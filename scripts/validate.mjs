@@ -5,7 +5,8 @@ const walk = d => readdirSync(d).flatMap(f => { const p = join(d, f); return sta
 const problems = [];
 const fail = m => problems.push(m);
 const hype = /\b(revolutionary|cutting[- ]edge|seamless(?:ly)?|world[- ]class|game[- ]changing)\b/i;
-const files = walk('_site');
+const out = process.env.SITE_OUT || '_site';
+const files = walk(out);
 for (const f of files) {
   if (!/\.(html|js|css|json|md)$/.test(f)) continue;
   const s = readFileSync(f, 'utf8');
@@ -19,23 +20,23 @@ for (const f of files) {
     for (const m of s.matchAll(/<script[^>]+src="([^"]+)"/g)) if (/^(https?:)?\/\//.test(m[1])) fail(`${f}: third-party script ${m[1]}`);
     for (const m of s.matchAll(/(?:href|src)="([^"#?]+)/g)) {
       const u = m[1]; if (/^(https?:|mailto:|data:|\/\/)/.test(u)) continue;
-      const target = u.startsWith('/') ? join('_site', u) : join(dirname(f), u);
+      const target = u.startsWith('/') ? join(out, u) : join(dirname(f), u);
       if (!existsSync(target) && !existsSync(join(target, 'index.html'))) fail(`${f}: broken link ${u}`);
     }
   }
 }
-if (!existsSync('_site/version.json')) fail('no version.json');
-if (!existsSync('_site/index.html')) fail('no index.html');
+if (!existsSync(join(out, 'version.json'))) fail('no version.json');
+if (!existsSync(join(out, 'index.html'))) fail('no index.html');
 try { JSON.parse(readFileSync('hub.json', 'utf8')); } catch (e) { fail('hub.json is missing or not JSON'); }
-// Content rules (sites-loop brief): every fact links to its source, sources come from the named
-// material, and every page says it is not approved by Algarve Evolution until Dinis confirms it is.
-const allowedHosts = ['promptugal.news', 'newsroom.sgit.ai'];
+// Content rules (sites-loop brief): every fact links to its source, and every page says it is not approved
+// by Algarve Evolution until Dinis confirms it is. Sources: Dinis Cruz, 16 November 2026, "Yes, you should quote
+// original sources ... if you can find it", so any https source is allowed; each needs publisher, title and read date.
 const readJson = f => { try { return JSON.parse(readFileSync(f, 'utf8')); } catch { fail(`${f}: missing or not JSON`); return null; } };
 const srcFile = readJson('src/data/sources.json');
 const known = new Set((srcFile?.sources || []).map(x => x.url));
 for (const x of srcFile?.sources || []) {
   let host = ''; try { host = new URL(x.url).hostname; } catch { fail(`sources.json: bad URL ${x.url}`); continue; }
-  if (!allowedHosts.includes(host)) fail(`sources.json: ${x.url} is not from ${allowedHosts.join(' or ')}`);
+  if (!x.url.startsWith('https://')) fail(`sources.json: ${x.url} is not https`);
   if (!x.publisher || !x.title || !/^\d{4}-\d{2}-\d{2}$/.test(x.read || '')) fail(`sources.json: ${x.url} needs publisher, title and read date`);
 }
 const items = [
@@ -43,11 +44,19 @@ const items = [
   ...(readJson('src/data/programmes.json')?.pillars || []).flatMap(p => p.programmes.map(i => ['programmes', i])),
   ...(readJson('src/data/figures.json')?.figures || []).map(i => ['figures', i]),
   ...(readJson('src/data/proposals.json')?.proposals || []).map(i => ['proposals', i]),
+  ...(readJson('src/data/people.json')?.people || []).map(i => ['people', i]),
+  ...(readJson('src/data/people.json')?.quotes || []).map(i => ['people', i]),
 ];
+// The ecosystem data cites by key; every key must resolve to a listed source.
+const eco = readJson('src/data/ecosystem.json');
+for (const [kind, list] of [['nodes', eco?.nodes], ['timeline', eco?.timeline], ['places', eco?.places]])
+  for (const i of list || []) { const u = eco.sources[i.src]?.url; if (!u) fail(`ecosystem.json: ${kind} ${i.id || i.title || i.name} has no source`); else if (!known.has(u)) fail(`ecosystem.json: ${u} is not in sources.json`); }
+const voice = readJson('src/data/voice.json');
+for (const k of Object.keys(voice || {}).filter(k => k.endsWith('_sources'))) for (const u of voice[k]) if (!known.has(u)) fail(`voice.json: ${k} cites ${u}, which is not in sources.json`);
 for (const [file, i] of items) {
   if (!i.sources?.length) fail(`${file}.json: ${i.id} has no source`);
   for (const u of i.sources || []) if (!known.has(u)) fail(`${file}.json: ${i.id} cites ${u}, which is not in sources.json`);
-  for (const k of ['name', 'label', 'summary']) if (i[k] && (!i[k].en || !i[k].pt)) fail(`${file}.json: ${i.id} ${k} needs en and pt`);
+  for (const k of ['name', 'label', 'summary', 'text', 'role']) if (i[k] && !(file === 'people' && k === 'name') && (!i[k].en || !i[k].pt)) fail(`${file}.json: ${i.id} ${k} needs en and pt`);
 }
 for (const [file, i] of items) if (file === 'proposals' && i.status !== 'proposal') fail(`proposals.json: ${i.id} must be marked status "proposal"`);
 for (const f of files.filter(f => f.endsWith('.html'))) {
