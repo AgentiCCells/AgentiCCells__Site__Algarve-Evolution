@@ -78,14 +78,23 @@ export const partnerItem = (n, lang) => {
 };
 
 // A stylised Algarve: the coastline and border from places.json and a dot for each of the 16 municipalities.
-export function algarveMap(places, { w = 600, cls = 'map', label = '' } = {}) {
-  const lon0 = -9.08, lon1 = -7.22, lat0 = 36.9, lat1 = 37.62, k = Math.cos(37.2 * Math.PI / 180);
+export function algarveMap(places, { w = 600, cls = 'map', label = '', hq = 'faro', hqLabel = 'Faro', id = 'am' } = {}) {
+  const lon0 = -9.08, lon1 = -7.22, lat0 = 36.9, lat1 = 37.78, k = Math.cos(37.2 * Math.PI / 180);
   const sx = w / ((lon1 - lon0) * k), h = Math.round((lat1 - lat0) * sx);
-  const P = ([lon, lat]) => [((lon - lon0) * k * sx).toFixed(1), ((lat1 - lat) * sx).toFixed(1)];
+  const P = ([lon, lat]) => [+((lon - lon0) * k * sx).toFixed(1), +((lat1 - lat) * sx).toFixed(1)];
   const ring = r => 'M' + r.map(p => P(p).join(' ')).join('L') + 'Z';
   const path = c => (places.outline.countries[c] || []).map(pg => pg.map(ring).join('')).join('');
-  const dots = places.municipalities.map(m => { const [x, y] = P(m.ll); return `<circle cx="${x}" cy="${y}" r="${(w / 140).toFixed(1)}"><title>${m.name}</title></circle>`; }).join('');
-  return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><path class="map-es" d="${path('Spain')}"/><path class="map-pt" d="${path('Portugal')}"/><g class="map-dots">${dots}</g></svg>`;
+  const r = +(w / 150).toFixed(1);
+  const dots = places.municipalities.map(m => { const [x, y] = P(m.ll); return m.id === hq
+    ? `<g class="map-hq"><circle cx="${x}" cy="${y}" r="${r * 2.6}" class="map-ring"/><circle cx="${x}" cy="${y}" r="${r * 1.3}"/><text x="${x + r * 3.6}" y="${y + r * 3.4}">${hqLabel}</text></g>`
+    : `<circle cx="${x}" cy="${y}" r="${r}"><title>${m.name}</title></circle>`; }).join('');
+  return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs>` +
+    `<pattern id="${id}-d" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.25" class="map-dot"/></pattern>` +
+    `<pattern id="${id}-e" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r=".8" class="map-dot-es"/></pattern>` +
+    `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity="1"/></linearGradient>` +
+    `<mask id="${id}-m"><rect width="${w}" height="${h}" fill="url(#${id}-g)"/></mask></defs>` +
+    `<g mask="url(#${id}-m)"><path class="map-es" fill="url(#${id}-e)" d="${path('Spain')}"/><path class="map-pt" fill="url(#${id}-d)" d="${path('Portugal')}"/></g>` +
+    `<g class="map-dots">${dots}</g></svg>`;
 }
 
 const L = {
@@ -96,7 +105,7 @@ const L = {
     results: 'As reported', resultsNote: 'Our own figures, as reported. Nobody has audited them; where two sources differ, both are shown.',
     targets: 'Targets for 2032', kickers: { founded: 'Founded', members: 'Members', jobs: 'Jobs', events: 'Events', communities: 'Communities' },
     missionKicker: 'Our mandate', leadKicker: 'Leadership', role: 'Executive director', quoteOn: 'On the 2032 goals', said: 'Written',
-    pillarsTitle: 'Three pillars of work', prog: n => `${n} programme${n === 1 ? '' : 's'}`,
+    pillarsTitle: 'Three pillars of work', swipe: 'Swipe for all three', prog: n => `${n} programme${n === 1 ? '' : 's'}`,
     historyTitle: 'Our story', prev: 'Earlier', next: 'Later', trackLabel: 'Timeline, 2018 to 2027', future: 'Planned',
     networkTitle: 'Partners and places', partnersH: 'Partners', munisH: 'All 16 municipalities',
     munisNote: 'Algarve Digital Innovators\' communities cover the Algarve\'s 16 municipalities, the members of AMAL.',
@@ -114,7 +123,7 @@ const L = {
     results: 'Segundo as notícias', resultsNote: 'Os nossos próprios números, tal como foram noticiados. Ninguém os auditou; quando duas fontes diferem, mostramos ambas.',
     targets: 'Metas para 2032', kickers: { founded: 'Fundação', members: 'Membros', jobs: 'Emprego', events: 'Eventos', communities: 'Comunidades' },
     missionKicker: 'A nossa missão', leadKicker: 'Direção', role: 'Diretor executivo', quoteOn: 'Sobre os objetivos para 2032', said: 'Escrito a',
-    pillarsTitle: 'Três pilares de trabalho', prog: n => `${n} programa${n === 1 ? '' : 's'}`,
+    pillarsTitle: 'Três pilares de trabalho', swipe: 'Deslize para ver os três', prog: n => `${n} programa${n === 1 ? '' : 's'}`,
     historyTitle: 'A nossa história', prev: 'Anterior', next: 'Seguinte', trackLabel: 'Cronologia, 2018 a 2027', future: 'Previsto',
     networkTitle: 'Parceiros e territórios', partnersH: 'Parceiros', munisH: 'Os 16 municípios',
     munisNote: 'As comunidades da Algarve Digital Innovators cobrem os 16 municípios do Algarve, os membros da AMAL.',
@@ -146,6 +155,9 @@ export function render({ lang, data, h, chrome, other }) {
   const extra = proposals.filter(p => !v.apps.some(a => a.id === p.id));
   const navItems = [['kpi', W.kpi], ['mission', W.mission], ['leadership', W.leadership], ['programmes', W.programmes], ['history', W.history], ['network', W.network], ['events', W.events], ['prototypes', W.prototypes], ['join', W.join], ['notes', W.notes]];
   const srcIndex = new Map(data.sources.sources.map((s, i) => [s.url, i + 1]));
+  const kpiVal = x => esc(x).replace(/([^\d\s.,+·]+(?:\s[^\d\s.,+·]+)*)/g, '<small>$1</small>');
+  const hosts = list => { if (!list?.length) return ''; const seen = new Map(); for (const u of list) { const host = new URL(u).hostname.replace(/^www\./, ''); if (!seen.has(host)) seen.set(host, u); }
+    return ` ${pt ? 'Cita' : 'Cites'}: ${[...seen].map(([host, u]) => `<a href="${esc(u)}" rel="noopener">${esc(host)}</a>`).join(', ')}.`; };
   const goalVal = g => (pt && g.value_pt) || g.value;
 
   return `<!doctype html>
@@ -180,7 +192,7 @@ ${chrome.banner}
       ${cite(fig('founded')?.sources.concat(v.story_sources), 'src src-light')}
     </div>
     <figure class="hero-map">
-      ${algarveMap(data.places, { w: 560, cls: 'map', label: W.mapLabel })}
+      ${algarveMap(data.places, { w: 560, cls: 'map', label: W.mapLabel, id: 'hm' })}
       <figcaption><span class="hm-n">16</span> ${pt ? 'municípios, uma rede' : 'municipalities, one network'} ${cite(['adi', data.places.municipalities_source], 'src src-light')}</figcaption>
     </figure>
   </div>
@@ -198,7 +210,7 @@ ${chrome.banner}
       <p class="sec-intro">${W.resultsNote}</p>
     </header>
     <ul class="kpi-list">
-${kpis.map(f => `      <li class="kpi-item"><p class="kpi-kick">${W.kickers[f.id]}</p><p class="kpi-val">${esc(t(f.value))}</p><p class="kpi-label">${esc(t(f.label))}</p>${f.note ? `<p class="kpi-note">${esc(t(f.note))}</p>` : ''}${cite(f.sources)}</li>`).join('\n')}
+${kpis.map(f => `      <li class="kpi-item"><p class="kpi-kick">${W.kickers[f.id]}</p><p class="kpi-val">${kpiVal(t(f.value))}</p><p class="kpi-label">${esc(t(f.label))}</p>${f.note ? `<p class="kpi-note">${esc(t(f.note))}</p>` : ''}${cite(f.sources)}</li>`).join('\n')}
     </ul>
     <div class="targets" aria-labelledby="h-targets">
       <div class="targets-head"><h3 id="h-targets">${W.targets}</h3><p>${esc(t(v.goals_note))}</p>${cite(v.goals_sources, 'src src-light')}</div>
@@ -211,8 +223,7 @@ ${kpis.map(f => `      <li class="kpi-item"><p class="kpi-kick">${W.kickers[f.id
   <div class="grid">
     <p class="kicker">${W.missionKicker}</p>
     <h2 id="h-mission" class="statement">${esc(t(v.mission))}</h2>
-    <p class="mission-sub">${esc(t(v.pillars_intro))}</p>
-    ${cite(['psn', 'https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html'])}
+    ${cite('psn')}
   </div>
 </section>
 
@@ -238,7 +249,8 @@ ${kpis.map(f => `      <li class="kpi-item"><p class="kpi-kick">${W.kickers[f.id
 <section id="programmes" class="pillars" aria-labelledby="h-pillars">
   <div class="grid">
     <header class="sec-head"><p class="kicker">${W.programmes}</p><h2 id="h-pillars">${W.pillarsTitle}</h2><p class="sec-intro">${esc(t(v.pillars_intro))}</p></header>
-    <div class="pillar-row">
+    <p class="swipe" aria-hidden="true">${W.swipe} &rarr;</p>
+    <div class="pillar-row" tabindex="0" role="region" aria-label="${W.pillarsTitle}">
 ${data.programmes.pillars.map((p, i) => `      <article class="pillar" id="pillar-${esc(p.id)}">
         <header><span class="pl-num">0${i + 1}</span><h3>${esc(t(p.name))}</h3><p class="pl-count">${W.prog(p.programmes.length)}</p></header>
         <ul>${p.programmes.map(g => `<li id="prog-${esc(g.id)}"><h4>${esc(t(g.name))}</h4><p>${esc(t(g.summary))}</p>${cite(g.sources)}</li>`).join('')}</ul>
@@ -312,7 +324,7 @@ ${v.apps.map((a, i) => `      <a class="proto" href="${appHref(a)}"><span class=
   <div class="grid">
     <header class="sec-head"><p class="kicker">${W.notes}</p><h2 id="h-notes">${W.notesTitle}</h2><p class="sec-intro">${W.notesIntro}</p></header>
     <ol class="endnotes">
-${data.sources.sources.map(s => `      <li id="n${srcIndex.get(s.url)}"><span class="en-pub">${esc(s.publisher)}</span> <a href="${esc(s.url)}" rel="noopener">${esc(s.title)}</a>${s.published ? `, ${W.published} ${esc(date(s.published))}` : ''}; ${W.read} ${esc(date(s.read))}.${s.primary?.length ? ` ${pt ? 'Cita' : 'Cites'}: ${s.primary.map(u => `<a href="${esc(u)}" rel="noopener">${esc(new URL(u).hostname.replace(/^www\./, ''))}</a>`).join(', ')}.` : ''}</li>`).join('\n')}
+${data.sources.sources.map(s => `      <li id="n${srcIndex.get(s.url)}"><span class="en-pub">${esc(s.publisher)}</span> <a href="${esc(s.url)}" rel="noopener">${esc(s.title)}</a>${s.published ? `, ${W.published} ${esc(date(s.published))}` : ''}; ${W.read} ${esc(date(s.read))}.${hosts(s.primary)}</li>`).join('\n')}
     </ol>
   </div>
 </section>
