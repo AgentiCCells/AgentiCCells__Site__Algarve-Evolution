@@ -1,0 +1,8 @@
+{
+  "schema": "hub.json (draft, no vault fields until the vault read key is published)",
+  "name": "Algarve Evolution site (in preparation)",
+  "what_it_does": "Placeholder; not briefed yet.",
+  "owner": "AgentiCCells",
+  "team": "sites@AgentiCCells.dinis, instructed by Dinis Cruz",
+  "licence": { "code": "Apache-2.0", "text": "CC BY 4.0" }
+}
