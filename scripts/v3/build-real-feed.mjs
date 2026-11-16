@@ -37,6 +37,8 @@ const en = v => (v && typeof v === 'object' && !Array.isArray(v) ? (v.en ?? '') 
 export const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/;
 // A link is kept only if it is an organisation's or a group's public page: never a person's profile, never a group-chat
 // invitation (joining one shows members' telephone numbers).
+// Event kinds (see kindOf).
+export const EVENT_KINDS = ['hackathon', 'workshop', 'talk', 'meetup', 'summit', 'conference', 'fair', 'awards', 'other'];
 export const PRIVATE_LINK = /linkedin\.com\/in\/|chat\.whatsapp\.com|wa\.me\/|t\.me\/\+|discord\.gg|mailto:|tel:/i;
 const publicLink = u => (u && !PRIVATE_LINK.test(u) ? u : null);
 export const PHONE = /(?:\+|\b00)\d{2,3}[\s.-]?\(?\d{1,4}\)?[\s.-]?\d{3}[\s.-]?\d{3,4}\b|\b[29]\d{2}[\s.]\d{3}[\s.]\d{3}\b|\b[29]\d{8}\b/;
@@ -227,6 +229,7 @@ const ELSEWHERE = [
   ['paris', 'Paris', 'abroad'], ['amesterdam', 'Amsterdam', 'abroad'], ['amsterdam', 'Amsterdam', 'abroad'], ['rio de janeiro', 'Rio de Janeiro', 'abroad'],
   ['vancouver', 'Vancouver', 'abroad'], ['cape town', 'Cape Town', 'abroad'],
 ];
+const SPEAKER = /\s+with\s+([A-Z][a-zà-ÿ]+(?:\s+[A-Z][a-zà-ÿ]+)+)$/;
 const hasWord = (text, w) => new RegExp(`(^|[^a-z])${w}([^a-z]|$)`).test(text);
 function whereIs(place, name) {
   const p = fold(place);
@@ -240,13 +243,23 @@ function whereIs(place, name) {
   for (const [w, t] of TOWN_WORDS) if (hasWord(n, w)) return { town: t, region: 'algarve', town_from: 'name' };
   return { town: null, region: null };
 }
+// Kinds, tried in this order on the published title. `talk` covers talks, information sessions, webinars, panels and
+// question-and-answer sessions; `fair` covers job fairs, trade shows and expos; `awards` covers award ceremonies,
+// pitch days and competitions. A title that fits none stays `other`.
 function kindOf(name) {
   const n = fold(name);
-  if (/hackathon|hack day|hackday|buildathon|vibathon|build lab|8h2 build|startup weekend|design sprint/.test(n)) return 'hackathon';
+  if (/hackathon|hack day|hackday|buildathon|vibathon|build lab|8h2 build|startup weekend|design sprint|game jam/.test(n)) return 'hackathon';
+  if (/awards?\b|premio|competition|concurso|world cup|pitch day|challenge\b/.test(n)) return 'awards';
   if (/summit/.test(n)) return 'summit';
-  if (/workshop|webinar|curso|course|masterclass|bootcamp|formacao|training|aprende|\b101\b|deep dive|build with ai|intro to|practical guide|cria a tua|your way to/.test(n)) return 'workshop';
-  if (/meetup|meet-up|mixer|networking|party|pitch night|fuckup nights|pizza|celebration|anniversary|gathering|warm-up|grow algarve/.test(n)) return 'meetup';
-  if (/conference|\bconf\b|forum|festival|devfest|\bfest\b|show\b|expo|convention|congress|wordcamp|tedx|fair\b|feira|meeting|world cup|web ?summit/.test(n)) return 'conference';
+  if (/webinar|ask (me|us) anything|\bama\b|\baua\b|public session|info(rmation)? session|sessao de|palestra|\btalks?\b|panel|keynote|policy dialogue|dialogos|o que ha de novo|what'?s new|practical uses/.test(n)) return 'talk';
+  if (/workshop|curso|course|masterclass|bootcamp|formacao|training|aprende|\b101\b|deep dive|build with ai|intro to|practical guide|cria a tua|your way to|master your|enhance your|arcade/.test(n)) return 'workshop';
+  if (/\bfair\b|feira|emprego|expo\b|trade show|\bshow\b|work in portugal/.test(n)) return 'fair';
+  if (/meetup|meet-up|mixer|networking|party|pitch night|fuckup nights|pizza|celebration|anniversary|gathering|warm-up|grow algarve|gala\b/.test(n)) return 'meetup';
+  if (/conference|\bconf\b|forum|festival|devfest|\bfest\b|convention|congress|wordcamp|tedx|meeting|web ?summit|vivatech|transfiere|\bday\b|\btms\b/.test(n)) return 'conference';
+  // Talk-shaped titles: a question, "how / why / como", "X vs Y", "from X to Y", a business-AI evening, a named guest,
+  // or a title with a subtitle after a colon.
+  if (/\?$|\bhow (i|to|we)\b|\bwhy\b|\bcomo\b|\bvs\.?\b|^(from|da|de) .+ (to|a|ao) |ai for business|protect your business|proteja o seu|business school|\bera do\b|human \+ ai|vibe coding in|ai for startup|relocated/.test(n)
+    || SPEAKER.test(name) || /\S: \S/.test(name)) return 'talk';
   return 'other';
 }
 function activityOf(name, kind) {
@@ -259,7 +272,6 @@ function activityOf(name, kind) {
 // Titles as published, with HTML entities decoded and invisible characters removed. Two titles name a guest speaker;
 // they keep the published title and add `name_safe` without the name, since V3 names no person but António Guerreiro.
 const title = s => tidy(decode(s).replace(/[\u200b-\u200d\ufeff]/g, ''));
-const SPEAKER = /\s+with\s+([A-Z][a-zà-ÿ]+(?:\s+[A-Z][a-zà-ÿ]+)+)$/;
 const events = odoo.events.map(o => {
   const e = { ...o, name: title(o.name) };
   const kind = kindOf(e.name);
@@ -276,7 +288,7 @@ const PROGRAMME = {
   'incubator':                  { activity: 'inc-acc',  page: '/incubator', node: 'incubator' },
   'inova-algarve-3':            { activity: 'inc-acc',  page: '/inovaalgarve', node: 'inova' },
   'startup-showcase':           { activity: 'inc-acc',  page: '/startups-smbs' },
-  'ualg-entrepreneurship':      { activity: 'talent',   page: '/education', node: 'education' },
+  'ualg-entrepreneurship':      { activity: 'talent',   page: '/education' },   // the ecosystem's 'education' note is a list of names, not a fact
   'the-company':                { activity: 'talent',   page: '/education' },
   'buildathons':                { activity: 'vibathon', page: '/education' },
   'algarve-digital-innovators': { activity: 'talent',   page: '/adi', node: 'adi' },
@@ -439,6 +451,17 @@ if (adiPage?.data?.stated) organisation.adi = { communities: adiPage.data.stated
   mapped_listed: mapped.length, label: 'communities identified and their members, as stated on the ADI network page', source: adiPage.url, read: adiPage.read };
 if (pageBy('/hub')?.data?.documents) organisation.documents = pageBy('/hub').data.documents.map(d => ({ ...d, source: pageBy('/hub').url, read: pageBy('/hub').read }));
 
+// The two community numbers, kept apart: what the ADI network reports, and what has a public record.
+const adiStated = Number(String(adiPage?.data?.stated?.communities || '').replace(/\D/g, '')) || null;
+const adiMembers = Number(String(adiPage?.data?.stated?.members || '').replace(/\D/g, '')) || null;
+const communities_note = {
+  text: `The ADI network reports ${adiStated ?? 'an unstated number of'} communities${adiMembers ? ` with ${adiMembers.toLocaleString('en-GB')} members between them` : ''} and lists ${communities.filter(c => c.adi).length} by name on its page (adi: true). ${communities.filter(c => !c.adi).length} more communities near the network have a public record in PrompTugal.news research (adi: false), so the list holds ${communities.length}. No member count is published for any one community.`,
+  adi_reported: adiStated, adi_members: adiMembers, adi_listed: communities.filter(c => c.adi).length,
+  other_public: communities.filter(c => !c.adi).length, total: communities.length,
+  source: adiPage?.url || `${BASE}/algarveempreende`, read: adiPage?.read || null,
+  research_source: 'https://promptugal.news/data/by-place/faro.json',
+};
+
 // ---------- places ----------
 const places = {
   municipalities: placesData.municipalities, municipalities_source: placesData.municipalities_source,
@@ -455,13 +478,25 @@ const feed = {
     built: new Date().toISOString(),
     contract: 'docs/v3/REAL-FEED.md',
     rule: 'Real, published data only. Every record carries its source URL; nothing is simulated. No person is named except António Guerreiro, executive director. No e-mail address or telephone number is kept.',
+    // Every value in `sources` is a URL a page can link to (absolute, or a path on this site); the words go in `source_labels`.
     sources: {
+      odoo: BASE,
+      pages: pagesBlock.sitemap,
+      data: '/data/sources.json',
+      ecosystem: eco.from,
+      communities: `${BASE}/algarveempreende`,
+      organisations: '/v1/talent-map/data/organisations.json',
+      organisations_original: 'https://promptugal.news/data/by-place/faro.json',
+      newsroom: N,
+    },
+    source_labels: {
       odoo: `${BASE} (Odoo ${odoo.odoo || 'version unknown'}, read ${odoo.read}): ${events.length} events from one iCal export each, ${news.length} posts from ${odoo.from.news.length} blog feeds`,
       pages: `${pagesBlock.sitemap} (read ${pagesBlock.read}): ${pages.length} public pages, title, meta description and h1/h2 headings only`,
       data: `src/data (the facts V1 was built from): ${sourcesData.sources.length} sources in src/data/sources.json, each read on or before ${[...new Set(sourcesData.sources.map(s => s.read))].sort().pop()}`,
       ecosystem: eco.from,
       communities: `The ADI network's list of mapped communities on ${BASE}/algarveempreende (read ${adiPage?.read || 'not read'}), matched with PrompTugal.news research (data/by-place, CC BY 4.0) extracted ${seed.extracted} into scripts/odoo/seed/real-public.json`,
-      organisations: `PrompTugal.news research, ${orgsData.from?.repo || ''} at ${orgsData.from?.commit || ''}, compiled ${orgsData.compiled}; organisations only, contacts dropped`,
+      organisations: `PrompTugal.news research (its public data/by-place files, one per municipality, CC BY 4.0), compiled ${orgsData.compiled} into v1-source/src/talent-map/data/organisations.json; organisations only, contacts dropped`,
+      organisations_original: 'One of PrompTugal.news\'s public data/by-place files (Faro); there is one per municipality.',
       newsroom: `${N} (SGit Newsroom, ${srcIndex.get(N)?.published || '2026-10-31'}): facts as stated there`,
     },
     sources_index: sourcesData.sources.map(s => ({ url: s.url, publisher: s.publisher, title: s.title, published: s.published, read: s.read })),
@@ -476,7 +511,7 @@ const feed = {
       organisations_by_kind: count(organisations, 'kind'),
     },
   },
-  hub, organisation, programmes, pages, events, news, vibathons, communities, organisations, places, gaps,
+  hub, organisation, programmes, pages, events, news, vibathons, communities, communities_note, organisations, places, gaps,
 };
 if (notInOrgs.length) console.warn(`note: ${notInOrgs.length} seed organisations are not among the 211`);
 void seedNames;
@@ -500,6 +535,16 @@ function check(feed) {
   (feed.places?.activity || []).forEach((x, i) => need(`places.activity[${i}]`, x));
   if (!isUrl(feed.places?.source)) problems.push('places: no source URL');
   for (const [i, e] of (feed.events || []).entries()) { if (!isUrl(e.url) || !isUrl(e.register)) problems.push(`events[${i}]: url and register must link to their Odoo`); }
+  for (const [k, v] of Object.entries(feed.meta?.sources || {})) if (!(isUrl(v) || /^\/[^\s]*$/.test(v))) problems.push(`meta.sources.${k} is not a URL: "${String(v).slice(0, 50)}"`);
+  (feed.events || []).forEach((e, i) => { if (!EVENT_KINDS.includes(e.kind)) problems.push(`events[${i}]: kind "${e.kind}" is not one of ${EVENT_KINDS.join(', ')}`); });
+  // Programme and Vibathon facts must be clean sentences, never a page heading or a fragment.
+  const headings = new Set((feed.pages || []).flatMap(p => p.headings || []).map(x => x.toLowerCase()));
+  for (const k of ['programmes', 'vibathons']) (feed[k] || []).forEach((x, i) => (x.facts || []).forEach((f, j) => {
+    const t = String(f.text || '');
+    if (t.length < 25 || !/[.!?"')]$/.test(t) || !/^[A-Z0-9"'“]/.test(t) || headings.has(t.toLowerCase()) || /^with\b/i.test(t)) problems.push(`${k}[${i}].facts[${j}]: not a clean fact: "${t.slice(0, 60)}"`);
+  }));
+  const cn = feed.communities_note;
+  if (!cn || !isUrl(cn.source) || cn.total !== (feed.communities || []).length || cn.adi_listed !== (feed.communities || []).filter(c => c.adi).length) problems.push('communities_note: missing, without a source, or its numbers do not match the list');
   const ACT = new Set((feed.hub?.activities || []).map(a => a.id));
   for (const k of ['gaps', 'programmes', 'vibathons']) (feed[k] || []).forEach((x, i) => { if (!ACT.has(x.activity)) problems.push(`${k}[${i}]: activity "${x.activity}" is not one of the hub's four`); });
   for (const k of ['events', 'pages']) (feed[k] || []).forEach((x, i) => { if (x.activity !== null && !ACT.has(x.activity)) problems.push(`${k}[${i}]: activity "${x.activity}" is not one of the hub's four or null`); });

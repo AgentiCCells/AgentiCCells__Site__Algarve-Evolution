@@ -106,14 +106,14 @@ function model(ctx) {
   const fold = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const townOf = place => { if (/^\s*online\s*$/i.test(place || '')) return 'Online'; const f = fold(place); const m = munis.find(x => f.includes(fold(x.name))); return m ? m.name : ''; };
   const kindOf = name => (/hack|vibathon|buildathon|design sprint|startup weekend/i.test(name) ? 'hackathon' : /workshop|curso livre|como usar a ia|masterclass|bootcamp|clinic|ai for startup/i.test(name) ? 'workshop' : /summit/i.test(name) ? 'summit' : /meetup|meeting|pitch night/i.test(name) ? 'meetup' : 'other');
-  const events = (R?.events?.length ? R.events : odoo.events || []).map(e => ({ id: e.id, name: clean(e.name), start: e.start, end: e.end, place: e.place || '', town: e.town || townOf(e.place), url: e.url, register: e.register, kind: e.kind || kindOf(e.name), source: e.source || e.url }));
+  const events = (R?.events?.length ? R.events : odoo.events || []).map(e => ({ id: e.id, name: clean(e.name_safe || e.name), start: e.start, end: e.end, place: e.place || '', town: e.town || townOf(e.place), url: e.url, register: e.register, kind: e.kind || kindOf(e.name), source: e.source || e.url }));
   const news = (R?.news?.length ? R.news : odoo.posts || []).map(p => ({ title: clean(p.title), url: p.url, date: p.date, blog: clean(p.blog) }));
 
   // Vibathon Algarve 2026 and the real hackathons and workshops.
   const vibEvent = events.find(e => /vibathon/i.test(e.name) && e.start.startsWith('2026-10-31'));
   const v1vib = data.events.events.find(e => e.id === 'vibathon-algarve-2026');
   const vibathons = R?.vibathons?.length
-    ? R.vibathons.map(x => ({ name: clean(t(x.name)), date: x.date, start: x.start || x.date, end: x.end, place: t(x.place), town: t(x.town), kind: x.kind, url: x.url, facts: (x.facts || []).map(f => ({ text: t(f.text), sources: srcs(f), gap: f.gap })) }))
+    ? R.vibathons.map(x => ({ name: clean(t(x.name_safe || x.name)), date: x.date, start: x.start || x.date, end: x.end, place: t(x.place), town: t(x.town), kind: x.kind, url: x.url, facts: (x.facts || []).map(f => ({ text: t(f.text), sources: srcs(f), gap: f.gap })) }))
     : [{ name: t(v1vib.name), date: v1vib.start, start: v1vib.start, place: t(v1vib.place), url: vibEvent?.url, facts: [{ text: t(v1vib.summary), sources: v1vib.sources }] },
       ...events.filter(e => e.kind === 'hackathon' && !/vibathon/i.test(e.name)).map(e => ({ name: e.name, date: e.start.slice(0, 10), start: e.start, end: e.end, place: e.place, town: e.town, kind: 'hackathon', url: e.url, facts: [] }))];
   const workshops = events.filter(e => e.kind === 'workshop');
@@ -124,10 +124,13 @@ function model(ctx) {
   const adiFig = (o.figures?.length ? o.figures : data.figures.figures).find(f => f.id === 'communities');
   const orgsFile = R ? null : readJson('v1-source/src/talent-map/data/organisations.json');
   const organisations = R?.organisations || orgsFile?.organisations || [];
-  const orgMeta = String(R?.meta?.sources?.organisations || '');
-  const orgSource = (orgMeta.match(/https:\/\/promptugal\.news\/\S*/) || [])[0] || 'https://promptugal.news/places/index.html';
+  // meta.sources values may be strings, URLs or { label, url }: read them defensively.
+  const metaText = v => (typeof v === 'string' ? v : v && typeof v === 'object' ? [t(v.label), v.url].filter(Boolean).join(', ') : '');
+  const orgRaw = R?.meta?.sources?.organisations;
+  const orgMeta = metaText(orgRaw);
+  const orgSource = (typeof orgRaw === 'object' && /^https:\/\/promptugal\.news\//.test(orgRaw?.url || '') && orgRaw.url) || (orgMeta.match(/https:\/\/promptugal\.news\/[^\s,;)]*/) || [])[0] || 'https://promptugal.news/places/index.html';
 
-  return { R, adiFig, read, odooVersion, activities, org, programmes, pages, hubPage, events, news, vibathons, workshops, communities, organisations, orgSource, orgMeta, munis, gaps: R?.gaps?.length ? R.gaps : GAPS, counts: R?.meta?.counts || {} };
+  return { R, adiFig, read, odooVersion, activities, org, programmes, pages, hubPage, events, news, vibathons, workshops, communities, organisations, orgSource, orgMeta, munis, gaps: R?.gaps?.length ? [...R.gaps, ...(R.hub?.inputs ? [{ ...R.hub.inputs, activity: 'hub' }] : [])] : GAPS, counts: R?.meta?.counts || {} };
 }
 
 // Titles from their Odoo and blog: entities decoded, decorative emoji dropped, long dashes as hyphens.
@@ -189,8 +192,9 @@ export function render(ctx) {
   const v2link = (path, text) => `<a class="v2" href="${esc(path)}">${esc(text || `See it in V2: ${V2_NAME[path] || path}`)} <span aria-hidden="true">&rarr;</span></a>`;
   const gapBox = act => {
     const gs = m.gaps.filter(g => g.activity === act); if (!gs.length) return '';
-    return `<aside class="gap" aria-label="Not published yet"><p class="gap-k">Not published yet · your Odoo would fill this</p><ul>${gs.map(g => `<li><span class="gap-w">${esc(h.t(g.what))}</span>${g.known ? `<span class="gap-n">${esc(h.t(g.known))}</span>` : ''}<span class="gap-o">${odooList(g)}</span></li>`).join('')}</ul><p class="gap-go">${v2link(gs[0].v2)}</p></aside>`;
+    return `<aside class="gap" aria-label="Not published yet"><p class="gap-k">Not published yet · your Odoo would fill this</p><ul>${gs.map(g => `<li><span class="gap-w">${esc(h.t(g.what))}</span>${g.known ? `<span class="gap-n">${esc(known(g))}</span>` : ''}<span class="gap-o">${odooList(g)}</span></li>`).join('')}</ul><p class="gap-go">${v2link(gs[0].v2)}</p></aside>`;
   };
+  const known = g => h.t(g.known).replace(/\s*\(see organisation\.partners\)/, ' (listed under Partners)').replace(/listed below/, 'listed under the Talent Ecosystem');
   const odooList = g => {
     const list = [].concat(g.odoo || []);
     return list.length ? list.map(x => `<code>${esc(x)}</code>`).join(' ') : (g.odoo_note ? `<span class="gap-p">${esc(h.t(g.odoo_note))}</span>` : '');
@@ -292,7 +296,7 @@ ${otherComms.length ? `<h3 class="sub">${adiComms.length ? `${otherComms.length}
 <p class="intro small">Organisations only, no people. By kind, and by the town each is based in.</p>
 <div class="orgs">
   <table class="bars"><caption class="vh">Organisations by kind</caption><thead><tr><th scope="col">Kind</th><th scope="col">Count</th></tr></thead><tbody>${byKind.map(([k, n]) => `<tr><th scope="row">${esc(ORG_KINDS[k] || k)}</th><td><span class="bw"><span class="bar" style="--w:${(n / maxKind * 100).toFixed(1)}%"></span><span class="bn">${n}</span></span></td></tr>`).join('')}</tbody></table>
-  <table class="towns"><caption class="vh">Organisations by town</caption><thead><tr><th scope="col">Town</th><th scope="col">Count</th></tr></thead><tbody>${byTown.map(([k, n]) => `<tr><th scope="row">${esc(townName(k))}</th><td>${n}</td></tr>`).join('')}</tbody></table>
+  <div class="towns"><p class="th"><span>Town</span><span>Count</span></p><dl>${byTown.map(([k, n]) => `<div><dt>${esc(townName(k))}</dt><dd>${n}</dd></div>`).join('')}</dl></div>
 </div>${cite(N_ORGS)}
 ${gapBox('talent')}`),
 
@@ -307,7 +311,7 @@ ${gapBox('talent')}`),
 <ol class="tl">${m.org.timeline.map(e => `<li${e.future ? ' class="future"' : ''}><span class="tw">${esc(e.when)}${e.future ? '<em>Next</em>' : ''}</span><div><h3>${esc(e.title)}</h3><p>${esc(e.text)}${e.stat ? ` <span class="stat">${esc(e.stat)}</span>` : ''}</p>${cite(e.sources)}</div></li>`).join('')}</ol>`),
 
     sec('gaps', `<p class="intro">What is not published yet. Each gap names the records in the hub's Odoo addon that would hold it, and links to the V2 page that shows what it could look like. Getting this data into Odoo is the first piece of work.</p>
-<ol class="gaps">${m.gaps.map((g, i) => { const a = m.activities.find(x => x.id === g.activity); return `<li><span class="sn" aria-hidden="true">${i + 1}</span><div><p class="gp-k">${esc(a ? a.name : 'The hub')}</p><p class="gp-w">${esc(h.t(g.what))}</p>${g.known ? `<p class="gp-n">${esc(h.t(g.known))}</p>` : ''}<p class="gp-o">${odooList(g)}</p><p class="gp-v2">${v2link(g.v2)}</p></div></li>`; }).join('')}</ol>`),
+<ol class="gaps">${m.gaps.map((g, i) => { const a = m.activities.find(x => x.id === g.activity); return `<li><span class="sn" aria-hidden="true">${i + 1}</span><div><p class="gp-k">${esc(a ? a.name : 'The hub')}</p><p class="gp-w">${esc(h.t(g.what))}</p>${g.known ? `<p class="gp-n">${esc(known(g))}</p>` : ''}<p class="gp-o">${odooList(g)}</p><p class="gp-v2">${v2link(g.v2)}</p></div></li>`; }).join('')}</ol>`),
   ];
 
   const hero = `

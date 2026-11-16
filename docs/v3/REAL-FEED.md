@@ -9,11 +9,13 @@ node scripts/v3/build-real-feed.mjs --offline    rebuild from the pages already 
 node scripts/v3/build-real-feed.mjs --check [f]  check a feed; exit 1 on any problem (also run after every build)
 ```
 
-The check: every record has a source URL (http or https); no `simulated: true` and no "(simulated)" anywhere; no e-mail address, telephone number, personal profile or invitation link anywhere; `activity` is one of the four (null allowed only on events and pages); every count in `meta.counts` matches its list, and the lists match their inputs (160 events and 20 posts in odoo.json, 211 organisations, every seed community present, one ADI community per card on their page).
+The check: every record has a source URL (http or https); every `meta.sources` value is a URL; every event kind is one of the nine; every programme and Vibathon fact is a clean sentence (not a page heading or a fragment); no `simulated: true` and no "(simulated)" anywhere; no e-mail address, telephone number, personal profile or invitation link anywhere; `activity` is one of the four (null allowed only on events and pages); every count in `meta.counts` matches its list, and the lists match their inputs (160 events and 20 posts in odoo.json, 211 organisations, every seed community present, one ADI community per card on their page).
 
 ```
 {
-  "meta": { "built": ISO, "contract", "rule", "sources": { "odoo", "pages", "data", "ecosystem", "communities", "organisations", "newsroom" },
+  "meta": { "built": ISO, "contract", "rule",
+            "sources": { odoo, pages, data, ecosystem, communities, organisations, organisations_original, newsroom },   // every value a URL (absolute, or a path on this site)
+            "source_labels": { same keys: the words describing each source },
             "sources_index": [ { url, publisher, title, published, read } ],          // src/data/sources.json
             "pages_from", "pages_read", "pages_unread": [ { url, status } ], "odoo": { url, version, read },
             "classification": "kind, town and activity are our classification from names and places",
@@ -39,12 +41,13 @@ The check: every record has a source URL (http or https); no `simulated: true` a
            activity: id|null, data?: { mapped_communities: [ { name, url } ], stated: { communities, members }, documents: [...] }, source, read } ],
            // every non-event, non-blog, non-profile page in their sitemap: title, meta description, first h1/h2 headings; no body copy
   "events": [ { id, name, names_person?, name_safe?, start, end, tz, place, town, region: "algarve"|"portugal"|"abroad"|"online"|null, town_from?,
-           kind: "hackathon"|"workshop"|"summit"|"meetup"|"conference"|"other", activity: id|null, url, register, ics, source, read } ],
+           kind: "hackathon"|"workshop"|"talk"|"meetup"|"summit"|"conference"|"fair"|"awards"|"other", activity: id|null, url, register, ics, source, read } ],
   "news": [ { title, url, date, blog, source, read } ],
   "vibathons": [ { id, name, date, start, end, place, town, kind: "buildathon"|"hackathon", activity: "vibathon", url, odoo_event,
            facts: [ { text, source, sources?, gap? } ], source, read } ],   // Vibathon Algarve 2026 (events.json, the newsroom article), then hackathons from events
   "communities": [ { id, name, adi: true|false, municipality, municipality_from?, kind, kind_from?, summary?, url, members?, source, read, research?: { source, read } } ],
            // adi: true = on the ADI network's own list (source: their page); research adds PrompTugal.news's reading where it matches
+  "communities_note": { text, adi_reported, adi_members, adi_listed, other_public, total, source, read, research_source },   // the ADI network's 24 and the 29 with a public record, kept apart
   "organisations": [ { id, name, kind, town, towns, what, url, source, read } ],   // 211, organisations only; contact blocks dropped
   "places": { municipalities, municipalities_source, outline, about, activity: [ { name, ll, note, hq?, source } ], source },
   "gaps": [ { id, activity, what, known, odoo: ["aih.programme.company", "aih.kpi", ...], v2: "/inc-acc/" } ]   // what a real hub needs that is not public
@@ -55,6 +58,9 @@ The check: every record has a source URL (http or https); no `simulated: true` a
 - `communities` now starts from the ADI network's own list of 24 mapped communities on their Odoo page /algarveempreende (names and the public links on each card), matched with the 14 communities from PrompTugal.news research; 5 research communities not on their list stay with `adi: false`. No count per community is published, so `members` is absent.
 - `programmes` gains `pillar`, `sources`, `note`, and two programmes from their own pages (Algarve Empreende; the AI and Robotics Action Plan pilot for 15 tourism SMEs). The pilot page says 15 winners where src/data/programmes.json reports 20 for INOVA Algarve 3.0; both are shown, with a `note`.
 - `pages` gains `path`, `group`, `headings` and `data` (lists published as data: mapped communities, stated totals, document titles). Their Odoo pages have almost no meta descriptions, so `description` is usually empty and `headings` carry the content.
+- `meta.sources` values are URLs only (the organisations link to this site's copy, /v1/talent-map/data/organisations.json); their words moved to `meta.source_labels`.
+- `communities_note` states both numbers with their source: 24 communities reported (and listed) by the ADI network, 29 with a public record.
+- Event kinds: `talk` (talks, information sessions, webinars, panels, question-and-answer sessions), `fair` (job fairs, trade shows, expos) and `awards` (award ceremonies, pitch days, competitions) join `conference`; webinars moved from `workshop` to `talk`. "other" fell from 73 to 10 of 160. Designs should give the new kinds a label.
 - `events` gains `conference` as a kind, `region`, `tz`, `ics`, and `names_person` / `name_safe` for the two titles that name a guest speaker.
 - `organisation` gains `network`, `events` (as reported), `adi` and `documents`; every item keeps `source` and `sources`.
 - `gaps` entries always have one of the four activities; the ideas-and-needs gap moved to `hub.inputs`.

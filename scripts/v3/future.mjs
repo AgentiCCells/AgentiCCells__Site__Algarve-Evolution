@@ -12,7 +12,7 @@ export const meta = { slug: 'future', order: 4, name: 'The Future', tagline: 'Ci
 const ACT_COLOUR = { 'inc-acc': '#ffb547', 'challenge-connect': '#ff6f4f', vibathon: '#52e5d6', talent: '#a9b8ff' };
 const ACT_ORDER = ['inc-acc', 'challenge-connect', 'vibathon', 'talent'];
 const ACT_SHORT = { 'inc-acc': 'INC/ACC', 'challenge-connect': 'Challenge Connect', vibathon: 'Vibathon', talent: 'Talent Ecosystem' };
-const KIND = { hackathon: ['Hackathons and buildathons', '#52e5d6'], workshop: ['Workshops and training', '#ffb547'], summit: ['Summits, fairs and conferences', '#ff6f4f'], meetup: ['Meetups and community', '#a9b8ff'], other: ['Other', '#7d869e'] };
+const KIND = { hackathon: ['Hackathons and buildathons', '#52e5d6'], workshop: ['Workshops and training', '#ffb547'], summit: ['Summits, fairs and conferences', '#ff6f4f'], meetup: ['Meetups and community', '#a9b8ff'], talk: ['Talks and information sessions', '#e58fd0'], other: ['Other', '#7d869e'] };
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -51,7 +51,7 @@ function feedFrom(ctx) {
     return null;
   };
   const odooEvents = (r?.events || d.odoo.events.map(e => ({ ...e, source: e.url }))).map(e => ({
-    ...e, name: (e.names_person && e.name_safe) ? e.name_safe : e.name, kind: e.kind === 'conference' ? 'summit' : (KIND[e.kind] ? e.kind : guessKind(e.name)), town: e.town !== undefined ? (munis.find(m => m.id === e.town || fold(m.name) === fold(e.town))?.id || null) : (muniOf(e.place) || muniOf(e.name)), kindGuessed: !e.kind,
+    ...e, name: (e.names_person && e.name_safe) ? e.name_safe : e.name, kind: ['conference', 'fair', 'awards'].includes(e.kind) ? 'summit' : (KIND[e.kind] ? e.kind : guessKind(e.name)), town: e.town !== undefined ? (munis.find(m => m.id === e.town || fold(m.name) === fold(e.town))?.id || null) : (muniOf(e.place) || muniOf(e.name)), kindGuessed: !e.kind,
   }));
   const fig = id => (r?.organisation?.figures || []).find(f => f.id === id) || d.figures.figures.find(f => f.id === id);
   const quote = d.people.quotes[0];

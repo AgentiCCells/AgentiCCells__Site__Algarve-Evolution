@@ -278,8 +278,11 @@ code{font:500 12.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;b
 .bar{flex:none;width:calc(var(--w) * .8);height:10px;background:var(--accent);min-width:2px}
 .bars .bn{margin-left:auto}
 @media print{.bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-.towns tbody th{white-space:normal}
-@media (min-width:860px){.orgs{grid-template-columns:3fr 2fr}}
+.towns .th{display:flex;justify-content:space-between;font-size:12px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--grey);padding:0 0 6px;border-bottom:1px solid var(--rule-strong)}
+.towns dl{columns:2;column-gap:var(--gap)}
+.towns dl>div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--rule);padding:6px 0;font-size:15px;break-inside:avoid}
+.towns dd{font-weight:620;font-variant-numeric:tabular-nums}
+@media (min-width:860px){.orgs{grid-template-columns:1fr 1fr}}
 
 /* 11 The gaps. */
 .gaps{display:grid;grid-template-columns:1fr;gap:0 calc(var(--gap)*2);margin-top:24px}
@@ -318,8 +321,8 @@ code{font:500 12.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;b
   .hero{padding-top:6mm}
   .hero h1{font-size:34pt;margin-bottom:8mm!important}
   .row{padding:4mm 0 7mm;break-inside:auto}
-  .row>.lab{position:static;grid-column:1/4}
-  .row>.body,.row-hero>.body{grid-column:4/-1}
+  .row>.lab{position:static;grid-column:1/3}
+  .row>.body,.row-hero>.body{grid-column:3/-1}
   .lab h2{font-size:12pt}
   .lede{font-size:12.5pt}
   .statement,.quote blockquote p{font-size:18pt}
@@ -329,10 +332,16 @@ code{font:500 12.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;b
   .goals li{grid-template-columns:1fr;grid-template-areas:"k" "v" "l";border-bottom:0}
   .tl,.notes{columns:2}
   .partners,.comms{grid-template-columns:1fr 1fr}
-  .acts{grid-template-columns:repeat(4,1fr)!important}
+  .acts{grid-template-columns:1fr 1fr!important;grid-template-rows:none!important;border-top:3px solid #000}
+  .acts li,.acts a{grid-row:auto!important;display:block!important}
+  .acts li{border-top:0!important;border-bottom:1px solid var(--rule)!important}
+  .acts a>*{display:block}
+  .acts .kw{display:inline-block}
+  .deck{margin:0 0 6mm}
+  .comms{grid-template-columns:1fr}
   .gaps{grid-template-columns:1fr 1fr}
-  .tl li,.evs li,.fig,.partners>div,.comms>div,.progs>li,.gaps li,.gap,.vib,.acts li,.quote,.orgs table{break-inside:avoid}
-  .lab,h3,h4,.sub{break-after:avoid}
+  .tl li,.evs li,.fig,.partners>div,.comms>div,.gaps li,.gap li,.acts li,.quote,.lines li,.goals{break-inside:avoid}
+  h3,h4,.sub{break-after:avoid}
   .src{font-size:7.5pt}
   .src a{text-decoration:none}
   .notes{font-size:7.5pt}
