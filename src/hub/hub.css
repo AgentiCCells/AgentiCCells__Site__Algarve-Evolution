@@ -1,0 +1,40 @@
+/* The hub's chrome: prototype note, header with the main menu and the persona switcher, Odoo chips, simulated
+   badges, the staff dialog and the footer. Page styles go in each page's own stylesheet under src/hub/. */
+:root{--hub-navy:#0a1d3d;--hub-navy-2:#102a54;--hub-ink:#111827;--hub-muted:#4b5563;--hub-line:#dfe3ea;--hub-paper:#fff;--hub-soft:#f4f6fa;--hub-accent:#e8492b;--hub-accent-ink:#b8361b;--hub-odoo:#714b67;--hub-teal:#017e84;--hub-max:1200px}
+*{box-sizing:border-box}
+body{margin:0;color:var(--hub-ink);background:var(--hub-paper)}
+.hub-wrap{max-width:var(--hub-max);margin:0 auto;padding:0 16px}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:8px;z-index:3000;background:#fff;padding:.4rem .8rem}
+.proto{display:flex;flex-wrap:wrap;gap:.3rem .8rem;justify-content:center;align-items:center;padding:.45rem 16px;background:#14213d;color:#f4f1ea;font:500 13px/1.4 system-ui,sans-serif;text-align:center}
+.proto a{color:#ffd58a}.proto-v1{border:1px solid rgba(255,213,138,.5);border-radius:999px;padding:.05rem .6rem;text-decoration:none;font-weight:700}
+.hub-top{background:var(--hub-navy);color:#fff;position:sticky;top:0;z-index:900;box-shadow:0 2px 0 var(--hub-accent)}
+.hub-top-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1.5rem;min-height:64px}
+.hub-brand{display:flex;gap:.7rem;align-items:center;color:#fff;text-decoration:none}
+.hub-brand strong{display:block;font-size:17px;letter-spacing:.02em}.hub-brand small{display:block;font-size:12px;opacity:.75}
+.hub-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--hub-accent) 0 50%,#fff 50% 100%);border-radius:4px}
+.hub-nav ul{display:flex;flex-wrap:wrap;gap:.2rem;list-style:none;margin:0;padding:0}
+.hub-nav a{display:block;color:#dfe6f3;text-decoration:none;font:600 14px/1 system-ui,sans-serif;padding:.6rem .7rem;border-radius:6px}
+.hub-nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+.hub-nav a[aria-current="page"]{background:#fff;color:var(--hub-navy)}
+.hub-nav a:focus-visible,.persona-select:focus-visible{outline:3px solid #ffd58a;outline-offset:2px}
+.persona-row{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .7rem;padding-bottom:.6rem;font:14px system-ui,sans-serif}
+.persona-label{font-weight:700;color:#ffd58a;text-transform:uppercase;letter-spacing:.08em;font-size:12px}
+.persona-select{font:600 14px system-ui,sans-serif;padding:.3rem .5rem;border-radius:6px;border:0}
+.persona-hint{color:#c9d3e6}.feed-state{margin-left:auto;font-size:12px;color:#c9d3e6}
+.feed-state.is-private{color:#ffd58a;font-weight:700}
+@media (max-width:720px){.hub-nav ul{flex-wrap:nowrap;overflow-x:auto;max-width:calc(100vw - 32px)}.feed-state{margin-left:0;flex-basis:100%}.hub-nav a{white-space:nowrap}}
+.odoo-chip{display:inline-flex;align-items:center;gap:.35rem;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--hub-odoo);background:#f5eef3;border:1px solid #e6d6e1;border-radius:999px;padding:.25rem .55rem;vertical-align:middle}
+.odoo-dot{width:7px;height:7px;border-radius:50%;background:var(--hub-odoo)}
+.sim-badge{display:inline-block;font:700 10px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#7a5512;background:#fff4dc;border:1px solid #e8d6ad;border-radius:4px;padding:.2rem .35rem;vertical-align:middle}
+.src-link{font-size:12px}
+.for-me{outline:3px solid var(--hub-accent);outline-offset:4px;border-radius:6px}
+[data-only][hidden]{display:none!important}
+.key-dialog{max-width:440px;border:0;border-radius:14px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.35);font:15px/1.5 system-ui,sans-serif}
+.key-dialog::backdrop{background:rgba(10,29,61,.55)}
+.key-dialog h2{margin:0 0 .4rem;font-size:20px}.key-dialog label{display:block;font-weight:700;margin:.6rem 0}
+.key-dialog input{display:block;width:100%;margin-top:.3rem;padding:.5rem;font:inherit;border:1px solid var(--hub-line);border-radius:8px}
+.key-dialog menu{display:flex;justify-content:flex-end;gap:.5rem;padding:0;margin:.8rem 0 0}
+.key-dialog button{font:600 14px system-ui,sans-serif;border-radius:999px;padding:.45rem .9rem;border:1px solid var(--hub-navy);background:#fff;color:var(--hub-navy);cursor:pointer}
+.key-dialog button.primary{background:var(--hub-navy);color:#fff}.key-msg{color:var(--hub-accent-ink);min-height:1.2em;margin:0}
+.hub-foot{background:var(--hub-navy);color:#c9d3e6;font:14px/1.6 system-ui,sans-serif;padding:28px 0;margin-top:48px}
+.hub-foot a{color:#ffd58a}.hub-foot strong{color:#fff}

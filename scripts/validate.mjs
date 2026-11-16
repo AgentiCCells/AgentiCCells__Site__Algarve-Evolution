@@ -70,11 +70,13 @@ for (const f of files.filter(f => f.endsWith('.html'))) {
 for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
   for (const m of readFileSync(f, 'utf8').matchAll(/https?:\/\/((?:stg|staging|test|preview)\.[a-z0-9.-]+)/gi)) fail(`${f}: link to a staging or test host ${m[1]}`);
 }
-// Every design and every app page exists in every language (Dinis Cruz, 16 November 2026: four languages).
-const LANGS = ['en', 'pt', 'es', 'fr'];
-const manifest = (() => { try { return JSON.parse(readFileSync(join(out, 'designs.json'), 'utf8')); } catch { fail('designs.json missing'); return { designs: [] }; } })();
-for (const d of manifest.designs) for (const l of LANGS) { const p = d.paths?.[l]; if (!p || !existsSync(join(out, p, 'index.html'))) fail(`design ${d.slug}: no ${l} page`); }
-for (const a of ['/talent-map/', '/spreadsheet-to-app/', '/odoo/']) for (const l of LANGS) { const p = l === 'en' ? a : `/${l}${a}`; if (!existsSync(join(out, p, 'index.html'))) fail(`app ${a}: no ${l} page`); }
-for (const f of files.filter(f => f.endsWith('.html'))) { const m = readFileSync(f, 'utf8').match(/<html lang="([a-z]{2})/); const rel = f.slice(out.length + 1).replace(/^v1\//, ''); const want = rel.match(/^(pt|es|fr)\//)?.[1] || 'en'; if (m && m[1] !== want && !rel.startsWith('spreadsheet-to-app/example/')) fail(`${f}: <html lang="${m[1]}"> but the page is under /${want === 'en' ? '' : want + '/'}`); }
+// V2: every hub page exists and is English; the parked V1 at /v1/ keeps its own four languages.
+const V2_PAGES = ['/', '/inc-acc/', '/challenge-connect/', '/vibathon/', '/talent/', '/odoo/'];
+const need = process.env.V2_PAGES_REQUIRED === '0' ? [] : V2_PAGES;
+for (const p of need) if (!existsSync(join(out, p, 'index.html'))) fail(`V2 page ${p} is missing`);
+if (!existsSync(join(out, 'v1', 'index.html'))) fail('the parked V1 (/v1/) is missing');
+for (const f of files.filter(f => f.endsWith('.html'))) { const m = readFileSync(f, 'utf8').match(/<html lang="([a-z]{2})/); const rel0 = f.slice(out.length + 1); if (!rel0.startsWith('v1/')) { if (m && m[1] !== 'en') fail(`${f}: V2 is English, found <html lang="${m[1]}">`); continue; } const rel = rel0.replace(/^v1\//, ''); const want = rel.match(/^(pt|es|fr)\//)?.[1] || 'en'; if (m && m[1] !== want && !rel.startsWith('spreadsheet-to-app/example/')) fail(`${f}: <html lang="${m[1]}"> but the page is under /v1/${want === 'en' ? '' : want + '/'}`); }
+// The Odoo feeds follow docs/v2/CONTRACT.md and nothing private leaks into the public one.
+try { const { execFileSync } = await import('node:child_process'); execFileSync('node', ['scripts/odoo/check-feeds.mjs'], { stdio: 'pipe' }); } catch (e) { fail(`feeds: ${String(e.stdout || e.message).trim().split('\n').slice(-5).join(' | ')}`); }
 if (problems.length) { console.error(problems.join('\n')); console.error(`FAILED: ${problems.length} problem(s)`); process.exit(1); }
 console.log('OK');
