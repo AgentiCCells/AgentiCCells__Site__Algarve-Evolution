@@ -1,5 +1,5 @@
 // Spreadsheet to App: the proposed session programme, with a working tool that turns a spreadsheet into an app in the browser.
-// The programme text is rendered here at build time in English and Portuguese; the tool (src/spreadsheet-to-app/) needs JavaScript.
+// The programme text is rendered here at build time in English, Portuguese, Spanish and French; the tool (src/spreadsheet-to-app/) needs JavaScript.
 // Text from the SGit Newsroom article of 31 October 2026 and its public pack (vault ph10xfc1), CC BY 4.0.
 // Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0, text CC BY 4.0.
 import { readFileSync } from 'node:fs';
@@ -343,12 +343,12 @@ ${chrome.banner}
     <p class="s2p-honest">${esc(L.tryHonest)}</p>
   </div>
   <div id="s2a-tool" class="s2p-tool">
+    <p class="s2p-paynote"><span class="s2p-coin" aria-hidden="true"></span>${esc(L.payNote)}</p>
     <h3 class="s2p-pickh">${esc(L.pickTitle)}</h3>
     <ul class="s2p-picks" role="list">${examples.map((e, i) => `<li><a class="s2p-pick" href="/spreadsheet-to-app/examples/${e.file}" data-example="${e.id}" title="${esc(L.raw)}"><span class="s2p-pickn">0${i + 1}<span class="s2p-pickr"><span class="s2p-price" title="${esc(L.payTitle)}">${esc(eur(PRICE.load))}</span><em>${e.type}</em></span></span><strong>${esc(e.name)}</strong><span class="s2p-pickb">${esc(e.blurb)}</span><span class="s2p-pickv"><span>${esc(L.pickView)}${colon}</span> ${esc(e.view)}</span></a></li>`).join('')}
       <li class="s2p-ownli" data-own hidden></li></ul>
     ${L.exNote ? `<p class="s2p-exnote">${esc(L.exNote)}</p>` : ''}
     <noscript><p class="s2p-noscript">${esc(L.noscript)}</p></noscript>
-    <p class="s2p-paynote"><span class="s2p-coin" aria-hidden="true"></span>${esc(L.payNote)}</p>
     <p class="s2p-privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${esc(L.privacy)}</p>
     <div id="s2a-window" class="s2p-window" hidden></div>
   </div>
