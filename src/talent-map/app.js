@@ -298,8 +298,8 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
       }
       if (cs) why.push(e.type === 'org' ? X.whyKind(I.kinds[e.o.kind].label) : X.whyRole(e.p.roles.filter(r => pq.concepts.some(c => c.roles?.includes(r))).map(r => I.roles[r]).join(', ')));
       let s = topic + cs;
-      // A business whose first app needs help: favour the region's software and service providers.
-      if (pq.concepts.some(c => c.id === 'app') && PROVIDER.test(e.text) && (e.type === 'person' || ['company', 'support'].includes(e.o.kind))) { s += 2; why.push(X.whyBuilds); }
+      // Someone looking for a service, or a business whose first app needs help: favour the region's software and service providers.
+      if (pq.concepts.some(c => c.id === 'app' || c.id === 'talent') && PROVIDER.test(e.text) && (e.type === 'person' || ['company', 'support'].includes(e.o.kind))) { s += 3; why.push(X.whyBuilds); }
       if (pq.orgOnly && e.type === 'org') s += 1;
       const hasWhat = s > 0;
       // Asked for something specific that this entry never mentions: keep it, lower down.
