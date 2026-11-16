@@ -1,6 +1,6 @@
 # AgentiCCells__Site__Algarve-Evolution
 
-Status: placeholder page only, built by sites@AgentiCCells.dinis for Dinis Cruz. Content waits on a brief.
+Status: the AE Innovation Hub prototype for Algarve Evolution (V2 hub, V3 real data only, decks, V1 parked), built by sites@AgentiCCells.dinis for Dinis Cruz. What exists is in `REALITY.md`.
 
 - Site source in `src/`. Every push to `dev` runs `.github/workflows/pages.yml`: Agent trailer check, build, validate, leak scan, deploy to GitHub Pages, then a tag. The version is v0.1.N, set by CI only (first release v0.1.0), shown on the page and at `/version.json`. Locally: `scripts/release.sh`.
 - The same files live in an sgit vault (`.sg_vault/bare/` is its encrypted store, committed here; `.sg_vault/local/` holds keys and is never committed).

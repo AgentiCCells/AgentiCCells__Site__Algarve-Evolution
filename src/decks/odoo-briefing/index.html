@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AE Innovation Hub and Odoo: how we work</title>
+<meta name="description" content="A 14-slide briefing for the person who manages Algarve Evolution's Odoo: our approach, the two feeds, plan-then-apply, Odoo 20 agents and MCP, and the questions that unlock the next step.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/hub/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/decks/deck.css">
+</head><body>
+<div class="deck-bar" role="note"><span>A prototype website made by the PrompTugal team for Algarve Evolution; not yet approved by Algarve Evolution.</span> <a href="/decks/">All decks</a> <a class="dl" href="/decks/odoo-briefing/ae-innovation-hub-and-odoo.pdf">Download the PDF</a></div>
+<header class="deck-title"><h1>AE Innovation Hub and Odoo: how we work</h1><p>A briefing for the person who manages Algarve Evolution's Odoo, 16 November 2026. 14 slides; version __VERSION__.</p></header>
+<main class="deck">
+<div class="frame"><section class="s navy">
+  <p style="margin:0 0 70px;font-size:17px;font-weight:600"><span class="mark"></span>&nbsp; AE Innovation Hub · Algarve Evolution</p>
+  <p class="kicker">Briefing for the Odoo administrator · 16 November 2026</p>
+  <h1>AE Innovation Hub and Odoo:<br>how we work</h1>
+  <p class="lede">Algarve Evolution's Odoo stays the single source of truth. We build around it, never instead of it: what we built for the prototype, how it would connect, and what we need from you.</p>
+  <div class="foot"><span>Prepared by the PrompTugal team for Algarve Evolution · a prototype, not yet approved by Algarve Evolution</span><span>1</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">In one slide</p>
+  <h2>Integrate, do not replace</h2>
+  <ul class="big">
+    <li><b>Two worlds.</b> The official Odoo (algarveevolution.pt, Odoo 19 Enterprise, Odoo 20 planned) is the mature system; a throwaway Odoo 19 Community is where we try things fast.</li>
+    <li><b>Two feeds.</b> A public feed holds only published records; a private feed holds the rest, published only encrypted and opened with an access key.</li>
+    <li><b>Writes are planned, then applied.</b> Reviewed and signed by a person, checked against a written policy, applied by a broker that keeps a record.</li>
+    <li><b>Odoo 20 fits.</b> Its agents and MCP server map onto the same model: each agent gets a behaviour policy; its exposed tools are its grant.</li>
+    <li><b>What we ask of you:</b> the API on your plan, a read-only user or a staging copy, where the data lives today, and how proven experiments should land.</li>
+  </ul>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>2</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">The approach</p>
+  <h2>Two worlds, and only what works moves across</h2>
+  <div class="worlds">
+    <div class="world official"><p class="sub">The official world</p><h3>Algarve Evolution's Odoo</h3>
+      <ul><li>algarveevolution.pt, Odoo 19 Enterprise; Odoo 20 planned</li><li>The records, the website, events and news</li><li>Owned by you and the Odoo partner</li><li>Never written to by our experiments</li></ul></div>
+    <div class="mid"><span class="big">⇄</span>Public data in, today.<br><br>Proven ideas out, by configuration, the Odoo partner, or a further experiment.</div>
+    <div class="world exp"><p class="sub">The experimentation world</p><h3>Our throwaway Odoo</h3>
+      <ul><li>Odoo 19 Community, rebuilt from one script</li><li>The AE Innovation Hub addon</li><li>An idea tried in hours, shown, changed or dropped</li><li>No real person's data</li></ul></div>
+  </div>
+  <p class="note">Over time Odoo usually ships what we built (Odoo 20 adds agents and MCP) and we retire our code. Source: "Integrate with whatever is on the other side", SGit Newsroom, 16 November 2026.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>3</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">What runs today</p>
+  <h2>One addon, four activities, on Odoo 19 Community</h2>
+  <p style="margin:-8px 0 22px;font-size:19px;color:#374151"><code>algarve_innovation_hub</code> 19.0.1.3.0 · LGPL-3 · depends on base, mail, contacts, event · 16 new models, 2 extended</p>
+  <div class="cols c4">
+    <div class="card"><h3>INC/ACC</h3><p><code>aih.programme</code><br><code>aih.programme.company</code><br><code>aih.session</code><br><code>aih.kpi</code><br><code>aih.reflection</code></p><p>Programmes, mentoring, KPIs month 0 to 6</p></div>
+    <div class="card"><h3>Challenge Connect</h3><p><code>aih.challenge</code><br><code>aih.application</code><br><code>aih.skill</code></p><p>Challenges, suppliers, scored matches with reasons, top 3</p></div>
+    <div class="card"><h3>Vibathon</h3><p><code>aih.vibathon</code><br><code>aih.vibathon.jury</code><br><code>aih.vibathon.participant</code><br><code>aih.project</code><br><code>aih.project.score</code></p><p>Events, jury, projects, next steps</p></div>
+    <div class="card"><h3>Talent Ecosystem</h3><p><code>aih.community</code><br>fields on <code>res.partner</code></p><p>ADI communities; mentor, supplier and talent kind; consent and published flags</p></div>
+  </div>
+  <p class="note">Groups: Feed reader (read only), Manager, Plan broker (create and write, never delete). Rebuilt from nothing by <code>scripts/odoo/setup-local.sh</code>.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>4</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">The data</p>
+  <h2>Real where it is public; everything else flagged simulated</h2>
+  <div class="cols c3" style="margin-bottom:26px">
+    <div class="card accent"><div class="stat">160</div><div class="stat-l">events read from algarveevolution.pt's public Odoo</div></div>
+    <div class="card accent"><div class="stat">15</div><div class="stat-l">ADI communities from public research, each with its source</div></div>
+    <div class="card accent"><div class="stat">85</div><div class="stat-l">organisations from public research, each with its source</div></div>
+  </div>
+  <div class="card soft"><h3>Simulated, and labelled so on every page</h3><p>The programmes' companies, mentors, KPIs, challenges, applications, Vibathon projects and people. No real person's data is in the experimentation Odoo. A separate V3 of the prototype now uses real data only, and shows "your Odoo would fill this" wherever real data does not exist yet.</p></div>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>5</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">The two feeds</p>
+  <h2>Pages never talk to Odoo: they read two files</h2>
+  <table>
+    <tr><th></th><th>Public feed</th><th>Private feed</th></tr>
+    <tr><td>Holds</td><td>Records marked published; people only with consent</td><td>Everything, including notes, contacts, participants, jury scores</td></tr>
+    <tr><td>Served</td><td>A plain JSON file with the site</td><td>Encrypted (AES-256-GCM, PBKDF2-SHA256, 200,000 iterations); opened in the browser with an access key that never travels</td></tr>
+    <tr><td>Read by</td><td>Anyone</td><td>The Algarve Evolution team</td></tr>
+    <tr><td>Written by</td><td colspan="2">The exporter, over the Odoo 19 JSON-2 API (<code>/json/2/&lt;model&gt;/search_read</code>), as a dedicated read-only user with its own API key. A checker refuses any export that would leak a private field, an e-mail address or an unconsented person.</td></tr>
+  </table>
+  <p class="note">The official Odoo is read today without credentials: sitemap, one calendar file per event, blog feeds. Names, dates, places and links only, each linking back.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>6</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Plan, then apply</p>
+  <h2>Nothing reaches Odoo without a signed, checked plan</h2>
+  <div class="flow">
+    <div class="step arrow-r"><b>1 Snapshot</b><span>Read the records the change touches, as they are now</span></div>
+    <div class="step arrow-r"><b>2 Plan</b><span>A hub page or a cell writes the proposed Odoo calls into the plan queue</span></div>
+    <div class="step"><b>3 Policy check</b><span>Allowed models and methods only; no deletes, no users or access rights</span></div>
+    <div class="step hl arrow-r"><b>4 Signed approval</b><span>A person approves each item and signs the plan with their own key</span></div>
+    <div class="step arrow-r"><b>5 Broker applies</b><span>Checks signature, reviewer, policy and snapshot; writes through the JSON-2 API</span></div>
+    <div class="step"><b>6 Record</b><span>Plan hash, reviewer and each change kept in a log that outlives any chat</span></div>
+  </div>
+  <p class="note">Running against our experimentation Odoo and tested end to end on 16 November 2026, every refusal included. Today nothing writes to Algarve Evolution's Odoo.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>7</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">The broker's guarantees</p>
+  <h2>What the broker refuses, by design</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Before it writes</h3><ul><li>A signature that does not verify</li><li>A reviewer whose key is not on the allow list (empty until a person adds one)</li><li>Any delete, or anything on users, groups or access rights</li><li>A record that changed since its snapshot</li></ul></div>
+    <div class="card"><h3>Where and how</h3><ul><li>Any host but the experimentation Odoo; never algarveevolution.pt</li><li>The same plan twice</li><li>Writes as a plan-broker user: create and write, never delete</li><li>A dry run unless told <code>--apply</code>; a log line for every change</li></ul></div>
+  </div>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>8</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Ten agentic cells</p>
+  <h2>The thousand small requests, as Odoo 20 agents</h2>
+  <table>
+    <tr><th>Our cell</th><th>Odoo 20 agent</th></tr>
+    <tr><td>Mandate</td><td>Instructions: the system prompt and each skill's instructions</td></tr>
+    <tr><td>Grant</td><td>Skills and tools: without a skill an agent can only answer</td></tr>
+    <tr><td>Data it reads</td><td>Knowledge: files, web pages, Documents, Knowledge articles</td></tr>
+    <tr><td>Trigger</td><td>On a schedule, on a date field, after creation, after an update</td></tr>
+    <tr><td>Barriers</td><td>Agent approvals and tool limits, plus plan-then-apply for consequential writes</td></tr>
+    <tr><td>Record</td><td>Odoo keeps agent conversations 30 days; our plan log keeps what was applied</td></tr>
+  </table>
+  <p class="note">The ten: supplier "who should I talk to?", mentor or expert request, membership, monthly KPIs, mentor notes, challenge intake, Vibathon sign-ups, funder report, weekly digest, community import.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>9</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Connecting to Algarve Evolution's Odoo</p>
+  <h2>Three levels, each only when the one before has proved useful</h2>
+  <table>
+    <tr><th>Level</th><th>How</th><th>Access needed</th><th>Unlocks</th></tr>
+    <tr><td>1 Public read <span class="tag ok">Running</span></td><td>Sitemap, event calendar files, blog feeds</td><td>None</td><td>Events, news, pages, linking back</td></tr>
+    <tr><td>2 Private read, Odoo 19 <span class="tag prop">Proposal</span></td><td>JSON-2 API, dedicated read-only user, key in your build secrets</td><td>Read on chosen models only</td><td>Programmes, companies, contacts with consent</td></tr>
+    <tr><td>3 Agents, Odoo 20 <span class="tag prop">Proposal</span></td><td>MCP server at <code>&lt;database&gt;/mcp</code>, OAuth with expiry, only the tools you expose</td><td>An approved client; tools marked "Available in MCP"</td><td>Agents that read freely and propose writes</td></tr>
+  </table>
+  <p class="note">Check first: integrators report that Odoo Online includes the external API only on custom plans; Odoo.sh and self-hosted include it. Level 1 is unaffected.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>10</span></div>
+</section></div>
+
+<div class="frame"><section class="s navy">
+  <p class="kicker">Odoo 20 MCP server</p>
+  <h2>The exposed tools are the agent's grant</h2>
+  <div class="cols c2">
+    <div class="card" style="color:#111827"><h3>By default, read only</h3><ul><li>Get Fields, Get Models</li><li>Retrieve initial context</li><li>Search, Read group</li></ul><p style="margin-top:10px">Every other tool must be exposed one by one ("Available in MCP"), optionally marked read-only so it runs without approval.</p></div>
+    <div class="card" style="color:#111827"><h3>Access you control</h3><ul><li>OAuth (recommended), approved clients only, access that expires</li><li>Or an API key with MCP scope and an expiry</li><li>Revoke by deleting the key</li><li>Claude Code connects with <code>claude mcp add --transport http</code></li></ul></div>
+  </div>
+  <p class="note" style="color:#c9d3e6">Source: Odoo 20.0 documentation, AI agents and AI MCP server, read 16 November 2026. Not yet tested by us on a real instance.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>11</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Security and data</p>
+  <h2>Algarve Evolution's data stays in Algarve Evolution's systems</h2>
+  <div class="cols c3">
+    <div class="card"><h3>Keys</h3><p>Created by you, for a dedicated user, kept in your build secrets. Never in chat or a repository.</p></div>
+    <div class="card"><h3>Least access</h3><p>Read-only for feeds; create and write without delete for the broker; nothing on users or access rights.</p></div>
+    <div class="card"><h3>Consent</h3><p>People appear in a public feed only with recorded consent; withheld records are counted, never shown.</p></div>
+    <div class="card"><h3>Signed writes</h3><p>A person's signed approval, a policy check and a snapshot comparison before anything is applied.</p></div>
+    <div class="card"><h3>Throwaway</h3><p>The experimentation Odoo holds no real person's data and is rebuilt from one script.</p></div>
+    <div class="card"><h3>Unlisted</h3><p>The prototype is not indexed by search engines and is linked from nowhere.</p></div>
+  </div>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>12</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Questions for you</p>
+  <h2>Six answers that unlock the next step</h2>
+  <ul class="check">
+    <li>Which plan is algarveevolution.pt on, and does it include the external API?</li>
+    <li>Could we have a read-only user for chosen models, or a staging copy of the database?</li>
+    <li>Where does each activity's data live today (apps, models, Studio fields), and what is still in spreadsheets?</li>
+    <li>When is the move to Odoo 20, and will the AI app and MCP server be enabled?</li>
+    <li>How should proven experiments land: our addon, Studio, or the Odoo partner?</li>
+    <li>Who should approve plans, so their public keys can be added to the allow list?</li>
+  </ul>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>13</span></div>
+</section></div>
+
+<div class="frame"><section class="s navy">
+  <p class="kicker">Next steps</p>
+  <h2>From prototype to the official Odoo, one proven step at a time</h2>
+  <ol class="num">
+    <li>Map the hub's models onto what already exists in the official Odoo; drop or rename ours to match.</li>
+    <li>Read the official Odoo's published records into the hub (level 2): events, programmes, contacts with consent.</li>
+    <li>Turn one agentic cell into an Odoo 20 agent on a staging copy, under its behaviour policy, with plan-then-apply for its writes.</li>
+  </ol>
+  <p class="note" style="color:#c9d3e6;margin-top:40px">Prepared by the PrompTugal team for Algarve Evolution. A prototype, not yet approved by Algarve Evolution.</p>
+  <div class="foot"><span>AE Innovation Hub and Odoo: how we work</span><span>14</span></div>
+</section></div>
+</main>
+<script src="/decks/deck.js"></script>
+</body></html>

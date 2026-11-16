@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What's new in the AE Innovation Hub prototype</title>
+<meta name="description" content="A 16-slide deck: the three versions of the prototype, the hub on Odoo, the four real-data designs, our pick, and how real data flows from Algarve Evolution's own Odoo website into the site.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/hub/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/decks/deck.css">
+</head><body>
+<div class="deck-bar" role="note"><span>A prototype website made by the PrompTugal team for Algarve Evolution; not yet approved by Algarve Evolution.</span> <a href="/decks/">All decks</a> <a class="dl" href="/decks/whats-new/whats-new-in-the-ae-innovation-hub.pdf">Download the PDF</a></div>
+<header class="deck-title"><h1>What's new in the AE Innovation Hub prototype</h1><p>The three versions, the four real-data designs, our pick, and how the real data flows. 16 November 2026; 16 slides; version __VERSION__.</p></header>
+<main class="deck">
+
+<div class="frame"><section class="s navy">
+  <p style="margin:0 0 70px;font-size:17px;font-weight:600"><span class="mark"></span>&nbsp; AE Innovation Hub · Algarve Evolution</p>
+  <p class="kicker">What's new · 16 November 2026</p>
+  <h1>From eight experiments to<br>a hub built on real data</h1>
+  <p class="lede">The AE Innovation Hub prototype now has three versions side by side: the first experiments, the hub on Odoo with simulated records, and four designs that use only what Algarve Evolution has published.</p>
+  <div class="foot"><span>Prepared by the PrompTugal team for Algarve Evolution · a prototype, not yet approved by Algarve Evolution</span><span>1</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">In one slide</p>
+  <h2>Three versions, one site</h2>
+  <div class="cols c3">
+    <div class="ver"><div class="vn">V1</div><h3>The experiments</h3><div class="at">/v1/ · parked</div>
+      <ul><li>8 designs: 4 conventional, 4 bold</li><li>4 languages: English, Portuguese, Spanish, French</li><li>Apps: talent map, Spreadsheet to App, Live from Odoo, a demo wallet</li></ul></div>
+    <div class="ver"><div class="vn">V2</div><h3>What it could be</h3><div class="at">/ · the hub on Odoo</div>
+      <ul><li>António's four activities, one page each</li><li>Our throwaway Odoo 19 as the source of truth</li><li>8 personas, Workflows, plan-then-apply</li><li>Simulated records, each labelled</li></ul></div>
+    <div class="ver" style="border:2.5px solid #e8492b;background:#fff7f5"><div class="vn">V3</div><h3>What is true today</h3><div class="at">/v3/ · new</div>
+      <ul><li>The 4 designs António liked</li><li>Only published data, every record with its source</li><li>Gaps say "your Odoo would fill this" and link to V2</li></ul></div>
+  </div>
+  <p class="note">V1 was parked unchanged so nothing is lost; V2 stays as the picture of what the hub could do once Algarve Evolution's Odoo holds the records.</p>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>2</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V2 · the hub on Odoo</p>
+  <h2>Four activities, read from one Odoo</h2>
+  <div class="split">
+    <div><ul class="big tight">
+      <li><b>INC/ACC:</b> programmes, startups, mentoring, KPIs from month 0 to 6</li>
+      <li><b>Challenge Connect:</b> company challenges, suppliers, scored matches with reasons</li>
+      <li><b>Vibathon:</b> events, jury, projects, next steps</li>
+      <li><b>Talent Ecosystem:</b> communities, organisations, people only with consent</li>
+      <li><b>Try it as</b> one of 8 personas, from visitor to the Algarve Evolution team</li>
+    </ul>
+    <p class="note">Public feed exported from our Odoo 19 Community on 16 November 2026: 2 programmes, 18 companies, 99 sessions, 108 KPIs, 5 challenges, 25 applications, 113 in the talent network, 160 real events.</p></div>
+    <div><img class="shot" src="/decks/whats-new/img/hub.jpg" alt="The V2 hub home page: Experience the vision, then think again, with counts read from Odoo"><p class="shot-cap">The hub home page (V2)</p></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>3</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V2 · under the pages</p>
+  <h2>Feeds, workflows and signed changes</h2>
+  <div class="cols c2" style="margin-bottom:20px">
+    <div class="card"><h3>Two feeds</h3><p>Pages never talk to Odoo. They read a public feed (published records only) and a private feed, encrypted with AES-256-GCM and opened in the browser with the team's access key.</p></div>
+    <div class="card"><h3>Workflows: 10 agentic cells</h3><p>The small requests that arrive ten at a time, each mapped end to end: who to talk to, mentor requests, membership, monthly KPIs, the weekly digest. Nothing is sent; a person approves each step.</p></div>
+  </div>
+  <div class="cols c2">
+    <div class="card accent"><h3>Plan, then apply</h3><p>Every proposed change is queued, checked against a written policy, signed by a person (ECDSA P-256) and applied by a broker that keeps a record. It writes only to our experimentation Odoo.</p></div>
+    <div class="card soft"><h3>Briefing for Algarve Evolution's Odoo</h3><p>The 14-slide briefing "AE Innovation Hub and Odoo: how we work" explains this approach to the person who manages their Odoo. It is in the decks section beside this one.</p></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>4</span></div>
+</section></div>
+
+<div class="frame"><section class="s navy">
+  <p class="kicker">V3 · why</p>
+  <h2>A version with no made-up data at all</h2>
+  <ul class="big" style="max-width:1060px">
+    <li><b>António liked four of the V1 designs:</b> The Brief, Mission Control, The Atlas and The Future.</li>
+    <li><b>V2's simulated records are useful but easy to mistake.</b> V3 shows only what Algarve Evolution has published, so every number can be checked.</li>
+    <li><b>The rule, written into the feed:</b> "Real, published data only. Every record carries its source URL; nothing is simulated. No person is named except António Guerreiro, executive director."</li>
+    <li><b>Gaps are shown, not filled.</b> Where a record does not exist in public, the page says "your Odoo would fill this", names the Odoo models that would hold it and links to the V2 page that shows the idea.</li>
+  </ul>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>5</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V3 · the four designs</p>
+  <h2>One real feed, four ways to tell it</h2>
+  <div class="grid4">
+    <figure><img src="/decks/whats-new/img/brief.jpg" alt="The Brief"><figcaption><b>The Brief</b> · read it in two minutes</figcaption></figure>
+    <figure><img src="/decks/whats-new/img/mission.jpg" alt="Mission Control"><figcaption><b>Mission Control</b> · the ecosystem as a live dashboard</figcaption></figure>
+    <figure><img src="/decks/whats-new/img/atlas.jpg" alt="The Atlas"><figcaption><b>The Atlas</b> · the Algarve, mapped</figcaption></figure>
+    <figure><img src="/decks/whats-new/img/future.jpg" alt="The Future"><figcaption><b>The Future</b> · cinematic, with a year-by-year story</figcaption></figure>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype · a "Choose a design" button on every V3 page switches between them</span><span>6</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V3 · design 1 of 4 · /v3/</p>
+  <h2>The Brief <span class="pick">Our pick</span></h2>
+  <div class="split">
+    <div><ul class="big tight">
+      <li>One strong column in 12 numbered sections: the hub, who runs it, goals for 2032, one section per activity, coming up, news, the story in time</li>
+      <li>Every fact carries a numbered note; the notes list publisher and dates</li>
+      <li>Each activity ends with a gap box: what is known, the <code>aih.*</code> records that would hold the rest, a link to V2</li>
+      <li>Prints to a clean A4 PDF of 17 pages; dark mode follows the system</li>
+    </ul></div>
+    <div><img class="shot" src="/decks/whats-new/img/brief.jpg" alt="The Brief, top of the page"></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>7</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V3 · design 2 of 4 · /v3/mission/</p>
+  <h2>Mission Control</h2>
+  <div class="split">
+    <div><ul class="big tight">
+      <li>A live dashboard: the Faro clock, counters, the four activity panels with "real, published" counts and "awaiting Odoo" tiles</li>
+      <li>The 12 upcoming events with a countdown and a Register link to their Odoo</li>
+      <li>An ecosystem network of 55 nodes, a radar of the 16 municipalities, the 2032 targets as rings</li>
+      <li>A Motion switch; reduced-motion settings make it calm</li>
+    </ul></div>
+    <div><img class="shot" src="/decks/whats-new/img/mission.jpg" alt="Mission Control, top of the page"></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>8</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V3 · design 3 of 4 · /v3/atlas/</p>
+  <h2>The Atlas</h2>
+  <div class="split">
+    <div><ul class="big tight">
+      <li>A relief map of the Algarve: one bubble per town, sized by its events on their Odoo, past solid and upcoming dashed</li>
+      <li>A layer per activity; each place opens a card with its events, programmes, communities and organisations, each with its source</li>
+      <li>A timeline from 2018 to 2027 that plays, with arcs from Faro to where each thing happened</li>
+      <li>Works without JavaScript below the map; a bottom sheet on phones</li>
+    </ul></div>
+    <div><img class="shot" src="/decks/whats-new/img/atlas.jpg" alt="The Atlas, the map with the side panel and timeline"></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>9</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">V3 · design 4 of 4 · /v3/future/</p>
+  <h2>The Future</h2>
+  <div class="split">
+    <div><ul class="big tight">
+      <li>Cinematic and dark: large type, the counts that matter, a story that scrolls</li>
+      <li>A calendar chart of the 160 events by kind and month, a table of the 16 municipalities</li>
+      <li>The real hackathons, the programmes grouped by activity, the gaps as cards</li>
+      <li>Its six pictures are AI-generated illustrations from V1, each captioned as such</li>
+    </ul></div>
+    <div><img class="shot" src="/decks/whats-new/img/future.jpg" alt="The Future, the hero with the title over an illustration of the coast"></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>10</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Our pick</p>
+  <h2>The Brief as the front door; the others as views</h2>
+  <div class="split r">
+    <div><ul class="big tight" style="font-size:18px">
+      <li><b>It is the easiest to check,</b> which is the point of V3: every fact has a numbered note.</li>
+      <li><b>The gaps are plainest:</b> each activity says what is published and what only their Odoo can add.</li>
+      <li><b>It works everywhere:</b> phones, print, dark mode, no motion needed, the lightest of the four.</li>
+      <li><b>It is closest to what António asked for:</b> four activities on one Odoo, told in two minutes.</li>
+      <li><b>Keep the others as views of the same feed:</b> The Atlas for the region, Mission Control on a screen at events, The Future for a talk.</li>
+    </ul>
+    <p class="note">A recommendation, not a decision: António and Algarve Evolution choose.</p></div>
+    <div style="display:flex;gap:16px;align-items:flex-start"><img class="shot" style="width:230px" src="/decks/whats-new/img/brief-phone.jpg" alt="The Brief on a phone"><p class="shot-cap" style="max-width:170px">The Brief on a phone, 390 px wide. The same page is the default at /v3/.</p></div>
+  </div>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>11</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Architecture · V3</p>
+  <h2>How real data reaches the page</h2>
+  <div class="arch">
+    <div class="col"><p class="lbl">1 Sources</p>
+      <div class="box real"><b>Their Odoo website</b><span>algarveevolution.pt, Odoo 19.0: the sitemap, one iCal file per event, 6 blog feeds</span></div>
+      <div class="box real"><b>Published research</b><span>PrompTugal.news data by place (CC BY 4.0), SGit Newsroom, the 36 sources V1 used</span></div></div>
+    <div class="col"><p class="lbl">2 Read</p>
+      <div class="box"><b>sync-public</b><span>Read only, no login, robots.txt respected, one request at a time</span></div>
+      <div class="box"><b>build-real-feed</b><span>Keeps names, dates, places and links; drops body copy, e-mails, phones; replaces titles that name a person</span></div></div>
+    <div class="col"><p class="lbl">3 Snapshot</p>
+      <div class="box hl"><b>real.json, in git</b><span>372 KB; every record with its source URL; read 16 November 2026</span></div>
+      <div class="box"><b>The feed check</b><span>Refuses a source that is not a link, a fragment as a fact, a count that does not add up, any e-mail or phone</span></div></div>
+    <div class="col"><p class="lbl">4 Build</p>
+      <div class="box"><b>build</b><span>Renders the 4 designs from the same feed; gaps link to the V2 pages</span></div>
+      <div class="box"><b>validate</b><span>Not indexed, safe event titles, every link and source, plain wording</span></div></div>
+    <div class="col"><p class="lbl">5 Publish</p>
+      <div class="box"><b>On push to dev</b><span>Build, validate, leak scan, then a version tag v0.1.N</span></div>
+      <div class="box"><b>Static pages</b><span>No server, no database, no login; not indexed and linked from nowhere</span></div></div>
+  </div>
+  <div class="outrow"><p class="lbl">6 What a visitor gets: one feed, four designs</p><div class="outs">
+    <figure><img src="/decks/whats-new/img/brief.jpg" alt=""><figcaption>The Brief · /v3/</figcaption></figure>
+    <figure><img src="/decks/whats-new/img/mission.jpg" alt=""><figcaption>Mission Control · /v3/mission/</figcaption></figure>
+    <figure><img src="/decks/whats-new/img/atlas.jpg" alt=""><figcaption>The Atlas · /v3/atlas/</figcaption></figure>
+    <figure><img src="/decks/whats-new/img/future.jpg" alt=""><figcaption>The Future · /v3/future/</figcaption></figure>
+    <figure class="v2"><img src="/decks/whats-new/img/hub.jpg" alt=""><figcaption>Gaps link to V2 · simulated</figcaption></figure>
+  </div></div>
+  <p class="note" style="margin-top:10px"><b style="color:#0a1d3d">Not live, and said so:</b> their Odoo is read when we run the sync, and the site shows that snapshot until the next read. <span class="tag prop">Proposal</span> a scheduled read that publishes only when the feed check passes.</p>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>12</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">What the snapshot holds</p>
+  <h2>Everything Algarve Evolution has published, counted</h2>
+  <div class="kv">
+    <div class="card accent"><div class="stat">160</div><div class="stat-l">events on their Odoo, 26 June 2025 to 10 March 2027; 12 upcoming</div></div>
+    <div class="card accent"><div class="stat">20</div><div class="stat-l">news posts from their blog feeds</div></div>
+    <div class="card accent"><div class="stat">37</div><div class="stat-l">public pages: titles and headings only</div></div>
+    <div class="card accent"><div class="stat">12</div><div class="stat-l">programmes, each fact a full sentence with its source</div></div>
+    <div class="card"><div class="stat">8</div><div class="stat-l">hackathons and buildathons, Vibathon Algarve 2026 among them</div></div>
+    <div class="card"><div class="stat">24</div><div class="stat-l">communities on their ADI list, plus 5 more from research</div></div>
+    <div class="card"><div class="stat">211</div><div class="stat-l">organisations from public research; organisations only, no people</div></div>
+    <div class="card"><div class="stat">12</div><div class="stat-l">gaps only their Odoo can fill, each linked to V2</div></div>
+  </div>
+  <p class="note">Source: src/feeds/real.json, built 16 November 2026 at 23:21 UTC. Events in 9 kinds by our reading of their titles: talk 48, conference 30, meetup 26, workshop 14, summit 14, hackathon 8, fair 6, awards 4, other 10.</p>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>13</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">Architecture · V2 and V3 side by side</p>
+  <h2>Two pipelines, kept apart on purpose</h2>
+  <table>
+    <tr><th></th><th>V2 · what it could be</th><th>V3 · what is true today</th></tr>
+    <tr><td>Reads from</td><td>Our throwaway Odoo 19 Community with the hub addon, over the JSON-2 API</td><td>Algarve Evolution's own Odoo website and published research, without credentials</td></tr>
+    <tr><td>Feeds</td><td>A public feed and an encrypted private feed</td><td>One real feed</td></tr>
+    <tr><td>Real records</td><td>160 events, 85 organisations, 15 communities</td><td>Everything on the page</td></tr>
+    <tr><td>Simulated</td><td>Companies, mentors, KPIs, challenges, projects, people; each labelled</td><td>None; the feed check refuses any</td></tr>
+    <tr><td>Writes</td><td>Plan-then-apply, to our experimentation Odoo only</td><td>None: read only</td></tr>
+  </table>
+  <p class="note">Neither writes to Algarve Evolution's Odoo. When their Odoo grants a read-only user, V3 can read programmes and contacts with consent directly (level 2 in the Odoo briefing).</p>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>14</span></div>
+</section></div>
+
+<div class="frame"><section class="s">
+  <p class="kicker">The gaps</p>
+  <h2>What only their Odoo can fill</h2>
+  <div class="cols c2">
+    <div class="card"><h3>INC/ACC</h3><ul><li>Startups in each programme and their KPIs, month 0 to 6</li><li>Mentors and their sessions, clinics and workshops</li></ul></div>
+    <div class="card"><h3>Challenge Connect</h3><ul><li>Challenges from companies: requirements, budget, deadline</li><li>Suppliers and their capabilities</li><li>Applications, match scores and the top 3 suggested</li></ul></div>
+    <div class="card"><h3>Vibathon</h3><ul><li>Projects built at each Vibathon and the next step</li><li>The jury and their scores</li><li>Who registered and took part (private)</li></ul></div>
+    <div class="card"><h3>Talent Ecosystem</h3><ul><li>People in the network, only with their consent</li><li>Competences of people and organisations</li><li>Members of each ADI community; partners' roles</li></ul></div>
+  </div>
+  <p class="note">The 12 gaps in src/feeds/real.json, grouped by activity. Each V3 design shows them with the Odoo models that would hold the records.</p>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>15</span></div>
+</section></div>
+
+<div class="frame"><section class="s navy">
+  <p class="kicker">Next steps</p>
+  <h2>From a snapshot to their Odoo</h2>
+  <ol class="num">
+    <li>António chooses the design for the front door. Our pick is The Brief, with the other three kept as views.</li>
+    <li>Walk the person who manages Algarve Evolution's Odoo through the briefing, and agree a read-only user or a staging copy.</li>
+    <li><span class="tag prop">Proposal</span> A scheduled read of their public Odoo that publishes only when the feed check passes.</li>
+    <li>Fill the first gap from their Odoo: programmes and startups, with consent, replacing a V2 simulation with real records.</li>
+  </ol>
+  <p class="note" style="color:#c9d3e6;margin-top:36px">Prepared by the PrompTugal team for Algarve Evolution. A prototype, not yet approved by Algarve Evolution. Text CC BY 4.0.</p>
+  <div class="foot"><span>What's new in the AE Innovation Hub prototype</span><span>16</span></div>
+</section></div>
+
+</main>
+<script src="/decks/deck.js"></script>
+</body></html>
