@@ -64,7 +64,7 @@ for (const [file, i] of items) if (file === 'proposals' && i.status !== 'proposa
 for (const f of files.filter(f => f.endsWith('.html'))) {
   const s = readFileSync(f, 'utf8');
   if (/<!-- data:[a-z]+ -->/.test(s)) fail(`${f}: data block not rendered`);
-  if (!/not yet approved by Algarve Evolution|ainda não aprovado pela Algarve Evolution|aún no aprobado por Algarve Evolution|pas encore approuvé par Algarve Evolution/.test(s)) fail(`${f}: no "not yet approved by Algarve Evolution" notice`);
+  if (!/not yet approved by Algarve Evolution|ainda não aprovado pela Algarve Evolution|(?:aún|todavía) no aprobado por Algarve Evolution|pas encore approuvé par Algarve Evolution/.test(s)) fail(`${f}: no "not yet approved by Algarve Evolution" notice`);
 }
 // No links to a publisher's staging or test host (a source captured from stg.example.com, 2026-11-16).
 for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
