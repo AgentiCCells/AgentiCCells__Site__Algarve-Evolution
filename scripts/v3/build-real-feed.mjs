@@ -28,7 +28,7 @@ const PAUSE = Number(process.env.ODOO_PAUSE_MS || 600);
 const args = new Set(process.argv.slice(2));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const J = f => JSON.parse(readFileSync(f, 'utf8'));
-const tidy = s => String(s ?? '').replace(/\s*[—–]\s*/g, ' - ').replace(/\s+/g, ' ').trim();
+const tidy = s => String(s ?? '').replace(/\s*[\u2014\u2013]\s*/g, ' - ').replace(/\s+/g, ' ').trim();
 const fold = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 const slug = s => fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 const en = v => (v && typeof v === 'object' && !Array.isArray(v) ? (v.en ?? '') : (v ?? ''));

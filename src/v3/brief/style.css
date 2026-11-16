@@ -344,3 +344,4 @@ code{font:500 12.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;b
 @media screen and (max-width:520px){.kicker span:first-child{display:none}.kicker span:nth-child(2)::before{display:none}}
 .notes .pc a{text-decoration-color:var(--rule)}
 .nw{white-space:nowrap}
+.small-more{font-size:14px;margin-top:8px}
