@@ -71,7 +71,7 @@ for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
   for (const m of readFileSync(f, 'utf8').matchAll(/https?:\/\/((?:stg|staging|test|preview)\.[a-z0-9.-]+)/gi)) fail(`${f}: link to a staging or test host ${m[1]}`);
 }
 // V2: every hub page exists and is English; the parked V1 at /v1/ keeps its own four languages.
-const V2_PAGES = ['/', '/inc-acc/', '/challenge-connect/', '/vibathon/', '/talent/', '/odoo/'];
+const V2_PAGES = ['/', '/inc-acc/', '/challenge-connect/', '/vibathon/', '/talent/', '/workflows/', '/plan/', '/odoo/'];
 const need = process.env.V2_PAGES_REQUIRED === '0' ? [] : V2_PAGES;
 for (const p of need) if (!existsSync(join(out, p, 'index.html'))) fail(`V2 page ${p} is missing`);
 if (!existsSync(join(out, 'v1', 'index.html'))) fail('the parked V1 (/v1/) is missing');

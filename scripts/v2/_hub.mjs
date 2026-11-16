@@ -11,6 +11,8 @@ export const NAV = [
   { path: '/challenge-connect/', label: 'Challenge Connect' },
   { path: '/vibathon/', label: 'Vibathon' },
   { path: '/talent/', label: 'Talent Ecosystem' },
+  { path: '/workflows/', label: 'Workflows' },
+  { path: '/plan/', label: 'Plan' },
   { path: '/odoo/', label: 'Odoo' },
 ];
 // The personas a visitor can try the hub as (Dinis: "get the different personas to try it out").
