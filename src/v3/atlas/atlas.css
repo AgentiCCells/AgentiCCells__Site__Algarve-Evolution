@@ -360,7 +360,8 @@ details>summary{cursor:pointer}
 .actc-k{display:flex;align-items:center;gap:8px;font:700 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0}
 .actc h3{font:600 28px/1.05 var(--serif);margin:.3rem 0 .2rem}
 .actc>p{margin:.35rem 0;font-size:16px}
-.actc .gap{margin-top:auto}
+.actc .gap{margin-top:.8rem}
+.actc-now{font-size:15.5px !important;color:var(--ink-2)}
 .actc-n strong{font:700 30px var(--serif);color:var(--ink)}
 .linkish{font:600 14px var(--sans);color:var(--sea-ink);background:none;border:0;padding:4px 0;margin-left:6px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .gaps-wrap{margin-top:2.6rem;max-width:52rem}
@@ -402,3 +403,6 @@ details>summary{cursor:pointer}
 .plist .kd{font-size:10px}
 .plist li>span:not(.kd):not(.where):not(.mem){display:block}
 .labels{pointer-events:none}
+.srcs{list-style:none;padding:0;margin:1.2rem 0 0;font-size:14.5px;color:var(--ink-2);max-width:62rem}
+.srcs li{padding:.55rem 0;border-top:1px solid var(--rule);line-height:1.55}
+.srcs strong{color:var(--ink)}

@@ -357,7 +357,7 @@ ${ACTS.map(a => `<g class="layer layer-${a}" data-layer="${a}">${badgeLayer(a)}<
 </svg>`;
 
   // ---- records as list items ----
-  const evItem = (e, withTown) => `<li class="evi${e.up ? ' up' : ''}"><time datetime="${e.start}">${esc(range(e))}</time> <a href="${esc(e.url)}" rel="noopener">${esc(e.name)}</a> <span class="kd kd-${e.kind}">${esc(KIND_LABEL[e.kind] || 'Event')}</span>${withTown ? ` <span class="where">${esc(e.at === 'online' ? 'Online' : e.at === 'beyond' ? (e.place ? e.place.split(',').slice(-2).join(',').trim() : 'No place given') : nameOf(e.at))}</span>` : ''}${e.up ? ` <a class="reg" href="${esc(e.register || `${e.url}/register`)}" rel="noopener">Register<span class="vh">: ${esc(e.name)}</span></a>` : ''}</li>`;
+  const evItem = (e, withTown) => `<li class="evi${e.up ? ' up' : ''}"><time datetime="${e.start}">${esc(range(e))}</time> <a href="${esc(e.url)}" rel="noopener">${esc(e.name)}</a> <span class="kd kd-${e.kind}">${esc(KIND_LABEL[e.kind] || 'Event')}</span>${withTown ? ` <span class="where">${esc(e.at === 'online' ? 'Online' : e.at === 'beyond' ? (e.town || (e.place ? e.place.split(',').slice(-1)[0].replace(/[\d-]+/g, '').trim() : '') || 'No place given') : nameOf(e.at))}</span>` : ''}${e.up ? ` <a class="reg" href="${esc(e.register || `${e.url}/register`)}" rel="noopener">Register<span class="vh">: ${esc(e.name)}</span></a>` : ''}</li>`;
   const evList = (list, withTown) => `<ul class="evl">${list.map(e => evItem(e, withTown)).join('')}</ul>`;
   const progItem = g => `<li><strong>${esc(g.name)}</strong>${g.summary ? `<span>${esc(g.summary)}</span>` : ''}${arr(g.facts).length ? `<ul class="facts">${g.facts.map(f => `<li>${esc(f.text)}</li>`).join('')}</ul>` : ''}${g.note && !/src\//.test(g.note) ? `<span class="note-s">${esc(g.note)}</span>` : ''}${g.page ? `<a class="pg" href="${esc(g.page)}" rel="noopener">Their page on their Odoo</a>` : ''}${cite(g.sources)}</li>`;
   const pageItem = p => `<li><a href="${esc(p.url)}" rel="noopener">${esc(p.title)}</a> <span class="where">their page</span></li>`;
@@ -452,12 +452,34 @@ ${lg('<circle r="10" fill="rgba(251,248,241,.6)" stroke="#5f6c6e" stroke-width="
   // ---- the essentials below the map ----
   const S = (id, title, inner, cls = '') => `<section class="st ${cls}" id="${id}" aria-labelledby="h-${id}"><div class="st-in">${title ? `<h2 id="h-${id}">${title}</h2>` : ''}${inner}</div></section>`;
   const goals = M.goals.map(g => `<li><strong>${esc(g.value)}</strong><span>${esc(g.label)}</span></li>`).join('');
-  const actCols = M.acts.map(a => { const b = actBody(a); const n = spots.reduce((s, id) => s + badgeN(id, a.id), 0);
-    return `<section class="actc act-${a.cls}" aria-labelledby="ac-${a.id}"><p class="actc-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>${esc(a.short)}</p><h3 id="ac-${a.id}">${esc(a.name)}</h3><p class="kw"><span lang="pt">${esc(a.keywords)}</span>${a.keywordsEn ? ` <span class="kw-en">(${esc(a.keywordsEn)})</span>` : ''}</p><p>${esc(a.summary)}</p>
-<p class="actc-n"><strong>${num(n)}</strong> real ${n === 1 ? 'record' : 'records'} on the map <button type="button" class="linkish" data-show-layer="${a.id}">Show the layer</button></p>${b.gapShort}</section>`; }).join('');
+  // What exists today, in one line per activity, from the records on the map.
+  const nowLine = id => {
+    if (id === 'inc-acc') return `${plural(progsOf('inc-acc').length, 'programme')} and ${plural(pagesOf('inc-acc').length, 'page')} on their Odoo. No startup, mentor or KPI is published.`;
+    if (id === 'challenge-connect') return `No challenge, supplier or match is published. ${plural(M.challengeItems.length, 'call')} for ideas and projects on their blog come nearest.`;
+    if (id === 'vibathon') { const hk = M.vibEvents.filter(e => e.kind === 'hackathon').length, wk = M.vibEvents.filter(e => e.kind === 'workshop').length; return `${M.vibathons.map(v => v.name).join(', ') || 'No Vibathon record'}, ${plural(hk, 'other hackathon')} and ${plural(wk, 'workshop')} on their Odoo. No project, jury or score is published.`; }
+    const adiN = M.comms.filter(c => c.adi).length, resN = M.comms.length - adiN;
+    return `${M.adi ? esc(M.adi.communities) : num(adiN)} communities in the ADI network${resN ? `, ${num(resN)} more from research` : ''}, and ${plural(M.orgs.length, 'public organisation')}. No person is listed.`;
+  };
+  const actCols = M.acts.map((a, i) => { const b = actBody(a); const n = spots.reduce((s, id) => s + badgeN(id, a.id), 0);
+    return `<section class="actc act-${a.cls}" aria-labelledby="ac-${a.id}"><p class="actc-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>Activity ${i + 1} of 4</p><h3 id="ac-${a.id}">${esc(a.name)}</h3><p class="kw"><span lang="pt">${esc(a.keywords)}</span>${a.keywordsEn ? ` <span class="kw-en">(${esc(a.keywordsEn)})</span>` : ''}</p><p>${esc(a.summary)}</p>
+<p class="actc-now"><strong>Today:</strong> ${nowLine(a.id)}</p><p class="actc-n"><strong>${num(n)}</strong> ${n === 1 ? 'record' : 'records'} on the map <button type="button" class="linkish" data-show-layer="${a.id}">Show the layer</button></p>${b.gapShort}</section>`; }).join('');
   const upcoming = M.events.filter(e => e.up);
   const monthsDesc = [...months].reverse();
-  const sources = () => [...used.values()].sort((a, b) => (a.publisher || '').localeCompare(b.publisher || '') || (a.title || '').localeCompare(b.title || ''));
+  // The sources list: one line per publisher, each source linked under its title (the feed's index, else the site's
+  // sources, else the words of the link itself).
+  const index = new Map(arr(ctx.real?.meta?.sources_index).map(x => [x.url, x]));
+  const slugWords = u => { try { const seg = new URL(u).pathname.split('/').filter(Boolean).pop() || new URL(u).hostname; return decodeURIComponent(seg).replace(/\.(html?|php|json)$/, '').replace(/[-_]+/g, ' ').replace(/\s+\d+$/, '').trim().slice(0, 70) || u; } catch { return u; } };
+  const titles = new Map([...arr(ctx.real?.pages).map(x => [x.url, `their page: ${String(x.title || '').replace(/\s*\|\s*Algarve Evolution\s*$/i, '').trim()}`]), ...M.news.map(x => [x.url, x.title]), ...M.orgs.filter(o => o.source).map(o => [o.source, `on ${o.name}`]),
+    ...M.comms.filter(c => c.source && !/algarveempreende/.test(c.source)).map(c => [c.source, `on ${c.name}`])]);
+  const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+  const sources = () => { const groups = new Map(), pubOfHost = new Map();
+    const all = [...used.values()].map(s0 => ({ ...s0, ...(index.get(s0.url) || {}) }));
+    for (const s of all) if (s.publisher && s.publisher !== hostOf(s.url)) pubOfHost.set(hostOf(s.url), s.publisher);
+    for (const s of all) { const pub = pubOfHost.get(hostOf(s.url)) || s.publisher || hostOf(s.url);
+      const own = s.title && s.title !== s.url && s.title !== hostOf(s.url) ? s.title : titles.get(s.url) || slugWords(s.url);
+      const label = /^(index|\d+|[\w.-]+\.(pt|com|org|net|dev))$/i.test(own) ? `a page on ${hostOf(s.url)}` : own;
+      if (!groups.has(pub)) groups.set(pub, []); groups.get(pub).push({ ...s, label }); }
+    return [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'en', { sensitivity: 'base' })); };
   const feedNote = M.meta.live ? `From the real feed (src/feeds/real.json${M.meta.built ? `, built ${esc(d(String(M.meta.built)))}` : ''}).` : 'From the records the real feed is built from: their Odoo, read with no credentials, and public sources.';
 
   const story = `
@@ -489,8 +511,8 @@ ${lg('<circle r="10" fill="rgba(251,248,241,.6)" stroke="#5f6c6e" stroke-width="
   ${S('timeline', 'The timeline', `<p class="intro">From a small group of local entrepreneurs in 2018 to the hub. The scrubber on the map plays these entries and the months of events.</p><div class="chron">${M.timeline.map(tlCard).join('')}</div>`, 'st-chron')}
 
   <section class="st st-sources" id="sources" aria-labelledby="h-sources"><div class="st-in">
-    <h2 id="h-sources">Sources</h2><p class="intro">Every record on this page links to one of these. ${feedNote}</p>
-    <ol>${'<!--SOURCES-->'}</ol>
+    <h2 id="h-sources">Sources</h2><p class="intro">Every record on this page links to one of these, grouped by publisher. ${feedNote}</p>
+    <ul class="srcs">${'<!--SOURCES-->'}</ul>
   </div></section>
   <p class="back"><a href="#map">↑ Back to the map</a></p>
 </main>`;
@@ -564,5 +586,5 @@ ${story}
 ${chrome.foot}
 </body>
 </html>`;
-  return html.replace('<!--SOURCES-->', sources().map(s => `<li><a href="${esc(s.url)}" rel="noopener">${esc(s.publisher || s.url)}</a>${s.title && s.title !== s.url ? `, ${esc(s.title)}` : ''}${s.read ? ` <span class="muted">(read ${esc(d(s.read))})</span>` : ''}</li>`).join(''));
+  return html.replace('<!--SOURCES-->', sources().map(([pub, list]) => `<li><strong>${esc(pub)}</strong>: ${list.sort((a, b) => a.label.localeCompare(b.label)).map(s => `<a href="${esc(s.url)}" rel="noopener">${esc(s.label)}</a>${s.read ? ` <span class="muted">(read ${esc(d(s.read))})</span>` : ''}`).join('; ')}</li>`).join(''));
 }

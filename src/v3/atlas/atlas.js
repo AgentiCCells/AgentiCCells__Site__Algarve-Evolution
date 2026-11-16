@@ -57,7 +57,7 @@
     if (!phone()) return f;
     const [, h] = size(), i = insets();
     const z = Math.max(f.z, Math.min(0.47, (h - i.t - i.b) / (BOX[3] - BOX[1] + 40)));
-    return { x: 640, y: (BOX[1] + BOX[3]) / 2 + 40 - ((i.t - i.b) / 2) / z, z };
+    return { x: 610, y: (BOX[1] + BOX[3]) / 2 + 40 - ((i.t - i.b) / 2) / z, z };
   }
   function clamp() {
     if (!(zFit > 0) || !ok(zFit)) zFit = 0.3;
@@ -236,7 +236,10 @@
     lastNow = now ? now.id : null;
   }
   setYear(T1, { atEnd: true });
-  range.addEventListener('input', () => { stop(); const v = +range.value; if (v >= 1000) setYear(T1, { atEnd: true }); else setYear(tOf(v / 1000)); });
+  // Dragging or clicking the track snaps to an entry or a month when it is within a few pixels of one.
+  range.addEventListener('input', () => { stop(); const v = +range.value; if (v >= 1000) { setYear(T1, { atEnd: true }); return; }
+    const w = range.getBoundingClientRect().width || 1000, near = stops.map(s => [s, Math.abs(pos(s.t) * 1000 - v) * w / 1000]).filter(([, px]) => px < 9).sort((a, b) => a[1] - b[1])[0];
+    setYear(near ? near[0].t : tOf(v / 1000)); });
   // Arrow keys on the scrubber step from one entry to the next instead of one thousandth of the track.
   range.addEventListener('keydown', e => {
     const dir = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1 }[e.key];
