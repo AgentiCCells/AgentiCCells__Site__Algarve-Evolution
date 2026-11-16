@@ -3,7 +3,8 @@
 // Usage: node scripts/pages/_talent-map-data.mjs <path to a PrompTugal__News__Website clone> [commit]
 // Reads data/by-place/<municipality>.json for the 16 Algarve municipalities, quarteira.json (a parish of Loulé) and
 // algarve.json (arrays ai_map, start_company, investors, contacts), plus the partners in src/data/ecosystem.json, and
-// the Portuguese summaries in src/talent-map/data/what-pt.json. Writes src/talent-map/data/organisations.json.
+// the Portuguese, Spanish and French summaries in src/talent-map/data/what-pt.json, what-es.json and what-fr.json (by id).
+// Writes src/talent-map/data/organisations.json.
 // Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0; the compiled text is CC BY 4.0 (PrompTugal.news).
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -15,8 +16,9 @@ const read = f => JSON.parse(readFileSync(f, 'utf8'));
 const places = read('src/data/places.json').municipalities;
 const eco = read('src/data/ecosystem.json');
 const sources = new Map(read('src/data/sources.json').sources.map(s => [s.url, s]));
-const ptFile = 'src/talent-map/data/what-pt.json';
-const pt = existsSync(ptFile) ? read(ptFile) : {};
+// Our translations of each organisation's description, by id: merged as o.pt, o.es, o.fr.
+const TR = ['pt', 'es', 'fr'];
+const tr = Object.fromEntries(TR.map(l => { const f = `src/talent-map/data/what-${l}.json`; return [l, existsSync(f) ? read(f) : {}]; }));
 
 const fold = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const slug = s => fold(s).replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 64).replace(/-$/, '');
@@ -135,7 +137,7 @@ const out = [...orgs.values()].map(o => {
   // A role named in start_company (how to start a company here) says most to a founder, then investors, then the AI map.
   if (o._kinds && !KIND_OVERRIDE[o.id]) o.kind = o._kinds.start_company || o._kinds.investors || o._kinds.ai_map;
   delete o._kinds;
-  if (pt[o.id]) o.pt = pt[o.id];
+  for (const l of TR) if (tr[l][o.id]) o[l] = tr[l][o.id];
   return o;
 }).sort((a, b) => fold(a.name).localeCompare(fold(b.name)));
 
@@ -149,8 +151,12 @@ const doc = {
   organisations: out,
 };
 writeFileSync('src/talent-map/data/organisations.json', JSON.stringify(doc, null, 1) + '\n');
-const missingPt = out.filter(o => !o.pt).map(o => o.id);
-console.log(`organisations: ${out.length}; contacts attached: ${dropped.contacts_attached}; dropped without source: ${dropped.no_source.length}; persons skipped: ${dropped.person.length}; without pt: ${missingPt.length}`);
+const without = Object.fromEntries(TR.map(l => [l, out.filter(o => !o[l]).map(o => o.id)]));
+console.log(`organisations: ${out.length}; contacts attached: ${dropped.contacts_attached}; dropped without source: ${dropped.no_source.length}; persons skipped: ${dropped.person.length}; ${TR.map(l => `without ${l}: ${without[l].length}`).join('; ')}`);
+const stale = TR.flatMap(l => Object.keys(tr[l]).filter(id => !out.some(o => o.id === id)).map(id => `${l}:${id}`));
+if (stale.length) console.log(`translations for ids no longer compiled (kept in the what-*.json files, not used): ${stale.join(', ')}`);
 console.log('by kind', doc.counts.by_kind);
 console.log('by town', doc.counts.by_town);
-if (process.env.LIST_MISSING_PT) console.log(JSON.stringify(Object.fromEntries(out.filter(o => !o.pt).map(o => [o.id, o.what])), null, 1));
+// LIST_MISSING=es (or pt, fr) prints the English text of every organisation without that translation, to translate next.
+const listMissing = process.env.LIST_MISSING || (process.env.LIST_MISSING_PT ? 'pt' : '');
+if (TR.includes(listMissing)) console.log(JSON.stringify(Object.fromEntries(out.filter(o => !o[listMissing]).map(o => [o.id, o.what])), null, 1));
