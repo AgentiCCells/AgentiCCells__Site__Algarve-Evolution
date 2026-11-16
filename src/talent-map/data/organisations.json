@@ -2,7 +2,7 @@
  "about": "Organisations in the Algarve that a founder, a company or a student can turn to, compiled from PrompTugal.news public research. Organisations only: no private person is listed. Each entry keeps its source and the date it was read. Text CC BY 4.0 (PrompTugal.news); compiled by sites-dev@AgentiCCells.dinis with scripts/pages/_talent-map-data.mjs.",
  "from": {
   "repo": "https://github.com/PrompTugal/PrompTugal__News__Website",
-  "commit": "97faefc5cfa453564d7a43d5c204c777eaf92e43",
+  "commit": "2d658174",
   "files": [
    "data/by-place/faro.json",
    "data/by-place/albufeira.json",
@@ -37,52 +37,52 @@
   "funding"
  ],
  "counts": {
-  "total": 185,
+  "total": 196,
   "by_kind": {
-   "support": 21,
+   "support": 23,
    "education": 28,
-   "public": 35,
+   "public": 38,
+   "company": 44,
    "incubation": 27,
-   "company": 41,
-   "funding": 21,
-   "community": 12
+   "funding": 22,
+   "community": 14
   },
   "by_town": {
-   "alcoutim": 19,
+   "alcoutim": 21,
    "loule": 24,
-   "algarve": 18,
+   "algarve": 20,
    "faro": 29,
    "olhao": 8,
    "albufeira": 3,
    "vila-real-de-santo-antonio": 4,
    "portimao": 24,
    "castro-marim": 6,
-   "lagos": 9,
+   "lagos": 10,
+   "monchique": 5,
    "silves": 1,
-   "tavira": 4,
+   "tavira": 6,
    "vila-do-bispo": 14,
    "aljezur": 6,
-   "sao-bras-de-alportel": 8,
-   "monchique": 3,
+   "sao-bras-de-alportel": 10,
    "lagoa": 5
   },
   "by_presence": {
-   "alcoutim": 19,
+   "alcoutim": 21,
    "loule": 24,
-   "algarve": 32,
+   "algarve": 34,
    "faro": 29,
-   "sao-bras-de-alportel": 9,
-   "lagos": 12,
+   "sao-bras-de-alportel": 11,
+   "vila-real-de-santo-antonio": 6,
+   "lagos": 13,
    "portimao": 26,
    "olhao": 8,
    "albufeira": 3,
-   "vila-real-de-santo-antonio": 5,
    "castro-marim": 7,
+   "monchique": 5,
    "silves": 1,
-   "tavira": 4,
+   "tavira": 6,
    "vila-do-bispo": 14,
    "aljezur": 6,
-   "monchique": 3,
    "lagoa": 5
   }
  },
@@ -168,6 +168,22 @@
    "pt": "Projeto transfronteiriço de economia social e inovação agroalimentar, coordenado pela Diputación de Córdoba, que prevê laboratórios vivos de IA, IoT e rega inteligente."
   },
   {
+   "id": "ai-aumentar-lda",
+   "name": "AI Aumentar, Lda.",
+   "kind": "company",
+   "town": "algarve",
+   "towns": [
+    "algarve"
+   ],
+   "what": "Listed as a member of Algarve Evolution. The member page gives no description, town or product: the name suggests an AI focus and we have not confirmed it. Needs its own source.",
+   "url": "https://www.algarveevolution.pt/model/members/ai-aumentar-lda-3274",
+   "source_url": "https://www.algarveevolution.pt/model/members/ai-aumentar-lda-3274",
+   "read_on": "2026-11-16",
+   "ai": "Its name points to AI, which is unconfirmed.",
+   "from": "PrompTugal.news research",
+   "pt": "Listada como membro da Algarve Evolution. A página de membros não indica descrição, concelho nem produto: o nome sugere uma área de IA, que não confirmámos. Precisa de fonte própria."
+  },
+  {
    "id": "alcoutim-business-park-parque-empresarial-de-alcoutim",
    "name": "Alcoutim Business Park (Parque Empresarial de Alcoutim)",
    "kind": "incubation",
@@ -197,6 +213,24 @@
    "ai": "It builds and runs an AI tool for site selection.",
    "from": "PrompTugal.news research",
    "pt": "Empresa de resíduos fundada em 1995, com sede em Almancil, que serve todo o Algarve. Com a startup NILG.AI criou uma ferramenta de IA que escolhe locais para ecopontos, testada em Lagoa."
+  },
+  {
+   "id": "algarve-2030-feder-in-the-council-s-digitisation-project",
+   "name": "Algarve 2030 (FEDER) in the council's digitisation project",
+   "kind": "funding",
+   "town": "alcoutim",
+   "towns": [
+    "alcoutim"
+   ],
+   "what": "EU regional funding for digital infrastructure, online services and cybersecurity at the council.",
+   "url": "https://oalgarve.pt/alcoutim-investe-456-mil-euros-na-modernizacao-digital-dos-servicos-municipais/",
+   "source_url": "https://oalgarve.pt/alcoutim-investe-456-mil-euros-na-modernizacao-digital-dos-servicos-municipais/",
+   "read_on": "2026-11-16",
+   "ai": "Groundwork for AI in services, not AI itself.",
+   "amount": "273,709.04 euros of 456,181.74 euros eligible",
+   "date": "2026-08-27",
+   "from": "PrompTugal.news research",
+   "pt": "Fundos regionais europeus para infraestrutura digital, serviços online e cibersegurança na câmara."
   },
   {
    "id": "algarve-2030-and-algarve-empreende-2026",
@@ -273,6 +307,7 @@
    "towns": [
     "alcoutim",
     "sao-bras-de-alportel",
+    "vila-real-de-santo-antonio",
     "algarve"
    ],
    "what": "A PRR project of six municipalities to build an urban management platform with sensors and a LoRaWAN network, including monitoring of isolated elderly residents. Alcoutim's assigned funding is 124.32 thousand euros, and the project is due to end on 30 June 2026.",
@@ -287,6 +322,12 @@
      "what": "Intermunicipal recovery-plan project with six Algarve councils to set up an urban management platform and digital tools.",
      "source_url": "https://www.barlavento.pt/sao-bras-de-alportel-aposta-na-inovacao-tecnologica-e-modernizacao-de-servicos/",
      "read_on": "2026-11-15"
+    },
+    {
+     "town": "vila-real-de-santo-antonio",
+     "what": "A PRR digital public administration project of 1.13 million euros, run through the state's technological reform agency, to put an urban management platform with sensors and a LoRaWAN network in six Algarve municipalities. Vila Real de Santo António is assigned 140.74 thousand euros, with nothing spent on the day we read the page. Planned areas include incident management, waste, water use, air quality, green spaces and monitoring isolated elderly residents. The page gives an expected end date of 30 June 2026.",
+     "source_url": "https://transparencia.gov.pt/en/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C19-i08/2024.P13557/",
+     "read_on": "2026-11-16"
     },
     {
      "town": "algarve",
@@ -523,11 +564,11 @@
    "towns": [
     "algarve"
    ],
-   "what": "Community listed as AI-related in the Algarve entrepreneurship ecosystem directory. The directory gives a LinkedIn page only, which we do not read: needs a primary public source.",
-   "url": "https://bealgarve.pt/pt/ecossistema/",
-   "source_url": "https://bealgarve.pt/pt/ecossistema/",
+   "what": "Community that appears as an 'AIA Artificial Intelligence Algarve' category on Algarve Evolution's events page and is listed as AI-related in the BEALG ecosystem directory. The events page showed no event under it when read. Needs its own public page.",
+   "url": "https://www.algarveevolution.pt/events",
+   "source_url": "https://www.algarveevolution.pt/events",
    "read_on": "2026-11-15",
-   "ai": "Its name and the directory's tag say it is an AI community.",
+   "ai": "Its name and the events category are about AI.",
    "from": "PrompTugal.news research",
    "pt": "Comunidade listada como ligada à IA no diretório do ecossistema empreendedor do Algarve. Precisa de uma fonte pública primária."
   },
@@ -780,6 +821,30 @@
     }
    ],
    "pt": "O município diz ter contratado ferramentas de IA para processos de urbanismo."
+  },
+  {
+   "id": "camara-municipal-de-monchique-general-channels",
+   "name": "Câmara Municipal de Monchique (general channels)",
+   "kind": "public",
+   "town": "monchique",
+   "towns": [
+    "monchique"
+   ],
+   "what": "The council's general telephone, email and postal address, as published on its contacts page. The page lists no separate channel for the entrepreneurship office or the incubator.",
+   "url": "https://www.cm-monchique.pt/pt/menu/25/contactos.aspx",
+   "source_url": "https://www.cm-monchique.pt/pt/menu/25/contactos.aspx",
+   "read_on": "2026-11-16",
+   "from": "PrompTugal.news research",
+   "contacts": [
+    {
+     "label": "Câmara Municipal de Monchique (general channels)",
+     "channel": "Telephone 282 910 200, email geral@cm-monchique.pt, Travessa da Portela, n.º 2, 8550-470 Monchique",
+     "url": "https://www.cm-monchique.pt/pt/menu/25/contactos.aspx",
+     "source_url": "https://www.cm-monchique.pt/pt/menu/25/contactos.aspx",
+     "read_on": "2026-11-16"
+    }
+   ],
+   "pt": "Telefone, email e morada geral da câmara, tal como publicados na sua página de contactos. A página não indica um canal próprio para o gabinete de empreendedorismo nem para a incubadora."
   },
   {
    "id": "camara-municipal-de-olhao",
@@ -1337,6 +1402,22 @@
    "pt": "Empresa do Venture Lab by AlgarveSTP que automatiza processos de negócio e apoia decisões com base em dados."
   },
   {
+   "id": "dspa-data-science-portuguese-association",
+   "name": "DSPA (Data Science Portuguese Association)",
+   "kind": "support",
+   "town": "algarve",
+   "towns": [
+    "algarve"
+   ],
+   "what": "Listed as a member of Algarve Evolution. The member page gives no description or town: the name suggests a data science focus and we have not confirmed what it does in the Algarve. Needs its own source.",
+   "url": "https://www.algarveevolution.pt/model/members/dspa-data-science-portuguese-association-3229",
+   "source_url": "https://www.algarveevolution.pt/model/members/dspa-data-science-portuguese-association-3229",
+   "read_on": "2026-11-16",
+   "ai": "Data science is the base of most AI, and its activities are unconfirmed.",
+   "from": "PrompTugal.news research",
+   "pt": "Listada como membro da Algarve Evolution. A página de membros não indica descrição nem concelho: o nome sugere ciência de dados, e não confirmámos o que faz no Algarve. Precisa de fonte própria."
+  },
+  {
    "id": "dstelecom",
    "name": "dstelecom",
    "kind": "company",
@@ -1726,6 +1807,21 @@
    "pt": "Financia dois projetos de deteção de fugas da empresa municipal de águas, incluindo os sensores acústicos com IA."
   },
   {
+   "id": "gabinete-de-empreendedorismo-council-business-desk",
+   "name": "Gabinete de Empreendedorismo (council business desk)",
+   "kind": "support",
+   "town": "monchique",
+   "towns": [
+    "monchique"
+   ],
+   "what": "Created January 2022. Prepares funding applications for businesses and public bodies, tracks funding lines, prepares feasibility studies and supports investors.",
+   "url": "https://www.cm-monchique.pt/pt/menu/260/gabinete-de-empreendedorismo.aspx",
+   "source_url": "https://www.cm-monchique.pt/pt/menu/260/gabinete-de-empreendedorismo.aspx",
+   "read_on": "2026-11-16",
+   "from": "PrompTugal.news research",
+   "pt": "Criado em janeiro de 2022. Prepara candidaturas a financiamento para empresas e entidades públicas, acompanha linhas de financiamento, prepara estudos de viabilidade e apoia investidores."
+  },
+  {
    "id": "gdg-faro",
    "name": "GDG Faro",
    "kind": "community",
@@ -1743,7 +1839,7 @@
    "also": [
     {
      "town": "algarve",
-     "what": "Developer community that organises DevFest Faro on 27 and 28 November 2026 on AI applications and agents.",
+     "what": "Developer community that organises DevFest Faro on 27 and 28 November 2026 on AI applications and agents. Its pages also list a Build with AI 2026 day on 11 April and a Gemma AI hackathon on 18 July at UALG TEC Campus, both still marked upcoming when read, so we cannot confirm they ran.",
      "source_url": "https://gdg.community.dev/events/details/google-gdg-faro-presents-devfest-2026-build-secure-amp-scale-in-the-agentic-era/",
      "read_on": "2026-11-15"
     }
@@ -1892,7 +1988,31 @@
    "read_on": "2026-11-15",
    "ai": "It hosts an AI-using startup, so it is the place where an AI company in Monchique would most likely start.",
    "from": "PrompTugal.news research",
+   "also": [
+    {
+     "town": "monchique",
+     "what": "Individual, accompanied support for local entrepreneurs, online follow-up sessions and signposting to open funding calls. Pre-registration at the Espaço Jovem next to the Monchique parish council. No AI programme is named.",
+     "source_url": "https://www.cm-monchique.pt/pt/menu/2495/incubadora-de-empresas.aspx",
+     "read_on": "2026-11-16"
+    }
+   ],
    "pt": "A incubadora municipal de empresas, que acolhe a Invisible CFO e quer atrair e apoiar empresas que se instalem em Monchique e criem emprego."
+  },
+  {
+   "id": "inovaprime",
+   "name": "InovaPrime",
+   "kind": "company",
+   "town": "sao-bras-de-alportel",
+   "towns": [
+    "sao-bras-de-alportel"
+   ],
+   "what": "Local information technology company that presented its activity at the council's sixth business ideas forum on 27 October 2026.",
+   "url": "https://www.cm-sbras.pt/pt/noticias/38178/forum-ideias-de-negocios-deu-visibilidade-ao-empreendedorismo-sao-brasense.aspx",
+   "source_url": "https://www.cm-sbras.pt/pt/noticias/38178/forum-ideias-de-negocios-deu-visibilidade-ao-empreendedorismo-sao-brasense.aspx",
+   "read_on": "2026-11-16",
+   "ai": "An IT company is a natural place for AI services to be built or resold. The council page gives no product detail and does not mention AI, so this is a lead to check.",
+   "from": "PrompTugal.news research",
+   "pt": "Empresa local de tecnologias de informação que apresentou a sua atividade no sexto fórum de ideias de negócio da câmara, a 27 de outubro de 2026."
   },
   {
    "id": "instituto-politecnico-de-beja-partner-of-the-lagoa-air-quality-w",
@@ -2204,6 +2324,22 @@
    "pt": "Novo projeto de escola em Aljezur com ensino secundário em Ciências e Tecnologias, com abertura prevista para setembro de 2026."
   },
   {
+   "id": "loft-community",
+   "name": "LOFT Community",
+   "kind": "community",
+   "town": "tavira",
+   "towns": [
+    "tavira"
+   ],
+   "what": "Community of remote workers, digital nomads and entrepreneurs across Loulé, Olhão, Faro and Tavira. Its collaborators include Algarve Evolution, Tavira Works, GDG, the Algarve Blockchain Community, GeekSessions and the 351 Startup Association. No AI event is listed on its page.",
+   "url": "https://loftcommunity.pt/",
+   "source_url": "https://loftcommunity.pt/",
+   "read_on": "2026-11-16",
+   "ai": "A tech-adjacent community whose collaborators run developer and startup events where AI is a topic. The page lists no AI-specific event.",
+   "from": "PrompTugal.news research",
+   "pt": "Comunidade de trabalhadores remotos, nómadas digitais e empreendedores em Loulé, Olhão, Faro e Tavira. Entre os colaboradores estão a Algarve Evolution, a Tavira Works, o GDG, a Algarve Blockchain Community, as GeekSessions e a 351 Startup Association. A sua página não lista eventos de IA."
+  },
+  {
    "id": "loule-and-faro-multi-technology-centre-estadio-algarve-planned",
    "name": "Loulé and Faro multi-technology centre, Estádio Algarve (planned)",
    "kind": "incubation",
@@ -2320,6 +2456,22 @@
    "ai": "Vendor of an AI agent product and of the AI-ready software the council is adopting. Not based in Castro Marim as far as we saw, listed because it supplies the town.",
    "from": "PrompTugal.news research",
    "pt": "Empresa portuguesa de software cujo sistema de urbanismo ePaper está a ser implementado em Castro Marim. Também comercializa um agente de IA que responde a perguntas de urbanismo."
+  },
+  {
+   "id": "modernizacao-e-digitalizacao-do-municipio-de-alcoutim-algarve-20",
+   "name": "Modernizacao e Digitalizacao do Municipio de Alcoutim (Algarve 2030 project)",
+   "kind": "public",
+   "town": "alcoutim",
+   "towns": [
+    "alcoutim"
+   ],
+   "what": "Council project to strengthen IT infrastructure and cybersecurity, digitise internal processes, open online services and train staff, due 30 June 2028.",
+   "url": "https://oalgarve.pt/alcoutim-investe-456-mil-euros-na-modernizacao-digital-dos-servicos-municipais/",
+   "source_url": "https://oalgarve.pt/alcoutim-investe-456-mil-euros-na-modernizacao-digital-dos-servicos-municipais/",
+   "read_on": "2026-11-16",
+   "ai": "Digital records and online services are the groundwork for any later AI in the council's services. No AI is mentioned.",
+   "from": "PrompTugal.news research",
+   "pt": "Projeto da câmara para reforçar a infraestrutura informática e a cibersegurança, digitalizar processos internos, abrir serviços online e formar trabalhadores, com conclusão prevista a 30 de junho de 2028."
   },
   {
    "id": "mti-managing-the-intelligence",
@@ -2465,11 +2617,11 @@
    "towns": [
     "vila-real-de-santo-antonio"
    ],
-   "what": "Shipyard on the Guadiana in Vila Real de Santo António. In 2021 it launched the 19 metre research vessel «Mar Profundo» for INESC TEC and CINTAL (University of Algarve), meant for testing marine robots, sensors and unmanned underwater vehicles. Visited in February 2026 as part of the council's blue economy push.",
+   "what": "Shipyard on the Guadiana in Vila Real de Santo António. In 2021 it launched the 19 metre research vessel «Mar Profundo» for INESC TEC and CINTAL (University of Algarve), meant for testing marine robots, sensors and unmanned underwater vehicles. In December 2025 it said it plans a defence unit aimed at unmanned systems, with the structure of four surface drones already delivered, and the site undecided between VRSA, Portimão and Lagos. Visited in February 2026 as part of the council's blue economy push.",
    "url": "https://www.barlavento.pt/mar-profundo-marca-a-entrada-da-nautiber-na-ciencia/",
    "source_url": "https://www.barlavento.pt/mar-profundo-marca-a-entrada-da-nautiber-na-ciencia/",
    "read_on": "2026-11-15",
-   "ai": "It builds the platform on which robotics and unmanned vehicles, a common home for AI, are tested at sea. The article mentions no AI.",
+   "ai": "It builds the hulls and structures of robots and drones, the platforms on which autonomy and AI run. The articles mention no AI.",
    "from": "PrompTugal.news research",
    "pt": "Estaleiro no Guadiana, em Vila Real de Santo António. Em 2021 lançou o navio de investigação «Mar Profundo», de 19 metros, para testar robôs marinhos e veículos subaquáticos."
   },
@@ -2668,6 +2820,22 @@
    "read_on": "2026-11-15",
    "from": "PrompTugal.news research",
    "pt": "Sessão no nono aniversário da StartUP Portimão, a 10 de agosto de 2026, para ligar empreendedores, empresários, mentores e potenciais investidores."
+  },
+  {
+   "id": "polo-de-inovacao-de-tavira",
+   "name": "Polo de Inovação de Tavira",
+   "kind": "public",
+   "town": "tavira",
+   "towns": [
+    "tavira"
+   ],
+   "what": "Research, innovation and technology-transfer hub on the Mediterranean Diet, health, sustainable food and climate adaptation, funded by the PRR (1.36 million euros, 3 January 2022 to 31 December 2025), with the CCDR Algarve as direct beneficiary. It includes lab equipment and a collection of about 700 fruit and grape varieties.",
+   "url": "https://transparencia.gov.pt/pt/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C05-i03/2021.PPRR-C05-i03-P-000037/",
+   "source_url": "https://transparencia.gov.pt/pt/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C05-i03/2021.PPRR-C05-i03-P-000037/",
+   "read_on": "2026-11-16",
+   "ai": "A public research hub with labs and long-running collections produces the data that agri-food and climate AI models are trained and tested on. The page mentions no AI.",
+   "from": "PrompTugal.news research",
+   "pt": "Polo de investigação, inovação e transferência de tecnologia sobre a Dieta Mediterrânica, saúde, alimentação sustentável e adaptação climática, financiado pelo PRR (1,36 milhões de euros, de 3 de janeiro de 2022 a 31 de dezembro de 2025), com a CCDR Algarve como beneficiária direta. Inclui equipamento de laboratório e uma coleção de cerca de 700 variedades de fruta e uva."
   },
   {
    "id": "portimao-cowork",
@@ -2904,6 +3072,22 @@
    "pt": "Plataforma de rastreabilidade e operações para produtores de sal artesanal, nascida na reserva do Sapal de Castro Marim, com 30 dias de experiência gratuita."
   },
   {
+   "id": "savvy-alpha",
+   "name": "Savvy Alpha",
+   "kind": "company",
+   "town": "sao-bras-de-alportel",
+   "towns": [
+    "sao-bras-de-alportel"
+   ],
+   "what": "Local business in medical equipment and technology, presented at the council's sixth business ideas forum on 27 October 2026.",
+   "url": "https://www.cm-sbras.pt/pt/noticias/38178/forum-ideias-de-negocios-deu-visibilidade-ao-empreendedorismo-sao-brasense.aspx",
+   "source_url": "https://www.cm-sbras.pt/pt/noticias/38178/forum-ideias-de-negocios-deu-visibilidade-ao-empreendedorismo-sao-brasense.aspx",
+   "read_on": "2026-11-16",
+   "ai": "Medical technology is a field where AI is common. The council page gives no product detail and does not mention AI, so this is a lead to check.",
+   "from": "PrompTugal.news research",
+   "pt": "Empresa local de equipamentos e tecnologia médica, apresentada no sexto fórum de ideias de negócio da câmara, a 27 de outubro de 2026."
+  },
+  {
    "id": "sea4us",
    "name": "Sea4Us",
    "kind": "company",
@@ -2918,6 +3102,22 @@
    "ai": "Candidate only. Drug discovery is a field where AI is widely used, but neither source we opened says Sea4Us uses AI. Path: marine biotech, then computational drug discovery, then AI. Unconfirmed, to check with the company's own pages.",
    "from": "PrompTugal.news research",
    "pt": "Empresa de biotecnologia marinha em Sagres que desenvolve medicamentos a partir de compostos marinhos. Spin-off da Nova Medical School, no Porto da Baleeira."
+  },
+  {
+   "id": "shesapiens",
+   "name": "SheSapiens",
+   "kind": "community",
+   "town": "lagos",
+   "towns": [
+    "lagos"
+   ],
+   "what": "A women's community that ran an AI productivity workshop in Lagos on 14 October 2026 and was a partner of the 2025 International Women's Day Build with AI evening in the Lagos Town Hall.",
+   "url": "https://shesapiens.com/",
+   "source_url": "https://shesapiens.com/events/ai-for-productivity-workshop/",
+   "read_on": "2026-11-16",
+   "ai": "Runs AI workshops in Lagos.",
+   "from": "PrompTugal.news research",
+   "pt": "Uma comunidade de mulheres que realizou um workshop de produtividade com IA em Lagos, a 14 de outubro de 2026, e foi parceira da noite Build with AI do Dia Internacional da Mulher de 2025, nos Paços do Concelho de Lagos."
   },
   {
    "id": "sociedade-da-agua-de-monchique-agua-monchique",
@@ -3008,10 +3208,10 @@
    "towns": [
     "portimao"
    ],
-   "what": "Listed on the incubator's site as a programme. The page read gives no details of its terms.",
+   "what": "The 7th edition of the incubator's accelerator for entrepreneurs and business projects in the Algarve: skills, stronger business models and new market opportunities. Applications closed on 28 October 2026, with a first online bootcamp on 2 and 3 November and a second in person in Portimão on 24 and 25 November 2026. No AI theme is stated.",
    "url": "https://startupportimao.pt/index.php/pt/iniciativas/programa-de-aceleracao",
-   "source_url": "https://startupportimao.pt/index.php/pt/quem-somos/incubadora",
-   "read_on": "2026-11-15",
+   "source_url": "https://startupportimao.pt/index.php/pt/iniciativas/programa-de-aceleracao",
+   "read_on": "2026-11-16",
    "from": "PrompTugal.news research",
    "pt": "Listado no site da incubadora como programa. A página não dá detalhes das condições."
   },
@@ -3075,9 +3275,9 @@
    "towns": [
     "tavira"
    ],
-   "what": "Listed by name among the tech communities in the Algarve Tech Hub network in the regional development agency's July 2025 slides.",
-   "url": "https://www.ccdr-alg.pt/site/sites/default/files/inline-files/20250730_algarvetech-hub.pdf",
-   "source_url": "https://www.ccdr-alg.pt/site/sites/default/files/inline-files/20250730_algarvetech-hub.pdf",
+   "what": "Community whose own landing page says it aims to cultivate entrepreneurship and innovation in Tavira. Listed by name in the Algarve Tech Hub network (CCDR Algarve slides, July 2025) and as a collaborator of LOFT. The page names no organisers or events.",
+   "url": "https://tavira.works/",
+   "source_url": "https://tavira.works/",
    "read_on": "2026-11-15",
    "ai": "A local tech community inside the network that also lists an Artificial Intelligence Algarve community, so AI talk reaches Tavira through it.",
    "from": "PrompTugal.news research",
