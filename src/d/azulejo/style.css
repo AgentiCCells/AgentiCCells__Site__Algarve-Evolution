@@ -313,3 +313,9 @@ html:not(.js) .mt-card:focus-within .mt-in,.js .mt-card:focus-visible .mt-in,.js
   .srclist{font-size:13.5px;padding-left:1.4em}
   .mt-name{font-size:14px}
 }
+@media (max-width:899px){
+  .mt{aspect-ratio:5/6}
+  .mt-back{padding:8px 6px 6px}
+  .mt-back p{font-size:12px;line-height:1.25}
+  .az .mt-back p.mt-src{font-size:10px}
+}
