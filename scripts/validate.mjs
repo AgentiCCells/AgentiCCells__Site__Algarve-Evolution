@@ -75,6 +75,20 @@ const V2_PAGES = ['/', '/inc-acc/', '/challenge-connect/', '/vibathon/', '/talen
 const need = process.env.V2_PAGES_REQUIRED === '0' ? [] : V2_PAGES;
 for (const p of need) if (!existsSync(join(out, p, 'index.html'))) fail(`V2 page ${p} is missing`);
 if (!existsSync(join(out, 'v1', 'index.html'))) fail('the parked V1 (/v1/) is missing');
+// V3: António's four designs, real data only. Each page exists, is not indexed, has a picker thumbnail, and never
+// shows the raw title of an event that names a person (real.json gives name_safe for those).
+const V3_PAGES = { brief: '/v3/', mission: '/v3/mission/', atlas: '/v3/atlas/', future: '/v3/future/' };
+const realFeed = existsSync('src/feeds/real.json') ? JSON.parse(readFileSync('src/feeds/real.json', 'utf8')) : null;
+const namedEvents = (realFeed?.events || []).filter(e => e.names_person && e.name_safe).map(e => e.name);
+for (const [slug, p] of Object.entries(process.env.V3_PAGES_REQUIRED === '0' ? {} : V3_PAGES)) {
+  const f = join(out, p, 'index.html');
+  if (!existsSync(f)) { fail(`V3 page ${p} is missing`); continue; }
+  const s = readFileSync(f, 'utf8');
+  if (!/name="robots" content="noindex/.test(s)) fail(`${f}: V3 pages must carry noindex`);
+  for (const n of namedEvents) if (s.includes(n)) fail(`${f}: shows "${n}", which names a person; use name_safe`);
+  if (!existsSync(join(out, 'v3', 'thumbs', `${slug}.jpg`))) fail(`V3 design ${slug} has no picker thumbnail`);
+}
+if (realFeed) { try { const { execFileSync } = await import('node:child_process'); execFileSync('node', ['scripts/v3/build-real-feed.mjs', '--check'], { stdio: 'pipe' }); } catch (e) { fail(`real feed: ${String(e.stdout || e.stderr || e.message).trim().split('\n').slice(-5).join(' | ')}`); } }
 for (const f of files.filter(f => f.endsWith('.html'))) { const m = readFileSync(f, 'utf8').match(/<html lang="([a-z]{2})/); const rel0 = f.slice(out.length + 1); if (!rel0.startsWith('v1/')) { if (m && m[1] !== 'en') fail(`${f}: V2 is English, found <html lang="${m[1]}">`); continue; } const rel = rel0.replace(/^v1\//, ''); const want = rel.match(/^(pt|es|fr)\//)?.[1] || 'en'; if (m && m[1] !== want && !rel.startsWith('spreadsheet-to-app/example/')) fail(`${f}: <html lang="${m[1]}"> but the page is under /v1/${want === 'en' ? '' : want + '/'}`); }
 // The Odoo feeds follow docs/v2/CONTRACT.md and nothing private leaks into the public one.
 try { const { execFileSync } = await import('node:child_process'); execFileSync('node', ['scripts/odoo/check-feeds.mjs'], { stdio: 'pipe' }); } catch (e) { fail(`feeds: ${String(e.stdout || e.message).trim().split('\n').slice(-5).join(' | ')}`); }
