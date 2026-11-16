@@ -1,6 +1,6 @@
 /* Spreadsheet to App: the programme page. Algarve Evolution's coast palette; system fonts only.
    Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0. */
-:root{--sand:#fbf6ee;--sand-2:#f3eadb;--ink:#1d2327;--ink-2:#4a545b;--line:#e4d8c4;--sea:#0b3954;--sea-deep:#082a40;--sea-2:#1f7a8c;--ochre:#c4622d;--ochre-ink:#9c4718;--sun:#f2a65a;--card:#fff;
+:root{--sand:#fbf6ee;--sand-2:#f3eadb;--ink:#1d2327;--ink-2:#4a545b;--line:#e4d8c4;--sea:#0b3954;--sea-deep:#082a40;--sea-2:#196878;--ochre:#c4622d;--ochre-ink:#9c4718;--sun:#f2a65a;--card:#fff;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --wrap:78rem;color-scheme:light dark}
 @media (prefers-color-scheme:dark){:root{--sand:#10171c;--sand-2:#162129;--ink:#eef1f2;--ink-2:#b3bec4;--line:#2a3a44;--sea:#8fd3df;--sea-deep:#06141d;--sea-2:#5fb8c8;--ochre:#f08a55;--ochre-ink:#f6a77d;--card:#17232b}}
@@ -136,7 +136,7 @@ body.s2p{margin:0;background:var(--sand);color:var(--ink);font:17px/1.6 var(--sa
 .s2p-wintitle{margin:0;font:600 20px/1.2 var(--serif);color:var(--sea);outline:0}
 .s2p-winmeta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-left:auto;font-size:13px;color:var(--ink-2)}
 .s2p-winmeta>span:first-child{font-family:var(--mono);font-size:12.5px}
-.s2p-kept{display:inline-flex;align-items:center;gap:4px;color:#1f7a4c;font-weight:700}
+.s2p-kept{display:inline-flex;align-items:center;gap:4px;color:#1a6a41;font-weight:700}
 @media (prefers-color-scheme:dark){.s2p-kept{color:#7fd6a0}}
 .s2p-kept svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2}
 .s2p-restored{margin:0;padding:8px 18px;background:color-mix(in srgb,var(--sun) 20%,var(--sand));font-size:14px;font-weight:600}
@@ -240,3 +240,5 @@ body.s2p{margin:0;background:var(--sand);color:var(--ink);font:17px/1.6 var(--sa
 .s2p-foot{padding:36px 0 56px;border-top:1px solid var(--line);font-size:15px;color:var(--ink-2)}
 .s2p-foot p{margin:.4rem 0}
 @media (prefers-reduced-motion:reduce){.s2p-pick{transition:none}.s2p-pick:hover{transform:none}}
+/* Contrast (sites-design@, 2026-11-16): white on the dark-mode ochre was 2.5:1. */
+@media (prefers-color-scheme:dark){.s2p-wk{color:#10171c}}

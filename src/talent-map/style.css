@@ -2,7 +2,7 @@
    System fonts only; light and dark; works from 320 px. */
 :root {
   --bg: #fbf6ee; --bg2: #f3eadb; --card: #fff; --ink: #1d2327; --ink2: #4a545b; --ink3: #5f6a72; --line: #e4d8c4; --line2: #d6c7ad;
-  --sea: #0b3954; --sea2: #1f7a8c; --sea-ink: #135e6b; --ochre: #c4622d; --ochre-ink: #9c4718; --sun: #f2a65a;
+  --sea: #0b3954; --sea2: #196878; --sea-ink: #135e6b; --ochre: #c4622d; --ochre-ink: #9c4718; --sun: #f2a65a;
   --hero: #0b3954; --hero2: #0f4a6b; --hero-ink: #f7f2e8; --hero-ink2: #c9d9e2;
   --map-sea: #dcebf0; --map-wave: #c3dce5; --map-land: #fbf3e4; --map-land-line: #d9c4a0; --map-es: #efe9df; --map-es-line: #d8d0c2;
   --bub: #b4531e; --bub-on: #0b3954; --bub-ink: #fff;
@@ -374,3 +374,5 @@ html.no-js .tm-explore-grid { grid-template-columns: minmax(0, 1fr); max-width: 
 .tm-nav a { white-space: nowrap; }
 @media (max-width: 96rem) { .tm-meter .tm-meter-n { display: none; } }
 @media (min-width: 66rem) and (max-width: 80rem) { .tm-crumb, .tm-crumb-t { display: none; } }
+/* Contrast (sites-design@, 2026-11-16): `.tm a` was colouring the skip link and the prototype banner's links. */
+.tm a.tm-skip { color: var(--bg); }
