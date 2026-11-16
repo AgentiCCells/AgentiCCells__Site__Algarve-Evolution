@@ -77,8 +77,8 @@ export function render({ layout, feed, data, h, PERSONAS }) {
   <td data-th="Cell"><a href="#${esc(c.id)}"><span class="wf-tn">${pad(c.n)}</span> ${esc(c.title)}</a></td>
   <td data-th="Trigger and channel">${esc(c.trigger.what)}</td>
   <td data-th="Proposes writes to">${c.models.map(m => `<code>${esc(m)}</code>`).join(' ')}</td>
-  <td data-th="Waits for a person">${esc(c.policy.barriers.filter(b => b[0] === 'approval').map(b => b[1]).join('; '))}</td>
-  <td data-th="Time, illustrative" class="num">${esc(fmt(c.time.today))} → ${esc(fmt(c.time.cell))} <span class="wf-per">${esc(c.time.per)}</span></td>
+  <td data-th="Waits for a person"><ul class="wf-waits">${c.policy.barriers.filter(b => b[0] === 'approval').map(b => { const t = String(b[1]).trim(); return `<li>${esc(t.charAt(0).toUpperCase() + t.slice(1))}</li>`; }).join('')}</ul></td>
+  <td data-th="Time, illustrative" class="num"><span class="wf-nw">${esc(fmt(c.time.today))}</span> → <span class="wf-nw">${esc(fmt(c.time.cell))}</span> <span class="wf-per">${esc(c.time.per)}</span></td>
   <td data-th="Ladder">${esc(LADDER[c.ladder].name)}</td>
   <td data-th="Touches">${c.for.length ? c.for.map(p => esc(plabel(p))).join(', ') : 'The Algarve Evolution team'}</td>
 </tr>`;
@@ -152,7 +152,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
     <div class="hub-head-row"><div class="hub-head"><p class="kicker">At a glance</p><h2 class="hub-h2" id="sum-h">The ten cells</h2>
       <p class="hub-lede">Times are illustrative estimates for discussion, not measurements. They show where the hours go today, so the team can say which cells to try first.</p></div>
       ${h.odoo('aih.*, res.partner, event.event')}</div>
-    <div class="hub-table-wrap"><table class="hub-table wf-sum-table"><caption>The ten cells: trigger, Odoo models, what waits for a person, time today against with the cell (illustrative), ladder, and who each one touches.</caption>
+    <div class="hub-table-wrap wf-sum-wrap"><table class="hub-table wf-sum-table"><colgroup><col class="c-cell"><col class="c-trig"><col class="c-writes"><col class="c-waits"><col class="c-time"><col class="c-ladder"><col class="c-touch"></colgroup><caption>The ten cells: trigger, Odoo models, what waits for a person, time today against with the cell (illustrative), ladder, and who each one touches.</caption>
       <thead><tr><th scope="col">Cell</th><th scope="col">Trigger and channel</th><th scope="col">Proposes writes to</th><th scope="col">Waits for a person</th><th scope="col">Time, illustrative</th><th scope="col">Ladder</th><th scope="col">Touches</th></tr></thead>
       <tbody>${CELLS.map(row).join('')}</tbody></table></div>
   </div>

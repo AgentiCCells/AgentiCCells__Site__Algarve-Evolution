@@ -61,7 +61,7 @@
 .wf-sum-table .num { white-space: normal; }
 .wf-per { display: block; font-size: 12px; color: var(--ink-3); }
 .wf-sum-table tr.for-me { outline-offset: -3px; background: #fff8f6; }
-@media (min-width: 721px) { .wf-sum-table td:nth-child(4) { min-width: 15rem; } }
+
 
 /* ---------- One cell ---------- */
 .wf-cell-list { display: grid; gap: 40px; }
@@ -249,4 +249,24 @@
   .wf-tbl td { display: inline-block; width: 48%; vertical-align: top; padding-right: 2%; overflow-wrap: anywhere; }
   .wf-tbl td:last-child { display: block; width: auto; }
 }
-@media (min-width: 721px) { .wf-sum-table .num { white-space: nowrap; } .wf-sum-table td:first-child { min-width: 12rem; } .wf-sum-table td:nth-child(2) { min-width: 11rem; } }
+
+
+/* The summary table fits its panel: fixed proportional columns, model names one per line, the list of
+   approvals as a list, and a scroll fallback on narrow desktops rather than overflowing the panel. */
+.wf-sum-wrap { overflow-x: auto; }
+.wf-sum-table caption { padding: 14px 16px 10px; }
+.wf-sum-table code { display: inline-block; margin: 0 0 4px; white-space: normal; overflow-wrap: anywhere; }
+.wf-waits { margin: 0; padding-left: 1.1em; }
+.wf-waits li { margin: 0 0 .35em; }
+.wf-waits li:last-child { margin-bottom: 0; }
+.wf-per { display: block; }
+@media (min-width: 721px) {
+  .wf-sum-table { table-layout: fixed; min-width: 880px; }
+  .wf-sum-table .c-cell { width: 17%; } .wf-sum-table .c-trig { width: 16%; } .wf-sum-table .c-writes { width: 14%; }
+  .wf-sum-table .c-waits { width: 20%; } .wf-sum-table .c-time { width: 13%; } .wf-sum-table .c-ladder { width: 8%; } .wf-sum-table .c-touch { width: 12%; }
+  .wf-sum-table th, .wf-sum-table td { overflow-wrap: normal; hyphens: manual; }
+  .wf-sum-table thead th { padding: 12px 10px; }
+  .wf-sum-table td { padding: 14px 10px; }
+  .wf-sum-table .num { white-space: normal; text-align: right; }
+}
+.wf-nw { white-space: nowrap; }
