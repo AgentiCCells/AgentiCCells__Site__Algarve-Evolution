@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install and start the Algarve Innovation Hub's local Odoo 19 Community, idempotently.
+# Install and start the AE Innovation Hub's local Odoo 19 Community, idempotently.
 # Safe to run again at any time: each step checks what is already there.
 #
 #   scripts/odoo/setup-local.sh            install what is missing, seed if the hub is empty, start Odoo

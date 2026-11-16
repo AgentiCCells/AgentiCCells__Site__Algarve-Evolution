@@ -1,6 +1,6 @@
 # Running the hub's local Odoo
 
-Our own Odoo 19 Community, the source of truth for the Algarve Innovation Hub prototype. It runs in this container only, bound to 127.0.0.1. The container is ephemeral, so everything is rebuilt by one script.
+Our own Odoo 19 Community, the source of truth for the AE Innovation Hub (Algarve Evolution Innovation Hub) prototype. It runs in this container only, bound to 127.0.0.1. The container is ephemeral, so everything is rebuilt by one script.
 
 ## Start it (again)
 
@@ -18,12 +18,12 @@ The script is idempotent; each step checks what is already there:
 3. Python: a venv at `/opt/odoo19/venv` (Python 3.13) with Odoo's `requirements.txt`, except `python-ldap` (only the LDAP login module needs it) and `psycopg2`, replaced by `psycopg2-binary` 2.9.10 (the same module, without C headers).
 4. Secrets: generates the database password, the Odoo master password and the admin password into `/root/.agents/odoo/` (mode 600) and writes `odoo.conf` there. Nothing is printed.
 5. Database: role `odoo` and database `algarve_innovation_hub`.
-6. Modules: `contacts`, `event`, `website_event`, `crm`, `project`, `survey`, then our addon `odoo/addons/algarve_innovation_hub`.
+6. Modules: `contacts`, `event`, `website_event`, `crm`, `project`, `survey`, then our addon `odoo/addons/algarve_innovation_hub` (it depends on `mail`, `contacts` and `event`; `project` holds the tasks the Odoo page's "Ideas and needs" would create).
 7. Accounts (`scripts/odoo/accounts.py`): sets the admin password from its file; creates the read-only user `feed-exporter` (Internal User + Innovation Hub / Feed reader) and an API key for it, kept only in `/root/.agents/odoo/feed-api-key`.
 8. Seed (`scripts/odoo/seed.py`), when the hub is empty or with `--seed`. It updates records in place, never duplicates.
 9. Starts Odoo in the background (`/opt/odoo19/odoo.pid`, log `/opt/odoo19/odoo.log`).
 
-Other options: `--update` upgrades the addon after you edit it; `--seed` re-runs the seed; `--stop` stops Odoo.
+Other options: `--update` upgrades the addon after you edit it; `--seed` re-runs the seed; `--stop` stops Odoo. After changing the addon or the seed, run `scripts/odoo/setup-local.sh --update --seed --export`: it upgrades the addon, re-seeds, exports and checks the feeds (see `src/feeds/README.md`). A fresh container first downloads Odoo and installs its Python packages (several minutes); restarting an existing install took 25 seconds here (16 November 2026).
 
 ## Files outside the repository
 

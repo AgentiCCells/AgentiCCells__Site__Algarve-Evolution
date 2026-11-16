@@ -55,17 +55,17 @@ const SHAPE = {
   kpis: { company_id: T.str, month: (v) => T.int(v) && v >= 0 && v <= 6, revenue_eur: T.num, customers: T.int, team_size: T.int,
     funding_eur: T.num, product_stage: T.strOrNull },
   reflections: { programme_id: T.str, month: T.int, text: T.str },
-  challenges: { company_id: T.optional(T.str), org: T.optional(T.strOrNull), title: T.str, problem: T.strOrNull, requirements: T.strArr,
+  challenges: { company_id: T.optional(T.str), org: T.optional(T.strOrNull), title: T.str, town: T.strOrNull, problem: T.strOrNull, requirements: T.strArr,
     skills: T.strArr, budget_eur_min: T.num, budget_eur_max: T.num, deadline: T.dateOrNull, status: T.enum('open', 'matching', 'matched', 'closed') },
   suppliers: { kind: T.enum('company', 'individual'), name: T.str, town: T.strOrNull, capabilities: T.strArr, rate: T.optional(T.str),
     contact: T.optional(T.str), consent: T.bool },
   applications: { challenge_id: T.str, supplier_id: T.strOrNull, proposal: T.strOrNull, price_eur: T.num, days: T.int },
   matches: { challenge_id: T.str, ranked: (v) => Array.isArray(v) && v.every((x) => T.str(x.application_id) && T.num(x.score) && T.strArr(x.reasons)),
-    decision: T.enumOrNull('company', 'ae_triage'), chosen_application_id: T.optional(T.str) },
-  vibathons: { kind: T.enum('hackathon', 'workshop', 'buildathon'), name: T.str, date: T.date, venue: T.strOrNull, town: T.strOrNull,
+    decision: T.enumOrNull('company', 'ae_triage'), chosen_application_id: T.optional(T.str), suggested_application_ids: T.strArr },
+  vibathons: { kind: T.enum('hackathon', 'workshop', 'buildathon'), name: T.str, date: T.date, venue: T.strOrNull, town: T.strOrNull, event_id: T.strOrNull,
     mentor_ids: T.strArr, jury: (v) => Array.isArray(v) && v.every((j) => T.str(j.name) && T.strOrNull(j.role)), registrations: T.int,
-    participants: T.optional((v) => Array.isArray(v) && v.every((p) => T.str(p.name))), project_ids: T.strArr, next_steps: T.strArr },
-  projects: { vibathon_id: T.str, name: T.str, team: T.strArr, team_ids: T.optional(T.strArr), summary: T.strOrNull, prize: T.optional(T.str),
+    participants: T.optional((v) => Array.isArray(v) && v.every((p) => T.str(p.name) && (p.role === undefined || T.enumOrNull('builder', 'designer', 'business', 'other')(p.role)))), project_ids: T.strArr, next_steps: T.strArr },
+  projects: { vibathon_id: T.str, name: T.str, team: T.strArr, team_ids: T.optional(T.strArr), mentor_id: T.strOrNull, summary: T.strOrNull, prize: T.optional(T.str),
     scores: T.optional((v) => Array.isArray(v) && v.every((x) => T.str(x.juror) && T.str(x.criterion) && T.num(x.score))), next_step: T.strOrNull },
   talent: { kind: T.enum('community', 'informal_group', 'professional', 'consultant', 'mentor', 'investor', 'partner', 'stakeholder'),
     name: T.str, town: T.strOrNull, community_id: T.optional(T.str), tags: T.strArr, consent: T.bool, summary: T.strOrNull },
@@ -132,9 +132,12 @@ function checkFeed(feed, which) {
       if (i && x.score > r.ranked[i - 1].score) fail(`${at('matches', r)}: ranked is not in score order`);
     });
     ref('matches', r, 'chosen_application_id', 'applications');
+    refs('matches', r, 'suggested_application_ids', 'applications');
+    r.suggested_application_ids.forEach((a) => { if (appChallenge.get(a) !== r.challenge_id) fail(`${at('matches', r)}: suggested ${a} is not an application to ${r.challenge_id}`); });
+    if (r.suggested_application_ids.length > 3) fail(`${at('matches', r)}: more than 3 suggested applications`);
   });
-  feed.vibathons.forEach((r) => { refs('vibathons', r, 'mentor_ids', 'mentors'); refs('vibathons', r, 'project_ids', 'projects'); });
-  feed.projects.forEach((r) => ref('projects', r, 'vibathon_id', 'vibathons'));
+  feed.vibathons.forEach((r) => { refs('vibathons', r, 'mentor_ids', 'mentors'); refs('vibathons', r, 'project_ids', 'projects'); ref('vibathons', r, 'event_id', 'events', true); });
+  feed.projects.forEach((r) => { ref('projects', r, 'vibathon_id', 'vibathons'); ref('projects', r, 'mentor_id', 'mentors', true); });
   feed.talent.forEach((r) => ref('talent', r, 'community_id', 'communities'));
   return ids;
 }

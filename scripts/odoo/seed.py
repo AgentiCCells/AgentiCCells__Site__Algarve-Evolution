@@ -412,7 +412,7 @@ for key, cn, org, title, problem, reqs, sk, lo, hi, deadline, state in CHALLENGE
         'town': companies[cn].town if cn else 'Portimão', 'problem': problem + ' Invented for the prototype.',
         'requirements': '\n'.join(reqs), 'skill_ids': skills(*sk), 'budget_eur_min': lo, 'budget_eur_max': hi,
         'deadline': deadline, 'state': state, 'simulated': True, 'is_published': True,
-        'decision': False, 'chosen_application_id': False,
+        'decision': False, 'chosen_application_id': False, 'suggested_application_ids': [(5, 0, 0)],
     })
     count('challenges (simulated)')
     n_apps = rnd.randint(4, 8)
@@ -434,7 +434,10 @@ for key, cn, org, title, problem, reqs, sk, lo, hi, deadline, state in CHALLENGE
     if state == 'matched':  # the company chose, not always the top score
         ch.write({'decision': 'company', 'chosen_application_id': ranked[1 if len(ranked) > 1 else 0].id})
     elif state == 'closed':  # Algarve Evolution triaged and suggested a top 3; the first was chosen
-        ch.write({'decision': 'ae_triage', 'chosen_application_id': ranked[0].id})
+        ch.write({'decision': 'ae_triage', 'chosen_application_id': ranked[0].id,
+                  'suggested_application_ids': [(6, 0, ranked[:3].ids)]})
+    elif org:  # an organisation outside the programmes asked Algarve Evolution to triage; no choice yet
+        ch.write({'decision': 'ae_triage', 'suggested_application_ids': [(6, 0, ranked[:3].ids)]})
 
 # ---------------------------------------------------------------- talent people (simulated)
 people = {}
@@ -482,6 +485,7 @@ count('vibathons (simulated)', 2)
 for v in (past, upcoming):
     v.jury_ids.unlink()
     v.participant_ids.unlink()
+ROLES = ['builder', 'builder', 'designer', 'business', 'other']  # how each joins (fixed, no random draw)
 jury = [(people[16], 'Investor'), (mentors[10], 'Investor readiness mentor'), (people[11], 'Consultant'), (people[18], 'Investor')]
 for p, role in jury:
     env['aih.vibathon.jury'].create({'vibathon_id': past.id, 'partner_id': p.id, 'name': p.name, 'role': role + SIM})
@@ -490,10 +494,11 @@ for i in range(1, 25):
     env['aih.vibathon.participant'].create({
         'vibathon_id': past.id, 'partner_id': p.id if p else False,
         'name': p.name if p else f'Participant {i:02d}{SIM}', 'email': f'participant{i:02d}@{EX}',
+        'role': ROLES[i % 5],
     })
 for i in range(1, 9):
     env['aih.vibathon.participant'].create({'vibathon_id': upcoming.id, 'name': f'Registrant {i:02d}{SIM}',
-                                            'email': f'registrant{i:02d}@{EX}'})
+                                            'email': f'registrant{i:02d}@{EX}', 'role': ROLES[(i + 2) % 5]})
 PROJECTS = [
     ('Tide-safe', 'Warns swimmers of strong currents from public buoy data.', 'Build a pilot with a beach concession'),
     ('Catch Log', 'A voice app for small-boat fishers to log their catch.', 'Test with three fishers in Olhão'),
@@ -509,6 +514,8 @@ for k, (name, summary, nxt) in enumerate(PROJECTS, start=1):
         'vibathon_id': past.id, 'name': name + SIM, 'team_ids': [(6, 0, team)],
         'summary': summary + ' Invented for the prototype.', 'next_step': nxt,
         'prize': {1: 'First prize' + SIM, 2: 'Second prize' + SIM, 3: 'Third prize' + SIM}.get(k, False),
+        # the mentor who follows the project after the event (the stopped project has none)
+        'mentor_id': [mentors[3], mentors[7], mentors[12]][(k - 1) % 3].id if k != 6 else False,
         'simulated': True, 'is_published': k != 6,  # the stopped project is not published
     })
     proj.score_ids.unlink()

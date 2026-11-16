@@ -46,11 +46,14 @@ class AihVibathonParticipant(models.Model):
     partner_id = fields.Many2one('res.partner', string='Contact')
     name = fields.Char(required=True)
     email = fields.Char()
+    role = fields.Selection(
+        [('builder', 'Builder'), ('designer', 'Designer'), ('business', 'Business'), ('other', 'Other')],
+        help='How the person joins the Vibathon.')
 
 
 class AihProject(models.Model):
     _name = 'aih.project'
-    _inherit = ['aih.feed.mixin']
+    _inherit = ['aih.feed.mixin', 'mail.thread']
     _description = 'Vibathon project'
     _order = 'vibathon_id, score_total desc, id'
 
@@ -62,6 +65,9 @@ class AihProject(models.Model):
     score_ids = fields.One2many('aih.project.score', 'project_id', string='Jury scores (private)')
     score_total = fields.Float(compute='_compute_score_total', store=True, string='Average score')
     next_step = fields.Char()
+    mentor_id = fields.Many2one(
+        'res.partner', string='Mentor', domain=[('aih_is_mentor', '=', True)],
+        help='The mentor who follows the project after the event (office hours are logged in the chatter).')
 
     @api.depends('score_ids.score')
     def _compute_score_total(self):

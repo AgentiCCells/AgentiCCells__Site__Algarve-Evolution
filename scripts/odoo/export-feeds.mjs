@@ -112,12 +112,12 @@ async function buildPrivate() {
     read('aih.session', [], [...F, 'programme_id', 'company_id', 'mentor_id', 'kind', 'date', 'topic', 'notes'], 'date, id'),
     read('aih.kpi', [], [...F, 'company_id', 'month', 'revenue_eur', 'customers', 'team_size', 'funding_eur', 'product_stage'], 'company_id, month'),
     read('aih.reflection', [], [...F, 'programme_id', 'month', 'text']),
-    read('aih.challenge', [], [...F, 'name', 'company_id', 'org_name', 'problem', 'requirements', 'skill_ids', 'budget_eur_min', 'budget_eur_max', 'deadline', 'state', 'decision', 'chosen_application_id']),
+    read('aih.challenge', [], [...F, 'name', 'company_id', 'org_name', 'town', 'problem', 'requirements', 'skill_ids', 'budget_eur_min', 'budget_eur_max', 'deadline', 'state', 'decision', 'chosen_application_id', 'suggested_application_ids']),
     read('aih.application', [], [...F, 'challenge_id', 'supplier_id', 'proposal', 'price_eur', 'days', 'score', 'rank', 'reasons'], 'challenge_id, rank, id'),
-    read('aih.vibathon', [], [...F, 'name', 'kind', 'date', 'venue', 'town', 'mentor_ids', 'registrations', 'project_ids', 'next_steps'], 'date, id'),
+    read('aih.vibathon', [], [...F, 'name', 'kind', 'date', 'venue', 'town', 'event_id', 'mentor_ids', 'registrations', 'project_ids', 'next_steps'], 'date, id'),
     read('aih.vibathon.jury', [], ['vibathon_id', 'partner_id', 'name', 'role']),
-    read('aih.vibathon.participant', [], ['vibathon_id', 'partner_id', 'name', 'email']),
-    read('aih.project', [], [...F, 'vibathon_id', 'name', 'team_ids', 'summary', 'prize', 'next_step', 'score_total']),
+    read('aih.vibathon.participant', [], ['vibathon_id', 'partner_id', 'name', 'email', 'role']),
+    read('aih.project', [], [...F, 'vibathon_id', 'name', 'team_ids', 'mentor_id', 'summary', 'prize', 'next_step', 'score_total']),
     read('aih.project.score', [], ['project_id', 'juror', 'criterion', 'score']),
     read('aih.community', [], [...F, 'name', 'municipality', 'kind', 'members']),
     read('event.event', [['aih_feed_key', '!=', false]], ['aih_feed_key', 'aih_published', 'aih_simulated', 'aih_source_url', 'name', 'date_begin', 'date_end', 'date_tz', 'aih_place', 'aih_url'], 'date_begin, id'),
@@ -130,6 +130,10 @@ async function buildPrivate() {
   const extra = extraIds.length ? await read('res.partner', [['id', 'in', extraIds]], [...PF, 'aih_talent_kind']) : [];
   const partners = new Map([...hubPartners, ...extra].map((p) => [p.id, p]));
 
+  // Linked events are read by feed id; an event without one (not in the hub) exports as null.
+  const linked = [...new Set(vibs.map((r) => m2o(r.event_id)).filter(Boolean))];
+  const eventKey = new Map((linked.length ? await read('event.event', [['id', 'in', linked]], ['aih_feed_key']) : [])
+    .filter((e) => e.aih_feed_key).map((e) => [e.id, e.aih_feed_key]));
   const ids = {
     prog: new Map(progs.map((r) => [r.id, key(r, 'prog')])),
     comp: new Map(comps.map((r) => [r.id, key(r, 'co')])),
@@ -184,7 +188,7 @@ async function buildPrivate() {
       if (m2o(r.company_id)) o.company_id = ids.comp.get(m2o(r.company_id));
       else o.org = s(r.org_name);
       return Object.assign(o, {
-        title: r.name, problem: s(r.problem), requirements: lines(r.requirements),
+        title: r.name, town: s(r.town), problem: s(r.problem), requirements: lines(r.requirements),
         skills: r.skill_ids.map((i) => skillName.get(i)), budget_eur_min: r.budget_eur_min, budget_eur_max: r.budget_eur_max,
         deadline: s(r.deadline), status: r.state,
       });
@@ -210,25 +214,28 @@ async function buildPrivate() {
       const o = {
         ...base('aih.challenge', c, `match-${key(c, 'ch')}`, c.is_published, c.simulated, c.source_url),
         challenge_id: ids.chal.get(c.id), ranked, decision: s(c.decision),
+        suggested_application_ids: c.suggested_application_ids.map((i) => ids.app.get(i)).filter(Boolean),
       };
       if (m2o(c.chosen_application_id)) o.chosen_application_id = ids.app.get(m2o(c.chosen_application_id));
       return o;
     }).filter((m) => m.ranked.length),
     vibathons: vibs.map((r) => ({
       ...feedBase('aih.vibathon', r, 'vib'), kind: r.kind, name: r.name, date: r.date, venue: s(r.venue), town: s(r.town),
+      event_id: m2o(r.event_id) ? (eventKey.get(m2o(r.event_id)) || null) : null,
       mentor_ids: r.mentor_ids.map(ids.partner),
       jury: juries.filter((j) => m2o(j.vibathon_id) === r.id).map((j) => ({
         name: j.name, role: s(j.role), ...(m2o(j.partner_id) ? { partner_id: ids.partner(m2o(j.partner_id)) } : {}),
       })),
       registrations: r.registrations,
-      participants: parts.filter((p) => m2o(p.vibathon_id) === r.id).map((p) => ({ name: p.name, email: s(p.email) })),
+      participants: parts.filter((p) => m2o(p.vibathon_id) === r.id).map((p) => ({ name: p.name, email: s(p.email), role: s(p.role) })),
       project_ids: r.project_ids.map((i) => ids.proj.get(i)), next_steps: lines(r.next_steps),
     })),
     projects: projs.map((r) => {
       const o = {
         ...feedBase('aih.project', r, 'prj'), vibathon_id: ids.vib.get(m2o(r.vibathon_id)), name: r.name,
         team: r.team_ids.map((i) => partners.get(i)?.name).filter(Boolean),
-        team_ids: r.team_ids.map(ids.partner), summary: s(r.summary),
+        team_ids: r.team_ids.map(ids.partner), mentor_id: m2o(r.mentor_id) ? ids.partner(m2o(r.mentor_id)) : null,
+        summary: s(r.summary),
       };
       if (r.prize) o.prize = r.prize;
       o.scores = scores.filter((x) => m2o(x.project_id) === r.id).map((x) => ({ juror: x.juror, criterion: x.criterion, score: x.score }));
@@ -298,13 +305,14 @@ function buildPublic(priv) {
   const vibathons0 = pub(priv.vibathons);
   const vibIds = new Set(vibathons0.map((r) => r.id));
   const projects = pub(priv.projects).filter((r) => vibIds.has(r.vibathon_id)).map((r) => {
-    const o = strip(r);
+    const o = { ...strip(r), mentor_id: r.mentor_id && mentorIds.has(r.mentor_id) ? r.mentor_id : null };
     const keep = r.team_ids.map((pid, i) => [pid, r.team[i]]).filter(([pid]) => personOk(pid));
     o.team = keep.map(([, name]) => name);
     delete o.team_ids; // the ids stay in the private feed only
     return o;
   });
   const projIds = new Set(projects.map((r) => r.id));
+  const pubEventIds = new Set(pub(priv.events).map((r) => r.id));
 
   return {
     hub: priv.hub, // only published activities are read
@@ -321,12 +329,14 @@ function buildPublic(priv) {
     suppliers,
     applications,
     matches: pub(priv.matches).filter((m) => chalIds.has(m.challenge_id)).map((m) => {
-      const o = { ...m, ranked: m.ranked.filter((x) => appIds.has(x.application_id)) };
+      const o = { ...m, ranked: m.ranked.filter((x) => appIds.has(x.application_id)),
+        suggested_application_ids: m.suggested_application_ids.filter((i) => appIds.has(i)) };
       if (o.chosen_application_id && !appIds.has(o.chosen_application_id)) delete o.chosen_application_id;
       return o;
     }),
     vibathons: vibathons0.map((r) => ({
       ...strip(r), mentor_ids: r.mentor_ids.filter((i) => mentorIds.has(i)),
+      event_id: r.event_id && pubEventIds.has(r.event_id) ? r.event_id : null,
       jury: r.jury.filter((j) => !j.partner_id || personOk(j.partner_id)).map(({ name, role }) => ({ name, role })),
       project_ids: r.project_ids.filter((i) => projIds.has(i)),
     })),

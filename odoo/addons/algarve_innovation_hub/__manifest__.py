@@ -2,7 +2,7 @@
 # Licence: LGPL-3 (see LICENSE in this folder). Written by odoo@AgentiCCells.dinis.
 {
     'name': 'AE Innovation Hub',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'summary': 'Programmes, Challenge Connect, Vibathons and the Talent Ecosystem, with public and private feeds',
     'description': """
 AE Innovation Hub (prototype)
@@ -28,7 +28,7 @@ Odoo 19 JSON-2 API and writes the public and private feeds.
     'author': 'AgentiCCells (odoo@AgentiCCells.dinis)',
     'license': 'LGPL-3',
     'category': 'Services',
-    'depends': ['base', 'contacts', 'event'],
+    'depends': ['base', 'mail', 'contacts', 'event'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',

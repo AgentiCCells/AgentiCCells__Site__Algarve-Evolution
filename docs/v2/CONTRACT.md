@@ -9,19 +9,19 @@ Every record carries: `id` (stable string), `odoo` ({ model, id }), `simulated` 
 ```
 {
   "meta": { "feed": "public|private", "exported": ISO, "odoo": { "url", "version", "db" }, "counts": {...} },
-  "hub": { "name": "Algarve Innovation Hub", "activities": [ { "id": "inc-acc|challenge-connect|vibathon|talent", "name", "summary" } ] },
+  "hub": { "name": "AE Innovation Hub", "activities": [ { "id": "inc-acc|challenge-connect|vibathon|talent", "name", "summary" } ] },
   "programmes": [ { id, kind: "incubation"|"acceleration", name, cohort, start, end, months: 6, status: "planned"|"running"|"finished", summary, company_ids[], mentor_ids[] } ],
   "companies":  [ { id, name, sector, town, stage, programme_id, summary, website? } ],
   "mentors":    [ { id, name, kind: "one_to_one"|"guest", expertise[], town, company_ids[] } ],
   "sessions":   [ { id, programme_id, company_id?, mentor_id, kind: "one_to_one"|"clinic"|"workshop", date, topic, notes? (private) } ],
   "kpis":       [ { company_id, month: 0..6, revenue_eur, customers, team_size, funding_eur, product_stage } ],
   "reflections":[ { programme_id, month, text } ],
-  "challenges": [ { id, company_id|org, title, problem, requirements[], skills[], budget_eur_min, budget_eur_max, deadline, status: "open"|"matching"|"matched"|"closed" } ],
+  "challenges": [ { id, company_id|org, title, town, problem, requirements[], skills[], budget_eur_min, budget_eur_max, deadline, status: "open"|"matching"|"matched"|"closed" } ],
   "suppliers":  [ { id, kind: "company"|"individual", name, town, capabilities[], rate?, contact? (private) } ],
   "applications":[ { id, challenge_id, supplier_id, proposal, price_eur, days } ],
-  "matches":    [ { challenge_id, ranked: [ { application_id, score, reasons[] } ], decision: "company"|"ae_triage"|null, chosen_application_id? } ],
-  "vibathons":  [ { id, kind: "hackathon"|"workshop"|"buildathon", name, date, venue, town, mentor_ids[], jury[ {name, role} ], registrations: n, participants? (private: [{name, email}]), project_ids[], next_steps[] } ],
-  "projects":   [ { id, vibathon_id, name, team[], summary, prize?, scores? (private), next_step } ],
+  "matches":    [ { challenge_id, ranked: [ { application_id, score, reasons[] } ], decision: "company"|"ae_triage"|null, chosen_application_id?, suggested_application_ids[] } ],
+  "vibathons":  [ { id, kind: "hackathon"|"workshop"|"buildathon", name, date, venue, town, event_id (or null), mentor_ids[], jury[ {name, role} ], registrations: n, participants? (private: [{name, email, role}]), project_ids[], next_steps[] } ],
+  "projects":   [ { id, vibathon_id, name, team[], mentor_id (or null), summary, prize?, scores? (private), next_step } ],
   "talent":     [ { id, kind: "community"|"informal_group"|"professional"|"consultant"|"mentor"|"investor"|"partner"|"stakeholder", name, town, community_id?, tags[], consent: bool, summary, source? } ],
   "communities":[ { id, name, municipality, kind, members?, source? } ],
   "events":     [ { id, name, start, end, place, url, source } ]   // real, from algarveevolution.pt public Odoo
@@ -36,3 +36,11 @@ In the public feed: people (mentors, talent of kind professional/consultant/inve
 4. The consent rule also covers talent of kind `mentor`, project team names and jurors.
 5. The private feed also carries `projects[].team_ids` and `vibathons[].jury[].partner_id`; the public feed strips them.
 6. Event `start` and `end` are local time without seconds (e.g. `2025-06-26T18:00`).
+
+## Changes after the V2 pages started (16 November 2026, made by odoo@ at sites@'s request; addon 19.0.1.2.0)
+7. The hub's name comes from Odoo (new model `aih.hub`) and is "AE Innovation Hub", as on António Guerreiro's whiteboard; the activity summaries carry his keywords.
+8. `challenges[].town`: the challenge's town (the town part of the match score uses it).
+9. `matches[].suggested_application_ids`: Algarve Evolution's triage, its suggested top 3 (`aih.challenge.suggested_application_ids`); in the public feed only applications that are themselves public.
+10. `vibathons[].event_id`: the feed id of the linked Odoo event (`event.event`), `null` when there is none or it is not public.
+11. `vibathons[].participants[].role` (private): builder, designer, business or other.
+12. `projects[].mentor_id`: the mentor who follows the project after the event; `null` in the public feed when that mentor is not public. `aih.project` now has Odoo's chatter (`mail.thread`), so a mentor's office hours can be logged with `message_post`.

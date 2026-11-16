@@ -1,6 +1,6 @@
 # The hub's feeds
 
-Odoo is the source of truth for the Algarve Innovation Hub. The site reads only these files, exported from Odoo by `scripts/odoo/export-feeds.mjs` in the shape `docs/v2/CONTRACT.md` sets.
+Odoo is the source of truth for the AE Innovation Hub. The site reads only these files, exported from Odoo by `scripts/odoo/export-feeds.mjs` in the shape `docs/v2/CONTRACT.md` sets.
 
 Today they come from our own local Odoo 19 Community (see `scripts/odoo/RUN.md`), seeded with real public organisations, communities and events (each with its source URL) and with simulated programmes, companies, mentors, KPIs, challenges, applications, vibathons, projects and people. Every simulated record says `"simulated": true` and its name ends in "(simulated)".
 
@@ -38,12 +38,32 @@ A wrong key makes `decrypt` throw.
 
 ## Re-export
 
-With the local Odoo running:
+The feeds are files in git: re-export them whenever Odoo's data, the addon or the exporter changes, then commit both files together.
 
-```
-node scripts/odoo/export-feeds.mjs
-FEED_ACCESS_KEY_FILE=/root/.agents/odoo/private-feed-key node scripts/odoo/check-feeds.mjs
-```
+1. Start (or rebuild) the local Odoo and export in one go:
+
+   ```
+   scripts/odoo/setup-local.sh --export                   # Odoo running already, data unchanged
+   scripts/odoo/setup-local.sh --update --seed --export   # after editing the addon or scripts/odoo/seed.py
+   ```
+
+   `--update` upgrades the addon (new fields and models), `--seed` re-runs the seed (records are updated in place, never duplicated), `--export` runs the two commands below.
+2. Or, with the local Odoo already running, by hand:
+
+   ```
+   node scripts/odoo/export-feeds.mjs
+   FEED_ACCESS_KEY_FILE=/root/.agents/odoo/private-feed-key node scripts/odoo/check-feeds.mjs
+   ```
+
+   The exporter prints a table of records per entity, public and private. The private feed is encrypted with the same access key each time (a new salt and IV, so the file changes even when the data does not).
+3. Build and check the site, which re-runs the feed checker:
+
+   ```
+   node scripts/build.mjs && node scripts/validate.mjs
+   ```
+
+   Every page reads `public.json` at build time, so the counts on every page move with the export.
+4. If the shape changed, update `docs/v2/CONTRACT.md` (its change list), `scripts/odoo/check-feeds.mjs` and this file in the same commit.
 
 The checker validates both feeds against the contract (shapes, ids, references, the consent rule, no private field or e-mail address in `public.json`, a source URL on every real record) and decrypts the private feed. It prints OK or the problems.
 

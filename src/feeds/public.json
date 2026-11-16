@@ -1,7 +1,7 @@
 {
  "meta": {
   "feed": "public",
-  "exported": "2026-11-16T13:11:43.843Z",
+  "exported": "2026-11-16T13:33:24.823Z",
   "odoo": {
    "url": "http://127.0.0.1:8069",
    "version": "19.0-20261116",
@@ -3875,6 +3875,7 @@
    "published": true,
    "company_id": "co-10",
    "title": "Connect the guest chatbot to three hotel booking systems (simulated)",
+   "town": "Lagoa",
    "problem": "Hotels use different property management systems; the chatbot cannot read bookings from them. Invented for the prototype.",
    "requirements": [
     "Read-only integration with three systems",
@@ -3901,6 +3902,7 @@
    "published": true,
    "company_id": "co-03",
    "title": "Sensor and satellite data pipeline for irrigation advice (simulated)",
+   "town": "Silves",
    "problem": "Field sensors and free satellite images arrive in different formats and are not combined. Invented for the prototype.",
    "requirements": [
     "Daily pipeline",
@@ -3927,6 +3929,7 @@
    "published": true,
    "company_id": "co-06",
    "title": "Brand and website refresh for the hotel energy dashboard (simulated)",
+   "town": "Albufeira",
    "problem": "The current site does not explain the product to hotel owners. Invented for the prototype.",
    "requirements": [
     "New brand guide",
@@ -3953,6 +3956,7 @@
    "published": true,
    "company_id": "co-13",
    "title": "Security and data protection review before the first clinic pilot (simulated)",
+   "town": "Tavira",
    "problem": "Health data needs a review before any patient uses the triage tool. Invented for the prototype.",
    "requirements": [
     "Threat model",
@@ -3978,6 +3982,7 @@
    "published": true,
    "org": "Restaurant association 01 (simulated)",
    "title": "Mobile app for daily fish auction price alerts (simulated)",
+   "town": "Portimão",
    "problem": "Restaurant owners want to know the morning auction prices before they plan the menu. Invented for the prototype.",
    "requirements": [
     "iOS and Android",
@@ -4689,7 +4694,8 @@
      ]
     }
    ],
-   "decision": null
+   "decision": null,
+   "suggested_application_ids": []
   },
   {
    "id": "match-ch-02",
@@ -4748,6 +4754,7 @@
     }
    ],
    "decision": "company",
+   "suggested_application_ids": [],
    "chosen_application_id": "app-02-3"
   },
   {
@@ -4798,6 +4805,11 @@
     }
    ],
    "decision": "ae_triage",
+   "suggested_application_ids": [
+    "app-03-1",
+    "app-03-3",
+    "app-03-2"
+   ],
    "chosen_application_id": "app-03-1"
   },
   {
@@ -4847,7 +4859,8 @@
      ]
     }
    ],
-   "decision": null
+   "decision": null,
+   "suggested_application_ids": []
   },
   {
    "id": "match-ch-05",
@@ -4896,7 +4909,12 @@
      ]
     }
    ],
-   "decision": null
+   "decision": "ae_triage",
+   "suggested_application_ids": [
+    "app-05-1",
+    "app-05-4",
+    "app-05-3"
+   ]
   }
  ],
  "vibathons": [
@@ -4913,6 +4931,7 @@
    "date": "2026-06-13",
    "venue": "Faro (simulated venue)",
    "town": "Faro",
+   "event_id": null,
    "mentor_ids": [
     "p-mentor-03",
     "p-mentor-07"
@@ -4958,6 +4977,7 @@
    "date": "2027-02-20",
    "venue": "Portimão (simulated venue)",
    "town": "Portimão",
+   "event_id": null,
    "mentor_ids": [
     "p-mentor-05"
    ],
@@ -4981,6 +5001,7 @@
    "team": [
     "Person 04 (simulated)"
    ],
+   "mentor_id": "p-mentor-03",
    "summary": "Warns swimmers of strong currents from public buoy data. Invented for the prototype.",
    "prize": "First prize (simulated)",
    "next_step": "Build a pilot with a beach concession"
@@ -4998,6 +5019,7 @@
    "team": [
     "Person 07 (simulated)"
    ],
+   "mentor_id": "p-mentor-07",
    "summary": "A voice app for small-boat fishers to log their catch. Invented for the prototype.",
    "prize": "Second prize (simulated)",
    "next_step": "Test with three fishers in Olhão"
@@ -5016,6 +5038,7 @@
     "Person 07 (simulated)",
     "Person 08 (simulated)"
    ],
+   "mentor_id": null,
    "summary": "Maps artificial reefs from divers' photos. Invented for the prototype.",
    "prize": "Third prize (simulated)",
    "next_step": "Find a dive school partner"
@@ -5034,6 +5057,7 @@
     "Person 10 (simulated)",
     "Person 11 (simulated)"
    ],
+   "mentor_id": "p-mentor-03",
    "summary": "An audio guide to the salt pans, generated per visitor. Invented for the prototype.",
    "next_step": "Apply to the incubation programme"
   },
@@ -5051,6 +5075,7 @@
     "Person 11 (simulated)",
     "Person 13 (simulated)"
    ],
+   "mentor_id": "p-mentor-07",
    "summary": "Books fuel and pump-out slots at marinas. Invented for the prototype.",
    "next_step": "Talk to two marinas"
   }

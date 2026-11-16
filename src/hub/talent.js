@@ -582,6 +582,13 @@ ${Q.unpublished.length ? `<p class="te-dim">Also: ${Q.unpublished.length} record
 
   // ---- events
   const root = $('#te-root');
+  // Controls that are redrawn when chosen (kinds, municipalities, matrix toggles) keep the keyboard focus.
+  root.addEventListener('click', ev => {
+    const t = ev.target.closest('[data-kind], [data-muni], [data-mx]'); if (!t) return;
+    const key = ['kind', 'muni', 'mx'].find(k => t.dataset[k] != null); const sel = `[data-${key}="${CSS.escape(t.dataset[key])}"]${t.classList.contains('tm-m') ? '.tm-m' : t.classList.contains('te-muni') ? '.te-muni' : ''}`;
+    const had = document.activeElement === t;
+    setTimeout(() => { if (had) root.querySelector(sel)?.focus(); }, 0);
+  }, true);
   root.addEventListener('click', ev => {
     const t = ev.target.closest('button, [data-muni], [data-node]'); if (!t || !root.contains(t)) return;
     if (t.dataset.kind) { const k = t.dataset.kind; f.kinds = f.kinds.includes(k) ? f.kinds.filter(x => x !== k) : [...f.kinds, k]; limit = FIRST; renderDirectory(); renderMap(); return; }
@@ -605,7 +612,7 @@ ${Q.unpublished.length ? `<p class="te-dim">Also: ${Q.unpublished.length} record
   root.addEventListener('toggle', ev => { const d = ev.target; if (d.classList?.contains('te-q')) { const id = d.id.slice(2); d.open ? openQ.add(id) : openQ.delete(id); } }, true);
   root.addEventListener('click', ev => { const a = ev.target.closest('.te-qt'); if (a) { const d = document.querySelector(a.getAttribute('href')); if (d) d.open = true; } });
   root.addEventListener('keydown', ev => {
-    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('[role="button"][data-muni], [role="button"][data-node]')) { ev.preventDefault(); ev.target.click(); }
+    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('[role="button"][data-muni], [role="button"][data-node]')) { ev.preventDefault(); ev.target.dispatchEvent(new MouseEvent('click', { bubbles: true })); }
   });
   root.addEventListener('change', ev => {
     const t = ev.target;

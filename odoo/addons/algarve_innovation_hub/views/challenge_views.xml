@@ -42,6 +42,7 @@
                         <group>
                             <field name="decision"/>
                             <field name="chosen_application_id"/>
+                            <field name="suggested_application_ids" widget="many2many_tags"/>
                             <field name="is_published"/>
                             <field name="simulated"/>
                             <field name="feed_key"/>

@@ -300,3 +300,4 @@
   .te-dl { grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr); }
   .te-swipe { display: block; }
 }
+@media (min-width: 64rem) { .te-map { position: sticky; top: 150px; } }

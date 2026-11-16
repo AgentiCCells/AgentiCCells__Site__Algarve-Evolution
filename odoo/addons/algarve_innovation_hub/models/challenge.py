@@ -36,6 +36,10 @@ class AihChallenge(models.Model):
         [('company', 'Company chooses'), ('ae_triage', 'Algarve Evolution triage')],
         help='Who decides: the company itself, or Algarve Evolution suggesting the best or a top 3.')
     chosen_application_id = fields.Many2one('aih.application', domain="[('challenge_id', '=', id)]")
+    suggested_application_ids = fields.Many2many(
+        'aih.application', 'aih_challenge_suggested_rel', 'challenge_id', 'application_id',
+        string='Suggested top 3', domain="[('challenge_id', '=', id)]",
+        help="Algarve Evolution's triage: the applications it suggests to the company, best first.")
     application_count = fields.Integer(compute='_compute_application_count')
 
     @api.depends('application_ids')
