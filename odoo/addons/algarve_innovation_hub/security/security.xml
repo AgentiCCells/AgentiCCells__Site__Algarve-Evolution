@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="privilege_innovation_hub" model="res.groups.privilege">
+        <field name="name">Innovation Hub</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- Read-only access for the feed exporter's dedicated user. -->
+    <record id="group_aih_reader" model="res.groups">
+        <field name="name">Feed reader (read only)</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="privilege_innovation_hub"/>
+    </record>
+
+    <!-- Algarve Evolution staff who keep the hub's data. -->
+    <record id="group_aih_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="privilege_innovation_hub"/>
+        <field name="implied_ids" eval="[(4, ref('group_aih_reader'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

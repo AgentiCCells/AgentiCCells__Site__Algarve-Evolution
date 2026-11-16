@@ -1,0 +1,828 @@
+{
+ "about": "Real, public organisations and communities in the Algarve, read by PrompTugal.news researchers (data/by-place/*.json in PrompTugal/PrompTugal__News__Website; code Apache-2.0, text CC BY 4.0). Extracted for the Algarve Innovation Hub Odoo seed by scripts/odoo/extract-real-seed.mjs. Every entry keeps its source URL. Names and one-line descriptions only; no people.",
+ "extracted": "2026-11-16",
+ "communities": [
+  {
+   "key": "com-cowork-aljezur",
+   "name": "Cowork Aljezur",
+   "municipality": "Aljezur",
+   "kind": "coworking",
+   "summary": "Described in an Outsite guide (June 2026) as a small, community-oriented coworking space near Praia do Amado. Other listings say Aljezur has no coworking, so its status needs checking.",
+   "url": "https://www.outsite.co/blog/where-to-go-in-algarve",
+   "source": "https://www.outsite.co/blog/where-to-go-in-algarve",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-gdg-faro",
+   "name": "GDG Faro",
+   "municipality": "Faro",
+   "kind": "developer group",
+   "summary": "Independent, community-run developer meetup in Faro. Runs DevFest 2026 and ran an AI hackathon on Gemma on 18 July 2026.",
+   "url": "https://gdg.community.dev/gdg-faro/",
+   "source": "https://gdg.community.dev/gdg-faro/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-geek-girls-faro",
+   "name": "Geek Girls Faro",
+   "municipality": "Faro",
+   "kind": "community",
+   "summary": "Faro chapter of Geek Girls Portugal, which held an event in 2019 on women in AI and tech. We found nothing newer.",
+   "url": "https://www.barlavento.pt/geek-girls-de-faro-provam-que-a-tecnologia-e-para-todas/",
+   "source": "https://www.barlavento.pt/geek-girls-de-faro-provam-que-a-tecnologia-e-para-todas/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-ai4youth-work-erasmus-project-with-contextos-and",
+   "name": "AI4Youth Work (Erasmus+ project, with Contextos and Algarve STP)",
+   "municipality": "Faro",
+   "kind": "project",
+   "summary": "An Erasmus+ project to help youth workers use AI tools, with partners in Portugal, Greece, Italy and Romania. Its Algarve session was held at UALG TEC Campus in Faro on 2 April 2025.",
+   "url": "https://www.barlavento.pt/ualg-tec-campus-acolhe-apresentacao-de-projeto-sobre-inteligencia-artificial-para-jovens/",
+   "source": "https://www.barlavento.pt/ualg-tec-campus-acolhe-apresentacao-de-projeto-sobre-inteligencia-artificial-para-jovens/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "com-gdg-lagos-google-developer-group",
+   "name": "GDG Lagos (Google Developer Group)",
+   "municipality": "Lagos",
+   "kind": "developer group",
+   "summary": "Runs AI talks and workshops at The Collab Bar and the Town Hall, including Build with AI, an agents talk and DevFest Lagos.",
+   "url": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-build-with-ai-intro-to-ai-agent-skills/",
+   "source": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-ai-agents-the-architects-of-automation/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-lagos-remoters",
+   "name": "Lagos Remoters",
+   "municipality": "Lagos",
+   "kind": "informal group",
+   "summary": "A community of Lagos remote workers, listed as a partner and media partner of the International Women's Day Build with AI event.",
+   "url": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-international-womens-day-build-with-ai",
+   "source": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-international-womens-day-build-with-ai",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-lagos-digital-nomads",
+   "name": "Lagos Digital Nomads",
+   "municipality": "Lagos",
+   "kind": "informal group",
+   "summary": "Started by a local entrepreneur in 2020 or 2021 during the pandemic, it links the town's digital nomads with local businesses through a website, networking events and workshops. Media partner of the Women's Day AI event.",
+   "url": "https://www.essential-business.pt/2022/12/02/lagos-digital-nomads-building-a-bridge-between-local-businesses-and-remote-workers/",
+   "source": "https://www.essential-business.pt/2022/12/02/lagos-digital-nomads-building-a-bridge-between-local-businesses-and-remote-workers/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-shesapiens",
+   "name": "SheSapiens",
+   "municipality": "Lagos",
+   "kind": "community",
+   "summary": "A women's community that ran an AI productivity workshop in Lagos on 14 October 2026 and was a partner of the 2025 International Women's Day Build with AI evening in the Lagos Town Hall.",
+   "url": "https://shesapiens.com/",
+   "source": "https://shesapiens.com/events/ai-for-productivity-workshop/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "com-algarve-ai-agents",
+   "name": "Algarve AI Agents",
+   "municipality": "Loulé",
+   "kind": "community",
+   "summary": "An AI community that BeAlgarve's ecosystem directory lists for Faro and Loulé. We found no page of its own, so its activity is unverified.",
+   "url": "https://bealgarve.pt/pt/ecossistema/",
+   "source": "https://bealgarve.pt/pt/ecossistema/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-portimao-cowork-space",
+   "name": "Portimão Cowork Space",
+   "municipality": "Portimão",
+   "kind": "coworking",
+   "summary": "Council coworking space whose entrepreneurs were expected at the June 2026 Future Business Summit AI panel.",
+   "url": "https://cm-portimao.pt/portimao-cowork",
+   "source": "https://www.barlavento.pt/empreendedores-future-business-summit-portimao/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-tavira-works",
+   "name": "Tavira Works",
+   "municipality": "Tavira",
+   "kind": "community",
+   "summary": "Community whose own landing page says it aims to cultivate entrepreneurship and innovation in Tavira. Listed by name in the Algarve Tech Hub network (CCDR Algarve slides, July 2025) and as a collaborator of LOFT. The page names no organisers or events.",
+   "url": "https://tavira.works/",
+   "source": "https://tavira.works/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-loft-community",
+   "name": "LOFT Community",
+   "municipality": "Tavira",
+   "kind": "informal group",
+   "summary": "Community of remote workers, digital nomads and entrepreneurs across Loulé, Olhão, Faro and Tavira. Its collaborators include Algarve Evolution, Tavira Works, GDG, the Algarve Blockchain Community, GeekSessions and the 351 Startup Association. No AI event is listed on its page.",
+   "url": "https://loftcommunity.pt/",
+   "source": "https://loftcommunity.pt/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "com-algarve-digital-innovators",
+   "name": "Algarve Digital Innovators",
+   "municipality": "Algarve (region)",
+   "kind": "network",
+   "summary": "Network of digital communities across the Algarve, supported by Algarve Evolution. Reported to include GDG Faro, Flutter Faro and Algarve AI Agents (our own newsroom's reading, to be re-checked at source).",
+   "url": "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+   "source": "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "com-artificial-intelligence-algarve",
+   "name": "Artificial Intelligence Algarve",
+   "municipality": "Algarve (region)",
+   "kind": "community",
+   "summary": "Community that appears as an 'AIA Artificial Intelligence Algarve' category on Algarve Evolution's events page and is listed as AI-related in the BEALG ecosystem directory. The events page showed no event under it when read. Needs its own public page.",
+   "url": "https://www.algarveevolution.pt/events",
+   "source": "https://www.algarveevolution.pt/events",
+   "read_on": "2026-11-15"
+  }
+ ],
+ "organisations": [
+  {
+   "key": "org-municipio-de-albufeira",
+   "name": "Município de Albufeira",
+   "type": "public body",
+   "town": "Albufeira",
+   "summary": "The council says it uses an AI-based urban management platform, and it runs a smart city portal for occurrence management.",
+   "url": "https://www.cm-albufeira.pt",
+   "source": "https://www.barlavento.pt/?p=402125",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ccdesert-centro-de-competencias-na-luta-contra-a",
+   "name": "CCDesert, Centro de Competencias na Luta contra a Desertificacao",
+   "type": "institution",
+   "town": "Alcoutim",
+   "summary": "A national competence centre hosted by Alcoutim since 2018, joining the Government and more than 30 institutions in research, training and knowledge transfer on desertification, and publishing results digitally. It is also named as a partner of the Robotics4Farmers consortium.",
+   "url": "https://www.iniav.pt/images/Investigacao_Inovacao/Centros-Competencias/CCDesert/poster.pdf",
+   "source": "https://robotics4farmers.tecnico.ulisboa.pt/~robotics4farmers.daemon/about/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-celeiro-de-ideias-former-epac-granary-business-c",
+   "name": "Celeiro de Ideias (former EPAC granary business centre)",
+   "type": "public body",
+   "town": "Alcoutim",
+   "summary": "Municipal project to rehabilitate the old granary beside the EN 122.1 as an entrepreneurship and coworking centre, completion planned for 30 September 2028.",
+   "url": "https://www.barlavento.pt/alcoutim-vai-transformar-antigo-celeiro-da-epac-em-centro-empresarial/",
+   "source": "https://www.barlavento.pt/alcoutim-vai-transformar-antigo-celeiro-da-epac-em-centro-empresarial/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-associacao-odiana",
+   "name": "Associacao Odiana",
+   "type": "organisation",
+   "town": "Alcoutim",
+   "summary": "Local development association named by the Galp Foundation as social partner in Alcoutim, helping run Vilas em Movimento including its senior-isolation activities. Portuguese partner for the Lower Guadiana in the Agrosocial Plus project.",
+   "url": "https://www.fundacaogalp.com/en/the-energy-of-communities/portugal/alcoutim",
+   "source": "https://www.barlavento.pt/odiana-lancamento-projeto-inovacao-agrosocial-plus/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-municipio-de-aljezur",
+   "name": "Municipio de Aljezur",
+   "type": "public body",
+   "town": "Aljezur",
+   "summary": "The council runs an online services portal, an interactive municipal map, a GEO Portal and a tourist app. We found no AI use.",
+   "url": "https://www.cm-aljezur.pt",
+   "source": "https://www.cm-aljezur.pt",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-junta-de-freguesia-de-aljezur",
+   "name": "Junta de Freguesia de Aljezur",
+   "type": "public body",
+   "town": "Aljezur",
+   "summary": "The parish council that launched the Gota Aljezur teleassistance pilot with Tecnologias Imaginadas.",
+   "url": null,
+   "source": "https://www.barlavento.pt/?p=266797",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-liceu-azul",
+   "name": "Liceu Azul",
+   "type": "institution",
+   "town": "Aljezur",
+   "summary": "New school project in Aljezur with secondary education in Sciences and Technologies, due to open in September 2026, with a research centre on innovative teaching.",
+   "url": null,
+   "source": "https://www.barlavento.pt/?p=395797",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-camara-municipal-de-castro-marim",
+   "name": "Câmara Municipal de Castro Marim",
+   "type": "public body",
+   "town": "Castro Marim",
+   "summary": "The council is introducing a digital planning document system and, per the vendor, plans an online planning service with AI. Its own urbanismo page lists a GeoPortal and online services and does not mention AI.",
+   "url": "http://cm-castromarim.pt/site/",
+   "source": "https://epaper.mind.pt/noticias/209-castro-marim-reforca-a-aposta-na-transformacao-digital-do-urbanismo-com-o-epaper",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-eurocidade-do-guadiana-ayamonte-vila-real-de-san",
+   "name": "Eurocidade do Guadiana (Ayamonte, Vila Real de Santo António, Castro Marim)",
+   "type": "organisation",
+   "town": "Castro Marim",
+   "summary": "Cross-border grouping of three councils that presented a pilot AI avatar video for tourism in January 2024, led by Ayamonte. Castro Marim's council president took part.",
+   "url": "https://ayamonte.es/en/ayamonte-presenta-en-fitur-su-nueva-herramienta-creada-con-ia/",
+   "source": "https://ayamonte.es/en/ayamonte-presenta-en-fitur-su-nueva-herramienta-creada-con-ia/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-universidade-do-algarve-ualg",
+   "name": "Universidade do Algarve (UAlg)",
+   "type": "institution",
+   "town": "Faro",
+   "summary": "The Algarve's public university, with its main contact address in Faro. Published an AI use policy on 24 September 2026.",
+   "url": "https://www.ualg.pt",
+   "source": "https://www.ualg.pt/ualg-define-regras-e-principios-para-utilizacao-da-inteligencia-artificial",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-icarehb-ualg-research-centre",
+   "name": "ICArEHB (UAlg research centre)",
+   "type": "institution",
+   "town": "Faro",
+   "summary": "UAlg archaeology research centre behind UAlgTec Heritage, funded with 31.5 million euros to use AI in heritage protection.",
+   "url": "https://www.barlavento.pt/?p=397911",
+   "source": "https://www.barlavento.pt/?p=397911",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ualg-tec-campus",
+   "name": "UALG TEC Campus",
+   "type": "institution",
+   "town": "Faro",
+   "summary": "The University of Algarve's technology incubator and accelerator on its Penha campus in Faro, opened in March 2022 with about 16 companies and 300 workers, mostly in information technology. It has since hosted the July 2026 AI search panel, the 30 September 2026 founders' book launch and Vibathon Algarve 2026 on 31 October.",
+   "url": "https://www.barlavento.pt/ualg-tec-campus-traz-desafios-e-beneficios-para-o-algarve-e-o-pais/",
+   "source": "https://www.barlavento.pt/ualg-tec-campus-traz-desafios-e-beneficios-para-o-algarve-e-o-pais/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-algarve-stp",
+   "name": "Algarve STP",
+   "type": "organisation",
+   "town": "Faro",
+   "summary": "Science and technology park association that ran the first Venture Lab (12 firms, AI among the sectors) and co-hosted the July 2026 AI panel at UALG TEC Campus.",
+   "url": "https://www.barlavento.pt/?p=404460",
+   "source": "https://www.barlavento.pt/?p=404460",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-uls-algarve",
+   "name": "ULS Algarve",
+   "type": "public body",
+   "town": "Faro",
+   "summary": "The Algarve's local health unit, which held a webinar on AI in the national health service on 15 September 2026.",
+   "url": "https://www.barlavento.pt/webseminario-uls-algarve-inteligencia-artificial-sns/",
+   "source": "https://www.barlavento.pt/webseminario-uls-algarve-inteligencia-artificial-sns/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-camara-municipal-de-faro",
+   "name": "Câmara Municipal de Faro",
+   "type": "public body",
+   "town": "Faro",
+   "summary": "The council lists a month-long AI-themed library event and an AI exhibition in November 2026. It also updates its urban-planning submission platform, with no AI use stated.",
+   "url": "https://www.cm-faro.pt",
+   "source": "https://www.cm-faro.pt/pt/agenda/91716/mentes-artificiais-ola-futuro.aspx",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-caritas-diocesana-do-algarve",
+   "name": "Cáritas Diocesana do Algarve",
+   "type": "organisation",
+   "town": "Faro",
+   "summary": "Held an AI and human dignity conference at Faro's Seminário de São José on 29 October 2026.",
+   "url": "https://www.barlavento.pt/caritas-inteligencia-artificial-dignidade-humana-justica-social-faro/",
+   "source": "https://www.barlavento.pt/caritas-inteligencia-artificial-dignidade-humana-justica-social-faro/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ceot-centro-de-eletronica-optoelectronica-e-tele",
+   "name": "CEOT (Centro de Eletrónica, Optoelectrónica e Telecomunicações, UAlg)",
+   "type": "institution",
+   "town": "Faro",
+   "summary": "UAlg research centre that co-organised a 2024 workshop on deep learning for NIR chemometrics, AI applied to food control.",
+   "url": "https://fct.ualg.pt/workshop-inteligencia-artificial-aplicada-ao-controlo-alimentar",
+   "source": "https://fct.ualg.pt/workshop-inteligencia-artificial-aplicada-ao-controlo-alimentar",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-cria-ualg-entrepreneurship-and-technology-transf",
+   "name": "CRIA (UAlg entrepreneurship and technology transfer division)",
+   "type": "institution",
+   "town": "Faro",
+   "summary": "Runs UAlg's proof-of-concept validation programme for technology projects at maturity levels 3 to 6 (June 2026 call) and the Ideias em Caixa business-idea competition, with Algarve Evolution, Algarve STP, ANJE, AMAL and NERA.",
+   "url": "https://www.barlavento.pt/ualg-programa-apoiar-empresas-ideias-inovadoras/",
+   "source": "https://www.barlavento.pt/ualg-programa-apoiar-empresas-ideias-inovadoras/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-ccdr-algarve",
+   "name": "CCDR Algarve",
+   "type": "public body",
+   "town": "Faro",
+   "summary": "The Algarve's regional development body. Started its first AI course for its own staff in October 2025, 21 hours with ISCTE and funded by Algarve 2030. The page does not state its base city.",
+   "url": "https://www.ccdr-alg.pt/site/info/ccdr-algarve-promove-acao-de-formacao-em-inteligencia-artificial-para-os-seus-trabalhadores",
+   "source": "https://www.ccdr-alg.pt/site/info/ccdr-algarve-promove-acao-de-formacao-em-inteligencia-artificial-para-os-seus-trabalhadores",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-junta-de-freguesia-de-ferragudo",
+   "name": "Junta de Freguesia de Ferragudo",
+   "type": "public body",
+   "town": "Lagoa",
+   "summary": "The parish council runs Ferrukas, an AI virtual assistant on its website, and an official app. A PRR-funded digital neighbourhood project is under way in the village.",
+   "url": "https://www.barlavento.pt/ferragudo-reforca-presenca-digital-e-lanca-aplicacao-movel/",
+   "source": "https://www.barlavento.pt/ferragudo-reforca-presenca-digital-e-lanca-aplicacao-movel/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-nobel-algarve-british-international-school",
+   "name": "Nobel Algarve British International School",
+   "type": "institution",
+   "town": "Lagoa",
+   "summary": "A school in Lagoa that was the venue and a partner of the Lagoa Teens AI Design Sprint, a two-day AI hackathon for students aged 12 to 18, on 21 and 22 February 2026.",
+   "url": "https://www.algarveevolution.pt/pt/event/lagoa-teens-ai-design-sprint-62/register",
+   "source": "https://www.algarveevolution.pt/pt/event/lagoa-teens-ai-design-sprint-62/register",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-camara-municipal-de-lagos",
+   "name": "Câmara Municipal de Lagos",
+   "type": "public body",
+   "town": "Lagos",
+   "summary": "Co-organised DevFest Lagos 2025 and the International Women's Day Build with AI event, which was held in its Town Hall, and co-organised the 2025 Algarve Tech Hub Summit.",
+   "url": "https://www.cm-lagos.pt/",
+   "source": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-international-womens-day-build-with-ai",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-colagos-municipal-coworking-space",
+   "name": "CoLagos, municipal coworking space",
+   "type": "organisation",
+   "town": "Lagos",
+   "summary": "Run with the Lagos Youth Association (A)Garra in the old town, 20 workstations, partner of DevFest Lagos 2025.",
+   "url": "https://www.colagos.pt/",
+   "source": "https://www.barlavento.pt/premio-cinco-estrelas-regioes-distingue-colagos-pelo-terceiro-ano-consecutivo/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-fabrica-do-empreendedor-de-lagos",
+   "name": "Fábrica do Empreendedor de Lagos",
+   "type": "organisation",
+   "town": "Lagos",
+   "summary": "Free support for entrepreneurs, companies and individuals (employment, training, starting a business), promoted by the social entrepreneurs agency SEA with the Lagos council as social investor. Its Lagos office moved to the marina area in 2021. Also a partner of DevFest Lagos 2025.",
+   "url": "https://www.fabricadoempreendedor.pt",
+   "source": "https://www.cm-lagos.pt/municipio/noticias/8907-novo-espaco-da-fabrica-do-empreendedor-inaugurado-em-lagos",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-the-collab-bar",
+   "name": "The Collab Bar",
+   "type": "organisation",
+   "town": "Lagos",
+   "summary": "Bar venue on Avenida dos Descobrimentos that hosts GDG Lagos AI talks.",
+   "url": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-build-with-ai-intro-to-ai-agent-skills/",
+   "source": "https://gdg.community.dev/events/details/google-gdg-lagos-presents-build-with-ai-intro-to-ai-agent-skills/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-camara-municipal-de-loule",
+   "name": "Câmara Municipal de Loulé",
+   "type": "public body",
+   "town": "Loulé",
+   "summary": "The municipality says it has contracted AI tools for planning cases.",
+   "url": "https://www.cm-loule.pt",
+   "source": "https://www.barlavento.pt/?p=405832",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-nera-associacao-empresarial-da-regiao-do-algarve",
+   "name": "NERA, Associação Empresarial da Região do Algarve",
+   "type": "organisation",
+   "town": "Loulé",
+   "summary": "Regional business association headquartered in Loulé. It leads the Inova Algarve 3.0 consortium and runs AI tool training sessions and courses in November 2026.",
+   "url": "https://nera.pt",
+   "source": "https://nera.pt",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-loule-design-lab-loule-criativo",
+   "name": "Loulé Design Lab (Loulé Criativo)",
+   "type": "institution",
+   "town": "Loulé",
+   "summary": "Municipal creative and technology incubator and coworking space, as BeAlgarve lists it. No AI programme found yet.",
+   "url": "https://bealgarve.pt/pt/ecossistema/",
+   "source": "https://bealgarve.pt/pt/ecossistema/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ninho-de-empresas-de-loule-iefp",
+   "name": "Ninho de Empresas de Loulé (IEFP)",
+   "type": "institution",
+   "town": "Loulé",
+   "summary": "Public business and technology incubator, as BeAlgarve lists it. No AI tenants found yet.",
+   "url": "https://bealgarve.pt/pt/ecossistema/",
+   "source": "https://bealgarve.pt/pt/ecossistema/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-algarve-smart-destination-digital-innovation-hub",
+   "name": "Algarve Smart Destination, Digital Innovation Hub",
+   "type": "organisation",
+   "town": "Loulé",
+   "summary": "An informal network led by the non-profit Algarve STP, in the European Commission's hub catalogue. Loulé is one of its three partner municipalities, with Faro and Olhão, alongside the University of the Algarve, ANJE, Algarve Evolution, Altis and Fraunhofer Portugal. Its focus areas include AI and deep learning for tourism and digital marketing. Found by detective.places@ and read by us on 16 November 2026.",
+   "url": "https://european-digital-innovation-hubs.ec.europa.eu/edih-catalogue/algarve-smart-destination-digital-innovation-hub",
+   "source": "https://european-digital-innovation-hubs.ec.europa.eu/edih-catalogue/algarve-smart-destination-digital-innovation-hub",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-incubadora-de-empresas-de-monchique-iem",
+   "name": "Incubadora de Empresas de Monchique (IEM)",
+   "type": "organisation",
+   "town": "Monchique",
+   "summary": "The municipal business incubator, listed by the council among its co-financed projects (Vale incubadoras e aceleradoras). It hosts Invisible CFO and says it aims to attract and support companies that settle in Monchique and create jobs.",
+   "url": "https://www.cm-monchique.pt/pt/menu/2796/ficha-de-projeto-vale-incubadoras-e-aceleradoras.aspx",
+   "source": "https://www.barlavento.pt/?p=384561",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-s2aquacolab",
+   "name": "S2AQUAcoLAB",
+   "type": "organisation",
+   "town": "Olhão",
+   "summary": "Collaborative laboratory for sustainable and smart aquaculture, founded in 2021 and based in Olhão. It lists technological developments, from robotics to AI, among its research lines, and leads DigiATLA.",
+   "url": "https://www.ipma.pt/pt/pescas/eppo/colab/",
+   "source": "https://www.barlavento.pt/s2aquacolab-quer-elevar-a-aquacultura-nacional-a-um-novo-nivel/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-digiatla",
+   "name": "DigiATLA",
+   "type": "organisation",
+   "town": "Olhão",
+   "summary": "Interreg Atlantic Area project (1 January 2026 to 30 June 2028, about EUR 2.13 million) on digital capacity and precision nutrition in aquaculture, led by S2AQUA with SPAROS, IPMA and universities in Vigo, Galway and France.",
+   "url": "https://www.atlanticarea.eu/discover-our-projects/approved-projects/digiatla",
+   "source": "https://www.atlanticarea.eu/discover-our-projects/approved-projects/digiatla",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-camara-municipal-de-olhao",
+   "name": "Câmara Municipal de Olhão",
+   "type": "public body",
+   "town": "Olhão",
+   "summary": "Council that said in 2023 it was working on AI-optimised waste routes and smart parking, and in 2026 launched the digital commerce project Olhão com Alma.",
+   "url": "https://www.barlavento.pt/?p=251038",
+   "source": "https://www.barlavento.pt/?p=251038",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-algarve-innovation-and-technology-park-pppita-pe",
+   "name": "Algarve Innovation and Technology Park (PPPITA), Pechão",
+   "type": "public body",
+   "town": "Olhão",
+   "summary": "Planned 48.58 hectare park in Pechão for technology companies, education and research, health and green space, with land for 548 public homes. A contract signed in August 2024 started its detailed plan, with 18 months for the landowner to finalise it. Whether it has progressed since is not confirmed.",
+   "url": "https://www.iasp.ws/activities/news/algarve-innovation-park-development-moves-forward",
+   "source": "https://www.iasp.ws/activities/news/algarve-innovation-park-development-moves-forward",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-camara-municipal-de-portimao",
+   "name": "Câmara Municipal de Portimão",
+   "type": "public body",
+   "town": "Portimão",
+   "summary": "Is rolling out an online urban-management platform with an AI module that checks licensing documents on submission, and has an approved digital-transformation grant that lists AI among its areas.",
+   "url": "https://www.cm-portimao.pt",
+   "source": "https://www.barlavento.pt/portimao-inteligencia-artificial-urbanismo/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ismat-instituto-superior-manuel-teixeira-gomes",
+   "name": "ISMAT, Instituto Superior Manuel Teixeira Gomes",
+   "type": "institution",
+   "town": "Portimão",
+   "summary": "Higher-education institution in Portimão run by COFAC. Its computer engineering degree has a 6 ECTS Inteligência Artificial unit in the third year.",
+   "url": "https://www.ismat.pt",
+   "source": "https://www.ismat.pt/pt/licenciaturas/engenharia-informatica-pt",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-citai-fabxr-ismat",
+   "name": "CITAI-FABXR ISMAT",
+   "type": "institution",
+   "town": "Portimão",
+   "summary": "ISMAT research and making group that runs the Fabricating Futures workshop on 3D printing, biofabrication and advanced manufacturing.",
+   "url": null,
+   "source": "https://www.ismat.pt/en/events-calendar/fabricating-futures-workshop-by-citai-fabxr-ismat",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-startup-portimao",
+   "name": "StartUP Portimão",
+   "type": "organisation",
+   "town": "Portimão",
+   "summary": "Business incubator at the Autódromo Internacional do Algarve, opened in 2017 by the council, the Autódromo and Territórios Criativos, focused on smart cities, energy, mobility and tourism. In 2022 it reported 25 startups hosted. It promoted the June 2026 Future Business Summit with an AI panel.",
+   "url": null,
+   "source": "https://www.barlavento.pt/startup-portimao-assinala-5o-aniversario-com-olhos-postos-no-futuro/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-territorios-criativos",
+   "name": "Territórios Criativos",
+   "type": "organisation",
+   "town": "Portimão",
+   "summary": "Partner of StartUP Portimão's founding and moderator of the February 2026 AI como Copiloto debate.",
+   "url": null,
+   "source": "https://www.algarveprimeiro.com/d/livro-que-desvenda-utilidades-da-inteligencia-artificial-apresentado-dia-20-em-portimao/65325-1",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-parkalgar",
+   "name": "Parkalgar",
+   "type": "organisation",
+   "town": "Portimão",
+   "summary": "Manages the Autódromo Internacional do Algarve in Portimão, is a member of the Celerator technology park association with the University of Algarve, and was engaged around the TMCT conference.",
+   "url": null,
+   "source": "https://oalgarve.pt/tmct-2026-em-portimao-debate-inovacao-e-tecnologia-no-turismo-e-hospitalidade/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-escola-de-hotelaria-e-turismo-de-portimao",
+   "name": "Escola de Hotelaria e Turismo de Portimão",
+   "type": "institution",
+   "town": "Portimão",
+   "summary": "Hospitality school that hosted the February 2026 presentation of the AI como Copiloto book and was engaged around the TMCT conference.",
+   "url": null,
+   "source": "https://www.algarveprimeiro.com/d/livro-que-desvenda-utilidades-da-inteligencia-artificial-apresentado-dia-20-em-portimao/65325-1",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-celerator-parque-tecnologico-do-algarve",
+   "name": "Celerator, Parque Tecnológico do Algarve",
+   "type": "organisation",
+   "town": "Portimão",
+   "summary": "Association of Parkalgar and UAlg behind a technology hub beside the Autódromo, on mobility and energy research. Its rector links the planned UAlg campus to it for technology transfer. No AI work of its own is stated in the sources read.",
+   "url": null,
+   "source": "https://www.barlavento.pt/portimao-campus-universitario-da-ualg-pronto-em-2028-com-foco-nas-tecnologias-e-inovacao/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-junta-de-freguesia-de-quarteira",
+   "name": "Junta de Freguesia de Quarteira",
+   "type": "public body",
+   "town": "Quarteira",
+   "summary": "The parish council of Quarteira, a partner in the digital commercial neighbourhood consortium.",
+   "url": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "source": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-acral-associacao-do-comercio-e-servicos-da-regia",
+   "name": "ACRAL, Associação do Comércio e Serviços da Região do Algarve",
+   "type": "organisation",
+   "town": "Quarteira",
+   "summary": "Algarve commerce and services association, a consortium partner for Quarteira's digital commercial neighbourhood.",
+   "url": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "source": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-aea-associacao-de-empresarios-do-algarve",
+   "name": "AEA, Associação de Empresários do Algarve",
+   "type": "organisation",
+   "town": "Quarteira",
+   "summary": "Algarve business association, a consortium partner for Quarteira's digital commercial neighbourhood.",
+   "url": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "source": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-associacao-de-empresarios-por-quarteira",
+   "name": "Associação de Empresários Por Quarteira",
+   "type": "organisation",
+   "town": "Quarteira",
+   "summary": "Local business association of Quarteira, a consortium partner for the digital commercial neighbourhood.",
+   "url": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "source": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-loule-concelho-global",
+   "name": "Loulé Concelho Global",
+   "type": "organisation",
+   "town": "Quarteira",
+   "summary": "Named as a partner in the Quarteira digital commercial neighbourhood consortium.",
+   "url": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "source": "https://www.barlavento.pt/bairros-comerciais-digitais-loule-quarteira/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-municipio-de-sao-bras-de-alportel",
+   "name": "Município de São Brás de Alportel",
+   "type": "public body",
+   "town": "São Brás de Alportel",
+   "summary": "Local council, partner in the Algarve 6.0 smart territory project, supporter of University of Algarve research, host of the town's entrepreneurship programme.",
+   "url": "https://www.cm-sbras.pt",
+   "source": "https://www.barlavento.pt/sao-bras-de-alportel-aposta-na-inovacao-tecnologica-e-modernizacao-de-servicos/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-espaco-coworking-sao-bras-de-alportel",
+   "name": "Espaço Coworking São Brás de Alportel",
+   "type": "organisation",
+   "town": "São Brás de Alportel",
+   "summary": "Municipal coworking space for young people opened in August 2020, with five workstations and a meeting room.",
+   "url": "https://www.barlavento.pt/sao-bras-de-alportel-ja-tem-espaco-coworking-para-jovens/",
+   "source": "https://www.barlavento.pt/sao-bras-de-alportel-ja-tem-espaco-coworking-para-jovens/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ninho-de-empreendedorismo-da-vila",
+   "name": "Ninho de Empreendedorismo da Vila",
+   "type": "organisation",
+   "town": "São Brás de Alportel",
+   "summary": "Municipal incubation space in the village square, with one individual office, three coworking desks, two spaces for digital nomads and a meeting room.",
+   "url": "https://www.cm-sbras.pt/pt/menu/1641/espacos-de-incubacao.aspx",
+   "source": "https://www.cm-sbras.pt/pt/menu/1641/espacos-de-incubacao.aspx",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ninho-de-empreendedorismo-4-olhos",
+   "name": "Ninho de Empreendedorismo 4 Olhos",
+   "type": "organisation",
+   "town": "São Brás de Alportel",
+   "summary": "Second municipal Ninho listed on the council's incubation page, supporting local founders with a space and resources.",
+   "url": "https://www.cm-sbras.pt/pt/menu/1641/espacos-de-incubacao.aspx",
+   "source": "https://www.cm-sbras.pt/pt/menu/1641/espacos-de-incubacao.aspx",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-camara-municipal-de-silves",
+   "name": "Câmara Municipal de Silves",
+   "type": "public body",
+   "town": "Silves",
+   "summary": "The municipal council. It co-hosts the free Formação + Próxima training for the local tourism sector, which included an advanced AI-for-business course in March 2026, and it runs the GEL entrepreneurship office.",
+   "url": "https://www.cm-silves.pt",
+   "source": "https://www.cm-silves.pt/pt/noticias/32862/silves-acolhe-acoes-de-formacao-do-programa-formacao---proxima.aspx",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-polo-de-inovacao-de-tavira",
+   "name": "Polo de Inovação de Tavira",
+   "type": "public body",
+   "town": "Tavira",
+   "summary": "Research, innovation and technology-transfer hub on the Mediterranean Diet, health, sustainable food and climate adaptation, funded by the PRR (1.36 million euros, 3 January 2022 to 31 December 2025), with the CCDR Algarve as direct beneficiary. It includes lab equipment and a collection of about 700 fruit and grape varieties. At its November 2021 launch it had 23 partners, among them DRAP Algarve, the Município de Tavira, Ciência Viva, the Algarve Biomedical Center and Johns Hopkins University, and plans for a digital therapeutics centre and virtual-reality training.",
+   "url": "https://transparencia.gov.pt/pt/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C05-i03/2021.PPRR-C05-i03-P-000037/",
+   "source": "https://transparencia.gov.pt/pt/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C05-i03/2021.PPRR-C05-i03-P-000037/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-camara-municipal-de-tavira",
+   "name": "Câmara Municipal de Tavira",
+   "type": "public body",
+   "town": "Tavira",
+   "summary": "The council is a partner in the Algarve 6.0 urban management data platform and runs parking sensors linked to the Acessibilidades 360 app.",
+   "url": "https://cm-tavira.pt/site/",
+   "source": "https://cm-tavira.pt/site/wp-content/uploads/2025/05/FichaPRR_AMA_TERRITORIOS_INTELIGENTES_FGU-1.pdf",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-centro-ciencia-viva-de-tavira",
+   "name": "Centro Ciência Viva de Tavira",
+   "type": "institution",
+   "town": "Tavira",
+   "summary": "Science centre that co-hosted, with the IPMA mollusc research station and council support, a regional school meeting of the ROV4ALL project in May 2022, where students built small remotely operated underwater robots.",
+   "url": "https://www.barlavento.pt/tavira-acolheu-encontro-escolar-regional-de-robotica-submarina/",
+   "source": "https://www.barlavento.pt/tavira-acolheu-encontro-escolar-regional-de-robotica-submarina/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-centro-de-negocios-e-incubadora-level-up",
+   "name": "Centro de Negócios e Incubadora Level Up",
+   "type": "organisation",
+   "town": "Tavira",
+   "summary": "Business centre and incubator in central Tavira, run by the municipal company EMPET, housing the town's Espaço Empresa service point (gov.pt) and listed as an accredited incubator on IAPMEI's November 2018 Vale Incubação list.",
+   "url": "https://www.gov.pt/locais-de-atendimento/espaco-empresa-de-tavira",
+   "source": "https://www.gov.pt/locais-de-atendimento/espaco-empresa-de-tavira",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-drap-algarve-centro-de-experimentacao-agraria-de",
+   "name": "DRAP Algarve, Centro de Experimentação Agrária de Tavira (CEAT)",
+   "type": "public body",
+   "town": "Tavira",
+   "summary": "The regional agriculture and fisheries directorate manages the CEAT in Tavira, the site that anchors the Polo de Inovação and its Mediterranean Diet research.",
+   "url": "https://agriculturaemar.com/polo-de-inovacao-de-tavira-vai-ser-centro-de-referencia-nacional-da-dieta-mediterranica/",
+   "source": "https://agriculturaemar.com/polo-de-inovacao-de-tavira-vai-ser-centro-de-referencia-nacional-da-dieta-mediterranica/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-camara-municipal-de-vila-real-de-santo-antonio",
+   "name": "Câmara Municipal de Vila Real de Santo António",
+   "type": "public body",
+   "town": "Vila Real de Santo António",
+   "summary": "The council runs the VRSA Digital project (Wi-Fi, footfall counters, online marketplace), a municipal Geoportal launched in January 2025 and a new digital platform for the 2026/2027 school activity offer.",
+   "url": "https://www.cm-vrsa.pt",
+   "source": "https://www.barlavento.pt/?p=399594",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-odiana-baixo-guadiana-development-association",
+   "name": "Odiana, Baixo Guadiana development association",
+   "type": "organisation",
+   "town": "Vila Real de Santo António",
+   "summary": "Association that represents the Baixo Guadiana in the cooperation network of Agrosocial Plus, a 2,062,429.85 euro Interreg Spain-Portugal project, funded 75 percent by ERDF, whose Living Labs will test AI, IoT and smart irrigation. The article does not say whether Vila Real de Santo António is part of the project.",
+   "url": "https://www.barlavento.pt/odiana-lancamento-projeto-inovacao-agrosocial-plus/",
+   "source": "https://www.barlavento.pt/odiana-lancamento-projeto-inovacao-agrosocial-plus/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-fmcb-ualg-faculty-of-medicine-and-biomedical-sci",
+   "name": "FMCB-UAlg (Faculty of Medicine and Biomedical Sciences)",
+   "type": "institution",
+   "town": null,
+   "summary": "Co-runs the executive course on AI in healthcare with AuroraMed, held in Faro.",
+   "url": "https://www.ualg.pt",
+   "source": "https://www.barlavento.pt/auroramed-lanca-curso-de-ia-na-saude-com-a-ualg/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-turismo-do-algarve-regiao-de-turismo-do-algarve",
+   "name": "Turismo do Algarve (Região de Turismo do Algarve)",
+   "type": "public body",
+   "town": null,
+   "summary": "Regional tourism body that runs the Competências do Futuro Algarve programme, including a free AI bootcamp for tourism professionals, and is an INOVA ALGARVE 3.0 partner.",
+   "url": "https://www.barlavento.pt/turismo-algarve-bootcamps-eficiencia-hidrica-inteligencia-artificial/",
+   "source": "https://www.barlavento.pt/turismo-algarve-bootcamps-eficiencia-hidrica-inteligencia-artificial/",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-kipt-colab",
+   "name": "KIPT CoLab",
+   "type": "organisation",
+   "town": null,
+   "summary": "Consortium partner in INOVA ALGARVE 3.0. Its own role in AI is not yet sourced.",
+   "url": "https://www.algarveevolution.pt/inovaalgarve",
+   "source": "https://www.algarveevolution.pt/inovaalgarve",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-tertulia-algarvia",
+   "name": "Tertúlia Algarvia",
+   "type": "organisation",
+   "town": null,
+   "summary": "Consortium partner in INOVA ALGARVE 3.0. Its own role in AI is not yet sourced.",
+   "url": "https://www.algarveevolution.pt/inovaalgarve",
+   "source": "https://www.algarveevolution.pt/inovaalgarve",
+   "read_on": "2026-11-15"
+  },
+  {
+   "key": "org-ciac-ualg-research-centre-in-arts-and-communicat",
+   "name": "CIAC (UAlg research centre in arts and communication)",
+   "type": "institution",
+   "town": null,
+   "summary": "UAlg centre that opened the INTERFACE digital translation lab in Faro in October 2026, with an AI Studio extension at its Santarém hub.",
+   "url": "https://www.ualg.pt/ciac-inaugura-laboratorio-de-traducao-digital-na-ualg",
+   "source": "https://www.ualg.pt/ciac-inaugura-laboratorio-de-traducao-digital-na-ualg",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-intrepida-pro",
+   "name": "INTREPIDA pro",
+   "type": "organisation",
+   "town": null,
+   "summary": "Cross-border Interreg Spain-Portugal project led by Fundación Tres Culturas del Mediterráneo, with NERA as partner. It supported the 10 November Lunch & Learn on AI tools in Faro.",
+   "url": "https://nera.pt/noticias/intrepida-pro-promoveu-lunch-learn-sobre-ferramentas-de-ia",
+   "source": "https://nera.pt/noticias/intrepida-pro-promoveu-lunch-learn-sobre-ferramentas-de-ia",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-faculdade-de-ciencias-e-tecnologia-fct-ualg",
+   "name": "Faculdade de Ciências e Tecnologia (FCT-UAlg)",
+   "type": "institution",
+   "town": null,
+   "summary": "UAlg faculty named as the contact for EPIA 2025, the 24th Portuguese conference on AI, held at the Gambelas campus in Faro on 1 to 3 October 2025.",
+   "url": "https://epia2025.ualg.pt/",
+   "source": "https://epia2025.ualg.pt/",
+   "read_on": "2026-11-16"
+  },
+  {
+   "key": "org-dspa-data-science-portuguese-association",
+   "name": "DSPA (Data Science Portuguese Association)",
+   "type": "organisation",
+   "town": null,
+   "summary": "National association for data science and AI that is listed as a member of Algarve Evolution. Its own site lists a generative AI certification, an AI Act compliance programme for businesses, an AI agents day for executives and the annual INSIGHTS conference. The site states no Algarve link: it appears on the map because of the membership.",
+   "url": "http://www.dspa.pt",
+   "source": "http://www.dspa.pt",
+   "read_on": "2026-11-16"
+  }
+ ]
+}

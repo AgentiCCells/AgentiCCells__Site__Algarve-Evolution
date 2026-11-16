@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The four activities, as António Guerreiro described them (16 November 2026). -->
+    <record id="activity_inc_acc" model="aih.activity">
+        <field name="code">inc-acc</field>
+        <field name="name">INC/ACC: incubation and acceleration</field>
+        <field name="sequence">10</field>
+        <field name="summary">Six-month incubation and acceleration programmes: one mentor per company, guest mentors for clinics and workshops, KPIs from month 0 to month 6 made public, and a reflection on the indicators.</field>
+    </record>
+    <record id="activity_challenge_connect" model="aih.activity">
+        <field name="code">challenge-connect</field>
+        <field name="name">Challenge Connect</field>
+        <field name="sequence">20</field>
+        <field name="summary">A company presents a challenge; companies and individual professionals apply as suppliers; a matching result ranks them, and the company chooses or Algarve Evolution suggests the best or a top 3.</field>
+    </record>
+    <record id="activity_vibathon" model="aih.activity">
+        <field name="code">vibathon</field>
+        <field name="name">Vibathon</field>
+        <field name="sequence">30</field>
+        <field name="summary">Hackathons and workshops: who registered, mentors and jury, the projects presented at the end, and a next step after the event.</field>
+    </record>
+    <record id="activity_talent" model="aih.activity">
+        <field name="code">talent</field>
+        <field name="name">Talent Ecosystem</field>
+        <field name="sequence">40</field>
+        <field name="summary">The Algarve Digital Innovators network (communities, informal groups and the people in them) grouped as professionals, consultants, mentors and investors, plus project partners and the stakeholders of the regional business innovation hub.</field>
+    </record>
+</odoo>

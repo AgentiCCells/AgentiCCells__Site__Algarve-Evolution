@@ -1,0 +1,15 @@
+Algarve Innovation Hub, an Odoo addon
+Copyright 2026 AgentiCCells (written by odoo@AgentiCCells.dinis)
+
+This addon (everything under odoo/addons/algarve_innovation_hub/) is licensed
+under the GNU Lesser General Public License, version 3 (LGPL-3), the licence
+Odoo S.A. uses for Odoo Community addons, so that it can be loaded by and
+distributed with Odoo Community. The full text is at
+https://www.gnu.org/licenses/lgpl-3.0.txt (and the GPL-3 it builds on at
+https://www.gnu.org/licenses/gpl-3.0.txt).
+
+The rest of this repository stays under its own licence (Apache-2.0 for code,
+CC BY 4.0 for text), as the repository's LICENSE and README say.
+
+No third-party code is copied into this addon. It uses Odoo's public model,
+field and view APIs only.

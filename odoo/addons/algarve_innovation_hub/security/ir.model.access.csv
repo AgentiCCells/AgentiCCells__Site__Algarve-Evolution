@@ -1,0 +1,32 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_aih_skill_reader,aih.skill reader,model_aih_skill,group_aih_reader,1,0,0,0
+access_aih_skill_manager,aih.skill manager,model_aih_skill,group_aih_manager,1,1,1,1
+access_aih_activity_reader,aih.activity reader,model_aih_activity,group_aih_reader,1,0,0,0
+access_aih_activity_manager,aih.activity manager,model_aih_activity,group_aih_manager,1,1,1,1
+access_aih_programme_reader,aih.programme reader,model_aih_programme,group_aih_reader,1,0,0,0
+access_aih_programme_manager,aih.programme manager,model_aih_programme,group_aih_manager,1,1,1,1
+access_aih_programme_company_reader,aih.programme.company reader,model_aih_programme_company,group_aih_reader,1,0,0,0
+access_aih_programme_company_manager,aih.programme.company manager,model_aih_programme_company,group_aih_manager,1,1,1,1
+access_aih_session_reader,aih.session reader,model_aih_session,group_aih_reader,1,0,0,0
+access_aih_session_manager,aih.session manager,model_aih_session,group_aih_manager,1,1,1,1
+access_aih_kpi_reader,aih.kpi reader,model_aih_kpi,group_aih_reader,1,0,0,0
+access_aih_kpi_manager,aih.kpi manager,model_aih_kpi,group_aih_manager,1,1,1,1
+access_aih_reflection_reader,aih.reflection reader,model_aih_reflection,group_aih_reader,1,0,0,0
+access_aih_reflection_manager,aih.reflection manager,model_aih_reflection,group_aih_manager,1,1,1,1
+access_aih_challenge_reader,aih.challenge reader,model_aih_challenge,group_aih_reader,1,0,0,0
+access_aih_challenge_manager,aih.challenge manager,model_aih_challenge,group_aih_manager,1,1,1,1
+access_aih_application_reader,aih.application reader,model_aih_application,group_aih_reader,1,0,0,0
+access_aih_application_manager,aih.application manager,model_aih_application,group_aih_manager,1,1,1,1
+access_aih_vibathon_reader,aih.vibathon reader,model_aih_vibathon,group_aih_reader,1,0,0,0
+access_aih_vibathon_manager,aih.vibathon manager,model_aih_vibathon,group_aih_manager,1,1,1,1
+access_aih_vibathon_jury_reader,aih.vibathon.jury reader,model_aih_vibathon_jury,group_aih_reader,1,0,0,0
+access_aih_vibathon_jury_manager,aih.vibathon.jury manager,model_aih_vibathon_jury,group_aih_manager,1,1,1,1
+access_aih_vibathon_participant_reader,aih.vibathon.participant reader,model_aih_vibathon_participant,group_aih_reader,1,0,0,0
+access_aih_vibathon_participant_manager,aih.vibathon.participant manager,model_aih_vibathon_participant,group_aih_manager,1,1,1,1
+access_aih_project_reader,aih.project reader,model_aih_project,group_aih_reader,1,0,0,0
+access_aih_project_manager,aih.project manager,model_aih_project,group_aih_manager,1,1,1,1
+access_aih_project_score_reader,aih.project.score reader,model_aih_project_score,group_aih_reader,1,0,0,0
+access_aih_project_score_manager,aih.project.score manager,model_aih_project_score,group_aih_manager,1,1,1,1
+access_aih_community_reader,aih.community reader,model_aih_community,group_aih_reader,1,0,0,0
+access_aih_community_manager,aih.community manager,model_aih_community,group_aih_manager,1,1,1,1
+access_event_event_aih_reader,event.event hub reader,event.model_event_event,group_aih_reader,1,0,0,0

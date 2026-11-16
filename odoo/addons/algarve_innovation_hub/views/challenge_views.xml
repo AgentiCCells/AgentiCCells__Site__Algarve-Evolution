@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="aih_challenge_list" model="ir.ui.view">
+        <field name="name">aih.challenge.list</field>
+        <field name="model">aih.challenge</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="org_name"/>
+                <field name="budget_eur_min"/>
+                <field name="budget_eur_max"/>
+                <field name="deadline"/>
+                <field name="application_count" string="Applications"/>
+                <field name="state"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_challenge_form" model="ir.ui.view">
+        <field name="name">aih.challenge.form</field>
+        <field name="model">aih.challenge</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_compute_matches" type="object" string="Compute matches" class="btn-primary"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="Challenge title"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="org_name"/>
+                            <field name="town"/>
+                            <field name="budget_eur_min"/>
+                            <field name="budget_eur_max"/>
+                            <field name="deadline"/>
+                            <field name="skill_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="decision"/>
+                            <field name="chosen_application_id"/>
+                            <field name="is_published"/>
+                            <field name="simulated"/>
+                            <field name="feed_key"/>
+                        </group>
+                    </group>
+                    <separator string="Problem"/>
+                    <field name="problem"/>
+                    <separator string="Requirements (one per line)"/>
+                    <field name="requirements"/>
+                    <separator string="Applications, ranked"/>
+                    <field name="application_ids">
+                        <list>
+                            <field name="rank"/>
+                            <field name="supplier_id"/>
+                            <field name="price_eur"/>
+                            <field name="days"/>
+                            <field name="score"/>
+                            <field name="reasons"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_challenge_action" model="ir.actions.act_window">
+        <field name="name">Challenges</field>
+        <field name="res_model">aih.challenge</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="aih_application_list" model="ir.ui.view">
+        <field name="name">aih.application.list</field>
+        <field name="model">aih.application</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="challenge_id"/>
+                <field name="rank"/>
+                <field name="supplier_id"/>
+                <field name="price_eur"/>
+                <field name="days"/>
+                <field name="score"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_application_form" model="ir.ui.view">
+        <field name="name">aih.application.form</field>
+        <field name="model">aih.application</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="challenge_id"/>
+                            <field name="supplier_id"/>
+                            <field name="price_eur"/>
+                            <field name="days"/>
+                        </group>
+                        <group>
+                            <field name="score"/>
+                            <field name="rank"/>
+                            <field name="is_published"/>
+                            <field name="simulated"/>
+                            <field name="feed_key"/>
+                        </group>
+                    </group>
+                    <separator string="Proposal"/>
+                    <field name="proposal"/>
+                    <separator string="Why this score"/>
+                    <field name="reasons"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_application_search" model="ir.ui.view">
+        <field name="name">aih.application.search</field>
+        <field name="model">aih.application</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="supplier_id"/>
+                <field name="challenge_id"/>
+                <filter name="group_challenge" string="Challenge" context="{'group_by': 'challenge_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="aih_application_action" model="ir.actions.act_window">
+        <field name="name">Applications</field>
+        <field name="res_model">aih.application</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_challenge': 1}</field>
+    </record>
+</odoo>

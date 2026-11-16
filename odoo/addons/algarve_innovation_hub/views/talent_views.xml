@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The hub's fields on every contact -->
+    <record id="aih_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.innovation.hub</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Innovation Hub" name="innovation_hub">
+                    <group>
+                        <group string="Feed">
+                            <field name="aih_published"/>
+                            <field name="aih_consent"/>
+                            <field name="aih_simulated"/>
+                            <field name="aih_feed_key"/>
+                            <field name="aih_source_url" widget="url"/>
+                        </group>
+                        <group string="Talent">
+                            <field name="aih_talent_kind"/>
+                            <field name="aih_community_id"/>
+                        </group>
+                        <group string="Mentor">
+                            <field name="aih_is_mentor"/>
+                            <field name="aih_mentor_kind" invisible="not aih_is_mentor"/>
+                            <field name="aih_expertise_ids" widget="many2many_tags" invisible="not aih_is_mentor"/>
+                        </group>
+                        <group string="Supplier">
+                            <field name="aih_is_supplier"/>
+                            <field name="aih_capability_ids" widget="many2many_tags" invisible="not aih_is_supplier"/>
+                            <field name="aih_rate" invisible="not aih_is_supplier"/>
+                        </group>
+                    </group>
+                    <field name="aih_summary" placeholder="Short public summary"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Mentors -->
+    <record id="aih_mentor_list" model="ir.ui.view">
+        <field name="name">res.partner.list.aih.mentor</field>
+        <field name="model">res.partner</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="aih_mentor_kind"/>
+                <field name="aih_expertise_ids" widget="many2many_tags"/>
+                <field name="city"/>
+                <field name="aih_consent"/>
+                <field name="aih_published"/>
+                <field name="aih_simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_mentor_action" model="ir.actions.act_window">
+        <field name="name">Mentors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('aih_is_mentor', '=', True)]</field>
+        <field name="context">{'default_aih_is_mentor': True, 'default_is_company': False}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('aih_mentor_list')}), (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')})]"/>
+    </record>
+
+    <!-- Suppliers -->
+    <record id="aih_supplier_list" model="ir.ui.view">
+        <field name="name">res.partner.list.aih.supplier</field>
+        <field name="model">res.partner</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="is_company" string="Company"/>
+                <field name="aih_capability_ids" widget="many2many_tags"/>
+                <field name="city"/>
+                <field name="aih_rate"/>
+                <field name="aih_consent"/>
+                <field name="aih_published"/>
+                <field name="aih_simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_supplier_action" model="ir.actions.act_window">
+        <field name="name">Suppliers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('aih_is_supplier', '=', True)]</field>
+        <field name="context">{'default_aih_is_supplier': True}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('aih_supplier_list')}), (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')})]"/>
+    </record>
+
+    <!-- Talent -->
+    <record id="aih_talent_list" model="ir.ui.view">
+        <field name="name">res.partner.list.aih.talent</field>
+        <field name="model">res.partner</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="aih_talent_kind"/>
+                <field name="city"/>
+                <field name="aih_community_id"/>
+                <field name="category_id" widget="many2many_tags"/>
+                <field name="aih_consent"/>
+                <field name="aih_published"/>
+                <field name="aih_simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_talent_search" model="ir.ui.view">
+        <field name="name">res.partner.search.aih.talent</field>
+        <field name="model">res.partner</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="city"/>
+                <field name="aih_community_id"/>
+                <filter name="consent" string="With consent" domain="[('aih_consent', '=', True)]"/>
+                <filter name="published" string="Published" domain="[('aih_published', '=', True)]"/>
+                <filter name="simulated" string="Simulated" domain="[('aih_simulated', '=', True)]"/>
+                <filter name="real" string="Real (public sources)" domain="[('aih_simulated', '=', False)]"/>
+                <filter name="group_kind" string="Kind" context="{'group_by': 'aih_talent_kind'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="aih_talent_action" model="ir.actions.act_window">
+        <field name="name">Talent</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('aih_talent_kind', '!=', False)]</field>
+        <field name="context">{'search_default_group_kind': 1}</field>
+        <field name="search_view_id" ref="aih_talent_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('aih_talent_list')}), (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')})]"/>
+    </record>
+
+    <!-- Communities -->
+    <record id="aih_community_list" model="ir.ui.view">
+        <field name="name">aih.community.list</field>
+        <field name="model">aih.community</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="municipality"/>
+                <field name="kind"/>
+                <field name="members"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_community_form" model="ir.ui.view">
+        <field name="name">aih.community.form</field>
+        <field name="model">aih.community</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="municipality"/>
+                            <field name="kind"/>
+                            <field name="members"/>
+                            <field name="url" widget="url"/>
+                        </group>
+                        <group>
+                            <field name="is_published"/>
+                            <field name="simulated"/>
+                            <field name="feed_key"/>
+                            <field name="source_url" widget="url"/>
+                        </group>
+                    </group>
+                    <field name="summary"/>
+                    <separator string="Talent in this community"/>
+                    <field name="talent_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="aih_talent_kind"/>
+                            <field name="aih_consent"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_community_action" model="ir.actions.act_window">
+        <field name="name">Communities (ADI)</field>
+        <field name="res_model">aih.community</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Events: the hub's fields on the Events app's form -->
+    <record id="aih_event_form_inherit" model="ir.ui.view">
+        <field name="name">event.event.form.innovation.hub</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Innovation Hub" name="innovation_hub">
+                    <group>
+                        <field name="aih_published"/>
+                        <field name="aih_simulated"/>
+                        <field name="aih_feed_key"/>
+                        <field name="aih_place"/>
+                        <field name="aih_url" widget="url"/>
+                        <field name="aih_source_url" widget="url"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="aih_event_list" model="ir.ui.view">
+        <field name="name">event.event.list.aih</field>
+        <field name="model">event.event</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date_begin"/>
+                <field name="date_end"/>
+                <field name="name"/>
+                <field name="aih_place"/>
+                <field name="aih_published"/>
+                <field name="aih_simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_event_action" model="ir.actions.act_window">
+        <field name="name">Events (from algarveevolution.pt)</field>
+        <field name="res_model">event.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('aih_feed_key', '!=', False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('aih_event_list')}), (0, 0, {'view_mode': 'form', 'view_id': ref('event.view_event_form')})]"/>
+    </record>
+
+    <!-- Configuration -->
+    <record id="aih_activity_list" model="ir.ui.view">
+        <field name="name">aih.activity.list</field>
+        <field name="model">aih.activity</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="summary"/>
+                <field name="is_published"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_activity_action" model="ir.actions.act_window">
+        <field name="name">Activities</field>
+        <field name="res_model">aih.activity</field>
+        <field name="view_mode">list</field>
+    </record>
+    <record id="aih_skill_list" model="ir.ui.view">
+        <field name="name">aih.skill.list</field>
+        <field name="model">aih.skill</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_skill_action" model="ir.actions.act_window">
+        <field name="name">Skills</field>
+        <field name="res_model">aih.skill</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Programmes -->
+    <record id="aih_programme_list" model="ir.ui.view">
+        <field name="name">aih.programme.list</field>
+        <field name="model">aih.programme</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="cohort"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+                <field name="company_count" string="Companies"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_programme_form" model="ir.ui.view">
+        <field name="name">aih.programme.form</field>
+        <field name="model">aih.programme</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="Programme name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="kind"/>
+                            <field name="cohort"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="months"/>
+                        </group>
+                        <group>
+                            <field name="is_published"/>
+                            <field name="simulated"/>
+                            <field name="feed_key"/>
+                            <field name="source_url" widget="url"/>
+                        </group>
+                    </group>
+                    <field name="summary" placeholder="What the programme offers"/>
+                    <notebook>
+                        <page string="Companies">
+                            <field name="company_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="sector"/>
+                                    <field name="town"/>
+                                    <field name="stage"/>
+                                    <field name="mentor_id"/>
+                                    <field name="is_published"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mentors"><field name="mentor_ids" widget="many2many_tags"/></page>
+                        <page string="Sessions">
+                            <field name="session_ids">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="kind"/>
+                                    <field name="company_id"/>
+                                    <field name="mentor_id"/>
+                                    <field name="topic"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Reflections">
+                            <field name="reflection_ids">
+                                <list editable="bottom">
+                                    <field name="month"/>
+                                    <field name="text"/>
+                                    <field name="is_published"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_programme_action" model="ir.actions.act_window">
+        <field name="name">Programmes</field>
+        <field name="res_model">aih.programme</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Programme companies -->
+    <record id="aih_company_list" model="ir.ui.view">
+        <field name="name">aih.programme.company.list</field>
+        <field name="model">aih.programme.company</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="programme_id"/>
+                <field name="sector"/>
+                <field name="town"/>
+                <field name="stage"/>
+                <field name="mentor_id"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_company_form" model="ir.ui.view">
+        <field name="name">aih.programme.company.form</field>
+        <field name="model">aih.programme.company</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="programme_id"/>
+                            <field name="sector"/>
+                            <field name="town"/>
+                            <field name="stage"/>
+                            <field name="mentor_id"/>
+                            <field name="website" widget="url"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="is_published"/>
+                            <field name="simulated"/>
+                            <field name="feed_key"/>
+                            <field name="source_url" widget="url"/>
+                        </group>
+                    </group>
+                    <field name="summary"/>
+                    <notebook>
+                        <page string="KPIs, month 0 to 6">
+                            <field name="kpi_ids">
+                                <list editable="bottom">
+                                    <field name="month"/>
+                                    <field name="revenue_eur"/>
+                                    <field name="customers"/>
+                                    <field name="team_size"/>
+                                    <field name="funding_eur"/>
+                                    <field name="product_stage"/>
+                                    <field name="is_published"/>
+                                    <field name="simulated"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_company_search" model="ir.ui.view">
+        <field name="name">aih.programme.company.search</field>
+        <field name="model">aih.programme.company</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="sector"/>
+                <field name="town"/>
+                <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
+                <filter name="group_programme" string="Programme" context="{'group_by': 'programme_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="aih_company_action" model="ir.actions.act_window">
+        <field name="name">Programme companies</field>
+        <field name="res_model">aih.programme.company</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Sessions -->
+    <record id="aih_session_list" model="ir.ui.view">
+        <field name="name">aih.session.list</field>
+        <field name="model">aih.session</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="programme_id"/>
+                <field name="kind"/>
+                <field name="company_id"/>
+                <field name="mentor_id"/>
+                <field name="topic"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_session_form" model="ir.ui.view">
+        <field name="name">aih.session.form</field>
+        <field name="model">aih.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="programme_id"/>
+                            <field name="kind"/>
+                            <field name="company_id"/>
+                            <field name="mentor_id"/>
+                            <field name="date"/>
+                            <field name="topic"/>
+                        </group>
+                        <group>
+                            <field name="is_published"/>
+                            <field name="simulated"/>
+                            <field name="feed_key"/>
+                        </group>
+                    </group>
+                    <separator string="Notes (private)"/>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_session_search" model="ir.ui.view">
+        <field name="name">aih.session.search</field>
+        <field name="model">aih.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="topic"/>
+                <field name="mentor_id"/>
+                <field name="company_id"/>
+                <filter name="one_to_one" string="One-to-one" domain="[('kind', '=', 'one_to_one')]"/>
+                <filter name="clinic" string="Clinics" domain="[('kind', '=', 'clinic')]"/>
+                <filter name="workshop" string="Workshops" domain="[('kind', '=', 'workshop')]"/>
+                <filter name="group_programme" string="Programme" context="{'group_by': 'programme_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="aih_session_action" model="ir.actions.act_window">
+        <field name="name">Mentoring sessions</field>
+        <field name="res_model">aih.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- KPIs -->
+    <record id="aih_kpi_list" model="ir.ui.view">
+        <field name="name">aih.kpi.list</field>
+        <field name="model">aih.kpi</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="programme_id" readonly="1"/>
+                <field name="company_id"/>
+                <field name="month"/>
+                <field name="revenue_eur"/>
+                <field name="customers"/>
+                <field name="team_size"/>
+                <field name="funding_eur"/>
+                <field name="product_stage"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_kpi_search" model="ir.ui.view">
+        <field name="name">aih.kpi.search</field>
+        <field name="model">aih.kpi</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="company_id"/>
+                <filter name="group_programme" string="Programme" context="{'group_by': 'programme_id'}"/>
+                <filter name="group_company" string="Company" context="{'group_by': 'company_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="aih_kpi_action" model="ir.actions.act_window">
+        <field name="name">KPI snapshots</field>
+        <field name="res_model">aih.kpi</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Reflections -->
+    <record id="aih_reflection_list" model="ir.ui.view">
+        <field name="name">aih.reflection.list</field>
+        <field name="model">aih.reflection</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="programme_id"/>
+                <field name="month"/>
+                <field name="text"/>
+                <field name="is_published"/>
+                <field name="simulated"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_reflection_form" model="ir.ui.view">
+        <field name="name">aih.reflection.form</field>
+        <field name="model">aih.reflection</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="programme_id"/>
+                        <field name="month"/>
+                        <field name="is_published"/>
+                        <field name="simulated"/>
+                        <field name="feed_key"/>
+                    </group>
+                    <field name="text"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aih_reflection_action" model="ir.actions.act_window">
+        <field name="name">Reflections</field>
+        <field name="res_model">aih.reflection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_aih_root" name="Innovation Hub" sequence="30"
+              groups="group_aih_reader" web_icon="algarve_innovation_hub,static/description/icon.png"/>
+
+    <menuitem id="menu_aih_inc_acc" name="INC/ACC" parent="menu_aih_root" sequence="10"/>
+    <menuitem id="menu_aih_programmes" name="Programmes" parent="menu_aih_inc_acc" action="aih_programme_action" sequence="10"/>
+    <menuitem id="menu_aih_companies" name="Companies" parent="menu_aih_inc_acc" action="aih_company_action" sequence="20"/>
+    <menuitem id="menu_aih_mentors" name="Mentors" parent="menu_aih_inc_acc" action="aih_mentor_action" sequence="30"/>
+    <menuitem id="menu_aih_sessions" name="Mentoring sessions" parent="menu_aih_inc_acc" action="aih_session_action" sequence="40"/>
+    <menuitem id="menu_aih_kpis" name="KPI snapshots" parent="menu_aih_inc_acc" action="aih_kpi_action" sequence="50"/>
+    <menuitem id="menu_aih_reflections" name="Reflections" parent="menu_aih_inc_acc" action="aih_reflection_action" sequence="60"/>
+
+    <menuitem id="menu_aih_challenge" name="Challenge Connect" parent="menu_aih_root" sequence="20"/>
+    <menuitem id="menu_aih_challenges" name="Challenges" parent="menu_aih_challenge" action="aih_challenge_action" sequence="10"/>
+    <menuitem id="menu_aih_applications" name="Applications" parent="menu_aih_challenge" action="aih_application_action" sequence="20"/>
+    <menuitem id="menu_aih_suppliers" name="Suppliers" parent="menu_aih_challenge" action="aih_supplier_action" sequence="30"/>
+
+    <menuitem id="menu_aih_vibathon" name="Vibathon" parent="menu_aih_root" sequence="30"/>
+    <menuitem id="menu_aih_vibathons" name="Vibathons" parent="menu_aih_vibathon" action="aih_vibathon_action" sequence="10"/>
+    <menuitem id="menu_aih_projects" name="Projects" parent="menu_aih_vibathon" action="aih_project_action" sequence="20"/>
+
+    <menuitem id="menu_aih_talent" name="Talent Ecosystem" parent="menu_aih_root" sequence="40"/>
+    <menuitem id="menu_aih_talent_people" name="Talent" parent="menu_aih_talent" action="aih_talent_action" sequence="10"/>
+    <menuitem id="menu_aih_communities" name="Communities (ADI)" parent="menu_aih_talent" action="aih_community_action" sequence="20"/>
+    <menuitem id="menu_aih_events" name="Events" parent="menu_aih_talent" action="aih_event_action" sequence="30"/>
+
+    <menuitem id="menu_aih_config" name="Configuration" parent="menu_aih_root" sequence="90" groups="group_aih_manager"/>
+    <menuitem id="menu_aih_activities" name="Activities" parent="menu_aih_config" action="aih_activity_action" sequence="10"/>
+    <menuitem id="menu_aih_skills" name="Skills" parent="menu_aih_config" action="aih_skill_action" sequence="20"/>
+</odoo>
