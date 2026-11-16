@@ -271,7 +271,11 @@ html:not(.js) .dock{display:none}
 .sg-app>svg{width:20px;height:20px;margin-bottom:6px}
 .sg-app .ext{display:inline;color:var(--accent);font-size:inherit;margin:0}
 @media (max-width:939px){
-  .top-apps{order:3;flex:1 0 100%;margin:2px 0 0;overflow-x:auto;scrollbar-width:none}
+  .top{row-gap:10px}
+  .top-l{flex:1 1 0}
+  .top-r{flex:none}
+  .top h1{overflow-wrap:anywhere}
+  .top-apps{order:3;flex:1 0 100%;margin:0;overflow-x:auto;scrollbar-width:none}
   .top-apps::-webkit-scrollbar{display:none}
   .tapp{height:34px;font-size:13.5px}
 }
