@@ -21,6 +21,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:16px
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 body.az{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased}
 :where(.az) :where(h1,h2,h3,h4,p,ol,ul,figure,blockquote){margin:0}
+.az :where(h1,h2,h3,h4){overflow-wrap:break-word;hyphens:auto}
 :where(.az) :where(ol,ul){padding:0;list-style:none}
 .az :where(main,.top,.foot) a{color:var(--cobalt);text-decoration-thickness:2px;text-underline-offset:.18em}
 .az :where(main,.top,.foot) a:hover{color:var(--terra-dark)}
@@ -51,14 +52,36 @@ body.az{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var
 .nav ul{display:flex;gap:6px;width:max-content}
 .nav a{display:block;font:500 16px/1 var(--round);color:var(--blue);text-decoration:none;padding:.6rem .9rem;border-radius:999px;background:var(--sky-soft)}
 .nav a:hover{background:var(--yellow);color:var(--ink)}
-.lang{margin-left:auto;font:600 15px/1 var(--round);text-decoration:none;color:var(--blue);border:2.5px solid var(--cobalt);padding:.5rem .9rem;border-radius:999px}
-.lang:hover{background:var(--cobalt);color:var(--white)!important}
-@media (min-width:1080px){
-  .nav{order:0;flex:1;flex-basis:auto;margin:0;padding:0;overflow:visible}
-  .nav ul{width:auto;justify-content:center}
-  .nav a{background:none}
-  .lang{margin-left:0}
+/* The two working ideas: always on the logo's row, so a phone reaches them without scrolling the strip. */
+.apps{margin-left:auto;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.az .apps .app{display:flex;align-items:center;gap:7px;font:600 14px/1.1 var(--round);text-decoration:none;color:var(--blue);background:var(--yellow);border:2.5px solid var(--cobalt);padding:.32rem .75rem .32rem .45rem;border-radius:999px;white-space:nowrap;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.az .apps .app+.app{background:var(--cobalt);color:var(--white)}
+.az .apps .app:hover{transform:rotate(-2deg) scale(1.04);color:var(--ink)}
+.az .apps .app+.app:hover{color:var(--white)}
+.app-ic{flex:none;width:22px;height:22px;background:var(--white);border-radius:50%;padding:2px}
+@media (prefers-reduced-motion:reduce){.az .apps .app{transition:none}}
+@media (min-width:640px){
+  .apps{flex-direction:row;gap:8px}
+  .az .apps .app{font-size:15px;padding:.45rem .9rem .45rem .5rem}
 }
+/* A soft fade at the right edge of the scrolling strip says there is more. */
+@media (max-width:1079px){
+  .nav{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+  .nav ul{padding-right:28px}
+}
+/* Laptops: the logo and the two ideas on one row, every section on the next, nothing hidden. */
+@media (min-width:1080px){
+  .nav{margin:0;padding:0;overflow:visible}
+  .nav ul{width:auto;flex-wrap:wrap}
+}
+/* Wide screens: everything on one row (long Spanish and French labels need the room). */
+@media (min-width:1500px){
+  .nav{order:0;flex:1;flex-basis:auto}
+  .nav ul{justify-content:center}
+  .nav a{background:none;padding:.6rem .7rem}
+  .apps{margin-left:0}
+}
+.foot-langs [aria-current]{font-weight:800}
 
 /* Panels: a white tile panel inside a border of beads. */
 .panel{background:var(--cobalt) url(/d/azulejo/tile-contas.svg) 0 0/20px 20px;padding:12px;border-radius:var(--radius);box-shadow:0 12px 0 rgba(22,63,134,.14)}

@@ -2,7 +2,6 @@
 // Everything is in the page without this script; it only adds motion and interaction.
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const lang = document.documentElement.lang === 'pt' ? 'pt-PT' : 'en-GB';
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
   // Count a number up from zero, then put the original text back exactly.
@@ -10,12 +9,14 @@
     if (el.dataset.done) return; el.dataset.done = '1';
     const to = Number(el.dataset.to), orig = el.textContent;
     if (reduce || !to) return;
-    const m = orig.match(/[\d.,]+/); if (!m) return;
+    const m = orig.match(/\d[\d.,\u00a0\u202f]*/); if (!m) return;
     const pre = orig.slice(0, m.index), post = orig.slice(m.index + m[0].length);
+    // Group digits as the page's own text does (1,000 / 1.000 / 1 000 / 1000), so the count never changes style.
+    const sep = (m[0].match(/\D/) || [''])[0], fmt = x => String(x).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
     const t0 = performance.now(), dur = 1600 + Math.min(900, to / 40);
     const step = now => {
       const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4);
-      el.textContent = k < 1 ? pre + Math.round(to * e).toLocaleString(lang) + post : orig;
+      el.textContent = k < 1 ? pre + fmt(Math.round(to * e)) + post : orig;
       if (k < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);

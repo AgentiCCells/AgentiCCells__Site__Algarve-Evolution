@@ -3,12 +3,13 @@
 // drawn icons (sun, wave, orange, boat, laptop), sticker figures, and a mosaic of the 16 municipalities whose
 // tiles turn over to show what happened there. Every fact is cited with h.cite().
 // By sites-design@AgentiCCells.dinis, 16 November 2026. Code Apache-2.0, text and drawings CC BY 4.0.
-import { timelineEntry, PARTNERS, eventDate } from './brief.mjs';
+import { timelineEntry, PARTNERS, eventDate, langLinks } from './brief.mjs';
+import { APPS, langPath } from '../site-data.mjs';
 
 export const meta = {
   slug: 'azulejo', order: 4, group: 'classic',
-  name: { en: 'Azulejo', pt: 'Azulejo' },
-  tagline: { en: 'Playful, Portuguese, full of colour', pt: 'Divertido, português, cheio de cor' },
+  name: { en: 'Azulejo', pt: 'Azulejo', es: 'Azulejo', fr: 'Azulejo' },
+  tagline: { en: 'Playful, Portuguese, full of colour', pt: 'Divertido, português, cheio de cor', es: 'Alegre, portugués, lleno de color', fr: 'Ludique, portugais, plein de couleurs' },
 };
 
 // Drawn icons, 64 by 64, in the tile colours. Decorative: always aria-hidden.
@@ -33,15 +34,15 @@ const GRID = {
 // Reading order on a phone (three columns): roughly west to east.
 const PHONE_ORDER = ['aljezur', 'monchique', 'silves', 'vila-do-bispo', 'lagos', 'portimao', 'lagoa', 'albufeira', 'loule', '*sun', 'sao-bras-de-alportel', 'faro', 'olhao', 'tavira', 'alcoutim', 'castro-marim', 'vila-real-de-santo-antonio', '*orange'];
 const PLACE = {
-  faro: { en: 'Our home. We were officially presented here in 2019.', pt: 'A nossa casa. Fomos apresentados oficialmente aqui em 2019.', src: 'pres19', home: true },
-  lagos: { en: 'Algarve Digital Innovators launched here, Sep 2025.', pt: 'Aqui foi lançada a Algarve Digital Innovators, set. 2025.', src: 'adi' },
-  portimao: { en: 'TMCT\'26, 5 to 7 Nov 2026, on our calendar.', pt: 'TMCT\'26, 5 a 7 nov. 2026, no nosso calendário.', src: 'tmct' },
-  albufeira: { en: 'Algarve Tech Hub Summit, 23 to 25 Oct 2024.', pt: 'Algarve Tech Hub Summit, 23 a 25 out. 2024.', src: 'aths24' },
-  loule: { en: 'The first Tech Hub Summit, 2022, with Faro.', pt: 'A primeira Tech Hub Summit, 2022, com Faro.', src: 'econews22' },
-  tavira: { en: 'Algarve Tech Afterwork, which we co-organised.', pt: 'Algarve Tech Afterwork, que coorganizámos.', src: 'afterwork' },
-  monchique: { en: 'A stop for our Grow Algarve Meetup.', pt: 'Uma paragem do nosso Grow Algarve Meetup.', src: 'meetup' },
+  faro: { en: 'Our home. We were officially presented here in 2019.', pt: 'A nossa casa. Fomos apresentados oficialmente aqui em 2019.', es: 'Nuestra casa. Aquí nos presentamos oficialmente en 2019.', fr: 'Chez nous. Nous y avons été présentés officiellement en 2019.', src: 'pres19', home: true },
+  lagos: { en: 'Algarve Digital Innovators launched here, Sep 2025.', pt: 'Aqui foi lançada a Algarve Digital Innovators, set. 2025.', es: 'Aquí se lanzó Algarve Digital Innovators, sept. 2025.', fr: 'Algarve Digital Innovators y a été lancé, sept. 2025.', src: 'adi' },
+  portimao: { en: 'TMCT\'26, 5 to 7 Nov 2026, on our calendar.', pt: 'TMCT\'26, 5 a 7 nov. 2026, no nosso calendário.', es: 'TMCT\'26, del 5 al 7 nov. 2026, en nuestro calendario.', fr: 'TMCT\'26, du 5 au 7 nov. 2026, dans notre calendrier.', src: 'tmct' },
+  albufeira: { en: 'Algarve Tech Hub Summit, 23 to 25 Oct 2024.', pt: 'Algarve Tech Hub Summit, 23 a 25 out. 2024.', es: 'Algarve Tech Hub Summit, del 23 al 25 oct. 2024.', fr: 'Algarve Tech Hub Summit, du 23 au 25 oct. 2024.', src: 'aths24' },
+  loule: { en: 'The first Tech Hub Summit, 2022, with Faro.', pt: 'A primeira Tech Hub Summit, 2022, com Faro.', es: 'La primera Tech Hub Summit, 2022, con Faro.', fr: 'Le premier Tech Hub Summit, 2022, avec Faro.', src: 'econews22' },
+  tavira: { en: 'Algarve Tech Afterwork, which we co-organised.', pt: 'Algarve Tech Afterwork, que coorganizámos.', es: 'Algarve Tech Afterwork, que coorganizamos.', fr: 'Algarve Tech Afterwork, que nous avons co-organisé.', src: 'afterwork' },
+  monchique: { en: 'A stop for our Grow Algarve Meetup.', pt: 'Uma paragem do nosso Grow Algarve Meetup.', es: 'Una parada de nuestro Grow Algarve Meetup.', fr: 'Une étape de notre Grow Algarve Meetup.', src: 'meetup' },
 };
-const PLACE_DEFAULT = { en: 'One of the 16 municipalities in Algarve Digital Innovators.', pt: 'Um dos 16 municípios da Algarve Digital Innovators.', src: 'adi' };
+const PLACE_DEFAULT = { en: 'One of the 16 municipalities in Algarve Digital Innovators.', pt: 'Um dos 16 municípios da Algarve Digital Innovators.', es: 'Uno de los 16 municipios de Algarve Digital Innovators.', fr: 'L\'une des 16 municipalités d\'Algarve Digital Innovators.', src: 'adi' };
 
 const W = {
   en: {
@@ -58,7 +59,7 @@ const W = {
     events: 'Events', eventsIntro: 'Days we ran, co-ran or joined as a partner, newest first. All are past; our current calendar is on algarveevolution.pt.',
     joinCta: 'See the membership categories', proposal: 'Proposal', open: 'Open the prototype',
     sources: 'Sources', sourcesIntro: 'Every fact on this page links to one of these.', published: 'published', read: 'read', cites: 'which cites',
-    version: 'Version', licence: 'Code Apache-2.0; text and drawings CC BY 4.0. Type: Fredoka and Nunito (SIL Open Font License 1.1).', other: 'Português', top: 'Back to the top',
+    version: 'Version', licence: 'Code Apache-2.0; text and drawings CC BY 4.0. Type: Fredoka and Nunito (SIL Open Font License 1.1).', top: 'Back to the top',
     qo: '“', qc: '”',
   },
   pt: {
@@ -75,14 +76,48 @@ const W = {
     events: 'Eventos', eventsIntro: 'Dias que organizámos, coorganizámos ou em que fomos parceiros, do mais recente para o mais antigo. Todos já passaram; o calendário atual está em algarveevolution.pt.',
     joinCta: 'Ver as categorias de membro', proposal: 'Proposta', open: 'Abrir o protótipo',
     sources: 'Fontes', sourcesIntro: 'Cada facto nesta página liga a uma destas fontes.', published: 'publicado a', read: 'lido a', cites: 'que cita',
-    version: 'Versão', licence: 'Código Apache-2.0; texto e desenhos CC BY 4.0. Tipos de letra: Fredoka e Nunito (SIL Open Font License 1.1).', other: 'English', top: 'Voltar ao início',
+    version: 'Versão', licence: 'Código Apache-2.0; texto e desenhos CC BY 4.0. Tipos de letra: Fredoka e Nunito (SIL Open Font License 1.1).', top: 'Voltar ao início',
+    qo: '«', qc: '»',
+  },
+  es: {
+    skip: 'Saltar al contenido', menu: 'Secciones',
+    nav: [['goals', 'Objetivos'], ['work', 'Nuestro trabajo'], ['map', 'Mapa'], ['story', 'Historia'], ['events', 'Eventos'], ['join', 'Unirse'], ['ideas', 'Pruébelo']],
+    kicker: 'Faro, Algarve', sinceWord: 'desde', based: 'con sede en Faro', mandate: 'Nuestra misión',
+    cta1: 'Únase a nosotros', cta2: 'Pruebe dos ideas', target: 'Meta para 2032',
+    figures: 'En cifras', figuresIntro: 'Nuestras propias cifras, tal como se publicaron. Nadie de fuera las ha auditado; cuando dos fuentes difieren, mostramos ambas.',
+    quote: 'En nuestras palabras', about: 'sobre nuestros objetivos para 2032',
+    pillars: 'Tres pilares',
+    map: 'Los 16 municipios', mapIntro: 'Cada azulejo es uno de los 16 municipios del Algarve, situado más o menos donde está en el mapa. Pase el ratón, toque o use la tecla Tab para girar un azulejo.', mapKey: 'Un sol marca un lugar con una historia de nuestro trabajo.', home: 'Sede',
+    story: 'Nuestra historia, azulejo a azulejo', next: 'Próximo',
+    partners: 'Con quién trabajamos',
+    events: 'Eventos', eventsIntro: 'Jornadas que organizamos, coorganizamos o en las que participamos como socios, de la más reciente a la más antigua. Todas han pasado; nuestro calendario actual está en algarveevolution.pt.',
+    joinCta: 'Ver las categorías de socio', proposal: 'Propuesta', open: 'Abrir el prototipo',
+    sources: 'Fuentes', sourcesIntro: 'Cada dato de esta página enlaza con una de estas fuentes.', published: 'publicado el', read: 'leído el', cites: 'que cita',
+    version: 'Versión', licence: 'Código Apache-2.0; texto y dibujos CC BY 4.0. Tipografías: Fredoka y Nunito (SIL Open Font License 1.1).', top: 'Volver arriba',
+    qo: '«', qc: '»',
+  },
+  fr: {
+    skip: 'Aller au contenu', menu: 'Sections',
+    nav: [['goals', 'Objectifs'], ['work', 'Notre travail'], ['map', 'Carte'], ['story', 'Histoire'], ['events', 'Événements'], ['join', 'Adhérer'], ['ideas', 'Essayer']],
+    kicker: 'Faro, Algarve', sinceWord: 'depuis', based: 'basés à Faro', mandate: 'Notre mission',
+    cta1: 'Rejoignez-nous', cta2: 'Essayez deux idées', target: 'Objectif pour 2032',
+    figures: 'En chiffres', figuresIntro: 'Nos propres chiffres, tels que publiés. Personne d\'extérieur ne les a audités\u202f; quand deux sources divergent, nous montrons les deux.',
+    quote: 'Avec nos mots', about: 'à propos de nos objectifs pour 2032',
+    pillars: 'Trois piliers',
+    map: 'Les 16 municipalités', mapIntro: 'Chaque azulejo est l\'une des 16 municipalités de l\'Algarve, placée à peu près là où elle se trouve sur la carte. Survolez, touchez ou atteignez un azulejo avec la touche Tab pour le retourner.', mapKey: 'Un soleil marque un lieu lié à une histoire de notre travail.', home: 'Siège',
+    story: 'Notre histoire, azulejo par azulejo', next: 'À venir',
+    partners: 'Avec qui nous travaillons',
+    events: 'Événements', eventsIntro: 'Les journées que nous avons organisées, co-organisées ou rejointes comme partenaire, de la plus récente à la plus ancienne. Toutes sont passées\u202f; notre calendrier actuel est sur algarveevolution.pt.',
+    joinCta: 'Voir les catégories de membre', proposal: 'Proposition', open: 'Ouvrir le prototype',
+    sources: 'Sources', sourcesIntro: 'Chaque fait de cette page renvoie à l\'une de ces sources.', published: 'publié le', read: 'lu le', cites: 'qui cite',
+    version: 'Version', licence: 'Code Apache-2.0\u202f; texte et dessins CC BY 4.0. Polices\u202f: Fredoka et Nunito (SIL Open Font License 1.1).', top: 'Retour en haut',
     qo: '«', qc: '»',
   },
 };
 
-export function render({ lang, data, h, chrome, other }) {
-  const { esc, t } = h; const v = data.voice; const w = W[lang];
-  const otherLang = lang === 'en' ? 'pt' : 'en';
+export function render({ lang, data, h, chrome, alt }) {
+  const { esc, t } = h; const v = data.voice; const w = W[lang] || W.en;
+  const goalValue = g => (/^\d{1,3}(,\d{3})+$/.test(g.value) ? h.num(Number(g.value.replace(/,/g, ''))) : g.value);
 
   // h.cite(), and a list of every source used, for the sources panel at the end.
   const used = [];
@@ -107,12 +142,12 @@ export function render({ lang, data, h, chrome, other }) {
     return `<li class="mt${story ? ' mt-story' : ''}${p.home ? ' mt-home' : ''}" style="--c:${c};--r:${r}">
 <div class="mt-card" tabindex="0" role="group" aria-label="${esc(m.name)}"><div class="mt-in">
 <div class="mt-front">${story ? icon('sun', 'mt-sun') : ''}<span class="mt-name">${esc(m.name)}</span>${p.home ? `<span class="mt-badge">${esc(w.home)}</span>` : ''}</div>
-<div class="mt-back"><p>${esc(p[lang])}</p>${cite(p.src, 'src mt-src')}</div>
+<div class="mt-back"><p>${esc(p[lang] || p.en)}</p>${cite(p.src, 'src mt-src')}</div>
 </div></div></li>`;
   };
   const sea = Array.from({ length: 9 }, (_, i) => `<li class="mt mt-sea${i === 4 ? ' mt-boat' : ''}" aria-hidden="true" style="--c:${i + 1};--r:3">${i === 4 ? `<span class="mt-face">${icon('boat')}</span>` : ''}</li>`).join('');
 
-  const tl = data.ecosystem.timeline.map((raw, i) => { const e = timelineEntry(raw); return `<li class="tt${e.future ? ' tt-future' : ''}"><div class="tt-in"><p class="tt-when"><span class="tt-n" aria-hidden="true">${i + 1}</span>${esc(e.when)}${e.future ? ` <em>${w.next}</em>` : ''}</p><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p>${e.stat ? `<p class="tt-stat">${esc(e.stat)}</p>` : ''}${cite(e.src)}</div></li>`; }).join('');
+  const tl = data.ecosystem.timeline.map((raw, i) => { const e = timelineEntry(raw, lang); return `<li class="tt${e.future ? ' tt-future' : ''}"><div class="tt-in"><p class="tt-when"><span class="tt-n" aria-hidden="true">${i + 1}</span>${esc(e.when)}${e.future ? ` <em>${w.next}</em>` : ''}</p><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p>${e.stat ? `<p class="tt-stat">${esc(e.stat)}</p>` : ''}${cite(e.src)}</div></li>`; }).join('');
 
   const tones = ['y', 'b', 't', 'w'];
 
@@ -141,7 +176,7 @@ export function render({ lang, data, h, chrome, other }) {
 <section class="sec" id="goals" aria-labelledby="h-goals">
   <div class="wrap">
     ${head('goals', t(v.goals_note), t(v.goals_title), '', 'sun')}
-    <ol class="goals">${v.goals.map((g, i) => `<li class="goal tone-${['b', 'y', 't'][i]}"><span class="goal-k">${esc(w.target)}</span><span class="goal-v">${esc(lang === 'pt' && g.value_pt ? g.value_pt : g.value)}</span><span class="goal-l">${esc(t(g.label))}</span></li>`).join('')}</ol>
+    <ol class="goals">${v.goals.map((g, i) => `<li class="goal tone-${['b', 'y', 't'][i]}"><span class="goal-k">${esc(w.target)}</span><span class="goal-v">${esc(goalValue(g))}</span><span class="goal-l">${esc(t(g.label))}</span></li>`).join('')}</ol>
     ${cite(v.goals_sources)}
   </div>
 </section>
@@ -219,7 +254,7 @@ export function render({ lang, data, h, chrome, other }) {
 <section class="sec sec-tint" id="ideas" aria-labelledby="h-ideas">
   <div class="wrap">
     ${head('ideas', '', t(v.try_title), t(v.try_intro), 'laptop')}
-    <div class="ideas">${v.apps.map((a, i) => { const p = proposals[a.id]; const href = (lang === 'pt' ? '/pt' : '') + a.href; return `<article class="panel idea tone-${['y', 'b'][i]}"><div class="pin">
+    <div class="ideas">${v.apps.map((a, i) => { const p = proposals[a.id]; const href = langPath(a.href, lang); return `<article class="panel idea tone-${['y', 'b'][i]}"><div class="pin">
       <span class="sticker st-prop">${esc(w.proposal)}</span>
       <span class="idea-ic">${icon(appIcon[a.id] || 'laptop')}</span>
       <h3><a href="${esc(href)}">${esc(t(a.name))}</a></h3>
@@ -254,7 +289,6 @@ ${chrome.head}
 <link rel="preload" href="/d/azulejo/fonts/fredoka-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/d/azulejo/fonts/nunito-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/d/azulejo/style.css">
-<link rel="alternate" hreflang="${otherLang}" href="${other}">
 </head>
 <body class="az">
 ${chrome.banner}
@@ -263,7 +297,7 @@ ${chrome.banner}
   <div class="wrap top-in">
     <a class="logo" href="#main"><span class="logo-tile" aria-hidden="true"></span><span>Algarve<br>Evolution</span></a>
     <nav class="nav" aria-label="${esc(w.menu)}"><ul>${w.nav.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('')}</ul></nav>
-    <a class="lang" href="${esc(other)}" hreflang="${otherLang}" lang="${otherLang}">${esc(w.other)}</a>
+    <nav class="apps" aria-label="${esc(h.words.ideas)}">${APPS.map(a => `<a class="app" href="${esc(langPath(a.path, lang))}">${icon(appIcon[a.id] || 'laptop', 'app-ic')}<span>${esc(a.name[lang] || a.name.en)}</span></a>`).join('')}</nav>
   </div>
 </header>
 <div class="strip" aria-hidden="true"></div>
@@ -278,7 +312,8 @@ ${sources}
     <div class="foot-text">
       <p><strong>${esc(t(v.banner))}</strong> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(t(v.banner_link))}</a>.</p>
       <p>${esc(t(v.footer_disclosure))}</p>
-      <p class="small">${w.version} ${esc(chrome.version)} · ${esc(w.licence)} · <a href="${esc(other)}" hreflang="${otherLang}" lang="${otherLang}">${esc(w.other)}</a> · <a href="#main">${esc(w.top)}</a></p>
+      <p class="small">${w.version} ${esc(chrome.version)} · ${esc(w.licence)} · <a href="#main">${esc(w.top)}</a></p>
+      <p class="small foot-langs" role="group" aria-label="${esc(h.words.language)}">${langLinks(h, alt)}</p>
     </div>
   </div>
 </footer>

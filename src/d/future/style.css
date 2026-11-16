@@ -14,15 +14,15 @@
   --pad:clamp(16px,5vw,72px);color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:72px}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--text);overflow-x:clip}
 a{color:var(--cyan);text-underline-offset:3px;text-decoration-thickness:1px}
 a:hover{color:#9ff5ec}
 :focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:4px}
 img{max-width:100%;display:block}
 .skip{position:absolute;left:-9999px;top:0;background:var(--amber);color:#000;padding:.6rem 1rem;z-index:1200;font-weight:600}
-.skip:focus{left:16px;top:56px}
-h1,h2,h3,h4{margin:0;font-family:var(--disp);font-weight:900;letter-spacing:-.035em;line-height:.95}
+.skip:focus{left:16px;top:56px;z-index:1300}
+h1,h2,h3,h4{margin:0;font-family:var(--disp);font-weight:900;letter-spacing:-.035em;line-height:.95;overflow-wrap:break-word;hyphens:auto}
 p{margin:0 0 1em}
 
 /* sources and captions */
@@ -46,6 +46,33 @@ figcaption .cap{position:static;text-align:left;max-width:none;text-shadow:none;
 .chap a[aria-current="true"] span{background:var(--amber);color:#111;border-color:var(--amber)}
 .chap a:focus-visible{outline-offset:1px}
 @media (min-width:1500px){.chap{display:block}}
+
+/* top menu: brand, four chapters (wide screens) and the two working ideas (every screen) */
+.fx-top{position:sticky;top:0;z-index:920;background:rgba(5,7,13,.72);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.fx-top-in{display:flex;align-items:center;gap:12px;max-width:1440px;margin:0 auto;padding:10px var(--pad);min-height:58px}
+.fx-brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:700 15px/1 var(--disp);letter-spacing:-.01em;flex:none}
+.fx-mark{width:26px;height:26px;border-radius:50%;background:conic-gradient(from 210deg,var(--amber),var(--coral),var(--cyan),var(--amber));box-shadow:0 0 18px rgba(255,111,79,.45);position:relative}
+.fx-mark::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg)}
+.fx-nav{display:flex;align-items:center;gap:clamp(10px,2vw,28px);margin-left:auto;min-width:0}
+.fx-nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center}
+.fx-chap{gap:clamp(12px,1.8vw,26px)}
+.fx-chap a{color:var(--mute);text-decoration:none;font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:8px 0;white-space:nowrap}
+.fx-chap a:hover{color:var(--ink)}
+.fx-apps{gap:8px}
+.fx-app{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;color:var(--ink);text-decoration:none;font:600 14px/1 var(--text);padding:9px 14px 9px 11px;border-radius:999px;border:1px solid transparent;background:linear-gradient(rgba(10,15,29,.92),rgba(10,15,29,.92)) padding-box,linear-gradient(100deg,var(--amber),var(--coral) 50%,var(--cyan)) border-box;transition:box-shadow .25s,transform .25s}
+.fx-app:hover{color:#fff;box-shadow:0 0 22px rgba(82,229,214,.35);transform:translateY(-1px)}
+.fx-app svg{width:17px;height:17px;flex:none;fill:none;stroke:var(--cyan);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fx-app svg circle{fill:var(--amber);stroke:none}
+.fx-app:nth-child(1) svg circle{fill:var(--amber)}
+@media (max-width:1099px){.fx-chap{display:none}}
+@media (max-width:620px){
+  .fx-top-in{gap:8px;padding:8px 12px;min-height:52px}
+  .fx-word{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .fx-apps{gap:6px}
+  .fx-app{font-size:13px;padding:8px 11px 8px 9px;gap:6px}
+  .fx-app svg{width:15px;height:15px}
+}
+@media (max-width:370px){.fx-app svg{display:none}}
 
 /* kinetic words */
 .kin .w,.reveal-text .w,.quote blockquote .w,.foot .big .w{display:inline-block}

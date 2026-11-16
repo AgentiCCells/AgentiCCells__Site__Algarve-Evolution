@@ -86,10 +86,100 @@
       madeWith: d => `Feita num navegador com o protótipo Da folha de cálculo à aplicação a ${d}. Este ficheiro não faz pedidos à internet.`,
       resetPub: 'Repor os dados publicados',
     },
+    es: {
+      types: { text: 'Texto', category: 'Categoría', number: 'Número', money: 'Dinero', date: 'Fecha', time: 'Hora', bool: 'Sí/no', phone: 'Teléfono' },
+      yes: 'Sí', no: 'No', empty: '(vacío)', all: 'Todos', search: n => `Buscar en ${n} filas`, showing: (n, t) => n === t ? `${t} filas` : `${n} de ${t} filas`,
+      none: 'Nada coincide. Borre la búsqueda o un filtro.', sortBy: 'Ordenar por', orig: 'Como en el archivo', asc: 'Ascendente', desc: 'Descendente', clear: 'Borrar filtros',
+      more: n => `Mostrar ${n} más`, add: 'Añadir fila', edit: 'Editar', del: 'Borrar', sure: '¿Borrar?', save: 'Guardar', cancel: 'Cancelar',
+      addTitle: 'Añadir una fila', editTitle: 'Editar esta fila', exportCsv: 'Exportar CSV', importCsv: 'Importar CSV', reset: 'Volver al original', resetSure: '¿Volver? Sus cambios se pierden.',
+      imported: n => `Importadas ${n} filas.`, importDiff: 'Ese archivo tiene otras columnas. Cárguelo como una aplicación nueva.', importFail: 'No se pudo leer ese archivo como CSV.',
+      saved: 'Guardado en este navegador.', deleted: 'Fila borrada.', added: 'Fila añadida.', changed: 'Fila guardada.', storeFail: 'Este navegador no ha guardado; los cambios duran hasta que cierre la página.',
+      actions: 'Acciones', required: 'Al menos un campo necesita un valor.',
+      done: 'Hecho', ordered: 'Pedido', chased: 'Reclamada', reminded: 'Avisado',
+      marked: (n, t, a) => `${n} de ${t} marcados "${a}"`, otherView: 'Otra vista', todayIs: 'Hoy es', useToday: 'Usar hoy',
+      v: {
+        stock: ['Qué pedir', 'Primero los artículos por debajo del mínimo, agrupados por proveedor, con lo que hay que pedir y lo que cuesta.'],
+        invoices: ['Facturas pendientes de pago', 'Primero las vencidas, las más antiguas arriba, con los totales.'],
+        schedule: ['Hoy y esta semana', 'Primero hoy, luego el resto de la semana, con quién, dónde y lo que queda por pagar.'],
+        members: ['Quién no ha pagado', 'Primero quien no ha pagado, luego todos los demás.'],
+        checklist: ['Lo esencial primero, por fase', 'Primero los pasos esenciales, luego el resto de la fase.'],
+        generic: ['Lo más importante primero', 'Primero las filas que aún necesitan algo.'],
+      },
+      belowMin: 'Por debajo del mínimo', ofItems: n => `de ${n} artículos`, ofRows: n => `de ${n}`, nothing: 'Nada aquí.', outOfStock: 'Agotados', costToMin: 'Para llegar al mínimo', stockOf: (a, b, u) => `${a} de ${b}${u ? ' ' + u : ''} en existencias`,
+      orderAtLeast: (n, u) => `pedir ${n}${u ? ' ' + u : ''}`, orderDay: d => `pedido: ${d}`, orderToday: 'Hoy toca pedido', aboveMin: 'En el mínimo o por encima', belowGroup: 'Por debajo del mínimo',
+      chCostCat: 'Coste para llegar al mínimo, por', chValueCat: 'Valor en existencias, por', chCountBelow: 'Artículos por debajo del mínimo, por',
+      unpaid: 'Pendiente', overdue: 'Vencidas', notDue: 'Aún no vencidas', paid: 'Pagadas', withVat: v => `${v} con IVA`, daysOver: n => n === 1 ? 'vencida hace 1 día' : `vencida hace ${n} días`,
+      dueIn: n => n === 0 ? 'vence hoy' : n === 1 ? 'vence mañana' : `vence en ${n} días`, dueOn: d => `vence el ${d}`, nInv: n => n === 1 ? '1 factura' : `${n} facturas`,
+      chUnpaidBy: 'Pendiente, por', chIssuedBy: 'Facturado, por', week: 'semana', month: 'mes', year: 'año',
+      today: 'Hoy', thisWeek: 'Esta semana', earlier: 'Antes, esta semana', people: 'Personas esta semana', takings: 'Ingresos esta semana', cancelled: n => n === 1 ? '1 cancelada, no se muestra' : `${n} canceladas, no se muestran`,
+      noneThisWeek: (a, b) => `No hay nada el ${a} ni en su semana, así que mostramos la semana del ${b} como si fuera hoy. Cambie la fecha para ver otra semana.`,
+      chByDay: 'Esta semana, por día', chBy: 'Esta semana, por', nRows: n => n === 1 ? '1 fila' : `${n} filas`,
+      notPaid: 'Aún no han pagado', paidN: (n, t) => `${n} de ${t}`, paidLabel: 'Han pagado', joined: d => `alta el ${d}`, chMembersBy: 'Socios, por', chJoinedBy: 'Altas, por año',
+      essentials: 'Esencial', theRest: 'El resto', progress: 'Pasos hechos', essentialsDone: 'Esenciales hechos', ofN: (n, t) => `${n} de ${t}`, chDoneByPhase: 'Hecho, por fase', essential: 'esencial',
+      allRows: 'Todas las filas', open: 'Por hacer', closed: 'Hecho o cerrado', upcoming: 'Próximamente', past: 'Pasado', total: 'Total', rows: 'Filas', countBy: 'Filas, por', sumBy: 'Total, por', byPeriod: p => `Por ${p}`,
+      wc: d => `sem. ${d}`,
+      runTitle: 'Terminar esta ronda', runSum: (v, d, s) => `${v}: ${d} hechos, ${s} saltados.`, runDone: 'Hechos', runSkipped: 'Saltados', runNote: 'Nota de esta ronda',
+      runPh: '¿Algo que recordar la próxima vez?', runSave: 'Guardar esta ronda', runSaved: 'Guardado en el historial. Las marcas se han borrado para la próxima ronda.',
+      hist: 'Historial', histEmpty: 'Aún no hay rondas. Marque elementos en la vista y guarde su primera ronda.', histDel: 'Borrar este registro', histItem: (d, s) => `${d} hechos, ${s} saltados`,
+      nav: { view: 'La vista que más uso', list: 'Todas las filas', hist: 'Historial', about: 'Acerca de' },
+      about: { what: 'Qué hace', where: 'Dónde se guardan los datos', not: 'Qué no hace todavía' },
+      madeWith: d => `Hecha en un navegador con el prototipo De la hoja a la app el ${d}. Este archivo no hace peticiones a internet.`,
+      resetPub: 'Volver a los datos publicados',
+    },
+    fr: {
+      types: { text: 'Texte', category: 'Catégorie', number: 'Nombre', money: 'Montant', date: 'Date', time: 'Heure', bool: 'Oui/non', phone: 'Téléphone' },
+      yes: 'Oui', no: 'Non', empty: '(vide)', all: 'Tous', search: n => `Chercher dans ${n} lignes`, showing: (n, t) => n === t ? `${t} lignes` : `${n} sur ${t} lignes`,
+      none: 'Aucun résultat. Effacez la recherche ou un filtre.', sortBy: 'Trier par', orig: 'Comme dans le fichier', asc: 'Croissant', desc: 'Décroissant', clear: 'Effacer les filtres',
+      more: n => `Afficher ${n} de plus`, add: 'Ajouter une ligne', edit: 'Modifier', del: 'Supprimer', sure: 'Supprimer ?', save: 'Enregistrer', cancel: 'Annuler',
+      addTitle: 'Ajouter une ligne', editTitle: 'Modifier cette ligne', exportCsv: 'Exporter en CSV', importCsv: 'Importer un CSV', reset: 'Revenir à l\'original', resetSure: 'Revenir ? Vos modifications seront perdues.',
+      imported: n => `${n} lignes importées.`, importDiff: 'Ce fichier a d\'autres colonnes. Chargez-le plutôt comme une nouvelle application.', importFail: 'Impossible de lire ce fichier comme CSV.',
+      saved: 'Enregistré dans ce navigateur.', deleted: 'Ligne supprimée.', added: 'Ligne ajoutée.', changed: 'Ligne enregistrée.', storeFail: 'Ce navigateur n\'a pas enregistré ; les modifications durent jusqu\'à la fermeture de la page.',
+      actions: 'Actions', required: 'Au moins un champ doit avoir une valeur.',
+      done: 'Fait', ordered: 'Commandé', chased: 'Relancée', reminded: 'Relancé',
+      marked: (n, t, a) => `${n} sur ${t} marqués « ${a} »`, otherView: 'Autre vue', todayIs: 'Nous sommes le', useToday: 'Revenir à aujourd\'hui',
+      v: {
+        stock: ['Ce qu\'il faut commander', 'Les articles sous leur minimum d\'abord, groupés par fournisseur, avec ce qu\'il faut commander et ce que cela coûte.'],
+        invoices: ['Factures impayées', 'Les factures en retard d\'abord, les plus anciennes en haut, avec les totaux.'],
+        schedule: ['Aujourd\'hui et cette semaine', 'Aujourd\'hui d\'abord, puis le reste de la semaine, avec qui, où et ce qui reste à payer.'],
+        members: ['Qui n\'a pas payé', 'Ceux qui n\'ont pas payé d\'abord, puis tous les autres.'],
+        checklist: ['L\'essentiel d\'abord, par phase', 'Les étapes essentielles d\'abord, puis le reste de la phase.'],
+        generic: ['Le plus important d\'abord', 'Les lignes qui demandent encore quelque chose, d\'abord.'],
+      },
+      belowMin: 'Sous le minimum', ofItems: n => `sur ${n} articles`, ofRows: n => `sur ${n}`, nothing: 'Rien ici.', outOfStock: 'En rupture', costToMin: 'Pour atteindre le minimum', stockOf: (a, b, u) => `${a} sur ${b}${u ? ' ' + u : ''} en stock`,
+      orderAtLeast: (n, u) => `commander ${n}${u ? ' ' + u : ''}`, orderDay: d => `commande : ${d}`, orderToday: 'Jour de commande aujourd\'hui', aboveMin: 'Au minimum ou au-dessus', belowGroup: 'Sous le minimum',
+      chCostCat: 'Coût pour atteindre le minimum, par', chValueCat: 'Valeur du stock, par', chCountBelow: 'Articles sous le minimum, par',
+      unpaid: 'Impayé', overdue: 'En retard', notDue: 'Pas encore échues', paid: 'Payées', withVat: v => `${v} TTC`, daysOver: n => n === 1 ? '1 jour de retard' : `${n} jours de retard`,
+      dueIn: n => n === 0 ? 'échéance aujourd\'hui' : n === 1 ? 'échéance demain' : `échéance dans ${n} jours`, dueOn: d => `échéance le ${d}`, nInv: n => n === 1 ? '1 facture' : `${n} factures`,
+      chUnpaidBy: 'Impayé, par', chIssuedBy: 'Facturé, par', week: 'semaine', month: 'mois', year: 'année',
+      today: 'Aujourd\'hui', thisWeek: 'Cette semaine', earlier: 'Plus tôt cette semaine', people: 'Personnes cette semaine', takings: 'Recettes cette semaine', cancelled: n => n === 1 ? '1 annulée, non affichée' : `${n} annulées, non affichées`,
+      noneThisWeek: (a, b) => `Rien le ${a} ni dans sa semaine ; nous affichons donc la semaine du ${b} comme si c'était aujourd'hui. Changez la date pour voir une autre semaine.`,
+      chByDay: 'Cette semaine, par jour', chBy: 'Cette semaine, par', nRows: n => n === 1 ? '1 ligne' : `${n} lignes`,
+      notPaid: 'Pas encore payé', paidN: (n, t) => `${n} sur ${t}`, paidLabel: 'Ont payé', joined: d => `adhésion le ${d}`, chMembersBy: 'Membres, par', chJoinedBy: 'Adhésions, par année',
+      essentials: 'Essentiel', theRest: 'Le reste', progress: 'Étapes faites', essentialsDone: 'Essentiels faits', ofN: (n, t) => `${n} sur ${t}`, chDoneByPhase: 'Fait, par phase', essential: 'essentiel',
+      allRows: 'Toutes les lignes', open: 'À faire', closed: 'Fait ou clos', upcoming: 'À venir', past: 'Passé', total: 'Total', rows: 'Lignes', countBy: 'Lignes, par', sumBy: 'Total, par', byPeriod: p => `Par ${p}`,
+      wc: d => `sem. du ${d}`,
+      runTitle: 'Terminer cette tournée', runSum: (v, d, s) => `${v} : ${d} faits, ${s} sautés.`, runDone: 'Faits', runSkipped: 'Sautés', runNote: 'Note pour cette tournée',
+      runPh: 'Quelque chose à retenir pour la prochaine fois ?', runSave: 'Enregistrer cette tournée', runSaved: 'Ajouté à l\'historique. Les marques sont effacées pour la prochaine tournée.',
+      hist: 'Historique', histEmpty: 'Aucune tournée pour l\'instant. Marquez des éléments dans la vue, puis enregistrez votre première tournée.', histDel: 'Supprimer ce relevé', histItem: (d, s) => `${d} faits, ${s} sautés`,
+      nav: { view: 'La vue que j\'utilise le plus', list: 'Toutes les lignes', hist: 'Historique', about: 'À propos' },
+      about: { what: 'Ce qu\'elle fait', where: 'Où sont gardées les données', not: 'Ce qu\'elle ne fait pas encore' },
+      madeWith: d => `Créée dans un navigateur avec le prototype Du tableur à l'app le ${d}. Ce fichier ne fait aucune requête vers internet.`,
+      resetPub: 'Revenir aux données publiées',
+    },
   };
+  // French puts a no-break space before : ; ? ! and inside « »; applied to every French string (and to what its functions return).
+  const frNb = s => String(s).replace(/ ([:;?!»])/g, ' $1').replace(/« /g, '« ');
+  const nbWalk = v => typeof v === 'string' ? frNb(v) : typeof v === 'function' ? (...a) => frNb(v(...a)) : Array.isArray(v) ? v.map(nbWalk) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, nbWalk(x)])) : v;
+  L.fr = nbWalk(L.fr);
+  const LANGS = ['en', 'pt', 'es', 'fr'];
+  const LOCALE = { en: 'en-GB', pt: 'pt-PT', es: 'es-ES', fr: 'fr-FR' };
+  const pickLang = l => (LANGS.includes(l) ? l : 'en');
   let lang = 'en';
   const W = () => L[lang];
-  const loc = () => (lang === 'pt' ? 'pt-PT' : 'en-GB');
+  const loc = () => LOCALE[lang];
+  const C = () => (lang === 'fr' ? ' : ' : ': '); // "label: value", French style in French
+  // The words the engine writes into data it makes (checklist columns, unnamed columns), by language.
+  const DATAW = { en: ['Phase', 'Step', 'Essential', 'List', 'Column'], pt: ['Fase', 'Passo', 'Essencial', 'Lista', 'Coluna'], es: ['Fase', 'Paso', 'Esencial', 'Lista', 'Columna'], fr: ['Phase', 'Étape', 'Essentiel', 'Liste', 'Colonne'] };
 
   /* ---------- small helpers ---------- */
   const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

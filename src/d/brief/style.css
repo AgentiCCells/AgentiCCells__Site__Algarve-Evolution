@@ -34,9 +34,20 @@ body.brief{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 v
 .mark{font-weight:750;letter-spacing:-.01em;text-decoration:none!important;white-space:nowrap}
 .mast-t{flex:1;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mast-t span:first-child{color:var(--ink);font-weight:550}
-.lang{font-weight:550;text-decoration:none!important;border:1px solid var(--rule);padding:.15rem .6rem;border-radius:999px}
-.lang:hover{border-color:var(--accent)}
+/* The two working ideas sit at the right of the masthead; on a phone they take a row of their own. */
+.mast-apps{display:flex;gap:8px;flex:none}
+.mast-apps .app{display:inline-flex;align-items:center;gap:.5em;font-weight:550;text-decoration:none!important;border:1px solid var(--rule);padding:.2rem .7rem .2rem .6rem;border-radius:999px;white-space:nowrap}
+.mast-apps .app::before{content:"";flex:none;width:.5em;height:.5em;background:var(--accent)}
+.mast-apps .app:hover{border-color:var(--accent)}
 @media (max-width:520px){.mast-sub{display:none}}
+@media (max-width:719px){
+  .mast-in{flex-wrap:wrap;row-gap:0}
+  .mast-t{display:none}
+  .mast-apps{order:3;flex:1 1 100%;padding:0 0 9px}
+  .mast-apps .app{flex:1 1 0;min-width:0;justify-content:center;font-size:13.5px;padding:.3rem .5rem;white-space:normal;text-align:center;line-height:1.2}
+  html{scroll-padding-top:104px}
+}
+.foot-langs [aria-current]{font-weight:650;text-decoration:underline;text-decoration-thickness:2px;text-decoration-color:var(--accent);text-underline-offset:.2em}
 
 /* The grid. */
 .row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);border-top:1px solid var(--rule-strong);padding:28px 0 52px}
@@ -56,7 +67,8 @@ body.brief{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 v
 .hero{padding-top:44px}
 .kicker{display:flex;flex-wrap:wrap;gap:6px 0;font-size:13px;font-weight:550;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);margin-bottom:28px}
 .kicker span+span::before{content:"";display:inline-block;width:1px;height:.9em;background:var(--rule);margin:0 12px;vertical-align:-1px}
-.hero h1{font-size:clamp(2.85rem,1rem + 7.3vw,7.6rem);line-height:.94;font-weight:680;letter-spacing:-.045em;max-width:12.5ch;margin-bottom:56px;text-wrap:balance;hyphens:manual}
+.hero h1{font-size:clamp(2.85rem,1rem + 7.3vw,7.6rem);line-height:.94;font-weight:680;letter-spacing:-.045em;max-width:12.5ch;margin-bottom:56px;text-wrap:balance;hyphens:manual;overflow-wrap:break-word}
+.brief :where(h2,h3,h4,dt){overflow-wrap:break-word}
 .hero h1::after{content:"";display:block;width:.42em;height:.09em;background:var(--accent);margin-top:.28em}
 .row-hero{padding-bottom:64px}
 .lede{font-size:clamp(1.2rem,1rem + .9vw,1.6rem);line-height:1.38;font-weight:430;letter-spacing:-.012em;max-width:31em;color:var(--ink)}

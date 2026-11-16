@@ -1,11 +1,11 @@
-// Writes the static templates of the default design "coast" (src/index.html, src/pt/index.html) from src/data.
+// Writes the static templates of the default design "coast" (src/index.html, src/pt/, src/es/, src/fr/index.html) from src/data.
 // The <!-- data:NAME --> markers are left for scripts/render.mjs. Run from the repository root.
 // Owner: sites-design@AgentiCCells.dinis. Code Apache-2.0.
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 const R = process.cwd();
-const { loadData, helpers, chrome } = await import(R + '/scripts/site-data.mjs');
+const { loadData, localise, helpers, chrome, LANGS, LANG_NAMES, APPS, designPath, langPath } = await import(R + '/scripts/site-data.mjs');
 const { timelineItem, partnerItem, algarveMap } = await import(R + '/scripts/designs/corporate.mjs');
-const data = loadData('src/data');
+const raw = loadData('src/data');
 
 const C = {
   en: {
@@ -22,10 +22,11 @@ const C = {
     evKick: 'Where we meet', evTitle: 'Events', evIntro: 'Days we ran, co-ran or partnered, newest first. All are past; our current calendar is on <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>.',
     tryKick: 'Working prototypes', proposal: 'Proposal', working: 'working prototype', open: 'Open it', oneMore: 'And one more idea',
     joinKick: 'Take part', joinIntro: 'Everything happens through <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>. This prototype takes no sign-ups and keeps no data.',
-    dataH: 'Every fact, as data', dataP: 'The figures, programmes, events and proposals on this page are published as files, each item with its sources, in English and Portuguese.',
+    dataH: 'Every fact, as data', dataP: 'The figures, programmes, events and proposals on this page are published as files, each item with its sources and its translations.',
+    storyTitle: 'Our story', apps: 'Working prototypes', languages: 'This page in',
     peopleKick: 'Our people', peopleTitle: 'Who leads the team',
     srcSummary: 'Sources', srcNote: 'every fact on this page comes from one of these',
-    official: 'Our official site is', version: 'Version', licence: 'Code Apache-2.0, text and drawings CC BY 4.0', otherLang: 'Português', desc: "Algarve Evolution's goals, story, partners, work and events, each linked to its source.",
+    official: 'Our official site is', version: 'Version', licence: 'Code Apache-2.0, text and drawings CC BY 4.0', desc: "Algarve Evolution's goals, story, partners, work and events, each linked to its source.",
   },
   pt: {
     title: 'Algarve Evolution: construir a economia do Algarve para além do turismo', skip: 'Saltar para o conteúdo', sections: 'Secções', top: 'topo da página',
@@ -41,17 +42,62 @@ const C = {
     evKick: 'Onde nos encontramos', evTitle: 'Eventos', evIntro: 'Dias que organizámos, coorganizámos ou apoiámos como parceiros, do mais recente para o mais antigo. Todos já passaram; o calendário atual está em <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>.',
     tryKick: 'Protótipos a funcionar', proposal: 'Proposta', working: 'protótipo a funcionar', open: 'Abrir', oneMore: 'E mais uma ideia',
     joinKick: 'Participar', joinIntro: 'Tudo acontece através de <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>. Este protótipo não recolhe inscrições nem guarda dados.',
-    dataH: 'Cada facto, em dados', dataP: 'Os números, programas, eventos e propostas desta página estão publicados em ficheiros, cada item com as suas fontes, em inglês e em português.',
+    dataH: 'Cada facto, em dados', dataP: 'Os números, programas, eventos e propostas desta página estão publicados em ficheiros, cada item com as suas fontes e as suas traduções.',
+    storyTitle: 'A nossa história', apps: 'Protótipos a funcionar', languages: 'Esta página em',
     peopleKick: 'As nossas pessoas', peopleTitle: 'Quem lidera a equipa',
     srcSummary: 'Fontes', srcNote: 'cada facto desta página vem de uma destas',
-    official: 'O nosso site oficial é', version: 'Versão', licence: 'Código Apache-2.0, textos e desenhos CC BY 4.0', otherLang: 'English', desc: 'Os objetivos, a história, os parceiros, o trabalho e os eventos da Algarve Evolution, cada um com a sua fonte.',
+    official: 'O nosso site oficial é', version: 'Versão', licence: 'Código Apache-2.0, textos e desenhos CC BY 4.0', desc: 'Os objetivos, a história, os parceiros, o trabalho e os eventos da Algarve Evolution, cada um com a sua fonte.',
+  },
+  es: {
+    title: 'Algarve Evolution: construir la economía del Algarve más allá del turismo', skip: 'Saltar al contenido', sections: 'Secciones', top: 'inicio de la página',
+    nav: [['goals', 'Objetivos'], ['story', 'Historia'], ['partners', 'Socios'], ['work', 'Trabajo'], ['events', 'Eventos'], ['try', 'Pruébelo'], ['join', 'Únase']],
+    eyebrow: 'Faro, Algarve · desde 2018', ctaJoin: 'Únase a nosotros', ctaTry: 'Pruebe dos ideas en funcionamiento',
+    goalsKick: 'Hacia dónde vamos', goalsIntro: 'Dónde queremos que esté el Algarve en 2032.',
+    quoteKick: 'De nuestro director ejecutivo', role: 'Director ejecutivo',
+    storyKick: 'De dónde venimos', trackLabel: 'Nuestra historia, de 2018 a 2027', planned: 'Previsto', swipe: 'Deslice',
+    partnersKick: 'Con quién trabajamos', partnersTitle: 'Socios y los 16 municipios', munisH: 'Los 16 municipios',
+    munisNote: 'Las comunidades de Algarve Digital Innovators cubren los 16 municipios del Algarve, miembros de AMAL.', mapLabel: 'Mapa del Algarve con un punto por cada uno de sus 16 municipios; Faro, donde tenemos nuestra sede, está rodeado con un círculo',
+    workKick: 'Lo que hacemos', workTitle: 'Nuestro trabajo, en tres pilares',
+    figKick: 'Dónde estamos hoy', figTitle: 'En cifras', figIntro: 'Nuestras propias cifras, tal como se publicaron. Nadie las ha auditado; cuando dos fuentes difieren, mostramos ambas.',
+    evKick: 'Dónde nos encontramos', evTitle: 'Eventos', evIntro: 'Jornadas que organizamos, coorganizamos o apoyamos como socios, de la más reciente a la más antigua. Todas han pasado ya; nuestro calendario actual está en <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>.',
+    tryKick: 'Prototipos en funcionamiento', proposal: 'Propuesta', working: 'prototipo en funcionamiento', open: 'Abrir', oneMore: 'Y una idea más',
+    joinKick: 'Participar', joinIntro: 'Todo pasa por <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>. Este prototipo no recoge inscripciones ni guarda datos.',
+    dataH: 'Cada dato, en archivos', dataP: 'Las cifras, programas, eventos y propuestas de esta página están publicados en archivos, cada elemento con sus fuentes y sus traducciones.',
+    storyTitle: 'Nuestra historia', apps: 'Prototipos en funcionamiento', languages: 'Esta página en',
+    peopleKick: 'Nuestro equipo', peopleTitle: 'Quién dirige el equipo',
+    srcSummary: 'Fuentes', srcNote: 'cada dato de esta página procede de una de ellas',
+    official: 'Nuestro sitio oficial es', version: 'Versión', licence: 'Código Apache-2.0, textos y dibujos CC BY 4.0', desc: 'Los objetivos, la historia, los socios, el trabajo y los eventos de Algarve Evolution, cada uno con su fuente.',
+  },
+  fr: {
+    title: 'Algarve Evolution\u00a0: bâtir l\'économie de l\'Algarve au-delà du tourisme', skip: 'Aller au contenu', sections: 'Sections', top: 'haut de page',
+    nav: [['goals', 'Objectifs'], ['story', 'Histoire'], ['partners', 'Partenaires'], ['work', 'Action'], ['events', 'Événements'], ['try', 'Essayer'], ['join', 'Adhérer']],
+    eyebrow: 'Faro, Algarve · depuis 2018', ctaJoin: 'Rejoignez-nous', ctaTry: 'Essayez deux idées en action',
+    goalsKick: 'Où nous allons', goalsIntro: 'Là où nous voulons que l\'Algarve soit en 2032.',
+    quoteKick: 'De notre directeur exécutif', role: 'Directeur exécutif',
+    storyKick: 'D\'où nous venons', trackLabel: 'Notre histoire, de 2018 à 2027', planned: 'Prévu', swipe: 'Faites glisser',
+    partnersKick: 'Avec qui nous travaillons', partnersTitle: 'Nos partenaires et les 16 communes', munisH: 'Les 16 communes',
+    munisNote: 'Les communautés d\'Algarve Digital Innovators couvrent les 16 communes de l\'Algarve, membres de l\'AMAL.', mapLabel: 'Carte de l\'Algarve avec un point pour chacune de ses 16 communes\u00a0; Faro, où nous sommes installés, est entouré',
+    workKick: 'Ce que nous faisons', workTitle: 'Notre action, en trois piliers',
+    figKick: 'Où nous en sommes', figTitle: 'En chiffres', figIntro: 'Nos propres chiffres, tels que publiés. Personne ne les a audités\u00a0; quand deux sources divergent, nous montrons les deux.',
+    evKick: 'Où nous nous retrouvons', evTitle: 'Événements', evIntro: 'Les journées que nous avons organisées, coorganisées ou soutenues comme partenaire, de la plus récente à la plus ancienne. Toutes sont passées\u00a0; notre agenda actuel est sur <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>.',
+    tryKick: 'Prototypes en état de marche', proposal: 'Proposition', working: 'prototype en état de marche', open: 'Ouvrir', oneMore: 'Et une idée de plus',
+    joinKick: 'Participer', joinIntro: 'Tout se passe sur <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>. Ce prototype ne prend aucune inscription et ne conserve aucune donnée.',
+    dataH: 'Chaque fait, en données', dataP: 'Les chiffres, programmes, événements et propositions de cette page sont publiés sous forme de fichiers, chaque élément avec ses sources et ses traductions.',
+    storyTitle: 'Notre histoire', apps: 'Prototypes en état de marche', languages: 'Cette page en',
+    peopleKick: 'Notre équipe', peopleTitle: 'Qui dirige l\'équipe',
+    srcSummary: 'Sources', srcNote: 'chaque fait de cette page vient de l\'une d\'elles',
+    official: 'Notre site officiel est', version: 'Version', licence: 'Code Apache-2.0, textes et dessins CC BY 4.0', desc: 'Les objectifs, l\'histoire, les partenaires, l\'action et les événements d\'Algarve Evolution, chacun avec sa source.',
   },
 };
 
-for (const lang of ['en', 'pt']) {
-  const h = helpers(data, lang); const { esc, t, cite, date } = h; const v = data.voice; const W = C[lang]; const pt = lang === 'pt';
-  const self = pt ? '/pt/' : '/', other = pt ? '/' : '/pt/', otherLang = pt ? 'en' : 'pt';
-  const ch = chrome(data, lang, { slug: 'coast', version: '__VERSION__', other });
+const alt = Object.fromEntries(LANGS.map(l => [l, designPath('coast', l)]));
+for (const lang of LANGS) {
+  const data = localise(raw, lang); // k_<lang> fields replace k, so data text is in this language where it has been translated
+  const h = helpers(data, lang); const { esc, t, cite, date } = h; const v = data.voice; const W = C[lang] || C.en;
+  const self = alt[lang];
+  const ch = chrome(data, lang, { slug: 'coast', version: '__VERSION__', alt });
+  const appLinks = APPS.map((a, i) => `<a class="nav-app" href="${esc(langPath(a.path, lang))}"><span class="nav-app-n" aria-hidden="true">${i + 1}</span>${esc(a.name[lang] || a.name.en)}</a>`).join('');
+  const langLinks = LANGS.map(l => l === lang ? `<span aria-current="true">${esc(LANG_NAMES[l])}</span>` : `<a href="${esc(alt[l])}" hreflang="${l}" lang="${l}">${esc(LANG_NAMES[l])}</a>`).join(' · ');
   const person = data.people.people[0], quote = data.people.quotes.find(q => q.by === person.id);
   const fig = id => data.figures.figures.find(f => f.id === id);
   const timeline = data.ecosystem.timeline.map(e => timelineItem(e, lang));
@@ -72,8 +118,7 @@ for (const lang of ['en', 'pt']) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(W.title)}</title>
 <meta name="description" content="${esc(W.desc)} ${esc(t(v.banner))}">
-<link rel="alternate" hreflang="${otherLang}" href="${other}">
-<link rel="stylesheet" href="/assets/chrome.css">
+${ch.head}
 <link rel="stylesheet" href="/style.css">
 <meta name="theme-color" content="#0b3954">
 </head>
@@ -88,10 +133,10 @@ ${ch.banner}
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="13" r="7" fill="#f2a65a"/><path d="M2 21c4-2 8 2 14 0s10-2 14 0v9H2z" fill="#1f7a8c"/><path d="M2 25c4-2 8 2 14 0s10-2 14 0" stroke="#bfe3e8" stroke-width="1.5" fill="none"/></svg>
       Algarve Evolution
     </a>
-    <a class="lang" href="${other}" hreflang="${otherLang}" lang="${otherLang}">${otherLang.toUpperCase()}</a>
     <nav class="nav" aria-label="${W.sections}">
 ${W.nav.map(([id, label]) => `      <a href="#${id}">${label}</a>`).join('\n')}
     </nav>
+    <nav class="nav-apps" aria-label="${W.apps}">${appLinks}</nav>
   </div>
 </header>
 
@@ -120,7 +165,7 @@ ${W.nav.map(([id, label]) => `      <a href="#${id}">${label}</a>`).join('\n')}
       <h2 id="h-goals">${esc(t(v.goals_title))}</h2>
       <p class="intro">${W.goalsIntro}</p>
       <ul class="goal-list">
-${v.goals.map(g => `        <li><strong>${esc((pt && g.value_pt) || g.value)}</strong><span>${esc(t(g.label))}</span></li>`).join('\n')}
+${v.goals.map(g => `        <li><strong>${esc(g.value)}</strong><span>${esc(t(g.label))}</span></li>`).join('\n')}
       </ul>
       <p class="goal-note">${esc(t(v.goals_note))}</p>
       ${cite(v.goals_sources)}
@@ -139,7 +184,7 @@ ${v.goals.map(g => `        <li><strong>${esc((pt && g.value_pt) || g.value)}</s
   <div class="wrap story-grid">
     <div class="story-head">
       ${kick(W.storyKick)}
-      <h2 id="h-story">${pt ? 'A nossa história' : 'Our story'}</h2>
+      <h2 id="h-story">${W.storyTitle}</h2>
       <p class="intro">${esc(t(v.story_intro))}</p>
       ${cite(v.story_sources)}
       <p class="swipe" aria-hidden="true">${W.swipe} &rarr;</p>
@@ -210,7 +255,7 @@ ${partners.map(p => `        <li><p class="pt-name">${esc(p.label)}</p><p class=
     <h2 id="h-try">${esc(t(v.try_title))}</h2>
     <p class="intro">${esc(t(v.try_intro))}</p>
     <ul class="try-list">
-${v.apps.map(a => `      <li class="try-app"><a class="try-card" href="${pt ? '/pt' : ''}${a.href}">${icon(a.id)}<span class="tag">${W.proposal} · ${W.working}</span><span class="try-name">${esc(t(a.name))}</span><span class="try-sum">${esc(t(a.summary))}</span><span class="try-go">${W.open} <span aria-hidden="true">&rarr;</span></span></a>${cite(propOf(a.id)?.sources)}</li>`).join('\n')}
+${v.apps.map(a => `      <li class="try-app"><a class="try-card" href="${esc(langPath(a.href, lang))}">${icon(a.id)}<span class="tag">${W.proposal} · ${W.working}</span><span class="try-name">${esc(t(a.name))}</span><span class="try-sum">${esc(t(a.summary))}</span><span class="try-go">${W.open} <span aria-hidden="true">&rarr;</span></span></a>${cite(propOf(a.id)?.sources)}</li>`).join('\n')}
 ${extra.map(p => `      <li class="try-idea"><p class="try-more">${W.oneMore}</p><p class="tag">${W.proposal}</p><h3>${esc(t(p.name))}</h3><p>${esc(t(p.summary))}</p>${cite(p.sources)}</li>`).join('\n')}
     </ul>
   </div>
@@ -269,13 +314,16 @@ ${['figures', 'programmes', 'events', 'proposals', 'sources'].map(f => `        
     <p class="prep">${esc(t(v.banner))}</p>
     <p>${esc(t(v.footer_disclosure))}</p>
     <p>${W.official} <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>.</p>
-    <p>${W.version} __VERSION__ · <a href="https://dev.vault.sgraph.ai/#sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f%3Ajg76g6nx">vault jg76g6nx</a> · ${W.licence} · <a href="${other}" hreflang="${otherLang}" lang="${otherLang}">${W.otherLang}</a></p>
+    <p>${W.version} __VERSION__ · <a href="https://dev.vault.sgraph.ai/#sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f%3Ajg76g6nx">vault jg76g6nx</a> · ${W.licence}</p>
+    <p class="foot-langs">${W.languages}: ${langLinks}</p>
   </div>
 </footer>
 ${ch.foot}
 </body>
 </html>
 `;
-  writeFileSync(pt ? 'src/pt/index.html' : 'src/index.html', html);
+  const file = lang === 'en' ? 'src/index.html' : `src/${lang}/index.html`;
+  if (lang !== 'en') mkdirSync(`src/${lang}`, { recursive: true });
+  writeFileSync(file, html);
 }
-console.log('wrote src/index.html and src/pt/index.html');
+console.log(`wrote the coast template in ${LANGS.length} languages: ${LANGS.map(l => (l === 'en' ? 'src/index.html' : `src/${l}/index.html`)).join(', ')}`);

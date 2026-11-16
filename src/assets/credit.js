@@ -107,6 +107,17 @@
     const ok = api.charge(Number(el.dataset.aeCharge), el.dataset.aeChargeLabel || el.textContent.trim().slice(0, 40));
     if (!ok) { e.preventDefault(); e.stopImmediatePropagation(); }
   }, true);
+  // data-auto-cents="<n>" on the script tag: any other click on a button, link inside the page, checkbox, select or
+  // summary in <main> costs n cents, labelled with what was clicked. Elements inside [data-ae-free] never charge.
+  const auto = Number(me?.dataset.autoCents || 0);
+  if (auto > 0) {
+    document.addEventListener('click', e => {
+      const el = e.target.closest('button, a[href^="#"], a[role="button"], input[type="checkbox"], input[type="radio"], summary, [role="tab"]');
+      if (!el || el.closest('.aec, .ae-proto, .ae-ideas, .ae-pick, [data-ae-free], [data-ae-charge]') || !el.closest('main')) return;
+      const what = (el.getAttribute('aria-label') || el.textContent || el.value || '').replace(/\s+/g, ' ').trim().slice(0, 40) || '·';
+      api.charge(auto, what);
+    }, true);
+  }
   const start = () => { render(null); const open = Number(me?.dataset.openCents ?? 1); const title = me?.dataset.title || document.title.split(':')[0]; if (open > 0) setTimeout(() => api.charge(open, `${L.opened}: ${title}`), 600); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();

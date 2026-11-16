@@ -1,7 +1,7 @@
 // "The Institution": marks the section in view in the sticky nav, and adds earlier/later buttons to the timeline.
 // The page works without it. Owner: sites-design@AgentiCCells.dinis. Code Apache-2.0.
 (() => {
-  const links = [...document.querySelectorAll('.secnav a')];
+  const links = [...document.querySelectorAll('.secnav ul a')];
   const nav = document.querySelector('.secnav ul');
   const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
   const mark = id => {
