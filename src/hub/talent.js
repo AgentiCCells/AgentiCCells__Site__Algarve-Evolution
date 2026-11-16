@@ -17,6 +17,8 @@ export const KINDS = [
   { id: 'partner', label: 'Project partners', one: 'Project partner', group: 'org' },
   { id: 'stakeholder', label: 'Stakeholders', one: 'Stakeholder', group: 'org' },
 ];
+// Challenges still looking for suppliers.
+export const OPEN = new Set(['open', 'matching']);
 export const PEOPLE = new Set(['professional', 'consultant', 'mentor', 'investor']);
 const KIND = Object.fromEntries([...KINDS, { id: 'supplier', label: 'Supplier companies', one: 'Supplier company (Challenge Connect)', group: 'org' }].map(k => [k.id, k]));
 export const ACTS = [
@@ -159,15 +161,15 @@ export function card(e, model) {
   if (e.cc.size) links.push(`<a href="/challenge-connect/">Challenge Connect supplier</a>`);
   if (e.vib.size) links.push(`<a href="/vibathon/">Vibathon ${esc([...e.roles].filter(r => /jury|team|vibathon/.test(r)).map(r => r.replace('vibathon ', '')).join(', ') || 'participant')}</a>`);
   if (e.comRecord) { const n = model.entries.filter(x => x.communityId === e.comRecord).length; if (n) links.push(`<button type="button" class="te-link" data-community="${esc(e.comRecord)}">${n} ${n === 1 ? 'person' : 'people'} listed</button>`); }
-  const np = model.priv && e.notPublic ? `<span class="te-np" title="In Odoo, but not in the public feed">${!e.published ? 'Not published' : 'Not public: no consent'}</span>` : '';
+  const np = model.priv && e.notPublic ? `<span class="tag tag-accent" title="In Odoo, but not in the public feed">${!e.published ? 'Not published' : 'Not public: no consent'}</span>` : '';
   const ml = muniLabel(model.munis, e.muni), where = e.town && e.town !== ml ? `${ml} (${e.town})` : ml;
-  const mine = e.changed ? '<span class="te-here" title="Changed in this browser only">Changed here</span>' : '';
+  const mine = e.changed ? '<span class="tag tag-warn" title="Changed in this browser only">Changed here</span>' : '';
   return `<article class="te-card g-${k.group}${e.notPublic ? ' is-np' : ''}" data-id="${esc(e.id)}">
 <p class="te-card-k"><span>${esc(k.one)}</span><span class="te-card-t">${esc(where)}</span></p>
 <h3>${esc(e.name)}</h3>
-<p class="te-card-b">${simB(e)}${e.source ? ` <span class="te-real">Real</span> ${srcL(e)}` : ''}${np}${mine}</p>
+<p class="te-card-b">${simB(e)}${e.source ? ` <span class="tag tag-ok">Real</span> ${srcL(e)}` : ''}${np}${mine}</p>
 ${e.summary ? `<p class="te-card-s">${esc(e.summary)}</p>` : ''}
-${e.comps.length ? `<ul class="te-tags" aria-label="Competences">${e.comps.map(c => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+${e.comps.length ? `<ul class="te-tags" aria-label="Competences">${e.comps.map(c => `<li class="tag">${esc(c)}</li>`).join('')}</ul>` : ''}
 ${links.length ? `<p class="te-card-l">${links.join(' · ')}</p>` : ''}
 <p class="te-card-o">Odoo ${esc(e.odoo?.model || '')} #${esc(e.odoo?.id ?? '')}${model.priv && e.contact ? ` · ${esc(e.contact)}` : ''}</p>
 </article>`;
@@ -185,9 +187,9 @@ const SX = MAP.w / ((MAP.lon1 - MAP.lon0) * K);
 export const project = ([lon, lat]) => [+((lon - MAP.lon0) * K * SX).toFixed(1), +((MAP.lat1 - lat) * SX).toFixed(1)];
 // Where each municipality's name sits, so the crowded coast stays readable: [dx sign, dy sign, anchor].
 const LABEL = {
-  'vila-do-bispo': [0, 1, 'middle'], lagos: [0, 1, 'middle'], portimao: [-1, 1, 'end'], lagoa: [1, 1, 'start'], silves: [0, -1, 'middle'],
+  'vila-do-bispo': [0, 1, 'middle'], lagos: [0, 1, 'middle'], portimao: [0, 1, 'middle'], lagoa: [1, 0, 'start'], silves: [0, -1, 'middle'],
   monchique: [0, -1, 'middle'], aljezur: [0, -1, 'middle'], albufeira: [0, 1, 'middle'], loule: [-1, -1, 'end'], 'sao-bras-de-alportel': [1, -1, 'start'],
-  faro: [-1, 1, 'end'], olhao: [1, 1, 'start'], tavira: [0, 1, 'middle'], 'vila-real-de-santo-antonio': [1, 1, 'start'], 'castro-marim': [1, -1, 'start'], alcoutim: [1, 0, 'start'],
+  faro: [-1, 1, 'end'], olhao: [1, 1, 'start'], tavira: [0, 1, 'middle'], 'vila-real-de-santo-antonio': [0, 0, 'end', [-7.265, 37.035]], 'castro-marim': [-1, -1, 'end'], alcoutim: [1, 0, 'start'],
 };
 export function mapBase(outline) {
   const ring = r => 'M' + r.map(p => project(p).join(' ')).join('L') + 'Z';
@@ -201,13 +203,15 @@ export function mapMarks(model, f) {
   const comsBy = {}; for (const c of model.coms) { const m = muniResolver(model.munis)(c.municipality) || 'none'; (comsBy[m] ||= []).push(c); }
   const g = model.munis.map(m => {
     const [x, y] = project(m.ll); const n = counts[m.id] || 0; const r = radius(n); const sel = f.muni === m.id;
-    const [lx, ly, an] = LABEL[m.id] || [0, 1, 'middle'];
-    const tx = x + lx * (r + 4), ty = y + (ly > 0 ? r + 15 : ly < 0 ? -(r + 6) : 4);
+    const [lx, ly, an, at] = LABEL[m.id] || [0, 1, 'middle'];
+    let tx = x + lx * (r + 4), ty = y + (ly > 0 ? r + 15 : ly < 0 ? -(r + 6) : 4), lead = '';
+    // A label placed away from a crowded spot, with a thin leader line back to its circle.
+    if (at) { [tx, ty] = project(at); lead = `<path class="tm-lead" d="M${x} ${y + r}L${tx - 30} ${ty - 12}"/>`; }
     const cs = comsBy[m.id] || [];
-    const sq = cs.map((c, i) => { const sx = x + r * .72 + 2 + i * 9, sy = y - r * .72 - 9; return `<rect class="tm-com" x="${sx.toFixed(1)}" y="${sy.toFixed(1)}" width="8" height="8"><title>${esc(c.name)} (community, real)</title></rect>`; }).join('');
+    const sq = cs.map((c, i) => { const sx = x - (cs.length * 10 - 2) / 2 + i * 10, sy = y - r - 12; return `<rect class="tm-com" x="${sx.toFixed(1)}" y="${sy.toFixed(1)}" width="8" height="8"><title>${esc(c.name)} (community, real)</title></rect>`; }).join('');
     return `<g class="tm-m${sel ? ' is-sel' : ''}${n ? '' : ' is-zero'}" data-muni="${m.id}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${esc(m.name)}: ${n} in the current selection${cs.length ? `, ${cs.length} ${cs.length === 1 ? 'community' : 'communities'}` : ''}">` +
       `<circle class="tm-hit" cx="${x}" cy="${y}" r="${Math.max(r, 14)}"/><circle class="tm-c" cx="${x}" cy="${y}" r="${r}"/>` +
-      (n && r >= 11 ? `<text class="tm-n" x="${x}" y="${y + 4}">${n}</text>` : '') + sq +
+      lead + (n && r >= 11 ? `<text class="tm-n" x="${x}" y="${y + 4}">${n}</text>` : '') + sq +
       `<text class="tm-label" x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${an}">${esc(m.name)}${n && r < 11 ? ` · ${n}` : ''}</text><title>${esc(m.name)}: ${n}</title></g>`;
   }).join('');
   return { svg: g, counts, comsBy };
@@ -233,7 +237,7 @@ export function matrix(model, mode = 'kind') {
   const pool = [...model.entries, ...model.suppliers.filter(s => model.priv || !s.notPublic)];
   const cols = mode === 'kind' ? MCOLS : model.munis.slice().sort((a, b) => a.ll[0] - b.ll[0]).map(m => ({ id: m.id, label: m.name }));
   const key = e => (mode === 'kind' ? e.kind : e.muni);
-  const demand = c => model.challenges.filter(ch => (ch.skills || []).includes(c) && ch.status !== 'closed').length;
+  const demand = c => model.challenges.filter(ch => (ch.skills || []).includes(c) && OPEN.has(ch.status)).length;
   const rows = model.vocab.map(c => {
     const has = pool.filter(e => e.comps.includes(c));
     return { c, total: has.length, cells: cols.map(col => has.filter(e => key(e) === col.id).length), demand: demand(c) };
@@ -259,7 +263,7 @@ export function find(model, { comps = [], who = '', where = '' }) {
     return { e, hit, near, score: hit.length * 3 + (near ? 1 : 0) + (e.cc.size || e.inc.size ? .2 : 0) };
   }).filter(r => (comps.length ? r.hit.length : true) && (!where || comps.length || r.near))
     .sort((a, b) => b.score - a.score || a.e.name.localeCompare(b.e.name, 'en'));
-  const asks = comps.length ? model.challenges.filter(ch => ch.status !== 'closed' && comps.some(c => (ch.skills || []).includes(c))) : [];
+  const asks = comps.length ? model.challenges.filter(ch => OPEN.has(ch.status) && comps.some(c => (ch.skills || []).includes(c))) : [];
   return { res, asks };
 }
 export function findHtml(model, q, limit = 10) {
@@ -301,16 +305,16 @@ export function networkData(model) {
 }
 export function networkSvg(model) {
   const { left, middle, right, edges } = networkData(model);
-  const W = 960, top = 54, row = 24, H = top + Math.max(middle.length, 12) * row + 16;
+  const W = 1040, top = 54, row = 25, H = top + Math.max(middle.length, 12) * row + 16;
   const ys = (n, i, pad = 0) => +(top + pad + (n <= 1 ? (H - top - 16) / 2 : i * ((H - top - 16 - pad * 2) / (n - 1)))).toFixed(1);
   const pos = {};
-  left.forEach((c, i) => { pos[c.id] = [250, ys(left.length, i, 10)]; });
-  middle.forEach((e, i) => { pos[e.id] = [480, top + i * row + row / 2]; });
+  left.forEach((c, i) => { pos[c.id] = [280, ys(left.length, i, 10)]; });
+  middle.forEach((e, i) => { pos[e.id] = [530, top + i * row + row / 2]; });
   // Activities in three groups with a heading each.
   const groups = ACTS.map(a => ({ a, items: right.filter(r => r.act === a.id) })).filter(g => g.items.length);
   const slots = right.length + groups.length; const step = (H - top - 16) / Math.max(1, slots - 1);
   let s = 0; const heads = [];
-  for (const g of groups) { heads.push([g.a, top + s * step]); s++; for (const r of g.items) { pos[r.id] = [720, +(top + s * step).toFixed(1)]; s++; } }
+  for (const g of groups) { heads.push([g.a, top + s * step]); s++; for (const r of g.items) { pos[r.id] = [790, +(top + s * step).toFixed(1)]; s++; } }
   const curve = (a, b) => { const [x1, y1] = a, [x2, y2] = b; const m = (x1 + x2) / 2; return `M${x1} ${y1}C${m} ${y1} ${m} ${y2} ${x2} ${y2}`; };
   const e = edges.map(ed => {
     const A = pos[ed.a], B = pos[ed.b]; if (!A || !B) return '';
@@ -321,9 +325,9 @@ export function networkSvg(model) {
   const L = left.map(c => { const [x, y] = pos[c.id]; return node(c.id, 'nw-com', `<circle cx="${x}" cy="${y}" r="6"/><text x="${x - 12}" y="${y + 4}" text-anchor="end">${esc(cut(c.name, 34))}</text><title>${esc(c.name)} (${esc(c.municipality || '')}, real)</title>`, `${c.name}, community`); }).join('');
   const M = middle.map(p => { const [x, y] = pos[p.id]; const k = p.kind === 'supplier' ? 'nw-sup' : 'nw-per'; return node(p.id, `${k}${p.notPublic ? ' is-np' : ''}`, `<rect x="${x - 100}" y="${y - 9}" width="200" height="18" rx="9"/><text x="${x}" y="${y + 4}" text-anchor="middle">${esc(cut(p.name, 30))}</text><title>${esc(p.name)}, ${esc(KIND[p.kind].one)}${p.notPublic ? ', not public' : ''}</title>`, `${p.name}, ${KIND[p.kind].one}${p.notPublic ? ', not public' : ''}`); }).join('');
   const R = right.map(r => { const [x, y] = pos[r.id]; return node(r.id, `nw-act a-${r.act}`, `<circle cx="${x}" cy="${y}" r="6"/><text x="${x + 12}" y="${y + 4}">${esc(shortName(r.name, 34))}</text><title>${esc(r.name)}</title>`, `${r.name}, ${ACTS.find(a => a.id === r.act).label}`); }).join('');
-  const Hd = heads.map(([a, y]) => `<text class="nw-gh a-${a.id}" x="714" y="${(+y + 4).toFixed(1)}">${esc(a.label.toUpperCase())}</text>`).join('');
-  return `<svg class="nw" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="group" aria-label="Network: ${left.length} communities, ${middle.length} people and supplier companies, ${right.length} hub activities, ${edges.length} links">
-<text class="nw-col" x="250" y="22" text-anchor="end">COMMUNITIES · ${left.length}</text><text class="nw-col" x="480" y="22" text-anchor="middle">PEOPLE AND SUPPLIERS · ${middle.length}</text><text class="nw-col" x="714" y="22">HUB ACTIVITIES · ${right.length}</text>
+  const Hd = heads.map(([a, y]) => `<text class="nw-gh a-${a.id}" x="784" y="${(+y + 4).toFixed(1)}">${esc(a.label.toUpperCase())}</text>`).join('');
+  return `<svg class="nw" viewBox="0 0 ${W} ${H}" role="group" aria-label="Network: ${left.length} communities, ${middle.length} people and supplier companies, ${right.length} hub activities, ${edges.length} links">
+<text class="nw-col" x="280" y="22" text-anchor="end">COMMUNITIES · ${left.length}</text><text class="nw-col" x="530" y="22" text-anchor="middle">PEOPLE AND SUPPLIERS · ${middle.length}</text><text class="nw-col" x="784" y="22">HUB ACTIVITIES · ${right.length}</text>
 <g class="nw-edges">${e}</g>${Hd}<g>${L}${M}${R}</g></svg>`;
 }
 
@@ -363,8 +367,8 @@ export function quality(model, privFeed) {
 
 // ------------------------------------------------------------------ the Odoo call panel (never sent)
 export function odooCall(steps, db, note = '') {
-  const block = s => `POST /json/2/${s.model}/${s.method}\nAuthorization: bearer <API key of a hub user allowed to change contacts>\nX-Odoo-Database: ${db}\nContent-Type: application/json\n\n${JSON.stringify(s.body, null, 2)}`;
-  return `<div class="te-call"><p class="te-call-h"><span>Odoo call</span> <span class="te-call-ns">not sent: prototype</span></p>${note ? `<p class="te-call-note">${esc(note)}</p>` : ''}${steps.map((s, i) => `${steps.length > 1 ? `<p class="te-call-step">Step ${i + 1}${s.why ? `: ${esc(s.why)}` : ''}</p>` : ''}<pre><code>${esc(block(s))}</code></pre>`).join('')}</div>`;
+  const head = `Authorization: bearer <API key of a hub user allowed to change contacts>\nX-Odoo-Database: ${db}\nContent-Type: application/json\n\n`;
+  return `<div class="te-calls">${steps.map((s, i) => `<details class="odoo-call" open><summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(s.model)}/${esc(s.method)}</code> <span class="odoo-call-flag">not sent: prototype</span></summary>${steps.length > 1 ? `<p class="odoo-call-note">Step ${i + 1} of ${steps.length}${s.why ? `: ${esc(s.why)}` : ''}</p>` : ''}<pre><code>${esc(head + JSON.stringify(s.body, null, 2))}</code></pre>${note && i === steps.length - 1 ? `<p class="odoo-call-note">${esc(note)}</p>` : ''}</details>`).join('')}</div>`;
 }
 
 // ================================================================== the browser
@@ -378,11 +382,26 @@ if (typeof document !== 'undefined' && document.getElementById('te-root')) {
   const munis = places.municipalities;
   let local = store.get(); local.listing ||= {}; local.fixes ||= {}; local.asked ||= {}; local.created ||= [];
   const save = () => store.set(local);
-  let pub = null, model = null, f = { ...EMPTY }, limit = 24, mxMode = 'kind', q = { comps: [], who: '', where: '' };
+  // Phones get shorter first pages: 8 cards and 6 matches, with "Show more" for the rest.
+  const phone = window.matchMedia('(max-width: 40rem)').matches;
+  const FIRST = phone ? 8 : 24, HITS = phone ? 6 : 10;
+  let pub = null, model = null, f = { ...EMPTY }, limit = FIRST, mxMode = 'kind', q = { comps: [], who: '', where: '' };
   const usePrivate = () => window.HUB?.persona === 'staff' && window.HUB?.privateFeed;
   const feed = () => (usePrivate() ? window.HUB.privateFeed : pub);
 
-  function rebuild() { model = buildModel(feed(), munis, { priv: !!usePrivate(), local }); renderAll(); }
+  const FIND_FOR = {
+    founder: () => ({ comps: ['Finance and fundraising'], who: 'mentor', where: '' }),
+    mentor: () => ({ comps: ['Product management'], who: 'mentor', where: '' }),
+    staff: () => ({ comps: ['Cybersecurity'], who: '', where: '' }),
+  };
+  let qTouched = false;
+  function defaultFind() {
+    if (qTouched) return;
+    const ch = model.challenges.find(c => OPEN.has(c.status));
+    q = (FIND_FOR[window.HUB?.persona] || (() => ({ comps: ch ? ch.skills.slice() : [], who: '', where: '', ch: ch?.id })))();
+    const sel = $('#te-fch'); if (sel) sel.value = q.ch || '';
+  }
+  function rebuild() { model = buildModel(feed(), munis, { priv: !!usePrivate(), local }); defaultFind(); renderAll(); }
   function renderAll() { renderDirectory(); renderMap(); renderMatrix(); renderFind(); renderNetwork(); renderConsent(); renderListing(); renderQuality(); }
 
   // ---- directory
@@ -403,10 +422,10 @@ if (typeof document !== 'undefined' && document.getElementById('te-root')) {
   function renderConsent() {
     $$('[data-te-listed]').forEach(el => { el.textContent = num(model.listed); });
     const h = model.hidden;
-    $$('[data-te-hidden]').forEach(el => { el.textContent = h == null ? 'not yet in the feed' : num(h); el.classList.toggle('is-unknown', h == null); });
+    $$('[data-te-hidden]').forEach(el => { el.textContent = h == null ? (model.withdrawnHere ? `not yet in the feed, plus ${model.withdrawnHere} here` : 'not yet in the feed') : num(h); el.classList.toggle('is-unknown', h == null); });
     const dots = $('#te-dots');
     if (dots) {
-      const n = model.listed, m = h ?? 0;
+      const n = model.listed, m = h ?? model.withdrawnHere;
       dots.innerHTML = Array.from({ length: n }, () => '<i class="d-on"></i>').join('') + Array.from({ length: m }, () => '<i class="d-off"></i>').join('') + (h == null ? '<i class="d-q" title="The public feed does not carry this number yet">?</i>' : '');
       dots.setAttribute('aria-label', `${n} people listed with consent${h == null ? '' : `, ${m} not listed for lack of consent`}`);
     }
@@ -422,9 +441,9 @@ if (typeof document !== 'undefined' && document.getElementById('te-root')) {
   // ---- competences
   function renderMatrix() { $('#te-mx').innerHTML = matrix(model, mxMode); $$('[data-mx]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mx === mxMode))); }
   function renderFind() {
-    $('#te-find-res').innerHTML = findHtml(model, q);
+    $('#te-find-res').innerHTML = findHtml(model, q, HITS);
     $('#te-fc').value = q.comps.length === 1 ? q.comps[0] : ''; $('#te-fw').value = q.who; $('#te-fm').value = q.where;
-    $('#te-fcomps').innerHTML = q.comps.length > 1 ? q.comps.map(c => `<span class="te-tagc">${esc(c)}</span>`).join('') : '';
+    $('#te-fcomps').innerHTML = q.comps.length > 1 ? q.comps.map(c => `<span class="tag">${esc(c)}</span>`).join('') : '';
   }
   // ---- network
   let focusNode = null;
@@ -454,25 +473,25 @@ if (typeof document !== 'undefined' && document.getElementById('te-root')) {
     rel.forEach(r => $(`[data-node="${CSS.escape(r)}"]`, svg)?.classList.add('on'));
     const m = nd.middle.find(x => x.id === id);
     const lines = nd.edges.filter(e => e.a === id || e.b === id).map(e => { const o = e.a === id ? e.b : e.a; const t = { com: 'community', inc: 'INC/ACC', cc: 'Challenge Connect', vib: 'Vibathon' }[e.t]; return `<li><span class="te-et t-${e.t}">${t}</span> ${esc(name(o))}</li>`; });
-    out.innerHTML = `<h3>${esc(name(id))}</h3>${m ? `<p>${esc(KIND[m.kind].one)} · ${esc(muniLabel(munis, m.muni))} ${simB(m)}${m.notPublic ? ' <span class="te-np">Not public</span>' : ''}</p>` : ''}<ul class="te-nw-l">${lines.join('') || '<li>No links yet.</li>'}</ul>`;
+    out.innerHTML = `<h3>${esc(name(id))}</h3>${m ? `<p>${esc(KIND[m.kind].one)} · ${esc(muniLabel(munis, m.muni))} ${simB(m)}${m.notPublic ? ' <span class="tag tag-accent">Not public</span>' : ''}</p>` : ''}<ul class="te-nw-l">${lines.join('') || '<li>No links yet.</li>'}</ul>`;
   }
   // ---- your listing (approve, change, do not list me)
   const listable = () => model.all.filter(e => e.isPerson && e.published && (model.priv || e.consent || local.listing[e.id]));
   const DEFAULT_FOR = { mentor: 'p-mentor-01', supplier: 'p-person-41', founder: 'p-person-16', challenger: 'p-person-42', participant: 'p-person-04', visitor: 'p-person-01' };
   let me = null, editing = false;
   function renderListing() {
-    const box = $('#te-listing'); if (!box || model.priv) return;
+    const box = $('#te-me-out'); if (!box || model.priv) return;
     const opts = listable();
     if (!me || (me !== 'new' && !opts.some(e => e.id === me))) me = opts.find(e => e.id === DEFAULT_FOR[window.HUB?.persona])?.id || opts[0]?.id || 'new';
     $('#te-me').innerHTML = opts.map(e => `<option value="${esc(e.id)}"${e.id === me ? ' selected' : ''}>${esc(e.name)} · ${esc(KIND[e.kind].one)}</option>`).join('') + `<option value="new"${me === 'new' ? ' selected' : ''}>I am not listed yet</option>`;
     const out = $('#te-me-out');
     if (me === 'new') { out.innerHTML = newForm(); return; }
     const e = model.all.find(x => x.id === me); const st = local.listing[me];
-    const status = e.consent ? (st?.consent === true ? 'You approved this listing (kept in this browser only).' : 'Listed: you gave consent and Algarve Evolution published it.') : 'Not listed: you asked not to be listed (kept in this browser only). You are counted among the people withheld.';
+    const status = e.consent ? (st?.consent === true ? 'You approved this listing.' : 'Listed: you gave consent and Algarve Evolution published it.') : 'Not listed: you asked not to be listed. You are now counted among the people withheld.';
     const comPick = model.coms.find(c => c.id === e.communityId);
     out.innerHTML = `<div class="te-me-grid"><div><p class="te-me-h">How the public directory shows you${e.consent ? '' : ' <b>(hidden now)</b>'}</p><div class="te-me-card${e.consent ? '' : ' is-off'}">${card(e, model)}</div>
-<p class="te-me-st" role="status">${esc(status)}</p>
-<div class="te-me-btns"><button type="button" class="te-btn te-btn-p" data-me="approve">Approve as shown</button><button type="button" class="te-btn" data-me="change" aria-expanded="${editing}">Change</button><button type="button" class="te-btn te-btn-x" data-me="withdraw">Do not list me</button>${st ? '<button type="button" class="te-btn te-btn-l" data-me="reset">Forget my choices</button>' : ''}</div>
+<p class="te-me-st" role="status">${esc(status)} ${st ? '<span class="local-note">Kept in this browser only</span>' : ''}</p>
+<div class="te-me-btns"><button type="button" class="btn btn-primary" data-me="approve">Approve as shown</button><button type="button" class="btn" data-me="change" aria-expanded="${editing}">Change</button><button type="button" class="btn te-btn-x" data-me="withdraw">Do not list me</button>${st ? '<button type="button" class="btn te-btn-l" data-me="reset">Forget my choices</button>' : ''}</div>
 ${editing ? editForm(e) : ''}</div>
 <div><p class="te-me-h">What Odoo holds for you (res.partner #${esc(e.odoo?.id)})</p><dl class="te-dl"><dt>Name</dt><dd>${esc(e.name)}</dd><dt>Kind <code>aih_talent_kind</code></dt><dd>${esc(KIND[e.kind].one)}</dd><dt>Town <code>city</code></dt><dd>${esc(e.town || 'none')}</dd><dt>Competences <code>category_id</code></dt><dd>${esc(e.comps.join(', ') || 'none')}</dd><dt>Community <code>aih_community_id</code></dt><dd>${esc(comPick?.name || 'none')}</dd><dt>Summary <code>aih_summary</code></dt><dd>${esc(e.summary)}</dd><dt>Consent <code>aih_consent</code></dt><dd>${e.consent ? 'yes' : 'no'}</dd><dt>Published <code>aih_published</code></dt><dd>${e.published ? 'yes' : 'no'}</dd></dl>
 <div id="te-me-call">${lastCall || odooCall([{ model: 'res.partner', method: 'write', body: { ids: [e.odoo?.id], vals: { aih_consent: true } } }], model.odooDb, 'Approving sets consent on your contact. Choose an action to see its call.')}</div></div></div>`;
@@ -480,24 +499,24 @@ ${editing ? editForm(e) : ''}</div>
   let lastCall = '';
   const KSEL = ['professional', 'consultant', 'mentor', 'investor'];
   function editForm(e) {
-    return `<form class="te-form" id="te-edit"><fieldset><legend>Change your listing</legend>
-<label>Kind <select name="kind">${KSEL.map(k => `<option value="${k}"${k === e.kind ? ' selected' : ''}>${KIND[k].one}</option>`).join('')}</select></label>
-<label>Town <select name="town"><option value="">No town</option>${munis.map(m => `<option${m.name === e.town ? ' selected' : ''}>${esc(m.name)}</option>`).join('')}</select></label>
-<label class="te-wide">Summary <textarea name="summary" rows="3" maxlength="400">${esc(e.summary)}</textarea></label>
+    return `<form class="te-form hub-form" id="te-edit"><fieldset><legend>Change your listing</legend>
+<label class="field"><span>Kind</span> <select name="kind">${KSEL.map(k => `<option value="${k}"${k === e.kind ? ' selected' : ''}>${KIND[k].one}</option>`).join('')}</select></label>
+<label class="field"><span>Town</span> <select name="town"><option value="">No town</option>${munis.map(m => `<option${m.name === e.town ? ' selected' : ''}>${esc(m.name)}</option>`).join('')}</select></label>
+<label class="field te-wide"><span>Summary</span> <textarea name="summary" rows="3" maxlength="400">${esc(e.summary)}</textarea></label>
 <fieldset class="te-wide te-checks"><legend>Competences</legend>${model.vocab.map(c => `<label><input type="checkbox" name="comp" value="${esc(c)}"${e.comps.includes(c) ? ' checked' : ''}> ${esc(c)}</label>`).join('')}</fieldset>
-<p class="te-wide"><button class="te-btn te-btn-p">Save the change and keep my consent</button></p></fieldset></form>`;
+<p class="te-wide"><button class="btn btn-primary">Save the change and keep my consent</button></p></fieldset></form>`;
   }
   function newForm() {
     const c = local.created;
-    return `<form class="te-form" id="te-new"><fieldset><legend>Ask to be listed in the Talent Ecosystem</legend>
-<label>Name <input name="name" required maxlength="80" autocomplete="off" placeholder="As you want it shown"></label>
-<label>Kind <select name="kind">${KSEL.map(k => `<option value="${k}">${KIND[k].one}</option>`).join('')}</select></label>
-<label>Town <select name="town">${munis.map(m => `<option>${esc(m.name)}</option>`).join('')}</select></label>
-<label>Community <select name="community"><option value="">None</option>${model.coms.map(x => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</select></label>
-<label class="te-wide">Summary <textarea name="summary" rows="2" maxlength="400" placeholder="What you do, in a sentence"></textarea></label>
+    return `<form class="te-form hub-form" id="te-new"><fieldset><legend>Ask to be listed in the Talent Ecosystem</legend>
+<label class="field"><span>Name</span> <input name="name" required maxlength="80" autocomplete="off" placeholder="As you want it shown"></label>
+<label class="field"><span>Kind</span> <select name="kind">${KSEL.map(k => `<option value="${k}">${KIND[k].one}</option>`).join('')}</select></label>
+<label class="field"><span>Town</span> <select name="town">${munis.map(m => `<option>${esc(m.name)}</option>`).join('')}</select></label>
+<label class="field"><span>Community</span> <select name="community"><option value="">None</option>${model.coms.map(x => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</select></label>
+<label class="field te-wide"><span>Summary</span> <textarea name="summary" rows="2" maxlength="400" placeholder="What you do, in a sentence"></textarea></label>
 <fieldset class="te-wide te-checks"><legend>Competences</legend>${model.vocab.map(v => `<label><input type="checkbox" name="comp" value="${esc(v)}"> ${esc(v)}</label>`).join('')}</fieldset>
 <label class="te-wide te-agree"><input type="checkbox" name="consent" required> I agree to be listed in the public directory of the AE Innovation Hub. I can withdraw at any time.</label>
-<p class="te-wide"><button class="te-btn te-btn-p">Ask to be listed</button> <span class="te-dim">Algarve Evolution reviews new listings before they are published.</span></p></fieldset></form>
+<p class="te-wide"><button class="btn btn-primary">Ask to be listed</button> <span class="te-dim">Algarve Evolution reviews new listings before they are published.</span></p></fieldset></form>
 ${c.length ? `<p class="te-me-st" role="status">Asked in this browser (kept here only, awaiting review): ${c.map(x => esc(x.name)).join(', ')}.</p>` : ''}
 <div id="te-me-call">${lastCall}</div>`;
   }
@@ -520,19 +539,31 @@ ${c.length ? `<p class="te-me-st" role="status">Asked in this browser (kept here
     const muniSel = id => `<select data-fix-town="${esc(id)}" aria-label="Town"><option value="">Choose a municipality</option>${munis.map(m => `<option>${esc(m.name)}</option>`).join('')}</select>`;
     const comSel = id => `<select data-fix-com="${esc(id)}" aria-label="Community"><option value="">Link to a community</option>${model.coms.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>`;
     const who = e => `<b>${esc(e.name)}</b> <span class="te-dim">${esc(KIND[e.kind]?.one || '')} · Odoo ${esc(e.odoo?.model)} #${esc(e.odoo?.id)}</span>`;
-    const sec = (id, title, why, rows) => `<details class="te-q" id="q-${id}"${rows.length ? '' : ''}><summary><span>${esc(title)}</span><b>${rows.length}</b></summary><p class="te-q-why">${why}</p>${rows.length ? `<ul>${rows.join('')}</ul>` : '<p class="te-dim">Nothing to fix.</p>'}</details>`;
+    const sec = (id, title, why, rows, n = rows.length) => `<details class="te-q" id="q-${id}"${openQ.has(id) ? ' open' : ''}><summary><span>${esc(title)}</span><b>${n}</b></summary><p class="te-q-why">${why}</p>${rows.length ? `<ul>${rows.join('')}</ul>` : '<p class="te-dim">Nothing to fix.</p>'}</details>`;
     box.innerHTML = `<div class="te-qts">${tile('town', Q.missingTown.length, 'missing towns')}${tile('consent', Q.noConsent.length, 'people without consent')}${tile('dup', Q.dups.length, 'likely duplicates')}${tile('unlinked', Q.unlinked.length + Q.outside.length, 'unlinked people')}${tile('contact', Q.noContact.length, 'communities with no contact')}${tile('comp', Q.orgsNoComp.length, 'organisations with no competences')}</div>
-${sec('town', 'Missing towns', 'Without a town a record cannot go on the map or be found "near me". Pick the municipality; the fix is one write to Odoo.', Q.missingTown.map(e => `<li>${who(e)} ${muniSel(e.id)}</li>`))}
-${sec('consent', 'People without consent', 'They are in Odoo and hidden from the public feed. Asking is a to-do on their contact for the person who knows them; nothing is sent from here.', Q.noConsent.map(e => `<li>${who(e)} ${local.asked[e.id] ? '<span class="te-ok">Asked (in this browser)</span>' : `<button type="button" class="te-btn te-btn-s" data-ask="${esc(e.id)}">Ask for consent</button>`}</li>`))}
-${sec('dup', 'Likely duplicates', 'Names that look like the same organisation. A community and a contact are linked; two contacts are merged in Odoo.', Q.dups.map(d => `<li>${who(d.a)} <span class="te-dim">and</span> ${who(d.b)} <span class="te-dim">(${Math.round(d.s * 100)}% alike)</span> <button type="button" class="te-btn te-btn-s" data-dup="${esc(d.a.id)}|${esc(d.b.id)}">Show the fix</button></li>`))}
-${sec('unlinked', 'Unlinked people', 'People in no community and no hub activity, and people in Vibathon teams or juries who are not in the Talent Ecosystem.', [...Q.unlinked.map(e => `<li>${who(e)} ${comSel(e.id)}</li>`), ...Q.outside.map(o => `<li><b>${esc(o.name)}</b> <span class="te-dim">${esc(o.where)}, not in the Talent Ecosystem</span> <button type="button" class="te-btn te-btn-s" data-add="${esc(o.id)}">Add as a professional</button></li>`)])}
-${sec('contact', 'Communities with no contact record', 'These are in aih.community but have no res.partner, so they have no town, consent or competences of their own.', Q.noContact.map(e => `<li>${who(e)} <button type="button" class="te-btn te-btn-s" data-mkcontact="${esc(e.id)}">Create the contact</button></li>`))}
-${sec('comp', 'Organisations with no competences', 'Partners and stakeholders carry type tags only, so "find by competence" cannot find them. A spreadsheet of competences per organisation would fill this in one import.', Q.orgsNoComp.slice(0, 12).map(e => `<li>${who(e)}</li>`).concat(Q.orgsNoComp.length > 12 ? [`<li class="te-dim">and ${Q.orgsNoComp.length - 12} more (all in the CSV)</li>`] : []))}
+${sec('town', 'Missing towns', 'Without a town a record cannot go on the map or be found "near me". Pick the municipality; the fix is one write to Odoo.', Q.missingTown.map(e => `<li data-row="${esc(e.id)}">${who(e)} ${muniSel(e.id)}</li>`))}
+${sec('consent', 'People without consent', 'They are in Odoo and hidden from the public feed. Asking is a to-do on their contact for the person who knows them; nothing is sent from here.', Q.noConsent.map(e => `<li data-row="${esc(e.id)}">${who(e)} ${local.asked[e.id] ? '<span class="tag tag-ok">Asked</span> <span class="local-note">Kept in this browser only</span>' : `<button type="button" class="btn btn-sm" data-ask="${esc(e.id)}">Ask for consent</button>`}</li>`))}
+${sec('dup', 'Likely duplicates', 'Names that look like the same organisation. A community and a contact are linked; two contacts are merged in Odoo.', Q.dups.map(d => `<li data-row="${esc(d.a.id)}">${who(d.a)} <span class="te-dim">and</span> ${who(d.b)} <span class="te-dim">(${Math.round(d.s * 100)}% alike)</span> <button type="button" class="btn btn-sm" data-dup="${esc(d.a.id)}|${esc(d.b.id)}">Show the fix</button></li>`))}
+${sec('unlinked', 'Unlinked people', 'People in no community and no hub activity, and people in Vibathon teams or juries who are not in the Talent Ecosystem.', [...Q.unlinked.map(e => `<li data-row="${esc(e.id)}">${who(e)} ${comSel(e.id)}</li>`), ...Q.outside.map(o => `<li data-row="${esc(o.id)}"><b>${esc(o.name)}</b> <span class="te-dim">${esc(o.where)}, not in the Talent Ecosystem</span> <button type="button" class="btn btn-sm" data-add="${esc(o.id)}">Add as a professional</button></li>`)])}
+${sec('contact', 'Communities with no contact record', 'These are in aih.community but have no res.partner, so they have no town, consent or competences of their own.', Q.noContact.map(e => `<li data-row="${esc(e.id)}">${who(e)} <button type="button" class="btn btn-sm" data-mkcontact="${esc(e.id)}">Create the contact</button></li>`))}
+${sec('comp', 'Organisations with no competences', 'Partners and stakeholders carry type tags only, so "find by competence" cannot find them. A spreadsheet of competences per organisation would fill this in one import.', Q.orgsNoComp.slice(0, 12).map(e => `<li data-row="${esc(e.id)}">${who(e)}</li>`).concat(Q.orgsNoComp.length > 12 ? [`<li class="te-dim">and ${Q.orgsNoComp.length - 12} more (all in the CSV)</li>`] : []), Q.orgsNoComp.length)}
 ${Q.unpublished.length ? `<p class="te-dim">Also: ${Q.unpublished.length} record${Q.unpublished.length === 1 ? '' : 's'} with consent but not published: ${Q.unpublished.map(e => esc(e.name)).join(', ')}.</p>` : ''}
-<p class="te-q-csv"><button type="button" class="te-btn" data-csv>Download the open issues as a spreadsheet (CSV)</button> <span class="te-dim">To fill in and import into Odoo: the "get more data into Odoo" path. Made in this browser; nothing leaves it.</span></p>
-<div id="te-q-call">${qCall}</div>`;
+<p class="te-q-csv"><button type="button" class="btn" data-csv>Download the open issues as a spreadsheet (CSV)</button> <span class="te-dim">To fill in and import into Odoo: the "get more data into Odoo" path. Made in this browser; nothing leaves it.</span></p>
+<div id="te-q-call"></div>`;
+    placeCall();
   }
-  let qCall = '';
+  let qCall = '', qFor = null; const openQ = new Set(['town', 'consent']);
+  // The Odoo call shows next to the row it came from (or at the top of its list when the fix removed the row).
+  function placeCall() {
+    if (!qCall) return;
+    const html = `<li class="te-q-callrow">${qCall}</li>`;
+    const row = qFor && $(`#te-quality [data-row="${CSS.escape(qFor.id)}"]`);
+    if (row) { row.insertAdjacentHTML('afterend', html); return; }
+    const d = qFor && $(`#q-${qFor.sec}`);
+    if (d) { d.open = true; const ul = $('ul', d); if (ul) ul.insertAdjacentHTML('afterbegin', html); else d.insertAdjacentHTML('beforeend', `<ul>${html}</ul>`); return; }
+    $('#te-q-call').innerHTML = qCall;
+  }
+  const showCall = () => $('.te-q-callrow')?.scrollIntoView({ block: 'nearest' });
   const later = () => new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
   function csv() {
     const Q = quality(model, window.HUB.privateFeed);
@@ -552,42 +583,44 @@ ${Q.unpublished.length ? `<p class="te-dim">Also: ${Q.unpublished.length} record
   const root = $('#te-root');
   root.addEventListener('click', ev => {
     const t = ev.target.closest('button, [data-muni], [data-node]'); if (!t || !root.contains(t)) return;
-    if (t.dataset.kind) { const k = t.dataset.kind; f.kinds = f.kinds.includes(k) ? f.kinds.filter(x => x !== k) : [...f.kinds, k]; limit = 24; renderDirectory(); renderMap(); return; }
+    if (t.dataset.kind) { const k = t.dataset.kind; f.kinds = f.kinds.includes(k) ? f.kinds.filter(x => x !== k) : [...f.kinds, k]; limit = FIRST; renderDirectory(); renderMap(); return; }
     if (t.dataset.clear) { f[t.dataset.clear] = ''; renderDirectory(); renderMap(); return; }
-    if (t.dataset.community) { f = { ...EMPTY, community: t.dataset.community }; limit = 24; renderDirectory(); renderMap(); $('#directory').scrollIntoView({ block: 'start' }); return; }
-    if (t.dataset.muni && (t.classList.contains('tm-m') || t.classList.contains('te-muni'))) { f.muni = f.muni === t.dataset.muni ? '' : t.dataset.muni; limit = 24; renderDirectory(); renderMap(); return; }
+    if (t.dataset.community) { f = { ...EMPTY, community: t.dataset.community }; limit = FIRST; renderDirectory(); renderMap(); $('#directory').scrollIntoView({ block: 'start' }); return; }
+    if (t.dataset.muni && (t.classList.contains('tm-m') || t.classList.contains('te-muni'))) { f.muni = f.muni === t.dataset.muni ? '' : t.dataset.muni; limit = FIRST; renderDirectory(); renderMap(); return; }
     if (t.id === 'te-more') { limit += 48; renderDirectory(); return; }
-    if (t.id === 'te-reset') { f = { ...EMPTY }; limit = 24; renderDirectory(); renderMap(); return; }
+    if (t.id === 'te-reset') { f = { ...EMPTY }; limit = FIRST; renderDirectory(); renderMap(); return; }
     if (t.id === 'te-to-dir') { $('#directory').scrollIntoView({ block: 'start' }); return; }
     if (t.dataset.mx) { mxMode = t.dataset.mx; renderMatrix(); return; }
-    if (t.classList.contains('te-mx-b')) { q = { comps: [t.dataset.comp], who: t.dataset.who ? (WHO.find(w => w.id.split(' ').includes(t.dataset.who))?.id || t.dataset.who) : '', where: t.dataset.where || '' }; renderFind(); $('#find').scrollIntoView({ block: 'start' }); return; }
-    if (t.dataset.preset) { const p = JSON.parse(t.dataset.preset); q = { comps: p.comps || [], who: p.who || '', where: p.where || '' }; $('#te-fch').value = p.ch || ''; renderFind(); return; }
+    if (t.classList.contains('te-mx-b')) { qTouched = true; q = { comps: [t.dataset.comp], who: t.dataset.who ? (WHO.find(w => w.id.split(' ').includes(t.dataset.who))?.id || t.dataset.who) : '', where: t.dataset.where || '' }; renderFind(); $('#find').scrollIntoView({ block: 'start' }); return; }
+    if (t.dataset.preset) { qTouched = true; const p = JSON.parse(t.dataset.preset); q = { comps: p.comps || [], who: p.who || '', where: p.where || '' }; $('#te-fch').value = p.ch || ''; renderFind(); return; }
     if (t.dataset.node) { focus(focusNode === t.dataset.node ? null : t.dataset.node); return; }
     if (t.dataset.me) { meAction(t.dataset.me); return; }
-    if (t.dataset.ask) { const e = model.all.find(x => x.id === t.dataset.ask); local.asked[e.id] = true; save(); qCall = odooCall([{ model: 'res.partner', method: 'activity_schedule', body: { ids: [e.odoo.id], act_type_xmlid: 'mail.mail_activity_data_todo', summary: 'Ask for consent to be listed in the Talent Ecosystem', note: 'The person who knows them asks; on a yes, tick "Consent to be listed".', date_deadline: later() } }], model.odooDb, `A to-do on ${e.name}'s contact. Nothing is e-mailed from the hub.`); renderQuality(); $('#te-q-call').scrollIntoView({ block: 'nearest' }); return; }
-    if (t.dataset.dup) { const [a, b] = t.dataset.dup.split('|').map(id => model.all.find(x => x.id === id)); const com = [a, b].find(x => x.odoo?.model === 'aih.community'), par = [a, b].filter(x => x.odoo?.model === 'res.partner'); qCall = com && par.length ? odooCall([{ model: 'res.partner', method: 'write', body: { ids: [par[0].odoo.id], vals: { aih_community_id: com.odoo.id, aih_talent_kind: 'community' } } }], model.odooDb, `Link the contact ${par[0].name} to the community ${com.name}, so they are one record in the directory.`) : odooCall([{ model: 'base.partner.merge.automatic.wizard', method: 'create', why: 'prepare the merge', body: { vals_list: [{ partner_ids: [[6, 0, par.map(x => x.odoo.id)]], dst_partner_id: par[0].odoo.id }] } }, { model: 'base.partner.merge.automatic.wizard', method: 'action_merge', why: 'merge into the first contact', body: { ids: ['<id from step 1>'] } }], model.odooDb); renderQuality(); $('#te-q-call').scrollIntoView({ block: 'nearest' }); return; }
-    if (t.dataset.add) { qCall = odooCall([{ model: 'res.partner', method: 'search', why: 'find the contact by its hub id', body: { domain: [['aih_feed_key', '=', t.dataset.add]] } }, { model: 'res.partner', method: 'write', why: 'add them to the Talent Ecosystem, not yet published', body: { ids: ['<id from step 1>'], vals: { aih_talent_kind: 'professional', aih_published: false } } }], model.odooDb); renderQuality(); $('#te-q-call').scrollIntoView({ block: 'nearest' }); return; }
-    if (t.dataset.mkcontact) { const e = model.all.find(x => x.id === t.dataset.mkcontact); qCall = odooCall([{ model: 'res.partner', method: 'create', body: { vals_list: [{ name: e.name, is_company: true, aih_talent_kind: e.kind, aih_community_id: e.odoo.id, aih_source_url: e.source, aih_published: true, aih_feed_key: `t-${e.id}` }] } }], model.odooDb, 'A contact for the community, so it can carry a town, competences and its own page.'); renderQuality(); $('#te-q-call').scrollIntoView({ block: 'nearest' }); return; }
+    if (t.dataset.ask) { const e = model.all.find(x => x.id === t.dataset.ask); qFor = { sec: 'consent', id: e.id }; local.asked[e.id] = true; save(); qCall = odooCall([{ model: 'res.partner', method: 'activity_schedule', body: { ids: [e.odoo.id], act_type_xmlid: 'mail.mail_activity_data_todo', summary: 'Ask for consent to be listed in the Talent Ecosystem', note: 'The person who knows them asks; on a yes, tick "Consent to be listed".', date_deadline: later() } }], model.odooDb, `A to-do on ${e.name}'s contact. Nothing is e-mailed from the hub.`); renderQuality(); showCall(); return; }
+    if (t.dataset.dup) { const [a, b] = t.dataset.dup.split('|').map(id => model.all.find(x => x.id === id)); qFor = { sec: 'dup', id: a.id }; const com = [a, b].find(x => x.odoo?.model === 'aih.community'), par = [a, b].filter(x => x.odoo?.model === 'res.partner'); qCall = com && par.length ? odooCall([{ model: 'res.partner', method: 'write', body: { ids: [par[0].odoo.id], vals: { aih_community_id: com.odoo.id, aih_talent_kind: 'community' } } }], model.odooDb, `Link the contact ${par[0].name} to the community ${com.name}, so they are one record in the directory.`) : odooCall([{ model: 'base.partner.merge.automatic.wizard', method: 'create', why: 'prepare the merge', body: { vals_list: [{ partner_ids: [[6, 0, par.map(x => x.odoo.id)]], dst_partner_id: par[0].odoo.id }] } }, { model: 'base.partner.merge.automatic.wizard', method: 'action_merge', why: 'merge into the first contact', body: { ids: ['<id from step 1>'] } }], model.odooDb); renderQuality(); showCall(); return; }
+    if (t.dataset.add) { qFor = { sec: 'unlinked', id: t.dataset.add }; qCall = odooCall([{ model: 'res.partner', method: 'search', why: 'find the contact by its hub id', body: { domain: [['aih_feed_key', '=', t.dataset.add]] } }, { model: 'res.partner', method: 'write', why: 'add them to the Talent Ecosystem, not yet published', body: { ids: ['<id from step 1>'], vals: { aih_talent_kind: 'professional', aih_published: false } } }], model.odooDb); renderQuality(); showCall(); return; }
+    if (t.dataset.mkcontact) { const e = model.all.find(x => x.id === t.dataset.mkcontact); qFor = { sec: 'contact', id: e.id }; qCall = odooCall([{ model: 'res.partner', method: 'create', body: { vals_list: [{ name: e.name, is_company: true, aih_talent_kind: e.kind, aih_community_id: e.odoo.id, aih_source_url: e.source, aih_published: true, aih_feed_key: `t-${e.id}` }] } }], model.odooDb, 'A contact for the community, so it can carry a town, competences and its own page.'); renderQuality(); showCall(); return; }
     if (t.hasAttribute('data-csv')) { csv(); return; }
   });
+  root.addEventListener('toggle', ev => { const d = ev.target; if (d.classList?.contains('te-q')) { const id = d.id.slice(2); d.open ? openQ.add(id) : openQ.delete(id); } }, true);
+  root.addEventListener('click', ev => { const a = ev.target.closest('.te-qt'); if (a) { const d = document.querySelector(a.getAttribute('href')); if (d) d.open = true; } });
   root.addEventListener('keydown', ev => {
     if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('[role="button"][data-muni], [role="button"][data-node]')) { ev.preventDefault(); ev.target.click(); }
   });
   root.addEventListener('change', ev => {
     const t = ev.target;
-    if (t.id === 'te-comp') { f.comp = t.value; limit = 24; renderDirectory(); renderMap(); }
-    if (t.id === 'te-muni') { f.muni = t.value; limit = 24; renderDirectory(); renderMap(); }
-    if (t.id === 'te-origin') { f.origin = t.value; limit = 24; renderDirectory(); renderMap(); }
-    if (t.id === 'te-fc') { q.comps = t.value ? [t.value] : []; $('#te-fch').value = ''; renderFind(); }
-    if (t.id === 'te-fch') { const ch = model.challenges.find(c => c.id === t.value); q.comps = ch ? ch.skills.slice() : []; if (ch && !q.who) q.who = ''; renderFind(); }
-    if (t.id === 'te-fw') { q.who = t.value; renderFind(); }
-    if (t.id === 'te-fm') { q.where = t.value; renderFind(); }
+    if (t.id === 'te-comp') { f.comp = t.value; limit = FIRST; renderDirectory(); renderMap(); }
+    if (t.id === 'te-muni') { f.muni = t.value; limit = FIRST; renderDirectory(); renderMap(); }
+    if (t.id === 'te-origin') { f.origin = t.value; limit = FIRST; renderDirectory(); renderMap(); }
+    if (t.id === 'te-fc') { qTouched = true; q.comps = t.value ? [t.value] : []; $('#te-fch').value = ''; renderFind(); }
+    if (t.id === 'te-fch') { qTouched = true; const ch = model.challenges.find(c => c.id === t.value); q.comps = ch ? ch.skills.slice() : []; if (ch && !q.who) q.who = ''; renderFind(); }
+    if (t.id === 'te-fw') { qTouched = true; q.who = t.value; renderFind(); }
+    if (t.id === 'te-fm') { qTouched = true; q.where = t.value; renderFind(); }
     if (t.id === 'te-nw-focus') { focus(t.value || null); }
     if (t.id === 'te-me') { me = t.value; editing = false; lastCall = ''; renderListing(); }
-    if (t.dataset.fixTown) { const e = model.all.find(x => x.id === t.dataset.fixTown); local.fixes[e.id] = { ...(local.fixes[e.id] || {}), town: t.value }; save(); qCall = odooCall([{ model: e.odoo.model === 'aih.community' ? 'aih.community' : 'res.partner', method: 'write', body: { ids: [e.odoo.id], vals: e.odoo.model === 'aih.community' ? { municipality: t.value } : { city: t.value } } }], model.odooDb, `${e.name} now shows in ${t.value} in this browser.`); rebuild(); }
-    if (t.dataset.fixCom) { const e = model.all.find(x => x.id === t.dataset.fixCom); const c = model.coms.find(x => x.id === t.value); local.fixes[e.id] = { ...(local.fixes[e.id] || {}), community_id: t.value }; save(); qCall = odooCall([{ model: 'res.partner', method: 'write', body: { ids: [e.odoo.id], vals: { aih_community_id: c.odoo.id } } }], model.odooDb, `${e.name} is now a member of ${c.name} in this browser.`); rebuild(); }
+    if (t.dataset.fixTown) { const e = model.all.find(x => x.id === t.dataset.fixTown); qFor = { sec: 'town', id: e.id }; local.fixes[e.id] = { ...(local.fixes[e.id] || {}), town: t.value }; save(); qCall = odooCall([{ model: e.odoo.model === 'aih.community' ? 'aih.community' : 'res.partner', method: 'write', body: { ids: [e.odoo.id], vals: e.odoo.model === 'aih.community' ? { municipality: t.value } : { city: t.value } } }], model.odooDb, `${e.name} now shows in ${t.value} in this browser.`); rebuild(); showCall(); }
+    if (t.dataset.fixCom) { const e = model.all.find(x => x.id === t.dataset.fixCom); qFor = { sec: 'unlinked', id: e.id }; const c = model.coms.find(x => x.id === t.value); local.fixes[e.id] = { ...(local.fixes[e.id] || {}), community_id: t.value }; save(); qCall = odooCall([{ model: 'res.partner', method: 'write', body: { ids: [e.odoo.id], vals: { aih_community_id: c.odoo.id } } }], model.odooDb, `${e.name} is now a member of ${c.name} in this browser.`); rebuild(); showCall(); }
   });
-  root.addEventListener('input', ev => { if (ev.target.id === 'te-q') { f.q = ev.target.value; limit = 24; renderDirectory(); renderMap(); } });
+  root.addEventListener('input', ev => { if (ev.target.id === 'te-q') { f.q = ev.target.value; limit = FIRST; renderDirectory(); renderMap(); } });
   root.addEventListener('submit', ev => {
     ev.preventDefault(); const fm = ev.target; const d = new FormData(fm);
     if (fm.id === 'te-edit') {
@@ -609,7 +642,8 @@ ${Q.unpublished.length ? `<p class="te-dim">Also: ${Q.unpublished.length} record
   });
 
   // ---- personas: highlight presets, switch feeds
-  window.HUB?.on('persona', () => { if (pub) { editing = false; rebuild(); } });
+  // A new persona starts from its own listing and its own question in the finder.
+  window.HUB?.on('persona', () => { if (pub) { editing = false; me = null; lastCall = ''; qTouched = false; rebuild(); } });
   window.HUB?.on('private', () => { if (pub) rebuild(); });
   (window.HUB ? window.HUB.publicFeed() : fetch('/feeds/public.json').then(r => r.json())).then(p => { pub = p; rebuild(); document.body.classList.add('te-ready'); });
 }

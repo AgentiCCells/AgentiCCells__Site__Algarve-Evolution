@@ -29,15 +29,17 @@
 
   // ---------------------------------------------------------------- the "Odoo call" panel
   const AUTH = 'Authorization: bearer <API key of an Odoo integration user, never in the browser>';
-  function showCall(el, title, steps) {
+  // The shared panel (.odoo-call in hub.css): one <details> per call, open when the person has acted.
+  function showCall(el, title, steps, open = false) {
     if (!el) return;
-    el.innerHTML = `<div class="vb-call-head"><strong>Odoo call</strong> <span>${esc(title)}</span> <span class="vb-notsent">not sent: prototype</span></div>${steps.map((s, i) => `
-      <pre tabindex="0" aria-label="Odoo call ${i + 1}: ${esc(s.model)} ${esc(s.method)}"><code>POST /json/2/${esc(s.model)}/${esc(s.method)}
-${esc(AUTH)}
+    const keep = el.querySelector('details')?.open;
+    el.innerHTML = `<p class="vb-call-title">${esc(title)}</p>` + steps.map(s => `<details class="odoo-call"${open || keep ? ' open' : ''}><summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(s.model)}/${esc(s.method)}</code> <span class="odoo-call-flag">not sent: prototype</span></summary><pre tabindex="0"><code>${esc(AUTH)}
 Content-Type: application/json
 
-${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-call-note">${esc(s.note)}</p>` : ''}`).join('')}`;
+${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="odoo-call-note">${esc(s.note)}</p>` : ''}</details>`).join('');
   }
+
+  const openCalls = root => root && root.querySelectorAll('details.odoo-call').forEach(d => { d.open = true; });
 
   // ---------------------------------------------------------------- persona
   function onPersona(id) {
@@ -78,7 +80,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
       if (!name) { msg.textContent = 'Please give your name.'; reg.name.focus(); return; }
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = 'Please give a valid e-mail address.'; reg.email.focus(); return; }
       store.set(`reg-${reg.dataset.vibathon}`, { name, email, as: f.get('as'), consent: !!f.get('consent'), at: new Date().toISOString() });
-      msg.textContent = 'You are registered, in this browser only. The calls below are what Odoo would receive.'; regCall(); renderTrack();
+      msg.textContent = 'You are registered, in this browser only. The calls below are what Odoo would receive.'; regCall(); openCalls(reg); renderTrack();
     });
   }
 
@@ -99,7 +101,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
       const f = Object.fromEntries(new FormData(sub)); for (const k of ['name', 'team', 'summary', 'next_step']) f[k] = String(f[k] || '').trim();
       const miss = ['name', 'summary', 'next_step'].find(k => !f[k]); if (miss) { msg.textContent = 'Please fill in the name, what it does and your next step.'; sub[miss].focus(); return; }
       store.set(`project-${sub.dataset.vibathon}`, { ...f, at: new Date().toISOString() });
-      msg.textContent = `Submitted, in this browser only. Your next step goes to ${lane(laneOf(f.next_step)).name}.`; subCall(); renderTrack(); renderMine();
+      msg.textContent = `Submitted, in this browser only. Your next step goes to ${lane(laneOf(f.next_step)).name}.`; subCall(); openCalls(sub); renderTrack(); renderMine();
     });
   }
 
@@ -137,7 +139,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
     const mine = store.get('scores', {});
     sheet.innerHTML = `<div class="vb-sheet-head" aria-hidden="true"><span>Project</span>${D.criteria.map(c => `<span>${esc(c)}</span>`).join('')}<span>Average</span></div>` + sheetProjects().map(p => {
       const sc = mine[p.id] || {}; const avg = mean(D.criteria.map(c => Number(sc[c] ?? 5)));
-      return `<div class="vb-row" data-row="${esc(p.id)}" role="group" aria-label="${esc(p.name)}"><div class="vb-row-name"><strong>${esc(p.name)}</strong> ${sim(p)} ${isPublicProject(p.id) ? '' : '<span class="vb-unpub">Not published</span>'}${mine[p.id] ? '<small class="vb-saved">Scored</small>' : ''}</div>${D.criteria.map(c => `<label class="vb-slider"><span class="vb-slider-l">${esc(c)}</span><input type="range" min="1" max="10" step="1" value="${esc(sc[c] ?? 5)}" data-c="${esc(c)}" aria-label="${esc(c)} for ${esc(p.name)}"><output>${esc(sc[c] ?? 5)}</output></label>`).join('')}<div class="vb-row-avg"><span class="vb-slider-l">Average</span><output data-avg>${f1(avg)}</output></div></div>`;
+      return `<div class="vb-row" data-row="${esc(p.id)}" role="group" aria-label="${esc(p.name)}"><div class="vb-row-name"><strong>${esc(p.name)}</strong> ${sim(p)} ${isPublicProject(p.id) ? '' : '<span class="tag tag-odoo">Not published</span>'}${mine[p.id] ? '<small class="vb-saved">Scored</small>' : ''}</div>${D.criteria.map(c => `<label class="vb-slider"><span class="vb-slider-l">${esc(c)}</span><input type="range" min="1" max="10" step="1" value="${esc(sc[c] ?? 5)}" data-c="${esc(c)}" aria-label="${esc(c)} for ${esc(p.name)}"><output>${esc(sc[c] ?? 5)}</output></label>`).join('')}<div class="vb-row-avg"><span class="vb-slider-l">Average</span><output data-avg>${f1(avg)}</output></div></div>`;
     }).join('');
     juryProgress(); scoresCall();
   }
@@ -150,7 +152,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
   $('[data-save-scores]')?.addEventListener('click', () => {
     store.set('scores', { ...store.get('scores', {}), ...readSheet() });
     $('[data-scores-msg]').textContent = 'Your scores are recorded in this browser only. The call below is what Odoo would receive.';
-    renderSheet(); renderCompare();
+    renderSheet(); renderCompare(); openCalls($('[data-call="scores"]'));
   });
   function juryProgress() {
     const el = $('[data-jury-progress]'); if (!el) return;
@@ -179,8 +181,8 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
     </svg>`;
     el.innerHTML = `<div class="vb-compare"><h4>Your scores and the jury's (private feed)</h4>
       <p class="vb-legend"><span class="lg lg-jury"></span>Jury average <span class="lg lg-juror"></span>Each juror <span class="lg lg-you"></span>You (this browser)</p>${svg}
-      <div class="vb-table-wrap" tabindex="0"><table class="vb-table vb-table-dark"><caption class="vh">Scores by project</caption><thead><tr><th scope="col">Project</th>${D.criteria.map(c => `<th scope="col">${esc(c)}</th>`).join('')}<th scope="col">Jury</th><th scope="col">You</th><th scope="col">Prize</th></tr></thead>
-      <tbody>${rows.map(r => `<tr><th scope="row">${esc(r.p.name)}</th>${D.criteria.map(c => `<td>${f1(r.st.byC[c])}</td>`).join('')}<td><strong>${f1(r.st.avg)}</strong></td><td>${f1(r.you)}</td><td>${esc((r.p.prize || '').replace(/\s*\(simulated\)/, '')) || '-'}</td></tr>`).join('')}</tbody></table></div>
+      <div class="hub-table-wrap"><table class="hub-table hub-table-pairs"><caption class="vh">Scores by project</caption><thead><tr><th scope="col">Project</th>${D.criteria.map(c => `<th scope="col" class="num">${esc(c)}</th>`).join('')}<th scope="col" class="num">Jury</th><th scope="col" class="num">You</th><th scope="col">Prize</th></tr></thead>
+      <tbody>${rows.map(r => `<tr><th scope="row">${esc(r.p.name)}</th>${D.criteria.map(c => `<td class="num" data-th="${esc(c)}">${f1(r.st.byC[c])}</td>`).join('')}<td class="num" data-th="Jury"><strong>${f1(r.st.avg)}</strong></td><td class="num" data-th="You">${f1(r.you)}</td><td data-th="Prize">${esc((r.p.prize || '').replace(/\s*\(simulated\)/, '')) || '-'}</td></tr>`).join('')}</tbody></table></div>
       <p class="vb-note-light">${rows.length} projects, ${rows.reduce((s, r) => s + r.st.n, 0)} scores from ${new Set(rows.flatMap(r => r.st.byJ.map(j => j.j))).size} jurors, all simulated, from aih.project.score in the private feed.</p></div>`;
   }
 
@@ -196,7 +198,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
       const ps = projects().filter(p => p.vibathon_id === v.id && isPublicProject(p.id));
       const past = v.date < D.today;
       return `<div class="vb-mentor-ev"><h3><a href="#${esc(v.id)}">${esc(v.name)}</a> ${sim(v)}</h3><p class="vb-where">${esc(fmtDate(v.date))} · ${esc(v.venue)} · ${past ? 'took place' : `upcoming, ${v.registrations} registered so far`}</p>
-        ${ps.length ? `<ul class="vb-mentor-teams">${ps.map(p => `<li><strong>${esc(p.name)}</strong> ${sim(p)}<span>${esc(p.team.join(', ') || 'Team not public')}</span><span class="vb-next"><span>Next step</span> ${esc(p.next_step)} (${esc(lane(p.lane).name)})</span><button type="button" class="vb-btn vb-btn-small" data-office="${esc(p.id)}" aria-pressed="${office[p.id] ? 'true' : 'false'}">${office[p.id] ? 'Office hours offered' : 'Offer office hours'}</button></li>`).join('')}</ul>` : `<p class="vb-empty">${past ? 'No projects recorded.' : 'The teams form on the day; you will see them here once they submit their projects.'}</p>`}</div>`;
+        ${ps.length ? `<ul class="vb-mentor-teams">${ps.map(p => `<li><strong>${esc(p.name)}</strong> ${sim(p)}<span>${esc(p.team.join(', ') || 'Team not public')}</span><span class="vb-next"><span>Next step</span> ${esc(p.next_step)} (${esc(lane(p.lane).name)})</span><button type="button" class="btn btn-sm" data-office="${esc(p.id)}" aria-pressed="${office[p.id] ? 'true' : 'false'}">${office[p.id] ? 'Office hours offered' : 'Offer office hours'}</button></li>`).join('')}</ul>` : `<p class="vb-empty">${past ? 'No projects recorded.' : 'The teams form on the day; you will see them here once they submit their projects.'}</p>`}</div>`;
     }).join('') + '<p class="vb-note">Mentors help every team at their event; Odoo does not yet link a mentor to a single project, nor keep a mentor\'s offer of office hours (kept in this browser only). A proposal for the addon: a mentor field and the chatter on aih.project.</p>' : '<p class="vb-empty">You are not a mentor at any vibathon in Odoo.</p>';
   }
   if (pick) {
@@ -224,7 +226,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
     D.lanes.forEach(l => {
       const ul = $(`[data-lane-list="${l.id}"]`); if (!ul) return;
       const ps = list.filter(p => laneFor(p) === l.id);
-      const items = ps.map(p => `<li class="vb-card${store.get('lanes', {})[p.id] ? ' is-moved' : ''}" data-card="${esc(p.id)}"><strong>${esc(p.name)}</strong> ${sim(p)} ${isPublicProject(p.id) ? '' : '<span class="vb-unpub">Not published</span>'}<span>${esc(p.next_step)}</span><small>${esc(V(p.vibathon_id)?.name || '')}${p.prize ? ` · ${esc(p.prize.replace(/\s*\(simulated\)/, ''))}` : ''}${store.get('lanes', {})[p.id] ? ' · moved in this browser' : ''}</small><span class="vb-move" data-move-slot></span></li>`);
+      const items = ps.map(p => `<li class="vb-card${store.get('lanes', {})[p.id] ? ' is-moved' : ''}" data-card="${esc(p.id)}"><strong>${esc(p.name)}</strong> ${sim(p)} ${isPublicProject(p.id) ? '' : '<span class="tag tag-odoo">Not published</span>'}<span>${esc(p.next_step)}</span><small>${esc(V(p.vibathon_id)?.name || '')}${p.prize ? ` · ${esc(p.prize.replace(/\s*\(simulated\)/, ''))}` : ''}${store.get('lanes', {})[p.id] ? ' · moved in this browser' : ''}</small><span class="vb-move" data-move-slot></span></li>`);
       if (mine && laneOf(mine.next_step) === l.id) items.push(`<li class="vb-card is-mine"><strong>${esc(mine.name)}</strong> <span class="vb-yours">Yours, in this browser</span><span>${esc(mine.next_step)}</span><small>${esc(D.next.name)}</small></li>`);
       ul.innerHTML = items.join('') || '<li class="vb-empty">No team in this lane yet.</li>';
       const n = $(`[data-lane-count="${l.id}"]`); if (n) n.textContent = items.length;
@@ -244,7 +246,7 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
     const s = e.target.closest('[data-move]'); if (!s) return;
     const id = s.dataset.move, p = P(id), o = store.get('lanes', {});
     if (s.value === p.lane) delete o[id]; else o[id] = s.value; store.set('lanes', o);
-    renderLanes(); routeCall(p, s.value); $(`[data-move="${id}"]`)?.focus();
+    renderLanes(); routeCall(p, s.value); openCalls($('[data-call="route"]')); $(`[data-move="${id}"]`)?.focus();
   });
   const renderMine = renderLanes;
 
@@ -260,21 +262,21 @@ ${esc(JSON.stringify(s.body, null, 2))}</code></pre>${s.note ? `<p class="vb-cal
     if (note) note.textContent = priv ? 'Includes the private fields: unpublished projects, jury averages and team contacts.' : 'Public fields only until the private feed is open.';
     if (!priv) return;
     const pubV = id => D.vibathons.find(v => v.id === id);
-    view.innerHTML = `<h3 class="vb-staff-h">The private feed is open in this tab</h3><div class="vb-table-wrap" tabindex="0"><table class="vb-table"><caption class="vh">Registrations data per vibathon</caption>
-      <thead><tr><th scope="col">Vibathon</th><th scope="col">Date</th><th scope="col">Registered</th><th scope="col">Participant records</th><th scope="col">Jurors (named in public)</th><th scope="col">Projects (published)</th><th scope="col">Jury scores</th></tr></thead>
-      <tbody>${priv.vibathons.map(v => { const ps = priv.projects.filter(p => p.vibathon_id === v.id); const pv = pubV(v.id); return `<tr><th scope="row"><a href="#${esc(v.id)}">${esc(v.name)}</a></th><td>${esc(fmtDate(v.date))}</td><td>${v.registrations}</td><td>${(v.participants || []).length}</td><td>${(v.jury || []).length} (${(pv?.jury || []).length})</td><td>${ps.length} (${ps.filter(p => isPublicProject(p.id)).length})</td><td>${ps.reduce((s, p) => s + (p.scores || []).length, 0)}</td></tr>`; }).join('')}</tbody></table></div>
+    view.innerHTML = `<h3 class="vb-staff-h">The private feed is open in this tab</h3><div class="hub-table-wrap"><table class="hub-table"><caption class="vh">Registrations data per vibathon</caption>
+      <thead><tr><th scope="col">Vibathon</th><th scope="col">Date</th><th scope="col" class="num">Registered</th><th scope="col" class="num">Participant records</th><th scope="col" class="num">Jurors (named in public)</th><th scope="col" class="num">Projects (published)</th><th scope="col" class="num">Jury scores</th></tr></thead>
+      <tbody>${priv.vibathons.map(v => { const ps = priv.projects.filter(p => p.vibathon_id === v.id); const pv = pubV(v.id); return `<tr><th scope="row"><a href="#${esc(v.id)}">${esc(v.name)}</a></th><td data-th="Date">${esc(fmtDate(v.date))}</td><td class="num" data-th="Registered">${v.registrations}</td><td class="num" data-th="Participant records">${(v.participants || []).length}</td><td class="num" data-th="Jurors (named in public)">${(v.jury || []).length} (${(pv?.jury || []).length})</td><td class="num" data-th="Projects (published)">${ps.length} (${ps.filter(p => isPublicProject(p.id)).length})</td><td class="num" data-th="Jury scores">${ps.reduce((s, p) => s + (p.scores || []).length, 0)}</td></tr>`; }).join('')}</tbody></table></div>
       <p class="vb-note">Participant records are the people Odoo holds a contact for; registrations is the count recorded for the event. Every record here is simulated. ${'<span class="odoo-chip"><span class="odoo-dot" aria-hidden="true"></span>Odoo · aih.vibathon.participant · ' + priv.vibathons.reduce((s, v) => s + (v.participants || []).length, 0) + '</span>'}</p>`;
     // Into each event: participants, the full jury, mentors without consent, unpublished projects.
     priv.vibathons.forEach(v => {
       const parts = $(`[data-participants-slot="${v.id}"]`);
-      if (parts) parts.innerHTML = (v.participants || []).length ? `<details class="vb-details"><summary>${v.participants.length} participant records (private)</summary><div class="vb-table-wrap" tabindex="0"><table class="vb-table"><thead><tr><th scope="col">Name</th><th scope="col">E-mail</th></tr></thead><tbody>${v.participants.map(p => `<tr><td>${esc(p.name)}</td><td>${esc(p.email || '')}</td></tr>`).join('')}</tbody></table></div></details>` : '<p class="vb-empty">No participant records yet.</p>';
+      if (parts) parts.innerHTML = (v.participants || []).length ? `<details class="vb-details"><summary>${v.participants.length} participant records (private)</summary><div class="hub-table-wrap"><table class="hub-table vb-parts"><thead><tr><th scope="col">Name</th><th scope="col">E-mail</th></tr></thead><tbody>${v.participants.map(p => `<tr><td data-th="Name">${esc(p.name)}</td><td data-th="E-mail">${esc(p.email || '')}</td></tr>`).join('')}</tbody></table></div></details>` : '<p class="vb-empty">No participant records yet.</p>';
       const pv = pubV(v.id);
       const jury = $(`[data-jury-slot="${v.id}"]`);
       if (jury) { const hidden = (v.jury || []).filter(j => !(pv?.jury || []).some(x => x.name === j.name)); jury.innerHTML = hidden.length ? `<p class="vb-priv-h">Also on the jury, not named in public (no consent):</p><ul class="vb-jury">${hidden.map(j => `<li><strong>${esc(j.name)}</strong><small>${esc(j.role || '')} · ${esc(j.partner_id || '')}</small></li>`).join('')}</ul>` : ''; }
       const men = $(`[data-mentors-slot="${v.id}"]`);
       if (men) { const hidden = (v.mentor_ids || []).filter(id => !(pv?.mentor_ids || []).includes(id)).map(id => priv.mentors.find(m => m.id === id)).filter(Boolean); men.innerHTML = hidden.length ? `<p class="vb-priv-h">Also mentoring, not named in public (no consent):</p><ul class="vb-people">${hidden.map(m => `<li class="vb-person"><span class="vb-avatar" aria-hidden="true">${esc(m.name.replace(/\D/g, '').slice(-2))}</span><span><strong>${esc(m.name)}</strong> ${sim(m)}<small>${esc((m.expertise || []).join(', '))}</small></span></li>`).join('')}</ul>` : ''; }
       const extra = $(`[data-extra-projects="${v.id}"]`);
-      if (extra) { const ps = priv.projects.filter(p => p.vibathon_id === v.id && !isPublicProject(p.id)); extra.innerHTML = ps.length ? `<p class="vb-priv-h">Presented but not published in Odoo:</p><ul class="vb-projects">${ps.map(p => { const st = juryStats(p); return `<li class="vb-project"><div class="vb-project-top"><span class="vb-unpub">Not published</span> ${sim(p)}</div><h4>${esc(p.name)}</h4><p>${esc(p.summary)}</p><p class="vb-team">${esc((p.team || []).join(', '))}</p><p class="vb-next"><span>Next step</span> ${esc(p.next_step)}</p>${st ? `<p class="vb-score-line"><strong>Jury ${f1(st.avg)}</strong></p>` : ''}</li>`; }).join('')}</ul>` : ''; }
+      if (extra) { const ps = priv.projects.filter(p => p.vibathon_id === v.id && !isPublicProject(p.id)); extra.innerHTML = ps.length ? `<p class="vb-priv-h">Presented but not published in Odoo:</p><ul class="cards vb-projects">${ps.map(p => { const st = juryStats(p); return `<li class="card vb-project"><div class="vb-project-top"><span class="tag tag-odoo">Not published</span> ${sim(p)}</div><h4>${esc(p.name)}</h4><p>${esc(p.summary)}</p><p class="vb-team">${esc((p.team || []).join(', '))}</p><p class="vb-next"><span>Next step</span> ${esc(p.next_step)}</p>${st ? `<p class="vb-score-line"><strong>Jury ${f1(st.avg)}</strong></p>` : ''}</li>`; }).join('')}</ul>` : ''; }
     });
   }
   $('[data-export]')?.addEventListener('click', () => {

@@ -62,7 +62,7 @@ export function render({ layout, feed, data, h, ix }) {
     : `<p class="vb-empty">${past(v) ? 'No jury recorded in Odoo for this event.' : 'The jury is not announced yet.'}</p>`;
   const projectCard = p => {
     const lane = LANES.find(l => l.id === laneOf(p.next_step)) || NO_LANE;
-    return `<li class="vb-project${p.prize ? ' has-prize' : ''}" id="${esc(p.id)}" data-project="${esc(p.id)}">
+    return `<li class="card vb-project${p.prize ? ' has-prize' : ''}" id="${esc(p.id)}" data-project="${esc(p.id)}">
       <div class="vb-project-top">${p.prize ? `<span class="vb-prize vb-prize-${rank(p)}">${esc(p.prize.replace(/\s*\(simulated\)/i, ''))}</span>` : '<span class="vb-prize vb-prize-none">Presented</span>'} ${h.sim(p)}</div>
       <h4>${esc(p.name)}</h4>
       <p>${esc(p.summary)}</p>
@@ -77,16 +77,16 @@ export function render({ layout, feed, data, h, ix }) {
     return `<article class="vb-event" id="${esc(v.id)}" aria-labelledby="${esc(v.id)}-h">
     <header class="vb-event-head">
       <div>
-        <p class="vb-meta"><span class="vb-kind kind-${esc(v.kind)}">${esc(KIND[v.kind] || v.kind)}</span><span class="vb-status ${isPast ? 'is-past' : 'is-next'}">${isPast ? 'Took place' : 'Upcoming'}</span>${h.sim(v)} ${h.src(v)}</p>
+        <p class="vb-meta"><span class="tag tag-navy">${esc(KIND[v.kind] || v.kind)}</span><span class="tag ${isPast ? '' : 'tag-accent'}">${isPast ? 'Took place' : 'Upcoming'}</span>${h.sim(v)} ${h.src(v)}</p>
         <h3 id="${esc(v.id)}-h">${esc(v.name)}</h3>
         <p class="vb-where">${esc(h.date(v.date))} · ${esc(v.venue)} · ${esc(v.town)}</p>
       </div>
-      <dl class="vb-stats">
-        <div><dt>Registered</dt><dd>${h.num(v.registrations)}</dd></div>
-        <div><dt>Mentors</dt><dd>${h.num((v.mentor_ids || []).length)}</dd></div>
-        <div><dt>Jury</dt><dd>${h.num((v.jury || []).length)}</dd></div>
-        <div><dt>Projects</dt><dd>${h.num(ps.length)}</dd></div>
-      </dl>
+      <div class="stats vb-stats">
+        <div class="stat"><span class="stat-n">${h.num(v.registrations)}</span><span class="stat-l">registered</span></div>
+        <div class="stat"><span class="stat-n">${h.num((v.mentor_ids || []).length)}</span><span class="stat-l">mentors</span></div>
+        <div class="stat"><span class="stat-n">${h.num((v.jury || []).length)}</span><span class="stat-l">jurors</span></div>
+        <div class="stat"><span class="stat-n">${h.num(ps.length)}</span><span class="stat-l">projects</span></div>
+      </div>
     </header>
     <ol class="vb-steps">
       <li class="vb-step" data-for="participant staff">
@@ -94,17 +94,17 @@ export function render({ layout, feed, data, h, ix }) {
         <div class="vb-step-body">
           <p><strong>${h.num(v.registrations)} people registered.</strong> ${isPast ? 'Registration is closed.' : 'Registration is open.'} Who they are is private in Odoo: the Algarve Evolution team sees the participant list with the access key.</p>
           <div class="vb-private-slot" data-participants-slot="${esc(v.id)}" data-only="staff" hidden><p class="vb-locked">Open the private feed to see the participant records.</p></div>
-          ${!isPast && v === next ? `<p data-only="visitor founder mentor challenger supplier"><a href="#you" class="vb-cta" data-go-persona="participant">Try it as a participant to register</a></p>
-          <form class="vb-form" id="vb-register" data-only="participant" hidden data-vibathon="${esc(v.id)}" data-odoo-id="${esc(v.odoo?.id)}" novalidate>
+          ${!isPast && v === next ? `<p data-only="visitor founder mentor challenger supplier"><a href="#you" class="btn btn-primary" data-go-persona="participant">Try it as a participant to register</a></p>
+          <form class="vb-form hub-form" id="vb-register" data-only="participant" hidden data-vibathon="${esc(v.id)}" data-odoo-id="${esc(v.odoo?.id)}" novalidate>
             <h5>Register for ${esc(v.name)}</h5>
             <div class="vb-fields">
-              <label>Your name <input name="name" autocomplete="name" required maxlength="80"></label>
-              <label>E-mail <input name="email" type="email" autocomplete="email" required maxlength="120"></label>
-              <label>You join as <select name="as"><option>Builder</option><option>Designer</option><option>Domain expert</option><option>Student</option></select></label>
+              <label class="field"><span>Your name</span><input name="name" autocomplete="name" required maxlength="80"></label>
+              <label class="field"><span>E-mail</span><input name="email" type="email" autocomplete="email" required maxlength="120"></label>
+              <label class="field"><span>You join as</span><select name="as"><option>Builder</option><option>Designer</option><option>Domain expert</option><option>Student</option></select></label>
             </div>
-            <label class="vb-check"><input type="checkbox" name="consent"> If my team presents, Algarve Evolution may show my name on the hub (consent, kept on my contact in Odoo).</label>
-            <p class="vb-form-note">Kept in this browser only. Nothing is sent.</p>
-            <button class="vb-btn" type="submit">Register</button> <span class="vb-msg" role="status"></span>
+            <label class="vb-check"><input type="checkbox" name="consent"> <span>If my team presents, Algarve Evolution may show my name on the hub (consent, kept on my contact in Odoo).</span></label>
+            <p class="vb-actions"><button class="btn btn-primary" type="submit">Register</button> <span class="local-note">Kept in this browser only. Nothing is sent.</span></p>
+            <p class="vb-msg" role="status"></p>
             <div class="vb-odoo-call" data-call="register"></div>
           </form>` : ''}
         </div>
@@ -123,18 +123,19 @@ export function render({ layout, feed, data, h, ix }) {
           <div class="vb-present">
             <div class="vb-jury-box"><h5>The jury</h5>${juryList(v)}<p class="vb-rule">Consent rule: a juror appears here only when their contact in Odoo says they agreed to be named. Scores stay in the private feed.</p>${h.odoo('aih.vibathon.jury', (v.jury || []).length)}<div class="vb-private-slot" data-jury-slot="${esc(v.id)}" data-only="staff" hidden></div></div>
             <div class="vb-projects-box">
-              ${ps.length ? `<h5>The projects presented at the end</h5><ul class="vb-projects">${ps.map(projectCard).join('')}</ul>` : `<p class="vb-empty">${isPast ? 'No projects recorded.' : 'Projects appear here when the teams present at the end of the day.'}</p>`}
+              ${ps.length ? `<h5>The projects presented at the end</h5><ul class="cards vb-projects">${ps.map(projectCard).join('')}</ul>` : `<p class="vb-empty">${isPast ? 'No projects recorded.' : 'Projects appear here when the teams present at the end of the day.'}</p>`}
               <div class="vb-private-slot" data-extra-projects="${esc(v.id)}" data-only="staff" hidden></div>
-              ${!isPast && v === next ? `<form class="vb-form" id="vb-submit" data-only="participant" hidden data-vibathon="${esc(v.id)}" data-odoo-id="${esc(v.odoo?.id)}" novalidate>
+              ${!isPast && v === next ? `<form class="vb-form hub-form" id="vb-submit" data-only="participant" hidden data-vibathon="${esc(v.id)}" data-odoo-id="${esc(v.odoo?.id)}" novalidate>
                 <h5>Submit your project (on the day, before you present)</h5>
                 <div class="vb-fields">
-                  <label>Project name <input name="name" required maxlength="60"></label>
-                  <label>Team (names, comma separated) <input name="team" maxlength="200"></label>
-                  <label class="vb-wide">What it does, in one sentence <textarea name="summary" rows="2" required maxlength="240"></textarea></label>
-                  <label class="vb-wide">Your next step after the event <input name="next_step" required maxlength="120" placeholder="For example: test with three hotels in Portimão"></label>
+                  <label class="field"><span>Project name</span><input name="name" required maxlength="60"></label>
+                  <label class="field"><span>Team</span><input name="team" maxlength="200"><span class="field-hint">Names, separated by commas</span></label>
+                  <label class="field vb-wide"><span>What it does, in one sentence</span><textarea name="summary" rows="2" required maxlength="240"></textarea></label>
+                  <label class="field vb-wide"><span>Your next step after the event</span><input name="next_step" required maxlength="120" placeholder="For example: test with three hotels in Portimão"></label>
                 </div>
-                <p class="vb-form-note">Kept in this browser only. Nothing is sent. Staff publish a project in Odoo after the event.</p>
-                <button class="vb-btn" type="submit">Submit project</button> <span class="vb-msg" role="status"></span>
+                <p class="field-hint">Staff publish a project in Odoo after the event.</p>
+                <p class="vb-actions"><button class="btn btn-primary" type="submit">Submit project</button> <span class="local-note">Kept in this browser only. Nothing is sent.</span></p>
+                <p class="vb-msg" role="status"></p>
                 <div class="vb-odoo-call" data-call="submit"></div>
               </form>` : ''}
             </div>
@@ -154,8 +155,8 @@ export function render({ layout, feed, data, h, ix }) {
   // The calendar: the feed's vibathons and the real Vibathon Algarve 2026, by date.
   const maxReg = Math.max(1, ...vibs.map(v => v.registrations || 0));
   const cal = [
-    ...vibs.map(v => ({ date: v.date, html: `<li class="vb-cal-item ${past(v) ? 'is-past' : 'is-next'}"><a href="#${esc(v.id)}"><span class="vb-cal-date">${esc(h.date(v.date))}</span><span class="vb-kind kind-${esc(v.kind)}">${esc(KIND[v.kind] || v.kind)}</span><strong>${esc(v.name)}</strong><span class="vb-cal-where">${esc(v.venue)}</span><span class="vb-bar" aria-hidden="true"><span style="width:${Math.round((v.registrations || 0) / maxReg * 100)}%"></span></span><span class="vb-cal-reg">${h.num(v.registrations)} registered · ${projOf(v).length} projects</span></a>${h.sim(v)}</li>` })),
-    ...(real ? [{ date: real.start, html: `<li class="vb-cal-item is-real ${real.start < today ? 'is-past' : 'is-next'}"><a href="#real"><span class="vb-cal-date">${esc(h.date(real.start))}</span><span class="vb-kind kind-real">Real event</span><strong>${esc(real.name.en)}</strong><span class="vb-cal-where">${esc(real.place.en)}</span><span class="vb-cal-reg">Sold out, with a waiting list</span></a><span class="vb-real-badge">Real, with sources</span></li>` }] : []),
+    ...vibs.map(v => ({ date: v.date, html: `<li class="card${past(v) ? ' vb-past' : ' card-accent'}"><p class="card-kicker">${esc(h.date(v.date))}</p><h3><a href="#${esc(v.id)}">${esc(v.name)}</a></h3><p class="card-meta"><span class="tag tag-navy">${esc(KIND[v.kind] || v.kind)}</span>${past(v) ? '<span class="tag">Took place</span>' : '<span class="tag tag-accent">Upcoming</span>'} ${esc(v.venue)}</p><div class="progress" role="progressbar" aria-label="Registrations" aria-valuenow="${v.registrations || 0}" aria-valuemin="0" aria-valuemax="${maxReg}"><span style="--v:${Math.round((v.registrations || 0) / maxReg * 100)}%"></span></div><p class="card-foot"><span>${h.num(v.registrations)} registered · ${projOf(v).length} projects</span>${h.sim(v)}</p></li>` })),
+    ...(real ? [{ date: real.start, html: `<li class="card vb-real-c"><p class="card-kicker">${esc(h.date(real.start))}</p><h3><a href="#real">${esc(real.name.en)}</a></h3><p class="card-meta"><span class="tag tag-ok">Real event</span>${real.start < today ? '<span class="tag">Took place</span>' : '<span class="tag tag-accent">Upcoming</span>'} ${esc(real.place.en)}</p><p>Sold out, with a waiting list.</p><p class="card-foot"><span>Registrations not in our Odoo</span><a class="src-link" href="${esc(real.sources[0])}" rel="noopener">source</a></p></li>` }] : []),
   ].sort((a, b) => a.date.localeCompare(b.date)).map(x => x.html).join('');
 
   // The follow-up pipeline: every presented project in a lane.
@@ -210,13 +211,15 @@ export function render({ layout, feed, data, h, ix }) {
   </div>
 </section>
 
-<section class="vb-you" id="you" aria-labelledby="vb-you-h">
+<section class="hub-sec hub-sec-mist hub-sec-tight vb-you" id="you" aria-labelledby="vb-you-h">
   <div class="hub-wrap">
-    <h2 id="vb-you-h" class="vb-you-h">Your view <span data-vb-persona-name>as a visitor</span></h2>
-    <div class="vb-panel" data-only="visitor">
+    <h2 id="vb-you-h" class="vh">Your view <span data-vb-persona-name>as a visitor</span></h2>
+    <div class="persona-panel vb-panel" data-only="visitor">
+      <p class="persona-panel-head">For visitors</p>
       <p>You see what anyone can see: the vibathons, the projects the teams presented and where each team went next. Try the page as a <button type="button" class="vb-link" data-go-persona="participant">participant or juror</button>, a <button type="button" class="vb-link" data-go-persona="mentor">mentor</button> or the <button type="button" class="vb-link" data-go-persona="staff">Algarve Evolution team</button>.</p>
     </div>
-    <div class="vb-panel" data-only="participant" hidden>
+    <div class="persona-panel vb-panel" data-only="participant" hidden>
+      <p class="persona-panel-head">For participants and jurors</p>
       <div class="vb-role" role="radiogroup" aria-label="At the Vibathon you are">
         <label><input type="radio" name="vb-role" value="participant" checked> A participant</label>
         <label><input type="radio" name="vb-role" value="jury"> On the jury</label>
@@ -228,27 +231,29 @@ export function render({ layout, feed, data, h, ix }) {
           <li data-track-step="present"><span class="vb-n">3</span><strong>Present</strong><small data-track-text="present">Submit your project before you present</small></li>
           <li data-track-step="next"><span class="vb-n">4</span><strong>Your next step</strong><small data-track-text="next">Appears when you submit a project</small></li>
         </ol>
-        <p class="vb-panel-actions">${next ? `<a class="vb-cta" href="#${esc(next.id)}" data-track-cta>Register for ${esc(next.name)}</a>` : ''} <button type="button" class="vb-link" data-reset>Clear what this browser keeps</button></p>
+        <p class="vb-panel-actions">${next ? `<a class="btn btn-primary" href="#${esc(next.id)}" data-track-cta>Register for ${esc(next.name)}</a>` : ''} <button type="button" class="vb-link" data-reset>Clear what this browser keeps</button></p>
       </div>
       <div class="vb-role-jury">
         <p>You are on the jury. Score the projects in the <a href="#jury">jury room</a> against three criteria; your scores stay in this browser, and the Odoo call that would record them is shown under the sheet. <span data-jury-progress></span></p>
       </div>
     </div>
-    <div class="vb-panel" data-only="mentor" hidden>
+    <div class="persona-panel vb-panel" data-only="mentor" hidden>
+      <p class="persona-panel-head">For mentors: the teams you help</p>
       <label class="vb-inline">You are <select data-mentor-pick>${client.mentors.map(m => `<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></label>
       <div data-mentor-view></div>
     </div>
-    <div class="vb-panel" data-only="founder" hidden><p>Teams whose next step is a programme are in the <a href="#after">INC/ACC lane</a>: they would join a cohort like yours. <a href="/inc-acc/">See INC/ACC</a>.</p></div>
-    <div class="vb-panel" data-only="challenger" hidden><p>Teams looking for a first customer or a pilot are in the <a href="#after">Challenge Connect lane</a>. If one of them could solve your problem, <a href="/challenge-connect/">post a challenge</a> and invite them to apply.</p></div>
-    <div class="vb-panel" data-only="supplier" hidden><p>Vibathon teams become suppliers too: the <a href="#after">Challenge Connect lane</a> shows the ones ready for a pilot. <a href="/challenge-connect/">See the open challenges</a>.</p></div>
-    <div class="vb-panel" data-only="staff" hidden>
+    <div class="persona-panel vb-panel" data-only="founder" hidden><p class="persona-panel-head">For founders</p><p>Teams whose next step is a programme are in the <a href="#after">INC/ACC lane</a>: they would join a cohort like yours. <a href="/inc-acc/">See INC/ACC</a>.</p></div>
+    <div class="persona-panel vb-panel" data-only="challenger" hidden><p class="persona-panel-head">For challenge owners</p><p>Teams looking for a first customer or a pilot are in the <a href="#after">Challenge Connect lane</a>. If one of them could solve your problem, <a href="/challenge-connect/">post a challenge</a> and invite them to apply.</p></div>
+    <div class="persona-panel vb-panel" data-only="supplier" hidden><p class="persona-panel-head">For suppliers</p><p>Vibathon teams become suppliers too: the <a href="#after">Challenge Connect lane</a> shows the ones ready for a pilot. <a href="/challenge-connect/">See the open challenges</a>.</p></div>
+    <div class="persona-panel persona-panel-private vb-panel" data-only="staff" hidden>
+      <p class="persona-panel-head">Algarve Evolution team: the private feed</p>
       <div data-staff-view><p class="vb-locked">The private feed is not open in this tab. Choose "Algarve Evolution team" again and enter the access key to see participants, registrations data and jury scores.</p></div>
-      <p class="vb-panel-actions"><button type="button" class="vb-btn" data-export>Export the follow-ups as CSV</button> <span class="vb-note" data-export-note>Public fields only until the private feed is open.</span></p>
+      <p class="vb-panel-actions"><button type="button" class="btn btn-primary" data-export>Export the follow-ups as CSV</button> <span class="local-note" data-export-note>Public fields only until the private feed is open.</span></p>
     </div>
   </div>
 </section>
 
-${real ? `<section class="vb-sec vb-real" id="real" aria-labelledby="real-h">
+${real ? `<section class="hub-sec vb-real" id="real" aria-labelledby="real-h">
   <div class="hub-wrap vb-real-grid">
     <div class="vb-real-card">
       <p class="kicker">The real one</p>
@@ -266,24 +271,24 @@ ${real ? `<section class="vb-sec vb-real" id="real" aria-labelledby="real-h">
   </div>
 </section>` : ''}
 
-<section class="vb-sec vb-cal" id="calendar" aria-labelledby="cal-h">
+<section class="hub-sec hub-sec-mist vb-cal" id="calendar" aria-labelledby="cal-h">
   <div class="hub-wrap">
-    <div class="vb-sec-head"><p class="kicker">The calendar</p><h2 id="cal-h">Vibathons, past and upcoming</h2><p class="vb-intro">Hackathons, workshops and buildathons, each with its date, venue, town and registrations. ${h.odoo('aih.vibathon', vibs.length)}</p></div>
-    <ol class="vb-cal-list">${cal}</ol>
+    <div class="hub-head-row"><div class="hub-head"><p class="kicker">The calendar</p><h2 id="cal-h" class="hub-h2">Vibathons, past and upcoming</h2><p class="hub-lede">Hackathons, workshops and buildathons, each with its date, venue, town and registrations.</p></div>${h.odoo('aih.vibathon', vibs.length)}</div>
+    <ol class="cards vb-cal-list">${cal}</ol>
   </div>
 </section>
 
-<section class="vb-sec vb-events" aria-labelledby="ev-h">
+<section class="hub-sec vb-events" aria-labelledby="ev-h">
   <div class="hub-wrap">
-    <div class="vb-sec-head"><p class="kicker">Each event</p><h2 id="ev-h">Who registered, who helped, what was presented</h2></div>
+    <div class="hub-head"><p class="kicker">Each event</p><h2 id="ev-h" class="hub-h2">Who registered, who helped, what was presented</h2></div>
     ${[...vibs].sort((a, b) => (past(a) === past(b) ? b.date.localeCompare(a.date) : past(a) ? 1 : -1)).map(eventDetail).join('')}
   </div>
 </section>
 
-<section class="vb-sec vb-juryroom" id="jury" aria-labelledby="jury-h">
+<section class="hub-sec hub-sec-navy vb-juryroom" id="jury" aria-labelledby="jury-h">
   <div class="hub-wrap">
-    <div class="vb-sec-head"><p class="kicker kicker-light">The jury room</p><h2 id="jury-h">How the jury decides</h2>
-      <p class="vb-intro">Each juror scores each project from 1 to 10 on three criteria: <strong>${CRITERIA.join('</strong>, <strong>')}</strong> (the criteria are a proposal). The average decides the prizes. Jurors are named only with their consent; the scores are private in Odoo (aih.project.score) and open only for the Algarve Evolution team.</p></div>
+    <div class="hub-head"><p class="kicker">The jury room</p><h2 id="jury-h" class="hub-h2">How the jury decides</h2>
+      <p class="hub-lede">Each juror scores each project from 1 to 10 on three criteria: <strong>${CRITERIA.join('</strong>, <strong>')}</strong> (the criteria are a proposal). The average decides the prizes. Jurors are named only with their consent; the scores are private in Odoo (aih.project.score) and open only for the Algarve Evolution team.</p></div>
     <div class="vb-jury-grid">
       ${vibs.filter(v => (v.jury || []).length).map(v => `<div class="vb-jury-card"><h3>${esc(v.name)} ${h.sim(v)}</h3><ul class="vb-jury vb-jury-dark">${v.jury.map(j => `<li><strong>${esc(j.name)}</strong><small>${esc(j.role || '')}</small></li>`).join('')}</ul><p class="vb-note">${h.odoo('aih.vibathon.jury', v.jury.length)}</p></div>`).join('')}
       ${lastPast && projOf(lastPast).some(p => p.prize) ? `<div class="vb-jury-card vb-verdict"><h3>The verdict: ${esc(lastPast.name)}</h3><ol>${projOf(lastPast).filter(p => p.prize).map(p => `<li><span class="vb-prize vb-prize-${rank(p)}">${esc(p.prize.replace(/\s*\(simulated\)/i, ''))}</span><a href="#${esc(p.id)}">${esc(p.name)}</a></li>`).join('')}</ol><p class="vb-note-light">${projOf(lastPast).length - projOf(lastPast).filter(p => p.prize).length} more projects presented. ${h.odoo('aih.project', projOf(lastPast).length)}</p></div>` : ''}
@@ -291,19 +296,19 @@ ${real ? `<section class="vb-sec vb-real" id="real" aria-labelledby="real-h">
     </div>
     <div class="vb-sheet" data-only="participant staff" hidden>
       <h3>Your score sheet${lastPast ? `: ${esc(lastPast.name)}` : ''}</h3>
-      <p class="vb-note-light">Move each slider from 1 to 10. Kept in this browser only. Nothing is sent. <span data-only="staff" hidden>With the private feed open, your scores sit next to the jury's.</span></p>
+      <p class="vb-note-light">Move each slider from 1 to 10. <span class="local-note">Kept in this browser only. Nothing is sent.</span> <span data-only="staff" hidden>With the private feed open, your scores sit next to the jury's.</span></p>
       <div class="vb-sheet-rows" data-sheet data-vibathon="${esc(lastPast?.id || '')}"></div>
-      <p><button type="button" class="vb-btn vb-btn-light" data-save-scores>Record my scores</button> <span class="vb-msg" role="status" data-scores-msg></span></p>
-      <div class="vb-odoo-call vb-odoo-dark" data-call="scores"></div>
+      <p><button type="button" class="btn btn-on-navy" data-save-scores>Record my scores</button> <span class="vb-msg" role="status" data-scores-msg></span></p>
+      <div class="vb-odoo-call" data-call="scores"></div>
       <div data-compare></div>
     </div>
   </div>
 </section>
 
-<section class="vb-sec vb-after" id="after" aria-labelledby="after-h">
+<section class="hub-sec vb-after" id="after" aria-labelledby="after-h">
   <div class="hub-wrap">
-    <div class="vb-sec-head"><p class="kicker">After the event</p><h2 id="after-h">Every team leaves with a next step</h2>
-      <p class="vb-intro">The next step each team wrote in Odoo routes it into another activity of the hub. The routing rule (keywords in the next step) is a proposal of ours, not a field in Odoo; the team can move a project to another lane.</p></div>
+    <div class="hub-head"><p class="kicker">After the event</p><h2 id="after-h" class="hub-h2">Every team leaves with a next step</h2>
+      <p class="hub-lede">The next step each team wrote in Odoo routes it into another activity of the hub. The routing rule (keywords in the next step) is a proposal of ours, not a field in Odoo; the team can move a project to another lane.</p></div>
     ${funnel}
     <div class="vb-lanes">${laneCols}</div>
     <div data-no-lane></div>

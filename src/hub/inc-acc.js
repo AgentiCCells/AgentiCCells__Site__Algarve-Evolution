@@ -19,7 +19,7 @@
   const change = (a, b) => { if (a === b) return 'no change'; if (!a) return b > 0 ? 'from zero' : 'no change'; const p = Math.round(((b - a) / a) * 100); return `${p > 0 ? '+' : ''}${p}%`; };
   const P = v => `${Math.round(v * 100) / 100}%`;
   const simB = r => (r?.simulated ? '<span class="sim-badge" title="Invented for the prototype">Simulated</span>' : '');
-  const localB = '<span class="ia-local-badge" title="Kept in this browser only; not in Odoo">This browser only</span>';
+  const localB = '<span class="local-note" title="Kept in this browser only; not in Odoo">This browser only</span>';
   const KPIS = [
     { k: 'revenue_eur', label: 'Monthly revenue', money: true },
     { k: 'customers', label: 'Customers' },
@@ -60,15 +60,15 @@
   };
 
   // ------------------------------------------------------------------ the Odoo call panel
-  const callPanel = (model, method, body, note) => `<div class="ia-call" aria-label="The Odoo call this would make">
-    <p class="ia-call-head"><span class="odoo-chip"><span class="odoo-dot" aria-hidden="true"></span>Odoo call</span><span class="ia-call-flag">Not sent: prototype</span></p>
+  const callPanel = (model, method, body, note) => `<details class="odoo-call" open>
+    <summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(model)}/${esc(method)}</code> <span class="odoo-call-flag">Not sent: prototype</span></summary>
     <pre tabindex="0"><code>POST /json/2/${esc(model)}/${esc(method)}
 Authorization: bearer &lt;API key of the signed-in user&gt;
 X-Odoo-Database: ${esc(pub.db || '<database>')}
 Content-Type: application/json
 
 ${esc(JSON.stringify(body, null, 2))}</code></pre>
-    ${note ? `<p class="ia-call-note">${note}</p>` : ''}</div>`;
+    ${note ? `<p class="odoo-call-note">${note}</p>` : ''}</details>`;
 
   const spark = (pts, cls) => {
     if (!pts.length) return '';
@@ -114,7 +114,7 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
     const tiles = KPIS.map(def => `<li class="ia-mtile"><span class="ia-tile-label">${esc(def.label)}</span><span class="ia-mtile-val">${esc(fmt(def, last?.[def.k]))}</span><span class="ia-tile-from">M0 ${esc(fmt(def, first?.[def.k]))} → M${last?.month} · <b>${esc(change(first?.[def.k], last?.[def.k]))}</b>${last?.local ? ` ${localB}` : ''}</span>${spark(ks.map(k => ({ m: k.month, v: Number(k[def.k] || 0), local: k.local })), kindCls(p).replace('ia-', 'ia-s-'))}</li>`).join('')
       + `<li class="ia-mtile"><span class="ia-tile-label">Product stage</span><span class="ia-mtile-val">${esc(PSTAGE_LABEL[last?.product_stage] || '')}</span><span class="ia-tile-from">from ${esc(PSTAGE_LABEL[first?.product_stage] || '')} at month 0</span></li>`;
     const defMonth = Math.min(6, (last?.month ?? -1) + 1);
-    wsF.innerHTML = `<div class="ia-ws-head"><div><p class="ia-ws-kicker">Founder workspace</p><h3>${esc(c.name)} ${simB(c)}</h3><p class="ia-ws-sub">${esc(progName(p))} · cohort ${esc(p.cohort)} · ${esc(n.label)} · ${esc(c.sector)}, ${esc(c.town)}</p></div>
+    wsF.innerHTML = `<div class="ia-ws-head"><div><p class="persona-panel-head">Founder workspace</p><h3>${esc(c.name)} ${simB(c)}</h3><p class="ia-ws-sub">${esc(progName(p))} · cohort ${esc(p.cohort)} · ${esc(n.label)} · ${esc(c.sector)}, ${esc(c.town)}</p></div>
       <label class="ia-pick">Pick your company <select id="ia-f-co">${pub.programmes.map(pp => `<optgroup label="${esc(progName(pp))}">${cos.filter(x => x.programme_id === pp.id).map(x => `<option value="${esc(x.id)}"${x.id === c.id ? ' selected' : ''}>${esc(plain(x.name))}</option>`).join('')}</optgroup>`).join('')}</select></label></div>
     <div class="ia-ws-grid">
       <div class="ia-ws-col">
@@ -124,18 +124,18 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
       </div>
       <div class="ia-ws-col">
         <div class="ia-card"><h4>Your KPIs, month 0 to month ${last?.month ?? 0}</h4><ul class="ia-mtiles">${tiles}</ul><p class="ia-note">Published in the <a href="#results">public results</a> once Algarve Evolution has reviewed them.</p></div>
-        <form class="ia-card ia-form" id="ia-f-form" novalidate>
+        <form class="ia-card ia-form hub-form" id="ia-f-form" novalidate>
           <h4>Record this month's KPIs</h4>
-          <p class="ia-note">Kept in this browser only. The panel shows the call to Odoo's <code>aih.kpi</code> model that would store it.</p>
+          <p class="local-note">Kept in this browser only</p><p class="ia-note">The panel shows the call to Odoo's <code>aih.kpi</code> model that would store it.</p>
           <div class="ia-fields">
-            <label>Month <select name="month">${[0, 1, 2, 3, 4, 5, 6].map(i => `<option value="${i}"${i === defMonth ? ' selected' : ''}>Month ${i}${ks.some(k => k.month === i) ? ' (recorded)' : ''}</option>`).join('')}</select></label>
-            <label>Revenue this month (€) <input name="revenue_eur" type="number" min="0" step="10" inputmode="numeric" value="${last?.revenue_eur ?? 0}" required></label>
-            <label>Customers <input name="customers" type="number" min="0" step="1" inputmode="numeric" value="${last?.customers ?? 0}" required></label>
-            <label>People in the team <input name="team_size" type="number" min="0" step="1" inputmode="numeric" value="${last?.team_size ?? 1}" required></label>
-            <label>Funding raised to date (€) <input name="funding_eur" type="number" min="0" step="1000" inputmode="numeric" value="${last?.funding_eur ?? 0}" required></label>
-            <label>Product stage <select name="product_stage">${PSTAGES.map(s => `<option value="${s}"${s === last?.product_stage ? ' selected' : ''}>${PSTAGE_LABEL[s]}</option>`).join('')}</select></label>
+            <label class="field"><span>Month</span> <select name="month">${[0, 1, 2, 3, 4, 5, 6].map(i => `<option value="${i}"${i === defMonth ? ' selected' : ''}>Month ${i}${ks.some(k => k.month === i) ? ' (recorded)' : ''}</option>`).join('')}</select></label>
+            <label class="field"><span>Revenue this month (€)</span> <input name="revenue_eur" type="number" min="0" step="10" inputmode="numeric" value="${last?.revenue_eur ?? 0}" required></label>
+            <label class="field"><span>Customers</span> <input name="customers" type="number" min="0" step="1" inputmode="numeric" value="${last?.customers ?? 0}" required></label>
+            <label class="field"><span>People in the team</span> <input name="team_size" type="number" min="0" step="1" inputmode="numeric" value="${last?.team_size ?? 1}" required></label>
+            <label class="field"><span>Funding raised to date (€)</span> <input name="funding_eur" type="number" min="0" step="1000" inputmode="numeric" value="${last?.funding_eur ?? 0}" required></label>
+            <label class="field"><span>Product stage</span> <select name="product_stage">${PSTAGES.map(s => `<option value="${s}"${s === last?.product_stage ? ' selected' : ''}>${PSTAGE_LABEL[s]}</option>`).join('')}</select></label>
           </div>
-          <p class="ia-form-actions"><button type="submit" class="ia-btn">Record in this browser</button> <span class="ia-form-msg" role="status"></span></p>
+          <p class="ia-form-actions"><button type="submit" class="btn btn-primary">Record in this browser</button> <span class="ia-form-msg" role="status"></span></p>
           <div data-call></div>
           ${local.kpis.some(k => k.company_id === c.id) ? '<p><button type="button" class="ia-btn-link" data-clear-kpis>Forget the KPIs this browser recorded for this company</button></p>' : ''}
         </form>
@@ -185,7 +185,7 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
       ...cos.filter(c => prog(c.programme_id)?.status !== 'finished').map(c => `<option value="co:${esc(c.id)}">${esc(plain(c.name))} (one-to-one)</option>`),
       ...runningProgs.map(p => `<option value="prog:${esc(p.id)}">Whole ${esc(progName(p).toLowerCase())} cohort (clinic or workshop)</option>`),
     ].join('');
-    wsM.innerHTML = `<div class="ia-ws-head"><div><p class="ia-ws-kicker">Mentor workspace</p><h3>${esc(m.name)} ${simB(m)}</h3><p class="ia-ws-sub">${m.kind === 'guest' ? 'Guest mentor' : 'One-to-one mentor'} · ${esc((m.expertise || []).join(', '))} · ${esc(m.town)}</p></div>
+    wsM.innerHTML = `<div class="ia-ws-head"><div><p class="persona-panel-head">Mentor workspace</p><h3>${esc(m.name)} ${simB(m)}</h3><p class="ia-ws-sub">${m.kind === 'guest' ? 'Guest mentor' : 'One-to-one mentor'} · ${esc((m.expertise || []).join(', '))} · ${esc(m.town)}</p></div>
       <label class="ia-pick">Pick yourself <select id="ia-m-pick">${['one_to_one', 'guest'].map(k => `<optgroup label="${k === 'guest' ? 'Guest mentors' : 'One-to-one mentors'}">${pub.mentors.filter(x => x.kind === k).map(x => `<option value="${esc(x.id)}"${x.id === m.id ? ' selected' : ''}>${esc(plain(x.name))}</option>`).join('')}</optgroup>`).join('')}</select></label></div>
     <div class="ia-ws-grid">
       <div class="ia-ws-col">
@@ -193,17 +193,17 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
         <div class="ia-card"><h4>Your sessions <small>${mine.length}</small></h4><ol class="ia-ses-list ia-ses-compact">${mine.slice(0, 8).map(s => sessionItem(s, { showMentor: false })).join('')}</ol>${mine.length > 8 ? `<p class="ia-note">And ${mine.length - 8} earlier, in the <a href="#sessions">sessions calendar</a>.</p>` : ''}</div>
       </div>
       <div class="ia-ws-col">
-        <form class="ia-card ia-form" id="ia-m-form" novalidate>
+        <form class="ia-card ia-form hub-form" id="ia-m-form" novalidate>
           <h4>Log a session</h4>
-          <p class="ia-note">Kept in this browser only. The panel shows the call to Odoo's <code>aih.session</code> model that would store it. Notes stay private: the export never puts them in the public feed.</p>
+          <p class="local-note">Kept in this browser only</p><p class="ia-note">The panel shows the call to Odoo's <code>aih.session</code> model that would store it. Notes stay private: the export never puts them in the public feed.</p>
           ${targetOpts ? `<div class="ia-fields">
-            <label>With <select name="target">${targetOpts}</select></label>
-            <label>Kind <select name="kind"><option value="one_to_one">One-to-one</option><option value="clinic">Clinic</option><option value="workshop">Workshop</option></select></label>
-            <label>Date <input name="date" type="date" value="${esc(pub.now)}" required></label>
-            <label class="ia-wide">Topic <input name="topic" type="text" maxlength="120" placeholder="For example: pricing for the second product" required></label>
-            <label class="ia-wide">Private notes <textarea name="notes" rows="3" maxlength="2000" placeholder="Actions agreed, what to check next time"></textarea></label>
+            <label class="field"><span>With</span> <select name="target">${targetOpts}</select></label>
+            <label class="field"><span>Kind</span> <select name="kind"><option value="one_to_one">One-to-one</option><option value="clinic">Clinic</option><option value="workshop">Workshop</option></select></label>
+            <label class="field"><span>Date</span> <input name="date" type="date" value="${esc(pub.now)}" required></label>
+            <label class="field ia-wide"><span>Topic</span> <input name="topic" type="text" maxlength="120" placeholder="For example: pricing for the second product" required></label>
+            <label class="field ia-wide"><span>Private notes</span> <textarea name="notes" rows="3" maxlength="2000" placeholder="Actions agreed, what to check next time"></textarea></label>
           </div>
-          <p class="ia-form-actions"><button type="submit" class="ia-btn">Log in this browser</button> <span class="ia-form-msg" role="status"></span></p>
+          <p class="ia-form-actions"><button type="submit" class="btn btn-primary">Log in this browser</button> <span class="ia-form-msg" role="status"></span></p>
           <div data-call></div>` : '<p>None of your programmes is running, so there is nothing to log today.</p>'}
           ${local.sessions.some(s => s.mentor_id === m.id) ? '<p><button type="button" class="ia-btn-link" data-clear-ses>Forget the sessions this browser logged for you</button></p>' : ''}
         </form>
@@ -243,8 +243,8 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
     if (!wsS) return;
     const pf = HUB.privateFeed;
     if (!pf) {
-      wsS.innerHTML = `<div class="ia-ws-head"><div><p class="ia-ws-kicker">Algarve Evolution team</p><h3>The private side of INC/ACC</h3><p class="ia-ws-sub">Session notes, companies not yet published, mentors who have not agreed to be public.</p></div></div>
-        <div class="ia-card"><p>Not everything in Odoo is public. The private feed is published only encrypted; enter the team's access key to open it in this tab. The key never leaves this browser.</p><p><button type="button" class="ia-btn" data-open-key>Enter the access key</button></p></div>`;
+      wsS.innerHTML = `<div class="ia-ws-head"><div><p class="persona-panel-head">Algarve Evolution team</p><h3>The private side of INC/ACC</h3><p class="ia-ws-sub">Session notes, companies not yet published, mentors who have not agreed to be public.</p></div></div>
+        <div class="ia-card"><p>Not everything in Odoo is public. The private feed is published only encrypted; enter the team's access key to open it in this tab. The key never leaves this browser.</p><p><button type="button" class="btn btn-primary" data-open-key>Enter the access key</button></p></div>`;
       $('[data-open-key]', wsS).addEventListener('click', () => { const s = $('[data-persona-select]'); if (s) { s.value = 'staff'; s.dispatchEvent(new Event('change')); } });
       return;
     }
@@ -258,12 +258,12 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
     const coBlock = hCos.map(c => {
       const ks = (pf.kpis || []).filter(k => k.company_id === c.id).sort((a, b) => a.month - b.month); const a = ks[0], b = ks.at(-1); const m = pmentorOf(c.id); const p = pprog(c.programme_id);
       const marked = local.publish.includes(c.id);
-      return `<li class="ia-mco ${kindCls(p)}"><p class="ia-mco-name">${esc(c.name)} ${simB(c)} <span class="ia-private-badge">Not published</span></p><p class="ia-note">${esc(progName(p))} · ${esc(c.sector)}, ${esc(c.town)} · mentor ${m ? esc(plain(m.name)) : 'none'}</p><p>${esc(c.summary || '')}</p>
+      return `<li class="ia-mco ${kindCls(p)}"><p class="ia-mco-name">${esc(c.name)} ${simB(c)} <span class="tag tag-odoo">Not published</span></p><p class="ia-note">${esc(progName(p))} · ${esc(c.sector)}, ${esc(c.town)} · mentor ${m ? esc(plain(m.name)) : 'none'}</p><p>${esc(c.summary || '')}</p>
         ${b ? `<p class="ia-mco-kpi">Revenue ${esc(money(a.revenue_eur))} → <strong>${esc(money(b.revenue_eur))}</strong> (M${b.month}) · customers ${esc(num(a.customers))} → <strong>${esc(num(b.customers))}</strong> · team ${esc(num(a.team_size))} → <strong>${esc(num(b.team_size))}</strong></p>` : ''}
-        <p><button type="button" class="ia-btn ia-btn-sm" data-publish="${esc(c.id)}" aria-pressed="${marked}">${marked ? 'Marked to publish (this browser only)' : 'Publish this company and its KPIs'}</button></p>
+        <p><button type="button" class="btn btn-primary btn-sm" data-publish="${esc(c.id)}" aria-pressed="${marked}">${marked ? 'Marked to publish (this browser only)' : 'Publish this company and its KPIs'}</button></p>
         ${marked ? callPanel('aih.programme.company', 'write', { ids: [c.odoo?.id], vals: { is_published: true } }, `Then the same for its ${ks.length} KPI snapshots: <code>POST /json/2/aih.kpi/write</code> with <code>{"ids": [${ks.map(k => k.odoo?.id).join(', ')}], "vals": {"is_published": true}}</code>. The next export adds them to the public feed and to the results.`) : ''}</li>`;
     }).join('');
-    wsS.innerHTML = `<div class="ia-ws-head"><div><p class="ia-ws-kicker">Algarve Evolution team · private feed open</p><h3>The private side of INC/ACC</h3><p class="ia-ws-sub">Read from the private feed exported from Odoo, decrypted in this tab.</p></div></div>
+    wsS.innerHTML = `<div class="ia-ws-head"><div><p class="persona-panel-head">Algarve Evolution team · private feed open</p><h3>The private side of INC/ACC</h3><p class="ia-ws-sub">Read from the private feed exported from Odoo, decrypted in this tab.</p></div></div>
       <ul class="ia-priv-stats">
         <li><strong>${(pf.companies || []).length}</strong> companies <span>${hCos.length} not published</span></li>
         <li><strong>${(pf.mentors || []).length}</strong> mentors <span>${hMen.length} without consent</span></li>
@@ -274,10 +274,10 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
         <div class="ia-ws-col">
           <div class="ia-card"><h4>Companies not yet published <small>${hCos.length}</small></h4>${hCos.length ? `<ul class="ia-mcos">${coBlock}</ul>` : '<p>Every company is published.</p>'}</div>
           <div class="ia-card"><h4>Mentors without consent <small>${hMen.length}</small></h4>${hMen.length ? `<ul class="ia-plain">${hMen.map(m => { const n = (pf.sessions || []).filter(s => s.mentor_id === m.id); return `<li><strong>${esc(m.name)}</strong> ${simB(m)} · ${m.kind === 'guest' ? 'guest' : 'one-to-one'} · ${esc((m.expertise || []).join(', '))}<br><span class="ia-note">${n.length} session${n.length === 1 ? '' : 's'}: ${n.map(s => `${esc(s.topic)} (${esc(shortDate(s.date))})`).join('; ')}. Public pages show "a guest mentor (not public)" until consent is recorded in Odoo (<code>aih_consent</code> on the contact).</span></li>`; }).join('')}</ul>` : '<p>All mentors have consented.</p>'}</div>
-          <form class="ia-card ia-form" id="ia-s-ref" novalidate><h4>Draft a reflection</h4><p class="ia-note">Kept in this browser only; the call shows how it would be saved to <code>aih.reflection</code>, unpublished until approved.</p>
-            <div class="ia-fields"><label>Programme <select name="programme">${(pf.programmes || []).map(p => `<option value="${esc(p.id)}">${esc(progName(p))}, ${esc(p.cohort)}</option>`).join('')}</select></label><label>At month <select name="month">${[0, 1, 2, 3, 4, 5, 6].map(i => `<option${i === 4 ? ' selected' : ''}>${i}</option>`).join('')}</select></label>
-            <label class="ia-wide">Text <textarea name="text" rows="4" maxlength="4000" placeholder="What the indicators show, what they miss, what we change for the next cohort"></textarea></label></div>
-            <p class="ia-form-actions"><button type="submit" class="ia-btn">Keep the draft in this browser</button> <span class="ia-form-msg" role="status"></span></p><div data-call></div>
+          <form class="ia-card ia-form hub-form" id="ia-s-ref" novalidate><h4>Draft a reflection</h4><p class="local-note">Kept in this browser only</p><p class="ia-note">The call shows how it would be saved to <code>aih.reflection</code>, unpublished until approved.</p>
+            <div class="ia-fields"><label class="field"><span>Programme</span> <select name="programme">${(pf.programmes || []).map(p => `<option value="${esc(p.id)}">${esc(progName(p))}, ${esc(p.cohort)}</option>`).join('')}</select></label><label class="field"><span>At month</span> <select name="month">${[0, 1, 2, 3, 4, 5, 6].map(i => `<option${i === 4 ? ' selected' : ''}>${i}</option>`).join('')}</select></label>
+            <label class="field ia-wide"><span>Text</span> <textarea name="text" rows="4" maxlength="4000" placeholder="What the indicators show, what they miss, what we change for the next cohort"></textarea></label></div>
+            <p class="ia-form-actions"><button type="submit" class="btn btn-primary">Keep the draft in this browser</button> <span class="ia-form-msg" role="status"></span></p><div data-call></div>
             ${local.reflections.length ? `<ul class="ia-plain">${local.reflections.map(r => `<li>${localB} ${esc(progName(pprog(r.programme_id)))}, month ${r.month}: ${esc(r.text)}</li>`).join('')}</ul>` : ''}</form>
         </div>
         <div class="ia-ws-col">
@@ -329,7 +329,7 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
   if (months) {
     months.classList.add('ia-js');
     const show = key => { $$('[data-month-panel]', months).forEach(p => { p.hidden = p.dataset.monthPanel !== key; }); $$('[data-month]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.month === key))); };
-    $$('[data-month]').forEach(b => b.addEventListener('click', () => show(b.dataset.month)));
+    $$('[data-month]').forEach(b => b.addEventListener('click', () => { show(b.dataset.month); const pnl = $(`[data-month-panel="${b.dataset.month}"]`, months); if (pnl && pnl.getBoundingClientRect().top > window.innerHeight - 80) pnl.scrollIntoView({ block: 'nearest' }); }));
     show(months.dataset.defaultMonth);
   }
 
@@ -346,6 +346,6 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
 
   // Anchors land below the sticky hub header.
   const top = $('.hub-top');
-  const pad = () => { if (!top) return; document.documentElement.style.scrollPaddingTop = `${top.offsetHeight + 12}px`; document.documentElement.style.setProperty('--ia-top', `${top.offsetHeight}px`); };
+  const pad = () => { if (!top) return; const h = getComputedStyle(top).position === 'sticky' ? top.offsetHeight : 0; document.documentElement.style.scrollPaddingTop = `${h + 12}px`; document.documentElement.style.setProperty('--ia-top', `${h}px`); };
   pad(); window.addEventListener('resize', pad);
 })();

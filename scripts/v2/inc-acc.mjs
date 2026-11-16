@@ -78,9 +78,9 @@ export function render({ layout, feed, h }) {
   const timeline = p => {
     const n = progNow(p); const last = lastMonthOf(p);
     const nodes = Array.from({ length: (p.months || 6) + 1 }, (_, m) => {
-      const d = m === 6 ? D(p.end) : addMonths(p.start, m);
+      const d = m === 0 ? D(p.start) : addMonths(p.start, m - 1);
       const st = m <= last ? 'kpi' : m <= n.frac ? 'done' : 'future';
-      return `<li class="ia-tl-node is-${st}" style="left:${P((m / 6) * 100)}"><span class="ia-tl-dot" aria-hidden="true"></span><span class="ia-tl-m">M${m}</span><span class="ia-tl-d">${MONTHS[d.getUTCMonth()]}</span><span class="vh">${m <= last ? ': KPIs recorded' : ': no KPIs yet'}</span></li>`;
+      return `<li class="ia-tl-node is-${st}" style="left:${P((m / 6) * 100)}"><span class="ia-tl-dot" aria-hidden="true"></span><span class="ia-tl-m">M${m}</span><span class="ia-tl-d">${m === 0 ? `${d.getUTCDate()} ` : ''}${MONTHS[d.getUTCMonth()]}</span><span class="vh">${m <= last ? ': KPIs recorded' : ': no KPIs yet'}</span></li>`;
     }).join('');
     const nowMark = n.state === 'running' ? `<span class="ia-tl-now" style="left:${P((n.frac / 6) * 100)}"><span>Now</span></span>` : '';
     return `<div class="ia-tl ia-${kindOf(p)}" role="group" aria-label="${esc(progName(p))} timeline, ${esc(n.label)}, KPIs recorded to month ${last}">
@@ -117,7 +117,7 @@ export function render({ layout, feed, h }) {
     const lo = Math.min(100, ...all), hi = Math.max(100, ...all);
     const step = hi - lo <= 120 ? 25 : hi - lo <= 300 ? 50 : 100;
     const min = Math.floor(lo / step) * step, max = Math.max(min + step, Math.ceil(hi / step) * step);
-    const x = m => 9 + (m / 6) * 76; const y = v => 8 + (1 - (v - min) / (max - min)) * 78;
+    const x = m => 9 + (m / 6) * 84; const y = v => 10 + (1 - (v - min) / (max - min)) * 76;
     let g = '';
     for (let t = min; t <= max; t += step) g += `<line class="${t === 100 ? 'ia-base' : 'ia-grid'}" x1="0" x2="100%" y1="${P(y(t))}" y2="${P(y(t))}"/><text class="ia-tick" x="0" y="${P(y(t))}" dy="-5">${t}</text>`;
     for (let m = 0; m <= 6; m++) g += `<text class="ia-tick" x="${P(x(m))}" y="100%" dy="-4" text-anchor="middle">M${m}</text>`;
@@ -128,13 +128,14 @@ export function render({ layout, feed, h }) {
       const end = s.pts.at(-1);
       const other = series[1 - si]?.pts.find(q => q.m === end?.m);
       const below = other && other.idx > end.idx;
-      const label = end ? `<text class="ia-end" x="${P(x(end.m))}" y="${P(y(end.idx))}" dx="9" dy="${below ? 18 : -9}">${esc(change(s.pts[0].v, end.v))}</text>` : '';
+      const atEdge = end && end.m >= 6;
+      const label = end ? `<text class="ia-end" x="${P(x(end.m))}" y="${P(y(end.idx))}" dx="${atEdge ? -10 : 9}" dy="${below ? 18 : atEdge ? -12 : -9}" text-anchor="${atEdge ? 'end' : 'start'}">${esc(change(s.pts[0].v, end.v))}</text>` : '';
       return `<g class="${cls}"><g class="ia-line-segs">${segs}</g><g class="ia-line-dots">${dots}</g>${label}</g>`;
     }).join('');
     const bands = Array.from({ length: 7 }, (_, m) => {
       const parts = series.map(s => { const pt = s.pts.find(q => q.m === m); return pt ? `${progName(s.p)} ${Math.round(pt.idx)} (${fmt(def, pt.v)})` : `${progName(s.p)}: not yet`; });
       const tip = `Month ${m}: ${parts.join(' · ')}`;
-      return `<rect class="ia-band" x="${P(x(m) - 76 / 12)}" y="0" width="${P(76 / 6)}" height="100%" tabindex="0" role="img" aria-label="${esc(tip)}" data-tip="${esc(tip)}"/>`;
+      return `<rect class="ia-band" x="${P(x(m) - 84 / 12)}" y="0" width="${P(84 / 6)}" height="100%" tabindex="0" role="img" aria-label="${esc(tip)}" data-tip="${esc(tip)}"/>`;
     }).join('');
     return `<figure class="ia-chart" data-k="${def.k}">
       <figcaption><strong>${esc(def.label)}: cohort growth since month 0</strong><span>Cohort total, indexed so month 0 = 100. ${sim({ simulated: true })}</span></figcaption>
@@ -152,7 +153,7 @@ export function render({ layout, feed, h }) {
     const max = Math.ceil(hi / stepC) * stepC; const ticks = []; for (let t = 0; t <= max; t += stepC) ticks.push(t);
     const x = v => 3 + (v / max) * 94;
     const grid = ticks.map(t => `<line class="ia-grid" x1="${P(x(t))}" x2="${P(x(t))}" y1="0" y2="100%"/>`).join('');
-    const axis = `<div class="ia-db-row ia-db-axis" aria-hidden="true"><span></span><svg class="ia-db-svg">${ticks.map((t, i) => `<text class="ia-tick" x="${P(x(t))}" y="70%" text-anchor="${i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle'}">${esc(compact(def, t))}</text>`).join('')}</svg><span></span></div>`;
+    const axis = `<div class="ia-db-row ia-db-axis" aria-hidden="true"><span></span><svg class="ia-db-svg">${ticks.map((t, i) => `<text class="ia-tick${i % 2 && i !== ticks.length - 1 ? ' ia-tick-minor' : ''}" x="${P(x(t))}" y="70%" text-anchor="${i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle'}">${esc(compact(def, t))}</text>`).join('')}</svg><span></span></div>`;
     const body = rows.map(({ c, a, b }) => {
       const tip = `${plain(c.name)}: ${fmt(def, a[def.k])} at month 0, ${fmt(def, b[def.k])} at month ${b.month} (${change(a[def.k], b[def.k])})`;
       return `<div class="ia-db-row" data-tip="${esc(tip)}"><span class="ia-db-name">${esc(plain(c.name))}</span>
@@ -177,8 +178,8 @@ export function render({ layout, feed, h }) {
     const tiles = KPIS.map(def => {
       const c = cohort(p, def.k); const a = c[0]?.v || 0, b = c.at(-1)?.v || 0;
       const delta = def.k === 'team_size' ? `${b - a >= 0 ? '+' : ''}${b - a} people` : def.k === 'funding_eur' ? `${money(b - a)} new` : change(a, b);
-      return `<li class="ia-tile"><span class="ia-tile-label">${esc(def.label)}</span><span class="ia-tile-val">${esc(fmt(def, b))}</span><span class="ia-tile-from">from ${esc(fmt(def, a))} at month 0 · <b>${esc(delta)}</b></span>${spark(c, `ia-s-${k}`, 6, pt => `Month ${pt.m}: ${fmt(def, pt.v)}`)}</li>`;
-    }).join('') + `<li class="ia-tile"><span class="ia-tile-label">Product stage</span><span class="ia-tile-val">${moved} of ${cos.length}</span><span class="ia-tile-from">moved at least one stage${firstSale ? ` · <b>${firstSale} made a first sale</b>` : ''}</span></li>`;
+      return `<li class="stat ia-tile"><span class="stat-l ia-tile-label">${esc(def.label)}</span><span class="stat-n">${esc(fmt(def, b))}</span><span class="stat-note ia-tile-from">from ${esc(fmt(def, a))} at month 0 · <b>${esc(delta)}</b></span>${spark(c, `ia-s-${k}`, 6, pt => `Month ${pt.m}: ${fmt(def, pt.v)}`)}</li>`;
+    }).join('') + `<li class="stat ia-tile"><span class="stat-l ia-tile-label">Product stage</span><span class="stat-n">${moved} of ${cos.length}</span><span class="stat-note ia-tile-from">moved at least one stage${firstSale ? ` · <b>${firstSale} made a first sale</b>` : ''}</span></li>`;
     const small = cos.map(c => {
       const ks = kOf(c.id); if (!ks.length) return '';
       const variants = KPIS.map(def => {
@@ -189,23 +190,23 @@ export function render({ layout, feed, h }) {
     }).join('');
     const rows = cos.map(c => {
       const ks = kOf(c.id); if (!ks.length) return ''; const a = ks[0], b = ks.at(-1); const m = mentorOf(c.id);
-      const cell = def => `<td class="ia-num"><span class="ia-from">${esc(fmt(def, a[def.k]))}</span> <span aria-hidden="true">→</span><span class="vh"> to </span> <strong>${esc(fmt(def, b[def.k]))}</strong><small>${esc(change(a[def.k], b[def.k]))}</small></td>`;
-      return `<tr><th scope="row"><a href="#${esc(c.id)}">${esc(c.name)}</a> ${sim(c)}<small>${esc(c.sector)} · ${esc(c.town)}</small></th><td>${m ? esc(plain(m.name)) : '<span class="ia-muted">Not public</span>'}</td>${KPIS.map(cell).join('')}<td>${ladder(a.product_stage, b.product_stage, `ia-s-${k}`)}<small>${esc(PSTAGE_LABEL[a.product_stage])} → ${esc(PSTAGE_LABEL[b.product_stage])}</small></td></tr>`;
+      const cell = def => `<td class="num" data-th="${esc(def.short)}"><span class="ia-from">${esc(fmt(def, a[def.k]))}</span> <span aria-hidden="true">→</span><span class="vh"> to </span> <strong>${esc(fmt(def, b[def.k]))}</strong><small>${esc(change(a[def.k], b[def.k]))}</small></td>`;
+      return `<tr><th scope="row"><a href="#${esc(c.id)}">${esc(c.name)}</a> ${sim(c)}<small>${esc(c.sector)} · ${esc(c.town)}</small></th><td data-th="Mentor">${m ? esc(plain(m.name)) : '<span class="ia-muted">Not public</span>'}</td>${KPIS.map(cell).join('')}<td data-th="Product stage">${ladder(a.product_stage, b.product_stage, `ia-s-${k}`)}<small>${esc(PSTAGE_LABEL[a.product_stage])} → ${esc(PSTAGE_LABEL[b.product_stage])}</small></td></tr>`;
     }).join('');
-    const tot = def => { const c = cohort(p, def.k); return `<td class="ia-num"><span class="ia-from">${esc(fmt(def, c[0]?.v || 0))}</span> → <strong>${esc(fmt(def, c.at(-1)?.v || 0))}</strong><small>${esc(change(c[0]?.v || 0, c.at(-1)?.v || 0))}</small></td>`; };
+    const tot = def => { const c = cohort(p, def.k); return `<td class="num" data-th="${esc(def.short)}"><span class="ia-from">${esc(fmt(def, c[0]?.v || 0))}</span> → <strong>${esc(fmt(def, c.at(-1)?.v || 0))}</strong><small>${esc(change(c[0]?.v || 0, c.at(-1)?.v || 0))}</small></td>`; };
     return `<div class="ia-prog-results ia-${k}" data-prog="${k}" id="results-${k}">
       <h3 class="ia-pr-head"><span class="ia-swatch" aria-hidden="true"></span>${esc(progName(p))}, cohort ${esc(p.cohort)}: month 0 to month ${last}${last < 6 ? ' (so far)' : ''} ${sim(p)}</h3>
-      <ul class="ia-tiles">${tiles}</ul>
+      <ul class="stats ia-tiles">${tiles}</ul>
       <div class="ia-two">
         <div>${KPIS.map(def => dumbbell(p, def)).join('')}</div>
         <div><h4 class="ia-h4">Each company, month by month</h4><p class="ia-note">Each small chart has its own scale; the values say how far each company moved. Hover a month to read it.</p><ul class="ia-sms">${small}</ul></div>
       </div>
       <h4 class="ia-h4">From month 0 to month ${last}: the table</h4>
-      <div class="ia-table-wrap" role="region" aria-label="${esc(progName(p))}: month 0 to month ${last}, table" tabindex="0">
-      <table class="ia-table"><caption class="vh">${esc(progName(p))} cohort ${esc(p.cohort)}, simulated KPIs from Odoo, month 0 against month ${last}</caption>
-      <thead><tr><th scope="col">Company</th><th scope="col">Mentor</th>${KPIS.map(d => `<th scope="col" class="ia-num">${esc(d.short)}</th>`).join('')}<th scope="col">Product stage</th></tr></thead>
+      <div class="hub-table-wrap ia-table-wrap" role="region" aria-label="${esc(progName(p))}: month 0 to month ${last}, table" tabindex="0">
+      <table class="hub-table hub-table-pairs ia-table"><caption class="vh">${esc(progName(p))} cohort ${esc(p.cohort)}, simulated KPIs from Odoo, month 0 against month ${last}</caption>
+      <thead><tr><th scope="col">Company</th><th scope="col">Mentor</th>${KPIS.map(d => `<th scope="col" class="num">${esc(d.short)}</th>`).join('')}<th scope="col">Product stage</th></tr></thead>
       <tbody>${rows}</tbody>
-      <tfoot><tr><th scope="row">The cohort (${cos.length} companies)</th><td></td>${KPIS.map(tot).join('')}<td><small>${moved} of ${cos.length} moved</small></td></tr></tfoot></table></div>
+      <tfoot><tr><th scope="row">The cohort (${cos.length} companies)</th><td class="ia-empty"></td>${KPIS.map(tot).join('')}<td data-th="Product stage"><small>${moved} of ${cos.length} moved</small></td></tr></tfoot></table></div>
     </div>`;
   };
 
@@ -235,7 +236,7 @@ export function render({ layout, feed, h }) {
   const mkey = cm => `${cm.y}-${String(cm.m + 1).padStart(2, '0')}`;
   const withSessions = calMonths.filter(cm => sessions.some(s => s.date.startsWith(mkey(cm))));
   const defaultMonth = withSessions.length ? mkey(withSessions.at(-1)) : mkey(calMonths[0]);
-  const mentorName = id => { const m = byId(mentors, id); return m ? plain(m.name) : 'A guest mentor (not public)'; };
+  const mentorName = id => { const m = byId(mentors, id); return m ? plain(m.name) : 'a guest mentor (not public)'; };
   const coName = id => { const c = byId(companies, id); return c ? plain(c.name) : 'A company not yet public'; };
   const calendar = calMonths.map(cm => {
     const key = mkey(cm);
@@ -261,9 +262,9 @@ export function render({ layout, feed, h }) {
   const companyCard = c => {
     const ks = kOf(c.id); const m = mentorOf(c.id); const p = byId(progs, c.programme_id);
     const a = ks[0], b = ks.at(-1);
-    return `<li class="ia-co ia-${p ? kindOf(p) : 'inc'}" id="${esc(c.id)}" data-company="${esc(c.id)}">
+    return `<li class="card ia-co ia-${p ? kindOf(p) : 'inc'}" id="${esc(c.id)}" data-company="${esc(c.id)}">
       <h4>${esc(c.name)} ${sim(c)}</h4><p class="ia-co-sum">${esc(c.summary)}</p>
-      <ul class="ia-tags"><li>${esc(c.sector)}</li><li>${esc(c.town)}</li><li>Entered at ${esc(CSTAGE_LABEL[c.stage] || c.stage)}</li></ul>
+      <p class="ia-tags"><span class="tag">${esc(c.sector)}</span><span class="tag">${esc(c.town)}</span><span class="tag">Entered at ${esc(CSTAGE_LABEL[c.stage] || c.stage)}</span></p>
       <p class="ia-co-mentor"><span>One-to-one mentor</span> ${m ? `<a href="#${esc(m.id)}">${esc(m.name)}</a>` : '<span class="ia-muted">Not public</span>'}</p>
       ${a ? `<p class="ia-co-kpi"><span>Revenue a month</span> ${esc(money(a.revenue_eur))} → <strong>${esc(money(b.revenue_eur))}</strong> <small>M0 to M${b.month}</small></p>` : ''}
       ${c.website ? `<p><a href="${esc(c.website)}" rel="noopener">Website</a></p>` : ''}</li>`;
@@ -272,10 +273,10 @@ export function render({ layout, feed, h }) {
     const ss = sessions.filter(s => s.mentor_id === m.id);
     const cos = (m.company_ids || []).map(id => byId(companies, id)).filter(Boolean);
     const guest = ss.filter(s => s.kind !== 'one_to_one');
-    return `<li class="ia-mentor" id="${esc(m.id)}" data-mentor="${esc(m.id)}">
+    return `<li class="card ia-mentor" id="${esc(m.id)}" data-mentor="${esc(m.id)}">
       <div class="ia-mono" aria-hidden="true">${esc(plain(m.name).replace(/^Mentor\s*/, 'M'))}</div>
       <div><h4>${esc(m.name)} ${sim(m)}</h4><p class="ia-mentor-meta">${esc(m.kind === 'guest' ? 'Guest mentor' : 'One-to-one mentor')} · ${esc(m.town)}</p>
-      <ul class="ia-tags">${(m.expertise || []).map(e => `<li>${esc(e)}</li>`).join('')}</ul>
+      <p class="ia-tags">${(m.expertise || []).map(e => `<span class="tag">${esc(e)}</span>`).join('')}</p>
       ${cos.length ? `<p class="ia-mentor-cos">${cos.map(c => { const p = byId(progs, c.programme_id); return `<a class="ia-pill ia-${p ? kindOf(p) : 'inc'}" href="#${esc(c.id)}">${esc(plain(c.name))}</a>`; }).join('')}</p>` : ''}
       ${guest.length ? `<ul class="ia-mentor-ses">${guest.map(s => `<li>${esc(s.topic)}, ${esc(shortDate(s.date))}</li>`).join('')}</ul>` : ''}
       <p class="ia-mentor-n">${ss.length} session${ss.length === 1 ? '' : 's'} in Odoo</p></div></li>`;
@@ -306,7 +307,7 @@ export function render({ layout, feed, h }) {
         <div><dt>One-to-one mentors</dt><dd>${ms.filter(m => m.kind === 'one_to_one' && m.company_ids.some(id => coOf(p).some(c => c.id === id))).length}</dd></div>
         <div><dt>One-to-ones</dt><dd>${ss.filter(s => s.kind === 'one_to_one').length}</dd></div>
         <div><dt>Clinics and workshops</dt><dd>${ss.filter(s => s.kind !== 'one_to_one').length}</dd></div>
-        <div><dt>KPIs recorded to</dt><dd>Month ${lastMonthOf(p)}</dd></div>
+        <div><dt>KPIs recorded to month</dt><dd>${lastMonthOf(p)}</dd></div>
       </dl>
       <p class="ia-prog-links"><a href="#results-${kindOf(p)}">Results</a> · <a href="#companies-${kindOf(p)}">Companies</a></p>
     </article>`;
@@ -316,55 +317,58 @@ export function render({ layout, feed, h }) {
 
   const body = `
 <section class="ia-hero">
-  <div class="grid">
+  <div class="hub-wrap ia-hero-grid">
     <div class="ia-hero-copy">
       <p class="kicker kicker-light">AE Innovation Hub · activity 1 of 4</p>
       <h1>Incubation and acceleration</h1>
       <p class="lede">Two six-month programmes for Algarve startups. One mentor for each company, guest mentors for clinics and workshops, and every company's KPIs from month 0 to month 6, published here and read together.</p>
       <figure class="ia-quote"><blockquote><p>${esc(quote)}</p></blockquote><figcaption>António Guerreiro, executive director, Algarve Evolution, 16 November 2026 (our translation from Portuguese)</figcaption></figure>
     </div>
-    <dl class="ia-hero-stats" aria-label="INC/ACC in Odoo today">
-      <div><dt>Programmes</dt><dd>${progs.length}</dd><p>${progs.map(p => `${esc(progName(p))}: ${esc(p.status)}`).join(' · ')}</p>${odoo('aih.programme', progs.length)}</div>
-      <div><dt>Companies</dt><dd>${totals.companies}</dd><p>${progs.map(p => `${coOf(p).length} in ${esc(progName(p).toLowerCase())}`).join(' · ')}</p>${odoo('aih.programme.company', totals.companies)}</div>
-      <div><dt>Mentors</dt><dd>${totals.mentors}</dd><p>${mentors.filter(m => m.kind === 'one_to_one').length} one-to-one · ${mentors.filter(m => m.kind === 'guest').length} guest</p>${odoo('res.partner', totals.mentors)}</div>
-      <div><dt>Sessions</dt><dd>${totals.sessions}</dd><p>${oneToOne} one-to-ones · ${clinics} clinics · ${workshops} workshops</p>${odoo('aih.session', totals.sessions)}</div>
+    <div class="ia-hero-side"><dl class="ia-hero-stats" aria-label="INC/ACC in Odoo today">
+      <div><dt>Programmes</dt><dd>${progs.length}</dd><dd class="ia-hs-note">${progs.map(p => `${esc(progName(p))}: ${esc(p.status)}`).join(' · ')}</dd></div>
+      <div><dt>Companies</dt><dd>${totals.companies}</dd><dd class="ia-hs-note">${progs.map(p => `${coOf(p).length} in ${esc(progName(p).toLowerCase())}`).join(' · ')}</dd></div>
+      <div><dt>Mentors</dt><dd>${totals.mentors}</dd><dd class="ia-hs-note">${mentors.filter(m => m.kind === 'one_to_one').length} one-to-one · ${mentors.filter(m => m.kind === 'guest').length} guest</dd></div>
+      <div><dt>Sessions</dt><dd>${totals.sessions}</dd><dd class="ia-hs-note">${oneToOne} one-to-ones · ${clinics} clinics · ${workshops} workshops</dd></div>
     </dl>
+<p class="ia-hero-chips"><span>Read from Odoo:</span> ${odoo('aih.programme', progs.length)} ${odoo('aih.programme.company', totals.companies)} ${odoo('res.partner', totals.mentors)} ${odoo('aih.session', totals.sessions)}</p></div>
   </div>
 </section>
-<nav class="ia-jump" aria-label="On this page"><div class="grid"><ul>
+<nav class="ia-jump" aria-label="On this page"><div class="hub-wrap"><ul>
   <li><a href="#you">Your view</a></li><li><a href="#programmes">Programmes</a></li><li><a href="#results">Public results</a></li><li><a href="#reflection">Reflection</a></li><li><a href="#companies">Companies</a></li><li><a href="#mentors">Mentors</a></li><li><a href="#sessions">Sessions</a></li>
 </ul></div></nav>
 
-<section class="ia-you" id="you" aria-labelledby="you-h">
-  <div class="grid">
-    <div class="ia-you-head"><p class="kicker">Your view</p><h2 id="you-h">Try INC/ACC as the people who use it</h2></div>
-    <div class="ia-panel" data-only="visitor">
+<section class="hub-sec hub-sec-tight hub-sec-mist ia-you" id="you" aria-labelledby="you-h">
+  <div class="hub-wrap">
+    <div class="ia-you-head"><p class="kicker">Your view</p><h2 class="hub-h2" id="you-h">Try INC/ACC as the people who use it</h2></div>
+    <div class="persona-panel" data-only="visitor">
+      <p class="persona-panel-head">For visitors</p>
       <p>You are seeing what anyone can see: the programmes, the companies and mentors who agreed to be public, and the results. The workspaces below change with the persona.</p>
-      <p class="ia-go"><button type="button" data-persona-go="founder">Try it as a founder</button><button type="button" data-persona-go="mentor">as a mentor</button><button type="button" data-persona-go="staff">as the Algarve Evolution team</button><a href="#results">or read the public results</a></p>
+      <p class="ia-go"><button type="button" class="btn btn-primary" data-persona-go="founder">Try it as a founder</button><button type="button" class="btn" data-persona-go="mentor">as a mentor</button><button type="button" class="btn" data-persona-go="staff">as the Algarve Evolution team</button><a href="#results">or read the public results</a></p>
     </div>
-    <div class="ia-panel" data-only="challenger supplier participant">
+    <div class="persona-panel" data-only="challenger supplier participant">
+      <p class="persona-panel-head">For this persona</p>
       <p>This persona matters most on <a href="/challenge-connect/">Challenge Connect</a> and <a href="/vibathon/">Vibathon</a>. INC/ACC is for founders, mentors and the Algarve Evolution team; the results below are public for everyone.</p>
-      <p class="ia-go"><button type="button" data-persona-go="founder">Try it as a founder</button><button type="button" data-persona-go="mentor">as a mentor</button></p>
+      <p class="ia-go"><button type="button" class="btn btn-primary" data-persona-go="founder">Try it as a founder</button><button type="button" class="btn" data-persona-go="mentor">as a mentor</button></p>
     </div>
-    <div class="ia-panel ia-ws" data-only="founder" id="ws-founder" aria-live="polite"><noscript><p>The founder workspace needs JavaScript.</p></noscript></div>
-    <div class="ia-panel ia-ws" data-only="mentor" id="ws-mentor" aria-live="polite"><noscript><p>The mentor workspace needs JavaScript.</p></noscript></div>
-    <div class="ia-panel ia-ws" data-only="staff" id="ws-staff" aria-live="polite"><noscript><p>The team view needs JavaScript.</p></noscript></div>
+    <div class="persona-panel ia-ws" data-only="founder" id="ws-founder" aria-live="polite"><noscript><p>The founder workspace needs JavaScript.</p></noscript></div>
+    <div class="persona-panel ia-ws" data-only="mentor" id="ws-mentor" aria-live="polite"><noscript><p>The mentor workspace needs JavaScript.</p></noscript></div>
+    <div class="persona-panel persona-panel-private ia-ws" data-only="staff" id="ws-staff" aria-live="polite"><noscript><p>The team view needs JavaScript.</p></noscript></div>
   </div>
 </section>
 
-<section class="ia-progs" id="programmes" aria-labelledby="prog-h">
-  <div class="grid">
-    <div class="sec-head"><p class="kicker">The programmes</p><h2 id="prog-h">Two cohorts, six months each</h2>
-      <p class="sec-intro">Incubation is for idea and pre-seed teams; acceleration for companies with first revenue. Each runs from month 0, when a company joins and records its starting KPIs, to month 6. The marker shows where each programme is on ${esc(h.date(NOW))}, the date of the Odoo export.</p>
+<section class="hub-sec ia-progs" id="programmes" aria-labelledby="prog-h">
+  <div class="hub-wrap">
+    <div class="hub-head"><p class="kicker">The programmes</p><h2 class="hub-h2" id="prog-h">Two cohorts, six months each</h2>
+      <p class="hub-lede">Incubation is for idea and pre-seed teams; acceleration for companies with first revenue. Each runs from month 0, when a company joins and records its starting KPIs, to month 6. The marker shows where each programme is on ${esc(h.date(NOW))}, the date of the Odoo export.</p>
       <p class="ia-chips">${odoo('aih.programme', progs.length)}</p></div>
     <div class="ia-prog-row">${progCards}</div>
   </div>
 </section>
 
-<section class="ia-results" id="results" aria-labelledby="res-h">
-  <div class="grid">
-    <div class="sec-head" data-for="visitor"><p class="kicker">Public results</p><h2 id="res-h">What changed between month 0 and month 6</h2>
-      <p class="sec-intro">Every company records five indicators each month: revenue, customers, team, funding and product stage. Algarve Evolution publishes them, company by company and for the cohort, so anyone can see what the programmes achieve and question it.</p>
+<section class="hub-sec hub-sec-mist ia-results" id="results" aria-labelledby="res-h">
+  <div class="hub-wrap">
+    <div class="hub-head" data-for="visitor"><p class="kicker">Public results</p><h2 class="hub-h2" id="res-h">What changed between month 0 and month 6</h2>
+      <p class="hub-lede">Every company records five indicators each month: revenue, customers, team, funding and product stage. Algarve Evolution publishes them, company by company and for the cohort, so anyone can see what the programmes achieve and question it.</p>
       <p class="ia-simnote"><span class="sim-badge">Simulated</span> Every KPI on this page is invented for the prototype and stored in our local Odoo. With Algarve Evolution's Odoo the same charts would show real results. ${odoo('aih.kpi', kpis.length)}</p>
     </div>
     <div class="ia-hero-fig">
@@ -386,10 +390,10 @@ export function render({ layout, feed, h }) {
   </div>
 </section>
 
-<section class="ia-reflect" id="reflection" aria-labelledby="ref-h">
-  <div class="grid">
-    <div class="sec-head"><p class="kicker">Reflection</p><h2 id="ref-h">What the indicators say, and what they miss</h2>
-      <p class="sec-intro">António asked for the results to come with a reflection. Algarve Evolution writes one in Odoo for each programme; this page adds a reading computed from the same KPIs. Both are simulated here.</p></div>
+<section class="hub-sec ia-reflect" id="reflection" aria-labelledby="ref-h">
+  <div class="hub-wrap">
+    <div class="hub-head"><p class="kicker">Reflection</p><h2 class="hub-h2" id="ref-h">What the indicators say, and what they miss</h2>
+      <p class="hub-lede">António asked for the results to come with a reflection. Algarve Evolution writes one in Odoo for each programme; this page adds a reading computed from the same KPIs. Both are simulated here.</p></div>
     <div class="ia-ref-row">
       <div class="ia-ref-odoo"><h3>Written in Odoo ${odoo('aih.reflection', reflections.length)}</h3>
         ${reflections.map(r => { const p = byId(progs, r.programme_id); return `<blockquote class="ia-ref ia-${p ? kindOf(p) : 'inc'}"><p class="ia-ref-meta"><span class="ia-swatch" aria-hidden="true"></span>${esc(p ? progName(p) : '')} · at month ${r.month} ${sim(r)}</p><p>${esc(r.text)}</p></blockquote>`; }).join('')}
@@ -401,30 +405,30 @@ export function render({ layout, feed, h }) {
   </div>
 </section>
 
-<section class="ia-cos" id="companies" aria-labelledby="co-h">
-  <div class="grid">
-    <div class="sec-head" data-for="founder"><p class="kicker">The companies</p><h2 id="co-h">${totals.companies} companies, each with one mentor</h2>
-      <p class="sec-intro">Sector, town, the stage they joined at and their one-to-one mentor, as published in Odoo. Companies that have not agreed to be public are not in the public feed.</p>
+<section class="hub-sec ia-cos" id="companies" aria-labelledby="co-h">
+  <div class="hub-wrap">
+    <div class="hub-head" data-for="founder"><p class="kicker">The companies</p><h2 class="hub-h2" id="co-h">${totals.companies} companies, each with one mentor</h2>
+      <p class="hub-lede">Sector, town, the stage they joined at and their one-to-one mentor, as published in Odoo. Companies that have not agreed to be public are not in the public feed.</p>
       <p class="ia-chips">${odoo('aih.programme.company', totals.companies)}</p></div>
-    ${progs.map(p => `<div class="ia-co-group ia-${kindOf(p)}" id="companies-${kindOf(p)}"><h3><span class="ia-swatch" aria-hidden="true"></span>${esc(progName(p))}, cohort ${esc(p.cohort)} <small>${coOf(p).length} companies</small></h3><ul class="ia-co-list">${coOf(p).map(companyCard).join('')}</ul></div>`).join('')}
+    ${progs.map(p => `<div class="ia-co-group ia-${kindOf(p)}" id="companies-${kindOf(p)}"><h3><span class="ia-swatch" aria-hidden="true"></span>${esc(progName(p))}, cohort ${esc(p.cohort)} <small>${coOf(p).length} companies</small></h3><ul class="cards ia-co-list">${coOf(p).map(companyCard).join('')}</ul></div>`).join('')}
   </div>
 </section>
 
-<section class="ia-mentors" id="mentors" aria-labelledby="men-h">
-  <div class="grid">
-    <div class="sec-head" data-for="mentor"><p class="kicker">The mentors</p><h2 id="men-h">One-to-one mentors and guest mentors</h2>
-      <p class="sec-intro">Today each company has one mentor for monthly one-to-ones. Guest mentors run clinics and workshops for a whole cohort. Mentors appear here only once they have agreed to be public.</p>
+<section class="hub-sec hub-sec-mist ia-mentors" id="mentors" aria-labelledby="men-h">
+  <div class="hub-wrap">
+    <div class="hub-head" data-for="mentor"><p class="kicker">The mentors</p><h2 class="hub-h2" id="men-h">One-to-one mentors and guest mentors</h2>
+      <p class="hub-lede">Today each company has one mentor for monthly one-to-ones. Guest mentors run clinics and workshops for a whole cohort. Mentors appear here only once they have agreed to be public.</p>
       <p class="ia-chips">${odoo('res.partner', totals.mentors)}</p></div>
-    <div class="ia-men-group"><h3>One-to-one mentors <small>${mentors.filter(m => m.kind === 'one_to_one').length}</small></h3><ul class="ia-men-list">${mentors.filter(m => m.kind === 'one_to_one').map(mentorCard).join('')}</ul></div>
-    <div class="ia-men-group"><h3>Guest mentors <small>${mentors.filter(m => m.kind === 'guest').length}</small></h3><ul class="ia-men-list">${mentors.filter(m => m.kind === 'guest').map(mentorCard).join('')}</ul>
+    <div class="ia-men-group"><h3>One-to-one mentors <small>${mentors.filter(m => m.kind === 'one_to_one').length}</small></h3><ul class="cards ia-men-list">${mentors.filter(m => m.kind === 'one_to_one').map(mentorCard).join('')}</ul></div>
+    <div class="ia-men-group"><h3>Guest mentors <small>${mentors.filter(m => m.kind === 'guest').length}</small></h3><ul class="cards ia-men-list">${mentors.filter(m => m.kind === 'guest').map(mentorCard).join('')}</ul>
       ${unnamedGuest.length ? `<p class="ia-note">${unnamedGuest.length} ${unnamedGuest.length === 1 ? 'session was' : 'sessions were'} run by a guest mentor who has not agreed to be public: ${unnamedGuest.map(s => `${esc(s.topic)} (${esc(shortDate(s.date))})`).join('; ')}. Odoo keeps the name; the public feed does not.</p>` : ''}</div>
   </div>
 </section>
 
-<section class="ia-sessions" id="sessions" aria-labelledby="ses-h">
-  <div class="grid">
-    <div class="sec-head" data-for="mentor staff"><p class="kicker">The sessions</p><h2 id="ses-h">${totals.sessions} sessions, month by month</h2>
-      <p class="sec-intro">Each dot is a one-to-one; clinics and workshops are named. Choose a month to see who met whom and on what topic. Private notes stay in Odoo; the Algarve Evolution team sees them in its view.</p>
+<section class="hub-sec ia-sessions" id="sessions" aria-labelledby="ses-h">
+  <div class="hub-wrap">
+    <div class="hub-head" data-for="mentor staff"><p class="kicker">The sessions</p><h2 class="hub-h2" id="ses-h">${totals.sessions} sessions, month by month</h2>
+      <p class="hub-lede">Each dot is a one-to-one; clinics and workshops are named. Choose a month to see who met whom and on what topic. Private notes stay in Odoo; the Algarve Evolution team sees them in its view.</p>
       <p class="ia-chips">${odoo('aih.session', totals.sessions)}</p></div>
     <ol class="ia-cal" style="--ia-cal-n:${calMonths.length}">${calendar}</ol>
     <p class="ia-legend ia-cal-legend"><span class="ia-inc"><i class="ia-key-dot" aria-hidden="true"></i>Incubation one-to-one</span><span class="ia-acc"><i class="ia-key-dot" aria-hidden="true"></i>Acceleration one-to-one</span><span><i class="ia-guest-key ia-guest-clinic" aria-hidden="true"></i>Clinic</span><span><i class="ia-guest-key ia-guest-workshop" aria-hidden="true"></i>Workshop</span></p>

@@ -243,7 +243,13 @@
     for (const r of upd) out.push({ model: t.model, method: 'write', why: `Update ${r.vals.name} (row ${r.n}): ${r.changes.map(c => c.label.toLowerCase()).join(', ')}.`, body: { ids: [r.match.r.odoo.id], vals: vals(r, true) } });
     return { host, out };
   }
-  const callText = (host, c) => `POST ${host.url}/json/2/${c.model}/${c.method}\nAuthorization: bearer <API key of a user allowed to write>\nX-Odoo-Database: ${host.db}\nContent-Type: application/json\n\n${JSON.stringify(c.body, null, 2)}`;
+  // JSON as Odoo's docs print it, with short arrays of plain values kept on one line.
+  const pretty = v => {
+    let t = JSON.stringify(v, null, 2), prev;
+    do { prev = t; t = t.replace(/\[\s*((?:[^\[\]{}\n]|\n|\[[^\[\]\n{}]*\])*?)\s*\]/g, (m, inner) => { const one = `[${inner.split(/,\s*\n\s*/).join(', ').trim()}]`; return one.length <= 88 && !one.includes('\n') ? one : m; }); } while (t !== prev);
+    return t;
+  };
+  const callText = (host, c) => `POST ${host.url}/json/2/${c.model}/${c.method}\nAuthorization: bearer <API key of a user allowed to write>\nX-Odoo-Database: ${host.db}\nContent-Type: application/json\n\n${pretty(c.body)}`;
   function odooCSV() {
     const t = state.target, rows = state.rows.filter(r => r.status === 'new');
     const sim = $('[data-opt-sim]')?.checked;
@@ -268,7 +274,8 @@
   }
 
   // ---- drawing the importer
-  const pill = s => `<span class="imp-pill imp-pill-${s}">${{ new: 'New', update: 'Update', same: 'Unchanged', error: 'Left out' }[s]}</span>`;
+  const TAG = { new: 'tag-ok', update: 'tag-navy', same: '', error: 'tag-accent' };
+  const pill = s => `<span class="tag ${TAG[s]}">${{ new: 'New', update: 'Update', same: 'Unchanged', error: 'Left out' }[s]}</span>`;
   function draw() {
     const out = $('[data-imp-out]'); if (!state.csv) { out.hidden = true; return; }
     out.hidden = false;
@@ -279,23 +286,32 @@
     // c. mapping
     const opts = sel => `<option value="">Leave out</option>${t.fields.map(fd => `<option value="${fd.f}"${fd.f === sel ? ' selected' : ''}>${esc(fd.label)}${fd.req ? ' (required)' : ''} · ${esc(fd.f)}</option>`).join('')}`;
     const missing = t.fields.filter(fd => fd.req && !state.map.includes(fd.f));
-    $('[data-map]').innerHTML = `<thead><tr><th scope="col">Column in your file</th><th scope="col">First value</th><th scope="col">Odoo field</th></tr></thead><tbody>${csv.headers.map((hd, i) => `<tr><th scope="row">${esc(hd || `(column ${i + 1})`)}</th><td class="imp-ex">${esc(csv.rows.find(r => r[i])?.[i] || '')}</td><td><label class="vh" for="map-${i}">Odoo field for ${esc(hd)}</label><select id="map-${i}" data-map-i="${i}" class="${state.map[i] ? 'is-mapped' : ''}">${opts(state.map[i])}</select></td></tr>`).join('')}</tbody>${missing.length ? `<tfoot><tr><td colspan="3" class="imp-miss">Required and not mapped: ${missing.map(m => esc(m.label)).join(', ')}. Every row will be left out until a column is mapped to it.</td></tr></tfoot>` : ''}`;
+    $('[data-map]').innerHTML = `<thead><tr><th scope="col">Column in your file</th><th scope="col">First value</th><th scope="col">Odoo field</th></tr></thead><tbody>${csv.headers.map((hd, i) => `<tr><th scope="row">${esc(hd || `(column ${i + 1})`)}</th><td class="imp-ex" data-th="First value">${esc(csv.rows.find(r => r[i])?.[i] || '')}</td><td data-th="Odoo field"><label class="vh" for="map-${i}">Odoo field for ${esc(hd)}</label><select id="map-${i}" data-map-i="${i}" class="${state.map[i] ? 'is-mapped' : ''}">${opts(state.map[i])}</select></td></tr>`).join('')}</tbody>${missing.length ? `<tfoot><tr><td colspan="3" class="imp-miss" data-th="Missing">Required and not mapped: ${missing.map(m => esc(m.label)).join(', ')}. Every row will be left out until a column is mapped to it.</td></tr></tfoot>` : ''}`;
     // d. preview
     const cols = t.fields.filter(fd => state.map.includes(fd.f));
     const c = { new: 0, update: 0, same: 0, error: 0 }; let warns = 0;
     state.rows.forEach(r => { c[r.status]++; warns += r.issues.filter(x => x.level === 'warn').length; });
-    $('[data-sum]').innerHTML = `<b>${num(state.rows.length)}</b> rows: <span class="imp-pill imp-pill-new">${c.new} new</span> <span class="imp-pill imp-pill-update">${c.update} update${c.update === 1 ? '' : 's'}</span> <span class="imp-pill imp-pill-same">${c.same} unchanged</span> <span class="imp-pill imp-pill-error">${c.error} left out</span>${warns ? ` · ${warns} warning${warns > 1 ? 's' : ''}` : ''}. Checked against the ${isStaff() ? 'private' : 'public'} feed.`;
+    $('[data-sum]').innerHTML = `<b>${num(state.rows.length)}</b> rows: <span class="tag tag-ok">${c.new} new</span> <span class="tag tag-navy">${c.update} update${c.update === 1 ? '' : 's'}</span> <span class="tag">${c.same} unchanged</span> <span class="tag tag-accent">${c.error} left out</span>${warns ? ` · ${warns} warning${warns > 1 ? 's' : ''}` : ''}. Checked against the ${isStaff() ? 'private' : 'public'} feed.`;
     const issue = x => `<li class="iss-${x.level}"><span class="vh">${x.level === 'error' ? 'Error' : x.level === 'warn' ? 'Warning' : 'Note'}: </span>${esc(x.msg)}</li>`;
-    $('[data-prev]').innerHTML = `<thead><tr><th scope="col">Row</th><th scope="col">Result</th>${cols.map(fd => `<th scope="col">${esc(fd.label)}</th>`).join('')}<th scope="col">Checks</th></tr></thead><tbody>${state.rows.map(r => `<tr class="row-${r.status}"><td class="od-n">${r.n}</td><td>${pill(r.status)}${r.match ? `<span class="imp-id">id ${r.match.r.odoo.id}</span>` : ''}</td>${cols.map(fd => { const ch = r.changes.find(x => x.f === fd.f); return `<td>${ch ? `<del>${esc(ch.from ?? '')}</del> <ins>${esc(ch.to)}</ins>` : esc(r.show[fd.f] ?? '')}</td>`; }).join('')}<td><ul class="imp-iss">${r.issues.map(issue).join('')}</ul></td></tr>`).join('')}</tbody>`;
+    const recCell = r => {
+      const nameF = cols.find(fd => fd.f === 'name');
+      const pairs = cols.filter(fd => fd !== nameF).map(fd => {
+        const ch = r.changes.find(x => x.f === fd.f); const v = r.show[fd.f];
+        if (!ch && (v === undefined || v === '')) return '';
+        return `<li><span class="imp-k">${esc(fd.label)}</span> ${ch ? `<del>${esc(ch.from ?? 'empty')}</del> <ins>${esc(ch.to)}</ins>` : esc(v)}</li>`;
+      }).join('') + r.changes.filter(c => c.flag).map(c => `<li><span class="imp-k">Flag</span> <ins>${esc(c.label)}</ins></li>`).join('');
+      return `<p class="imp-rec-n">${esc(r.show.name || r.raw[state.map.indexOf('name')] || '(no name)')}</p><ul class="imp-kv">${pairs}</ul>`;
+    };
+    $('[data-prev]').innerHTML = `<thead><tr><th scope="col">Row</th><th scope="col">Result</th><th scope="col">Record</th><th scope="col">Checks</th></tr></thead><tbody>${state.rows.map(r => `<tr class="row-${r.status}"><th scope="row" class="imp-rn">Row ${r.n}</th><td data-th="Result">${pill(r.status)}${r.match ? `<span class="imp-id">Odoo id ${r.match.r.odoo.id}</span>` : ''}</td><td data-th="Record" class="imp-rec">${recCell(r)}</td><td data-th="Checks"><ul class="imp-iss">${r.issues.map(issue).join('') || '<li class="iss-ok">No problems</li>'}</ul></td></tr>`).join('')}</tbody>`;
     // e. calls
     const { host, out: list } = calls();
     const custom = !['res.partner'].includes(t.model);
     $('[data-target-note]').textContent = $('input[name=imp-odoo]:checked').value === 'official'
       ? (custom ? `${t.model} exists only where the addon is installed: their Odoo needs it first (see section 6). The contacts and tags calls would work there today.` : `Contacts exist in every Odoo; the aih_ fields need the addon or the same fields added with Studio. Their API key and database name stay with them.`)
       : `Our experimentation Odoo (${host.version}, local to the PrompTugal team), which has the addon.`;
-    const head = `<div class="odoo-call-h"><span class="odoo-call-t">Odoo call${list.length > 1 ? 's' : ''} · JSON-2 · ${list.length}</span><span class="odoo-call-ns">not sent: prototype</span></div>`;
-    $('[data-calls]').innerHTML = list.length ? head + list.map((cl, i) => `<details class="odoo-call-i"${i < 2 || cl.method !== 'write' && i < 4 ? ' open' : ''}><summary><code>POST /json/2/${esc(cl.model)}/${esc(cl.method)}</code> <span>${esc(cl.why)}</span></summary><pre><code>${esc(callText(host, cl))}</code></pre></details>`).join('') + `<p class="odoo-call-f">Values in angle brackets are ids the first call looks up. Imported records arrive unpublished: someone at Algarve Evolution checks consent and publishes them in Odoo.</p>`
-      : head + '<p class="odoo-call-f">Nothing to send: no row is new or changed.</p>';
+    const head = `<p class="od-calls-h"><b>${list.length} Odoo call${list.length === 1 ? '' : 's'}</b>, in order, over the Odoo 19 JSON-2 API. None is sent: this is a prototype.</p>`;
+    $('[data-calls]').innerHTML = list.length ? head + list.map((cl, i) => `<details class="odoo-call"${i < 3 ? ' open' : ''}><summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(cl.model)}/${esc(cl.method)}</code> <span class="odoo-call-flag">not sent: prototype</span></summary><p class="odoo-call-note od-why">${i + 1}. ${esc(cl.why)}</p><pre><code>${esc(callText(host, cl))}</code></pre></details>`).join('') + `<p class="odoo-call-note od-calls-f">Values in angle brackets are ids the first call looks up. Imported records arrive unpublished: someone at Algarve Evolution checks consent and publishes them in Odoo.</p>`
+      : head + '<p class="odoo-call-note od-calls-f">Nothing to send: no row is new or changed.</p>';
     const nNew = c.new;
     $('[data-csv-note]').textContent = nNew ? `The CSV holds the ${nNew} new record${nNew > 1 ? 's' : ''} with external ids, in Odoo's import format: in Odoo, open the list, Favourites, Import records, and load it. ${c.update ? 'Updates are left out of the CSV: they need the write calls, or an export from Odoo with its ids.' : ''}` : 'No new records for the CSV.';
     $('[data-dl-csv]').disabled = !nNew;
@@ -370,7 +386,7 @@
       ...(r.due ? { date_deadline: `${r.due} 17:00:00` } : {}),
       tag_ids: [[6, 0, [ph('project.tags', kindName[r.kind]), ph('project.tags', laneName[r.lane])]]],
     }] };
-    return `POST ${host.url}/json/2/project.task/create\nAuthorization: bearer <API key>\nX-Odoo-Database: ${host.db}\nContent-Type: application/json\n\n${JSON.stringify(body, null, 2)}`;
+    return `POST ${host.url}/json/2/project.task/create\nAuthorization: bearer <API key>\nX-Odoo-Database: ${host.db}\nContent-Type: application/json\n\n${pretty(body)}`;
   };
   const fmtDate = d => { try { return new Date(`${d}T12:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); } catch { return d; } };
   function drawReqs() {
@@ -380,12 +396,12 @@
       const items = reqs.items.filter(r => r.lane === l.id).sort((a, b) => (a.done - b.done) || String(a.due || '9').localeCompare(String(b.due || '9')));
       $('[data-lane-count]', lane).textContent = items.filter(r => !r.done).length;
       $('[data-lane-list]', lane).innerHTML = items.map(r => `<li class="req-card${r.done ? ' is-done' : ''}" data-id="${esc(r.id)}">
-        <p class="req-meta"><span class="req-kind">${esc(kindName[r.kind] || r.kind)}</span>${r.simulated ? '<span class="sim-badge" title="Invented for the prototype">Simulated</span>' : '<span class="req-mine">Added in this browser</span>'}${r.done ? '<span class="req-donetag">Done</span>' : ''}</p>
+        <p class="req-meta"><span class="tag tag-navy">${esc(kindName[r.kind] || r.kind)}</span>${r.simulated ? '<span class="sim-badge" title="Invented for the prototype">Simulated</span>' : '<span class="tag tag-ok">Added in this browser</span>'}${r.done ? '<span class="tag">Done</span>' : ''}</p>
         <h4>${esc(r.title)}</h4>
-        <p class="req-who">${r.who ? `For ${esc(r.who)}` : 'For: not given'}${r.due ? ` · due ${esc(fmtDate(r.due))}` : ''}</p>
+        <p class="req-who">${r.who ? `For ${esc(r.who.charAt(0).toLowerCase() === r.who.charAt(0) || /^[A-Z][a-z]+ [a-z]/.test(r.who) ? r.who.charAt(0).toLowerCase() + r.who.slice(1) : r.who)}` : 'For: not given'}${r.due ? ` · due ${esc(fmtDate(r.due))}` : ''}</p>
         ${r.details ? `<p class="req-det">${esc(r.details)}</p>` : ''}${r.how ? `<p class="req-how"><b>How:</b> ${esc(r.how)}</p>` : ''}
-        ${staff ? `<div class="req-ctl"><label>Triage <select data-act="lane">${C.lanes.map(x => `<option value="${x.id}"${x.id === r.lane ? ' selected' : ''}>${esc(x.short)}</option>`).join('')}</select></label><button type="button" class="od-btn od-btn-s" data-act="done">${r.done ? 'Reopen' : 'Mark done'}</button>${r.simulated ? '' : '<button type="button" class="od-btn od-btn-s" data-act="del">Remove</button>'}</div>` : ''}
-        <details class="odoo-call odoo-call-mini"><summary>Odoo call <span class="odoo-call-ns">not sent: prototype</span></summary><pre><code>${esc(taskCall(r))}</code></pre></details>
+        ${staff ? `<div class="req-ctl"><label>Triage <select data-act="lane">${C.lanes.map(x => `<option value="${x.id}"${x.id === r.lane ? ' selected' : ''}>${esc(x.short)}</option>`).join('')}</select></label><button type="button" class="btn btn-sm" data-act="done">${r.done ? 'Reopen' : 'Mark done'}</button>${r.simulated ? '' : '<button type="button" class="btn btn-sm" data-act="del">Remove</button>'}</div>` : ''}
+        <details class="odoo-call req-call"><summary><span class="odoo-call-verb">POST</span> <code>project.task/create</code> <span class="odoo-call-flag">not sent: prototype</span></summary><pre><code>${esc(taskCall(r))}</code></pre></details>
       </li>`).join('') || '<li class="req-empty">Nothing here yet.</li>';
     });
   }
@@ -442,7 +458,7 @@
       }
     });
     const box = $('[data-fx-private]'); if (!box) return;
-    if (!show) { box.innerHTML = `<p class="fx-wait">The private feed is not open in this tab.</p><button type="button" class="od-btn od-btn-primary" data-open-key>Enter the access key</button>`; return; }
+    if (!show) { box.innerHTML = `<p class="fx-wait">The private feed is not open in this tab.</p><button type="button" class="btn btn-primary" data-open-key>Enter the access key</button>`; return; }
     const groups = {};
     for (const e of Object.keys(PRIV.meta.counts)) {
       const ids = new Set((PUB[e] || []).map(r => r.id));
@@ -458,7 +474,7 @@
     ];
     const label = ({ e, r }) => r.name || r.title || (e === 'sessions' ? `${r.topic} (${r.date})` : e === 'kpis' ? `${r.company_id}, month ${r.month}` : r.id);
     box.innerHTML = `<h4>Withheld from the public feed, record by record</h4>${Object.entries(groups).map(([why, list]) => `<details class="fx-g"${list.length < 8 ? ' open' : ''}><summary><b>${esc(why)}</b> · ${list.length}</summary><ul>${list.map(x => `<li><span class="fx-e">${esc(x.e)}</span> ${esc(label(x))} ${x.r.simulated ? '<span class="sim-badge">Simulated</span>' : ''}${x.full !== why ? `<span class="fx-why2">${esc(x.full.slice(why.length).replace(/^ \(|\)$/g, ''))}</span>` : ''}</li>`).join('')}</ul></details>`).join('')}
-      <h4>Private fields</h4><table class="od-table fx-pf"><tbody>${pf.map(([a, n, m]) => `<tr><th scope="row">${esc(a)}</th><td class="od-n">${num(n)}</td><td><code>${esc(m)}</code></td></tr>`).join('')}</tbody></table>`;
+      <h4>Private fields</h4><table class="fx-pf"><tbody>${pf.map(([a, n, m]) => `<tr><th scope="row">${esc(a)}</th><td class="od-n">${num(n)}</td><td><code>${esc(m)}</code></td></tr>`).join('')}</tbody></table>`;
   }
   document.addEventListener('click', e => {
     if (!e.target.closest('[data-open-key]')) return;

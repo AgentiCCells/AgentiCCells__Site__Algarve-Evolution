@@ -169,14 +169,14 @@ const KINDS = [
 ];
 // Example requests, invented for the prototype (simulated): the "death by a thousand cuts" kind.
 const SEED_REQUESTS = [
-  { id: 'req-s1', kind: 'data_fix', title: 'Twelve contacts have the town written as "Loule"', who: 'Algarve Evolution team', due: '2026-11-20', details: 'Fix them to Loulé so the Challenge Connect town score works.', lane: 'config', how: 'In Contacts, filter City = Loule, select all, edit the city once (list view mass edit).' },
+  { id: 'req-s1', kind: 'data_fix', title: 'Twelve contacts have the town written as "Loule"', who: 'the Algarve Evolution team', due: '2026-11-20', details: 'Fix them to Loulé so the Challenge Connect town score works.', lane: 'config', how: 'In Contacts, filter City = Loule, select all, edit the city once (list view mass edit).' },
   { id: 'req-s2', kind: 'new_field', title: 'Add "year founded" to the startup form', who: 'INC/ACC programme', due: '2026-11-28', details: 'The programme partner asks for it in the month 6 report.', lane: 'config', how: 'Studio in Odoo Enterprise adds the field to the form; or add it to the addon here first.' },
-  { id: 'req-s3', kind: 'report', title: 'Mentoring hours per programme, every month', who: 'Programme partner', due: '2026-12-01', details: 'One table: programme, mentor, sessions, hours.', lane: 'config', how: 'A pivot view on mentoring sessions grouped by programme and mentor, saved as a favourite.' },
-  { id: 'req-s4', kind: 'export', title: 'Export the list of mentors who agreed to be listed', who: 'A co-financed project partner', due: '2026-11-24', details: 'Name, expertise and town only.', lane: 'config', how: 'Contacts, filter Mentor and Consent, Export with the three columns.' },
+  { id: 'req-s3', kind: 'report', title: 'Mentoring hours per programme, every month', who: 'the programme partner', due: '2026-12-01', details: 'One table: programme, mentor, sessions, hours.', lane: 'config', how: 'A pivot view on mentoring sessions grouped by programme and mentor, saved as a favourite.' },
+  { id: 'req-s4', kind: 'export', title: 'Export the list of mentors who agreed to be listed', who: 'a co-financed project partner', due: '2026-11-24', details: 'Name, expertise and town only.', lane: 'config', how: 'Contacts, filter Mentor and Consent, Export with the three columns.' },
   { id: 'req-s5', kind: 'page_change', title: 'Show the next Vibathon on the events page', who: 'Communication', due: '2026-11-21', details: 'Its date moved to 20 February 2027.', lane: 'config', how: 'Edit the event in Events; the website shows it.' },
   { id: 'req-s6', kind: 'need', title: 'Startups should update their own KPIs each month', who: 'Founders in the programme', due: '2027-01-15', details: 'Today they send a spreadsheet by e-mail and someone copies it into Odoo.', lane: 'experiment', how: 'A KPI form on this hub writing aih.kpi records; then the Odoo portal.' },
   { id: 'req-s7', kind: 'idea', title: 'A reminder to mentors the day before each session', who: 'Mentors', due: '2027-01-31', details: 'Many sessions are rescheduled at the last minute.', lane: 'experiment', how: 'An automation rule on aih.session in the experimentation Odoo, then the same rule in the official one.' },
-  { id: 'req-s8', kind: 'integration', title: 'Install the hub\'s models in the official Odoo, then upgrade to Odoo 20', who: 'Algarve Evolution team', due: '2027-03-31', details: 'Once the experiments settle.', lane: 'partner', how: 'The partner installs the addon (or rebuilds the models with Studio) and plans the upgrade.' },
+  { id: 'req-s8', kind: 'integration', title: 'Install the hub\'s models in the official Odoo, then upgrade to Odoo 20', who: 'the Algarve Evolution team', due: '2027-03-31', details: 'Once the experiments settle.', lane: 'partner', how: 'The partner installs the addon (or rebuilds the models with Studio) and plans the upgrade.' },
 ].map(r => ({ ...r, simulated: true, created: '2026-11-16' }));
 
 // ---------------------------------------------------------------- render
@@ -207,52 +207,54 @@ export function render({ layout, feed, data, h }) {
   // -------- the architecture, wide (900 px and up) and stacked (phones)
   const T = (x, y, s, cls = '') => `<text x="${x}" y="${y}"${cls ? ` class="${cls}"` : ''}>${esc(s)}</text>`;
   const box = (x, y, w, hh, cls, lines) => `<g class="${cls}"><rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="6"/>${lines.map(([s, c], i) => T(x + 14, y + 26 + i * 19, s, c)).join('')}</g>`;
-  const arrow = (d, cls = '') => `<path class="ar ${cls}" d="${d}" marker-end="url(#ah)"/>`;
-  const defs = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>`;
-  const actShort = { 'inc-acc': ['INC/ACC', 'incubation, acceleration,', 'mentors, KPIs'], 'challenge-connect': ['Challenge Connect', 'challenges, suppliers,', 'matching'], vibathon: ['Vibathon', 'hackathons, workshops,', 'juries'], talent: ['Talent Ecosystem', 'talent, competences,', 'partners, ADI network'] };
-  const actBoxes = (x0, y0, w, gap, cols) => acts.map((a, i) => {
-    const [n, k1, k2] = actShort[a.id] || [a.name, '', ''];
-    const x = x0 + (i % cols) * (w + gap), y = y0 + Math.floor(i / cols) * 112;
-    return `<g class="d-act"><rect x="${x}" y="${y}" width="${w}" height="100" rx="6"/>${T(x + 12, y + 24, n, 'd-h')}${T(x + 12, y + 44, k1, 'd-s')}${T(x + 12, y + 61, k2, 'd-s')}${T(x + 12, y + 86, `${num(actCount[a.id])} records`, 'd-n')}</g>`;
+  let mk = 'ahw'; // each SVG has its own marker: a marker inside a hidden SVG does not draw
+  const arrow = (d, cls = '') => `<path class="ar ${cls}" d="${d}" marker-end="url(#${mk})"/>`;
+  const defsOf = id => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>`;
+  const actShort = { 'inc-acc': ['INC/ACC', 'incubation,', 'acceleration,', 'mentors, KPIs'], 'challenge-connect': ['Challenge Connect', 'challenges,', 'suppliers,', 'matching'], vibathon: ['Vibathon', 'hackathons,', 'workshops,', 'juries'], talent: ['Talent Ecosystem', 'talent, competences,', 'partners,', 'ADI network'] };
+  const actBoxes = (x0, y0, w, gap) => acts.map((a, i) => {
+    const [n, ...k] = actShort[a.id] || [a.name];
+    const x = x0 + i * (w + gap);
+    return `<g class="d-act"><rect x="${x}" y="${y0}" width="${w}" height="118" rx="6"/>${T(x + 12, y0 + 24, n, 'd-h d-h-s')}${k.map((s, j) => T(x + 12, y0 + 44 + j * 17, s, 'd-s')).join('')}${T(x + 12, y0 + 106, `${num(actCount[a.id])} records`, 'd-n')}</g>`;
   }).join('');
-  const wide = `<svg class="arch arch-wide" viewBox="0 0 1200 720" role="img" aria-labelledby="arch-t arch-d"><title id="arch-t">How the AE Innovation Hub uses Odoo</title><desc id="arch-d">Spreadsheets and public sources go into Odoo through the importer. Odoo infrastructure is the base layer under the four activities: our experimentation Odoo 19 Community with the hub addon, and Algarve Evolution's official Odoo 19 Enterprise at algarveevolution.pt. What works moves from the experiment to the official Odoo. The experimentation Odoo exports a public feed and an encrypted private feed, read by this hub and by future apps. The official Odoo feeds the official site. Ideas and needs flow in along the bottom and are triaged.</desc>${defs}
-  ${T(20, 28, 'IN', 'd-k')}${T(270, 28, 'THE FOUR ACTIVITIES, ON ODOO', 'd-k')}${T(910, 28, 'OUT', 'd-k')}
-  ${box(20, 120, 210, 112, 'd-in', [['Spreadsheets', 'd-h'], ['lists kept outside Odoo', 'd-s'], ['today: mentors, startups,', 'd-s'], ['suppliers, participants', 'd-s']])}
-  ${box(20, 290, 210, 92, 'd-in', [['Public sources', 'd-h'], ['communities, partners,', 'd-s'], ['events, each with its source', 'd-s']])}
-  ${arrow('M230 176 C 252 176 252 330 282 330', '')}${T(238, 250, 'importer', 'd-l')}
-  ${arrow('M230 336 L 282 336', '')}
-  ${actBoxes(270, 44, 140, 13, 4)}
-  <g class="d-infra"><rect x="262" y="160" width="610" height="390" rx="10"/>${T(282, 534, 'ODOO INFRASTRUCTURE', 'd-k2')}</g>
-  ${box(282, 274, 260, 236, 'd-exp', [['Experimentation Odoo', 'd-h'], ['Odoo 19 Community, run by us', 'd-s'], [`addon algarve_innovation_hub ${addon.version}`, 'd-m'], [`${newModels} new models, ${extModels} extended`, 'd-s'], ['', ''], ['the place to try things:', 'd-s'], ['cheap to change, simulated', 'd-s'], ['data where real is missing', 'd-s'], ['can run Odoo 20 first', 'd-s']])}
-  ${box(600, 274, 256, 236, 'd-off', [['Official Odoo', 'd-h'], ['algarveevolution.pt', 'd-m'], ['Odoo 19 Enterprise', 'd-s'], ['upgrade to Odoo 20 planned', 'd-s'], ['', ''], ['the mature system: website,', 'd-s'], ['events, news, contacts', 'd-s'], [`read today: ${official.events.length} events,`, 'd-s'], [`${official.posts.length} news posts`, 'd-s']])}
-  ${arrow('M546 380 L 594 380', 'ar-promote')}${T(546, 366, 'promote', 'd-l')}${T(546, 404, 'what works', 'd-l')}
-  ${box(910, 44, 270, 66, 'd-app', [['AE Innovation Hub (this site)', 'd-h'], ['every number read from the feeds', 'd-s']])}
-  ${box(910, 128, 270, 66, 'd-app d-future', [['Future apps: iOS', 'd-h'], ['the same feeds, no new backend', 'd-s']])}
-  ${box(910, 236, 270, 66, 'd-feed', [['Public feed  public.json', 'd-h'], [`published records: ${num(pubTotal)}`, 'd-s']])}
-  ${box(910, 316, 270, 66, 'd-feed d-priv', [['Private feed  private.enc.json', 'd-h'], ['every record, encrypted, access key', 'd-s']])}
-  ${arrow('M542 300 C 720 300 740 269 904 269', '')}${arrow('M542 316 C 720 316 740 349 904 349', '')}${T(700, 255, 'export (read-only API key)', 'd-l')}
-  ${arrow('M1180 252 C 1196 200 1196 120 1184 88', '')}${arrow('M1172 316 C 1192 260 1192 190 1184 166', 'ar-dash')}
-  ${box(910, 436, 270, 80, 'd-off2', [['Official website', 'd-h'], ['algarveevolution.pt, built on', 'd-s'], ['the official Odoo', 'd-s']])}
-  ${arrow('M856 476 L 904 476', '')}
-  ${arrow('M1045 516 C 1045 590 420 600 412 516', 'ar-dash')}${T(560, 584, 'its public events are read and seeded into the experiment', 'd-l')}
-  <g class="d-ideas"><rect x="20" y="628" width="1160" height="72" rx="8"/>${T(40, 658, 'IDEAS AND NEEDS', 'd-k2')}${T(40, 682, 'from the team, founders, mentors, partners: triaged into configuration, an experiment here, or the Odoo partner', 'd-s')}</g>
-  ${arrow('M412 628 L 412 556', '')}${arrow('M728 628 L 728 556', '')}
+  const wide = `<svg class="arch arch-wide" viewBox="0 0 1200 730" role="img" aria-labelledby="arch-t arch-d"><title id="arch-t">How the AE Innovation Hub uses Odoo</title><desc id="arch-d">Spreadsheets and public sources go into Odoo through the importer. Odoo infrastructure is the base layer under the four activities: our experimentation Odoo 19 Community with the hub addon, and Algarve Evolution's official Odoo 19 Enterprise at algarveevolution.pt. What works moves from the experiment to the official Odoo. The experimentation Odoo exports a public feed and an encrypted private feed, read by this hub and by future apps. The official Odoo feeds the official site. Ideas and needs flow in along the bottom and are triaged.</desc>${defsOf('ahw')}
+  ${T(20, 28, 'IN', 'd-k')}${T(250, 28, 'THE FOUR ACTIVITIES, ON ODOO', 'd-k')}${T(930, 28, 'OUT', 'd-k')}
+  ${actBoxes(250, 40, 151, 12)}
+  <g class="d-infra"><rect x="240" y="172" width="660" height="392" rx="10"/>${T(262, 548, 'ODOO INFRASTRUCTURE', 'd-k2')}</g>
+  ${box(262, 196, 616, 124, 'd-exp', [['Experimentation Odoo', 'd-h'], ['Odoo 19 Community, run by the PrompTugal team, with the hub\'s own models', 'd-s'], [`addon algarve_innovation_hub ${addon.version}: ${newModels} new models, ${extModels} of Odoo's extended`, 'd-m'], ['The place to try things: cheap to change, simulated data where real data is missing.', 'd-s'], ['Odoo 20 can run here first, to test the addon before the official upgrade.', 'd-s']])}
+  ${arrow('M570 322 L 570 382', 'ar-promote')}${T(584, 357, 'promote what works', 'd-l d-l-promote')}
+  ${box(262, 388, 616, 124, 'd-off', [['Official Odoo', 'd-h'], ['algarveevolution.pt', 'd-m'], ['Odoo 19 Enterprise; upgrade to Odoo 20 planned.', 'd-s'], ['The mature system: website, events, news, contacts.', 'd-s'], [`Read today through its public pages: ${num(official.events.length)} events and ${num(official.posts.length)} news posts.`, 'd-s']])}
+  ${box(20, 196, 186, 120, 'd-in', [['Spreadsheets', 'd-h'], ['lists kept outside Odoo', 'd-s'], ['today: mentors, startups,', 'd-s'], ['suppliers, participants', 'd-s'], ['members', 'd-s']])}
+  ${box(20, 340, 186, 120, 'd-in', [['Public sources', 'd-h'], ['communities, partners,', 'd-s'], ['events (also from', 'd-s'], ['algarveevolution.pt), each', 'd-s'], ['with its source URL', 'd-s']])}
+  ${arrow('M206 250 L 256 250')}${T(207, 240, 'importer', 'd-l')}
+  ${arrow('M206 400 C 232 400 230 300 256 296')}
+  ${box(930, 52, 120, 96, 'd-app', [['This hub', 'd-h'], ['AE Innovation', 'd-s'], ['Hub site, reads', 'd-s'], ['the feeds', 'd-s']])}
+  ${box(1060, 52, 120, 96, 'd-app d-future', [['iOS app', 'd-h'], ['future: the', 'd-s'], ['same feeds, no', 'd-s'], ['new backend', 'd-s']])}
+  ${T(930, 200, 'export, read-only API key', 'd-l')}
+  ${box(930, 212, 250, 52, 'd-feed', [['Public feed', 'd-h'], ['', '']])}${T(944, 255, `public.json · ${num(pubTotal)} records`, 'd-s')}
+  ${box(930, 278, 250, 52, 'd-feed d-priv', [['Private feed', 'd-h'], ['', '']])}${T(944, 321, 'private.enc.json · encrypted, key', 'd-s')}
+  ${arrow('M878 238 L 924 238')}${arrow('M878 300 L 924 302')}
+  ${arrow('M990 212 L 990 154')}${arrow('M1120 212 L 1120 154', 'ar-dash')}
+  ${box(930, 404, 250, 92, 'd-off2', [['Official website', 'd-h'], ['algarveevolution.pt, built on the', 'd-s'], ['official Odoo; people read and', 'd-s'], ['register there', 'd-s']])}
+  ${arrow('M878 450 L 924 450')}
+  <g class="d-ideas"><rect x="20" y="640" width="1160" height="76" rx="8"/>${T(40, 670, 'IDEAS AND NEEDS', 'd-k2')}${T(40, 694, 'From the team, founders, mentors and partners: triaged into Odoo by configuration, an experiment here, or the Odoo partner.', 'd-s')}</g>
+  ${arrow('M420 640 L 420 570')}${arrow('M720 640 L 720 570')}
 </svg>`;
+  mk = 'aht';
   const tallActs = acts.map((a, i) => {
-    const [n, k1, k2] = actShort[a.id] || [a.name, '', ''];
-    const x = 12 + (i % 2) * 172, y = 142 + Math.floor(i / 2) * 96;
-    return `<g class="d-act"><rect x="${x}" y="${y}" width="164" height="86" rx="6"/>${T(x + 10, y + 22, n, 'd-h')}${T(x + 10, y + 40, k1, 'd-s')}${T(x + 10, y + 56, k2, 'd-s')}${T(x + 10, y + 76, `${num(actCount[a.id])} records`, 'd-n')}</g>`;
+    const [n, ...k] = actShort[a.id] || [a.name];
+    const x = 12 + (i % 2) * 172, y = 142 + Math.floor(i / 2) * 100;
+    return `<g class="d-act"><rect x="${x}" y="${y}" width="164" height="94" rx="6"/>${T(x + 10, y + 20, n, 'd-h d-h-s')}${k.map((s, j) => T(x + 10, y + 37 + j * 15, s, 'd-s')).join('')}${T(x + 10, y + 84, `${num(actCount[a.id])} records`, 'd-n')}</g>`;
   }).join('');
-  const tall = `<svg class="arch arch-tall" viewBox="0 0 360 1010" role="img" aria-labelledby="arch-t2 arch-d"><title id="arch-t2">How the AE Innovation Hub uses Odoo</title>${defs}
+  const tall = `<svg class="arch arch-tall" viewBox="0 0 360 1010" role="img" aria-labelledby="arch-t2 arch-d"><title id="arch-t2">How the AE Innovation Hub uses Odoo</title>${defsOf('aht')}
   ${box(12, 10, 164, 76, 'd-in', [['Spreadsheets', 'd-h'], ['lists outside Odoo', 'd-s'], ['into the importer', 'd-s']])}
   ${box(184, 10, 164, 76, 'd-in', [['Public sources', 'd-h'], ['communities, events', 'd-s'], ['with their source', 'd-s']])}
   ${arrow('M94 86 L 94 132')}${arrow('M266 86 L 266 132')}
-  <g class="d-infra"><rect x="4" y="124" width="352" height="560" rx="10"/>${T(16, 670, 'ODOO INFRASTRUCTURE', 'd-k2')}</g>
+  <g class="d-infra"><rect x="4" y="124" width="352" height="560" rx="10"/>${T(64, 672, 'ODOO INFRASTRUCTURE', 'd-k2')}</g>
   ${tallActs}
-  ${box(12, 344, 336, 128, 'd-exp', [['Experimentation Odoo', 'd-h'], ['Odoo 19 Community, run by us', 'd-s'], [`addon algarve_innovation_hub`, 'd-m'], [`${newModels} new models, ${extModels} extended`, 'd-s'], ['cheap to change; can run Odoo 20 first', 'd-s']])}
-  ${arrow('M180 474 L 180 508', 'ar-promote')}${T(192, 496, 'promote what works', 'd-l')}
-  ${box(12, 512, 336, 130, 'd-off', [['Official Odoo', 'd-h'], ['algarveevolution.pt', 'd-m'], ['Odoo 19 Enterprise, Odoo 20 planned', 'd-s'], ['website, events, news, contacts', 'd-s'], [`read today: ${official.events.length} events, ${official.posts.length} posts`, 'd-s']])}
-  ${arrow('M94 686 L 94 712')}${arrow('M266 686 L 266 712')}
+  ${box(12, 344, 336, 128, 'd-off', [['Official Odoo', 'd-h'], ['algarveevolution.pt', 'd-m'], ['Odoo 19 Enterprise, Odoo 20 planned', 'd-s'], ['feeds the official website', 'd-s'], [`read today: ${official.events.length} events, ${official.posts.length} posts`, 'd-s']])}
+  ${arrow('M180 510 L 180 478', 'ar-promote')}${T(192, 498, 'promote what works', 'd-l d-l-promote')}
+  ${box(12, 514, 336, 130, 'd-exp', [['Experimentation Odoo', 'd-h'], ['Odoo 19 Community, run by us', 'd-s'], [`addon algarve_innovation_hub`, 'd-m'], [`${newModels} new models, ${extModels} extended`, 'd-s'], ['cheap to change; can run Odoo 20 first', 'd-s']])}
+  ${arrow('M40 646 L 40 712')}${arrow('M320 646 L 320 712')}
   ${box(12, 716, 164, 76, 'd-feed', [['Public feed', 'd-h'], [`${num(pubTotal)} records`, 'd-s'], ['public.json', 'd-m']])}
   ${box(184, 716, 164, 76, 'd-feed d-priv', [['Private feed', 'd-h'], ['encrypted, key', 'd-s'], ['private.enc.json', 'd-m']])}
   ${arrow('M180 794 L 180 816')}
@@ -264,7 +266,7 @@ export function render({ layout, feed, data, h }) {
   // -------- the models table
   const modelRows = MODELS.map(m => {
     const am = addon.models[m.model];
-    return `<tr data-model="${esc(m.model)}"><th scope="row"><code>${esc(m.model)}</code>${m.ext ? '<span class="od-ext">Odoo\'s own, extended</span>' : ''}</th><td class="od-act">${esc(ACT[m.act])}</td><td>${esc(m.holds)}<span class="od-meta">${am.fields.length} ${m.ext ? 'fields added' : 'fields'} · feed: <code>${esc(m.feed)}</code></span></td><td class="od-n" data-count="pub">${m.private ? '<span class="od-none" title="Private: never in the public feed">private</span>' : num(counts[m.model])}</td><td class="od-n" data-count="priv" data-key="${esc(m.count)}"><span class="od-locked">locked</span></td></tr>`;
+    return `<tr data-model="${esc(m.model)}"><th scope="row"><code>${esc(m.model)}</code>${m.ext ? '<span class="od-ext">Odoo\'s own, extended</span>' : ''}</th><td data-th="Activity" class="od-act">${esc(ACT[m.act])}</td><td data-th="What it holds">${esc(m.holds)}<span class="od-meta">${am.fields.length} ${am.fields.length === 1 ? 'field' : 'fields'}${m.ext ? ' added' : ''} · feed: <code>${esc(m.feed)}</code></span></td><td data-th="Public" class="num od-cnt" data-count="pub">${m.private ? '<span class="od-none" title="Private: never in the public feed">private</span>' : num(counts[m.model])}</td><td data-th="Private" class="num od-cnt" data-count="priv" data-key="${esc(m.count)}"><span class="od-locked">locked</span></td></tr>`;
   }).join('');
 
   // -------- the feed explorer (public side at build time; src/hub/odoo.js adds the private side)
@@ -289,14 +291,16 @@ export function render({ layout, feed, data, h }) {
     lanes: LANES, kinds: KINDS, seeds: SEED_REQUESTS, skills: [...new Set([...feed.mentors.flatMap(r => r.expertise), ...feed.suppliers.flatMap(r => r.capabilities), ...feed.challenges.flatMap(r => r.skills)])].sort(),
   };
 
+  const NOT_STAFF = 'visitor founder mentor challenger supplier participant';
+  const head = (n, kick, h2, lede) => `<div class="hub-head"><p class="kicker">${n} · ${esc(kick)}</p><h2 class="hub-h2">${esc(h2)}</h2><p class="hub-lede">${lede}</p></div>`;
   const body = `
 <section class="od-hero">
-  <div class="grid">
+  <div class="hub-wrap od-hero-grid">
     <div class="od-hero-copy">
       <p class="kicker kicker-light">Odoo infrastructure</p>
       <h1>Odoo: the source of truth</h1>
       <p class="lede">Every number, list and card on this hub is read from Odoo. Algarve Evolution already runs its official site on Odoo. Next to it we keep an Odoo for experiments, where the hub's four activities live today. Here is how the two fit, and how more of what the team keeps in spreadsheets and e-mails can get into Odoo.</p>
-      <p class="od-hero-links"><a href="#import">Try the spreadsheet importer</a> <a href="#ideas">Bring an idea or a need</a></p>
+      <p class="od-hero-links"><a class="btn btn-accent" href="#import">Try the spreadsheet importer</a> <a class="btn btn-on-navy" href="#ideas-and-needs">Bring an idea or a need</a></p>
     </div>
     <dl class="od-two">
       <div class="od-two-off"><dt>Official Odoo</dt><dd><a href="${esc(offUrl)}" rel="noopener">algarveevolution.pt</a>, Odoo ${esc(official.odoo)} Enterprise; Odoo 20 planned</dd><dd class="od-two-n"><b>${num(official.events.length)}</b> events and <b>${num(official.posts.length)}</b> news posts read from its public pages on ${esc(offRead)} (<a href="/v1/odoo/">the V1 page</a>, <a href="/data/odoo.json">data</a>)</dd></div>
@@ -305,23 +309,19 @@ export function render({ layout, feed, data, h }) {
   </div>
 </section>
 
-<nav class="od-toc" aria-label="On this page"><div class="grid"><ol>
-  <li><a href="#arch">How it fits</a></li><li><a href="#models">The models</a></li><li><a href="#import">Spreadsheet to Odoo</a></li><li><a href="#ideas">Ideas and needs</a></li><li><a href="#feeds">Public and private</a></li><li><a href="#official">To the official Odoo</a></li>
+<nav class="od-toc" aria-label="On this page"><div class="hub-wrap"><ol>
+  <li><a href="#arch">How it fits</a></li><li><a href="#models">The models</a></li><li><a href="#import">Spreadsheet to Odoo</a></li><li><a href="#ideas-and-needs">Ideas and needs</a></li><li><a href="#feeds">Public and private</a></li><li><a href="#official">To the official Odoo</a></li>
 </ol></div></nav>
 
-<section id="arch" class="od-arch">
-  <div class="grid">
-    <div class="sec-head">
-      <p class="kicker">1 · How it fits</p>
-      <h2>Two Odoos, one source of truth</h2>
-      <p class="sec-intro">The official Odoo is the mature system: the website, events and news that people use today. The experimentation Odoo is where we try things quickly, with the hub's own models and simulated data where real data is missing. When something works, it moves to the official Odoo. As on António Guerreiro's whiteboard, Odoo is the layer under all four activities, spreadsheets flow in, and ideas and needs come in along the bottom.</p>
-    </div>
+<section id="arch" class="hub-sec">
+  <div class="hub-wrap">
+    ${head(1, 'How it fits', 'Two Odoos, one source of truth', 'The official Odoo is the mature system: the website, events and news that people use today. The experimentation Odoo is where we try things quickly, with the hub\'s own models and simulated data where real data is missing. When something works, it moves to the official Odoo. As on António Guerreiro\'s whiteboard, Odoo is the layer under all four activities, spreadsheets flow in, and ideas and needs come in along the bottom.')}
     <figure class="od-fig">
       ${wide}${tall}
-      <figcaption>${h.odoo('aih.activity', acts.length)} ${h.odoo('aih.hub', 1)} Counts are from the public feed. <span class="od-fig-dash"><svg width="28" height="8" aria-hidden="true"><path d="M0 4h28" class="ar ar-dash"/></svg> dashed: not built yet, or read from public pages</span></figcaption>
+      <figcaption>${h.odoo('aih.hub', 1)} ${h.odoo('aih.activity', acts.length)} Counts are from the public feed. <span class="od-fig-dash"><svg width="28" height="8" aria-hidden="true"><path d="M0 4h28" class="ar ar-dash"/></svg> dashed: not built yet, or read from public pages</span></figcaption>
     </figure>
     <ol class="od-steps">
-      <li><b>In.</b> Spreadsheets go through the <a href="#import">importer</a>; public organisations, communities and events come in with their source URL. Ideas and needs are <a href="#ideas">triaged</a>.</li>
+      <li><b>In.</b> Spreadsheets go through the <a href="#import">importer</a>; public organisations, communities and events come in with their source URL. Ideas and needs are <a href="#ideas-and-needs">triaged</a>.</li>
       <li><b>Experiment.</b> Our Odoo 19 Community holds the addon's ${newModels} models (and extends Contacts and Events). Records carry <code>published</code>, <code>consent</code> and <code>simulated</code> flags.</li>
       <li><b>Feeds.</b> A read-only Odoo user exports two files: the <a href="/feeds/public.json">public feed</a> (published records, public fields, people only with consent) and the private feed, encrypted, for the team.</li>
       <li><b>Out.</b> This hub, and later an iOS app, read only the feeds. Nothing else is a source.</li>
@@ -330,44 +330,40 @@ export function render({ layout, feed, data, h }) {
   </div>
 </section>
 
-<section id="models" class="od-models">
-  <div class="grid">
-    <div class="sec-head">
-      <p class="kicker">2 · The models</p>
-      <h2>What the addon keeps in Odoo</h2>
-      <p class="sec-intro">The addon <code>algarve_innovation_hub</code> (${esc(addon.version)}, ${esc(addon.licence)}) adds ${newModels} models and extends two of Odoo's own. This table is read from its source code when the site is built, and the counts from the feed. <span data-only="staff">The private column fills in from the private feed you opened.</span><span data-only="visitor founder mentor challenger supplier participant">Try it as the Algarve Evolution team to fill in the private column.</span></p>
+<section id="models" class="hub-sec hub-sec-mist">
+  <div class="hub-wrap">
+    <div class="hub-head-row">
+      ${head(2, 'The models', 'What the addon keeps in Odoo', `The addon <code>algarve_innovation_hub</code> (${esc(addon.version)}, ${esc(addon.licence)}) adds ${newModels} models and extends two of Odoo's own. This table is read from its source code when the site is built; the counts come from the feed.`)}
+      ${h.odoo('aih.*', MODELS.length)}
     </div>
-    <div class="od-scroll" tabindex="0" role="region" aria-label="The addon's models">
-      <table class="od-table od-models-t">
-        <thead><tr><th scope="col">Odoo model</th><th scope="col">Activity</th><th scope="col">What it holds</th><th scope="col" class="od-n">Public</th><th scope="col" class="od-n">Private</th></tr></thead>
+    <div class="persona-panel persona-panel-private od-pp" data-only="staff"><p class="persona-panel-head">Algarve Evolution team</p><p>The Private column is counted from the private feed open in this tab: everything in Odoo, published or not.</p></div>
+    <div class="persona-panel od-pp" data-only="${NOT_STAFF}"><p class="persona-panel-head">The private column</p><p>Try the page as the <b>Algarve Evolution team</b> (with the access key) to count what Odoo holds beyond the public feed.</p></div>
+    <div class="hub-table-wrap">
+      <table class="hub-table hub-table-pairs od-models-t">
+        <thead><tr><th scope="col">Odoo model</th><th scope="col">Activity</th><th scope="col">What it holds</th><th scope="col" class="num">Public</th><th scope="col" class="num">Private</th></tr></thead>
         <tbody>${modelRows}</tbody>
       </table>
     </div>
-    <p class="src">Source: <code>odoo/addons/algarve_innovation_hub/models/*.py</code>, the public feed exported ${esc(h.date(feed.meta.exported))}. Simulated records are invented for the prototype and say so in their names; real ones keep their source URL.</p>
+    <p class="src">Source: <code>odoo/addons/algarve_innovation_hub/models/*.py</code> and the public feed exported ${esc(h.date(feed.meta.exported))}. Simulated records are invented for the prototype and say so in their names; real ones keep their source URL.</p>
   </div>
 </section>
 
-<section id="import" class="od-import">
-  <div class="grid">
-    <div class="sec-head">
-      <p class="kicker">3 · Spreadsheet to Odoo</p>
-      <h2>Bring a spreadsheet; get it into Odoo</h2>
-      <p class="sec-intro">Some of the team's lists still live in spreadsheets. This is the bottom right of the whiteboard: spreadsheets flowing into Odoo, and Odoo feeding the official site. Drop or paste a CSV, or pick a sample. The page works out which hub model it fits, maps the columns, checks every row against the feed, and shows the Odoo calls it would make. It also gives you a CSV in Odoo's own import format, so the team could import it today by hand.</p>
-    </div>
+<section id="import" class="hub-sec">
+  <div class="hub-wrap">
+    ${head(3, 'Spreadsheet to Odoo', 'Bring a spreadsheet; get it into Odoo', 'Some of the team\'s lists still live in spreadsheets. This is the bottom right of António Guerreiro\'s whiteboard: spreadsheets flowing into Odoo, and Odoo feeding the official site. Drop or paste a CSV, or pick a sample. The page works out which hub model it fits, maps the columns, checks every row against the feed, and shows the Odoo calls it would make. It also gives you a CSV in Odoo\'s own import format, so the team could import it today by hand.')}
     <div class="imp" data-imp>
       <div class="imp-in">
         <h3 class="imp-h"><span class="imp-n">a</span> Your spreadsheet</h3>
         <div class="imp-samples" role="group" aria-label="Sample spreadsheets (invented rows)">
-          <span class="imp-lab">Samples, invented rows:</span>
-          ${TARGETS.map(t => `<button type="button" class="imp-sample" data-sample="${t.id}" data-for="${t.personas}">${esc(t.sampleLabel)}</button>`).join('')}
+          <span class="imp-lab">Samples, invented rows</span>
+          ${TARGETS.map(t => `<button type="button" class="imp-sample" aria-pressed="false" data-sample="${t.id}" data-for="${t.personas}">${esc(t.sampleLabel)}</button>`).join('')}
         </div>
         <label class="imp-drop" data-drop>
           <input type="file" accept=".csv,text/csv,text/plain" data-file class="vh">
           <span class="imp-drop-t"><b>Drop a CSV file here</b> or <u>choose one</u></span>
           <span class="imp-drop-s">Read in this browser only; nothing is uploaded. Commas or semicolons, as Excel saves them in Portugal.</span>
         </label>
-        <label class="imp-paste-l" for="imp-paste">Or paste it</label>
-        <textarea id="imp-paste" class="imp-paste" rows="6" spellcheck="false" data-paste placeholder="Name,Email,Town&#10;Person 90 (simulated),person90@example.invalid,Faro"></textarea>
+        <label class="field imp-paste-f"><span>Or paste it</span><textarea class="imp-paste" rows="6" spellcheck="false" data-paste placeholder="Name,Email,Town&#10;Person 90 (simulated),person90@example.invalid,Faro"></textarea></label>
         <p class="imp-status" data-imp-status role="status" aria-live="polite"></p>
       </div>
       <div class="imp-out" data-imp-out hidden>
@@ -378,7 +374,7 @@ export function render({ layout, feed, data, h }) {
         <div class="imp-step">
           <h3 class="imp-h"><span class="imp-n">c</span> Columns to fields</h3>
           <p class="imp-hint">Matched by name, in English or Portuguese. Change any you disagree with.</p>
-          <div class="od-scroll" tabindex="0" role="region" aria-label="Column mapping"><table class="od-table imp-map" data-map></table></div>
+          <div class="hub-table-wrap"><table class="hub-table imp-map" data-map></table></div>
         </div>
         <div class="imp-step">
           <h3 class="imp-h"><span class="imp-n">d</span> Checked against the feed</h3>
@@ -388,21 +384,21 @@ export function render({ layout, feed, data, h }) {
             <label>Rows already in Odoo <select data-opt-dup><option value="write">update them (write)</option><option value="skip">leave them alone</option></select></label>
             <label>Batch size <select data-opt-batch><option>2</option><option>5</option><option selected>50</option><option>200</option></select></label>
           </div>
-          <div class="od-scroll" tabindex="0" role="region" aria-label="Preview of the records"><table class="od-table imp-prev" data-prev></table></div>
-          <p class="imp-note" data-only="staff">You opened the private feed, so rows are also checked against unpublished records and people without consent.</p>
-          <p class="imp-note" data-only="visitor founder mentor challenger supplier participant">Checked against the public feed. The Algarve Evolution team, with the private feed open, also catches duplicates of unpublished records.</p>
+          <div class="persona-panel persona-panel-private od-pp" data-only="staff"><p class="persona-panel-head">Algarve Evolution team</p><p>Checked against the private feed: duplicates of unpublished records and of people without consent are caught too.</p></div>
+          <div class="persona-panel od-pp" data-only="${NOT_STAFF}"><p class="persona-panel-head">Checked against the public feed</p><p>The Algarve Evolution team, with the private feed open, also catches duplicates of unpublished records (try the mentors sample as them: Mentor 12 is in Odoo but not public).</p></div>
+          <div class="hub-table-wrap"><table class="hub-table imp-prev" data-prev></table></div>
         </div>
         <div class="imp-step">
           <h3 class="imp-h"><span class="imp-n">e</span> Into Odoo</h3>
-          <div class="imp-target" role="group" aria-label="Which Odoo">
+          <div class="imp-target" role="radiogroup" aria-label="Which Odoo">
             <label><input type="radio" name="imp-odoo" value="experiment" checked> Our experimentation Odoo</label>
             <label><input type="radio" name="imp-odoo" value="official"> Their official Odoo</label>
           </div>
           <p class="imp-hint" data-target-note></p>
-          <div class="odoo-call" data-calls></div>
+          <div class="od-calls" data-calls></div>
           <div class="imp-actions">
-            <button type="button" class="od-btn od-btn-primary" data-dl-csv>Download the Odoo import CSV</button>
-            <button type="button" class="od-btn" data-copy-calls>Copy the calls</button>
+            <button type="button" class="btn btn-primary" data-dl-csv>Download the Odoo import CSV</button>
+            <button type="button" class="btn" data-copy-calls>Copy the calls</button>
           </div>
           <p class="imp-hint" data-csv-note></p>
         </div>
@@ -412,53 +408,48 @@ export function render({ layout, feed, data, h }) {
   </div>
 </section>
 
-<section id="ideas" class="od-ideas">
-  <div class="grid">
-    <div class="sec-head">
-      <p class="kicker">4 · Ideas and needs</p>
-      <h2>A thousand small requests, one place</h2>
-      <p class="sec-intro">Along the bottom of the whiteboard: ideas and needs. Anyone can bring one, and the team's many small requests (a data fix, a field, a report, a page, an export) go in the same place instead of a dozen e-mails. Each is triaged: done in Odoo by configuration, tried as an experiment here, or passed to the Odoo partner. Each would be a task in Odoo's Project app.</p>
-    </div>
+<section id="ideas-and-needs" class="hub-sec hub-sec-mist">
+  <div class="hub-wrap">
+    ${head(4, 'Ideas and needs', 'A thousand small requests, one place', 'Along the bottom of the whiteboard: ideas and needs. Anyone can bring one, and the team\'s many small requests (a data fix, a field, a report, a page, an export) go to the same place instead of a dozen e-mails. Each is triaged: done in Odoo by configuration, tried as an experiment here, or passed to the Odoo partner. In Odoo, each is a task in the Project app.')}
     <div class="req">
-      <form class="req-form" data-req-form>
+      <form class="hub-form req-form" data-req-form>
         <h3 class="imp-h">Bring an idea or a need</h3>
-        <label>What is it <input name="title" required maxlength="140" placeholder="For example: export the mentors list for a partner"></label>
+        <label class="field"><span>What is it</span><input name="title" required maxlength="140" placeholder="For example: export the mentors list for a partner"></label>
         <div class="req-row">
-          <label>Type <select name="kind">${KINDS.map(k => `<option value="${k.id}">${esc(k.label)}</option>`).join('')}</select></label>
-          <label>Due <input name="due" type="date"></label>
+          <label class="field"><span>Type</span><select name="kind">${KINDS.map(k => `<option value="${k.id}">${esc(k.label)}</option>`).join('')}</select></label>
+          <label class="field"><span>Due</span><input name="due" type="date"></label>
         </div>
-        <label>Who it is for <input name="who" maxlength="80" placeholder="For example: programme partner" data-req-who></label>
-        <label>Details <textarea name="details" rows="3" maxlength="600"></textarea></label>
-        <p class="req-triage-p">Suggested triage: <b data-req-suggest>An experiment here</b></p>
-        <button class="od-btn od-btn-primary" type="submit">Add it</button>
-        <p class="req-kept">Kept in this browser only. In Odoo it would be a task; the call is on each card.</p>
+        <label class="field"><span>Who it is for</span><input name="who" maxlength="80" placeholder="For example: programme partner" data-req-who></label>
+        <label class="field"><span>Details</span><textarea name="details" rows="3" maxlength="600"></textarea></label>
+        <div class="req-submit"><p class="req-triage-p">Suggested triage: <b data-req-suggest>An experiment here</b></p>
+        <button class="btn btn-accent" type="submit">Add it</button>
+        <p><span class="local-note">Kept in this browser only</span></p>
+        <p class="field-hint">In Odoo it would be a task in a project; the call is on each card.</p></div>
       </form>
-      <div class="req-board" data-req-board>
-        ${LANES.map(l => `<section class="req-lane req-lane-${l.id}" data-lane="${l.id}" aria-labelledby="lane-${l.id}"><header><h3 id="lane-${l.id}">${esc(l.label)} <span class="req-count" data-lane-count>0</span></h3><p>${esc(l.text)}</p></header><ol class="req-list" data-lane-list></ol></section>`).join('')}
+      <div>
+        <div class="persona-panel persona-panel-private od-pp" data-only="staff"><p class="persona-panel-head">Algarve Evolution team</p><p>You triage: move a request between lanes, mark it done, remove your own.</p></div>
+        <div class="persona-panel od-pp" data-only="${NOT_STAFF}"><p class="persona-panel-head">Who triages</p><p>The Algarve Evolution team triages. Try the page as them to move requests between lanes.</p></div>
+        <div class="req-board" data-req-board>
+          ${LANES.map(l => `<div class="req-lane req-lane-${l.id}" data-lane="${l.id}" role="group" aria-labelledby="lane-${l.id}"><header><h3 id="lane-${l.id}">${esc(l.label)} <span class="req-count" data-lane-count>0</span></h3><p>${esc(l.text)}</p></header><ol class="req-list" data-lane-list></ol></div>`).join('')}
+        </div>
       </div>
     </div>
-    <p class="imp-note" data-only="staff">As the Algarve Evolution team you can move a request between lanes and mark it done.</p>
-    <p class="imp-note" data-only="visitor founder mentor challenger supplier participant">The Algarve Evolution team triages; try it as them to move requests between lanes.</p>
     <p class="src">The example requests are simulated: invented for the prototype to show the kind of small requests a team receives.</p>
   </div>
 </section>
 
-<section id="feeds" class="od-feeds">
-  <div class="grid">
-    <div class="sec-head">
-      <p class="kicker">5 · Public and private</p>
-      <h2>What the public sees, and what stays with the team</h2>
-      <p class="sec-intro">"Not everything in Odoo is public." Odoo exports two feeds. The public one holds only what is published, only public fields, and people only when they have agreed to be listed. The private one holds everything and is encrypted; the team opens it in the browser with an access key.</p>
-    </div>
+<section id="feeds" class="hub-sec">
+  <div class="hub-wrap">
+    ${head(5, 'Public and private', 'What the public sees, and what stays with the team', 'Not everything in Odoo is public. Odoo exports two feeds. The public one holds only what is published, only public fields, and people only when they have agreed to be listed. The private one holds everything and is encrypted; the team opens it in the browser with an access key.')}
     <div class="fx">
       <div class="fx-chart">
-        <div class="od-scroll" tabindex="0" role="region" aria-label="Records per entity, public and private">
-          <table class="od-table fx-t">
-            <thead><tr><th scope="col">Entity</th><th scope="col" class="od-n">Public</th><th scope="col" class="od-n">Private</th><th scope="col" class="od-n">Withheld</th><th scope="col"><span class="fx-key"><i class="k-pub"></i>public <i class="k-priv"></i>private only</span></th></tr></thead>
+        <div class="hub-table-wrap od-scroll" tabindex="0" role="region" aria-label="Records per entity, public and private">
+          <table class="fx-t">
+            <thead><tr><th scope="col">Entity</th><th scope="col" class="od-n">Public</th><th scope="col" class="od-n">Private</th><th scope="col" class="od-n">Withheld</th><th scope="col" class="od-bar-cell"><span class="fx-key"><i class="k-pub"></i>public <i class="k-priv"></i>private only</span></th></tr></thead>
             <tbody>${feedRows}</tbody>
           </table>
         </div>
-        <p class="src">Public feed: <a href="/feeds/public.json">/feeds/public.json</a>, exported ${esc(h.date(feed.meta.exported))} from ${esc(exp.version)}. Private feed: <a href="/feeds/private.enc.json">/feeds/private.enc.json</a>, AES-256-GCM.</p>
+        <p class="src">Public feed: <a href="/feeds/public.json">/feeds/public.json</a>, exported ${esc(h.date(feed.meta.exported))} from Odoo ${esc(exp.version)}. Private feed: <a href="/feeds/private.enc.json">/feeds/private.enc.json</a>, AES-256-GCM.</p>
       </div>
       <div class="fx-why">
         <h3>Why a record is withheld</h3>
@@ -468,21 +459,17 @@ export function render({ layout, feed, data, h }) {
           <li><b>Its parent is not public.</b> Sessions and KPIs of an unpublished company stay private; a link to someone not public becomes empty.</li>
           <li><b>Private fields.</b> Session notes, supplier contacts, Vibathon participants and jury scores are never in the public feed.</li>
         </ul>
-        <div class="fx-private" data-only="staff" data-fx-private><p class="fx-wait">Opening the private feed…</p></div>
-        <p class="fx-lock" data-only="visitor founder mentor challenger supplier participant">Choose <b>Algarve Evolution team</b> in "Try it as" and enter the access key to compare the two feeds record by record.</p>
+        <div class="persona-panel persona-panel-private fx-private" data-only="staff"><p class="persona-panel-head">Private feed</p><div data-fx-private><p class="fx-wait">Opening the private feed…</p></div></div>
+        <div class="persona-panel fx-lock" data-only="${NOT_STAFF}"><p class="persona-panel-head">Record by record</p><p>Choose <b>Algarve Evolution team</b> in "Try it as" and enter the access key to compare the two feeds record by record.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="official" class="od-official">
-  <div class="grid">
-    <div class="sec-head">
-      <p class="kicker">6 · To the official Odoo</p>
-      <h2>What moves when it works</h2>
-      <p class="sec-intro">Experiments stay cheap because they happen here. What proves useful moves to the official Odoo, the mature system, in one of three ways.</p>
-    </div>
-    <ul class="mv">${moves.map(([a, b, c]) => `<li class="mv-${laneOf[c]}"><h3>${esc(a)}</h3><p>${esc(b)}</p><span class="mv-tag">${esc(c)}</span></li>`).join('')}</ul>
+<section id="official" class="hub-sec hub-sec-mist">
+  <div class="hub-wrap">
+    ${head(6, 'To the official Odoo', 'What moves when it works', 'Experiments stay cheap because they happen here. What proves useful moves to the official Odoo, the mature system, in one of three ways: configuration, the Odoo partner, or a further experiment first.')}
+    <ul class="cards mv">${moves.map(([a, b, c]) => `<li class="card mv-${laneOf[c]}"><p class="card-kicker">${esc(c)}</p><h3>${esc(a)}</h3><p>${esc(b)}</p></li>`).join('')}</ul>
     <div class="od-run">
       <h3>Run it yourself</h3>
       <p>The experimentation Odoo rebuilds from the repository with one script, and the feeds re-export from it:</p>
