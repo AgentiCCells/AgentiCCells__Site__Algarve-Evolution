@@ -27,5 +27,33 @@ for (const f of files) {
 if (!existsSync('_site/version.json')) fail('no version.json');
 if (!existsSync('_site/index.html')) fail('no index.html');
 try { JSON.parse(readFileSync('hub.json', 'utf8')); } catch (e) { fail('hub.json is missing or not JSON'); }
+// Content rules (sites-loop brief): every fact links to its source, sources come from the named
+// material, and every page says it is not approved by Algarve Evolution until Dinis confirms it is.
+const allowedHosts = ['promptugal.news', 'newsroom.sgit.ai'];
+const readJson = f => { try { return JSON.parse(readFileSync(f, 'utf8')); } catch { fail(`${f}: missing or not JSON`); return null; } };
+const srcFile = readJson('src/data/sources.json');
+const known = new Set((srcFile?.sources || []).map(x => x.url));
+for (const x of srcFile?.sources || []) {
+  let host = ''; try { host = new URL(x.url).hostname; } catch { fail(`sources.json: bad URL ${x.url}`); continue; }
+  if (!allowedHosts.includes(host)) fail(`sources.json: ${x.url} is not from ${allowedHosts.join(' or ')}`);
+  if (!x.publisher || !x.title || !/^\d{4}-\d{2}-\d{2}$/.test(x.read || '')) fail(`sources.json: ${x.url} needs publisher, title and read date`);
+}
+const items = [
+  ...(readJson('src/data/events.json')?.events || []).map(i => ['events', i]),
+  ...(readJson('src/data/programmes.json')?.pillars || []).flatMap(p => p.programmes.map(i => ['programmes', i])),
+  ...(readJson('src/data/figures.json')?.figures || []).map(i => ['figures', i]),
+  ...(readJson('src/data/proposals.json')?.proposals || []).map(i => ['proposals', i]),
+];
+for (const [file, i] of items) {
+  if (!i.sources?.length) fail(`${file}.json: ${i.id} has no source`);
+  for (const u of i.sources || []) if (!known.has(u)) fail(`${file}.json: ${i.id} cites ${u}, which is not in sources.json`);
+  for (const k of ['name', 'label', 'summary']) if (i[k] && (!i[k].en || !i[k].pt)) fail(`${file}.json: ${i.id} ${k} needs en and pt`);
+}
+for (const [file, i] of items) if (file === 'proposals' && i.status !== 'proposal') fail(`proposals.json: ${i.id} must be marked status "proposal"`);
+for (const f of files.filter(f => f.endsWith('.html'))) {
+  const s = readFileSync(f, 'utf8');
+  if (/<!-- data:[a-z]+ -->/.test(s)) fail(`${f}: data block not rendered`);
+  if (!/not yet approved by Algarve Evolution|ainda não aprovado pela Algarve Evolution/.test(s)) fail(`${f}: no "not yet approved by Algarve Evolution" notice`);
+}
 if (problems.length) { console.error(problems.join('\n')); console.error(`FAILED: ${problems.length} problem(s)`); process.exit(1); }
 console.log('OK');
