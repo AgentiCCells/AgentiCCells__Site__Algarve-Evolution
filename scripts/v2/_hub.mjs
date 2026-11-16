@@ -1,4 +1,4 @@
-// Shared layout and helpers for V2, the Algarve Innovation Hub (English only).
+// Shared layout and helpers for V2, the AE Innovation Hub (Algarve Evolution) (English only).
 // Every page is scripts/v2/<name>.mjs exporting `path`, `title`, optional `nav` (its label in the main menu) and
 // render(ctx). ctx = hubContext(...): { feed, data, version, path, h, layout, ix, NAV, PERSONAS }.
 // Odoo is the source of truth: pages read only the public feed (src/feeds/public.json); the staff view decrypts
@@ -41,8 +41,8 @@ export function hubContext({ data, feed, version, path, title }) {
   const layout = ({ body, description = '', head = '', scripts = '', pageClass = '' }) => `<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(title)}${path === '/' ? '' : ' · Algarve Innovation Hub'}</title>
-<meta name="description" content="${esc(description || 'The Algarve Innovation Hub by Algarve Evolution: incubation and acceleration, Challenge Connect, Vibathon and the Talent Ecosystem, with Odoo as the source of truth.')}">
+<title>${esc(title)}${path === '/' ? '' : ' · AE Innovation Hub'}</title>
+<meta name="description" content="${esc(description || 'The AE Innovation Hub by Algarve Evolution: incubation and acceleration, Challenge Connect, Vibathon and the Talent Ecosystem, with Odoo as the source of truth.')}">
 <meta name="theme-color" content="#0a1d3d">
 <link rel="stylesheet" href="/hub/base.css">
 <link rel="stylesheet" href="/hub/hub.css">
@@ -53,7 +53,7 @@ ${head}
 <div class="proto" role="note"><span>${esc(v.banner.en)}</span> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(v.banner_link.en)}</a> <a class="proto-v1" href="/v1/">V1 experiments</a></div>
 <header class="hub-top">
   <div class="hub-wrap hub-top-row">
-    <a class="hub-brand" href="/"><span class="hub-mark" aria-hidden="true"></span><span><strong>Algarve Innovation Hub</strong><small>by Algarve Evolution</small></span></a>
+    <a class="hub-brand" href="/"><span class="hub-mark" aria-hidden="true"></span><span><strong>AE Innovation Hub</strong><small>Algarve Evolution</small></span></a>
     <nav class="hub-nav" aria-label="Hub"><ul>${NAV.map(n => `<li><a href="${n.path}"${n.path === path ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('')}</ul></nav>
   </div>
   <div class="hub-wrap persona-row">

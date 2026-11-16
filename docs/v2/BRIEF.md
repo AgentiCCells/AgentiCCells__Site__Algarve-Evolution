@@ -15,3 +15,14 @@ António (in Portuguese, our summary): the project is the Algarve Innovation Hub
 - Real organisations and events may come from public sources (with their source). Every person, startup, mentor, KPI, challenge, application, project and score we invent is marked "simulated" everywhere it shows. Never invent a real person's data. António Guerreiro is the only real person named.
 - The prototype banner stays ("A prototype website made by the PrompTugal team for Algarve Evolution; not yet approved by Algarve Evolution").
 - Public feed: only records published in Odoo. Private feed: the rest, never in clear in the public repository.
+
+## António's whiteboard (photo: docs/v2/whiteboard-2026-11-16.jpg, shared by Dinis on 16 November 2026)
+- Title: **AE INNOVATION HUB** (Algarve Evolution Innovation Hub). Use "AE Innovation Hub" as the name.
+- Four boxes, each with António's keywords in Portuguese:
+  - INC/ACC: "incubação, aceleração, mentores, KPIs"
+  - CHALLENGE CONNECT: "desafios, fornecedores, matching"; a reference written beside it: "IN-Q-TEL .org" (In-Q-Tel, Dinis's "reference, which I worked before ... the US company who does this"), the model for matching a client's challenges with outside companies and startups. A reference for us, not something to name on the site.
+  - VIBATHON: "hackathons, workshops, júris"
+  - TALENT ECOSYSTEM: "talento, competências, parceiros, rede ADI" (talent, competences or skills, partners, the ADI network).
+- "ODOO INFRASTRUCTURE" frames all four: Odoo is the base layer under every activity.
+- Along the bottom: "IDEIAS, NECESSIDADES" (ideas, needs): an input stream into the hub.
+- Bottom right: spreadsheets feeding into Odoo, and Odoo feeding the official site ("official ... <- ODOO").
