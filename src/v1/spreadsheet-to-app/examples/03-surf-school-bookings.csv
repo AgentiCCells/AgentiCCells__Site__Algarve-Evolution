@@ -1,0 +1,9 @@
+date,time,student,level,group_size,instructor,beach,board_hired,paid_eur,status
+2026-11-02,09:30,Student A (simulated),Beginner,4,Instructor 1,Arrifana,yes,160,confirmed
+2026-11-02,09:30,Student B (simulated),Beginner,2,Instructor 1,Arrifana,yes,80,confirmed
+2026-11-02,14:00,Student C (simulated),Intermediate,1,Instructor 2,Amado,no,45,deposit
+2026-11-03,10:00,Student D (simulated),Beginner,3,Instructor 3,Meia Praia,yes,120,confirmed
+2026-11-03,10:00,Student E (simulated),Beginner,1,Instructor 3,Meia Praia,yes,40,unpaid
+2026-11-03,15:00,Student F (simulated),Advanced,2,Instructor 2,Amado,no,90,confirmed
+2026-11-04,09:30,Student G (simulated),Intermediate,2,Instructor 1,Arrifana,yes,90,cancelled
+2026-11-04,11:00,Student H (simulated),Beginner,5,Instructor 3,Meia Praia,yes,200,confirmed

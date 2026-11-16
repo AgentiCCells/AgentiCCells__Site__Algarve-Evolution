@@ -1,0 +1,125 @@
+{
+ "about": "Every person and need here is invented, for a prototype. From the public vault cig07f79 (Algarve Talent Map prototype, SGit Newsroom, 31 October 2026, CC BY 4.0), with Portuguese, Spanish and French text, municipality ids and search tags added by sites-dev@AgentiCCells.dinis. Nobody real is listed.",
+ "needs": [
+  {
+   "id": "n1",
+   "simulated": true,
+   "town": "faro",
+   "role": "talent",
+   "who": {
+    "en": "A founder in Faro (simulated)",
+    "pt": "Um fundador em Faro (simulado)",
+    "es": "Un fundador en Faro (simulado)",
+    "fr": "Un fondateur à Faro (simulé)"
+   },
+   "what": {
+    "en": "A part-time product designer for a booking app, three months",
+    "pt": "Um designer de produto a tempo parcial para uma aplicação de reservas, três meses",
+    "es": "Un diseñador de producto a tiempo parcial para una aplicación de reservas, tres meses",
+    "fr": "Un designer produit à temps partiel pour une application de réservation, trois mois"
+   },
+   "pay": {
+    "en": "€40/h, about 10h a week",
+    "pt": "40 €/h, cerca de 10 h por semana",
+    "es": "40 €/h, unas 10 h a la semana",
+    "fr": "40 €/h, environ 10 h par semaine"
+   },
+   "tags": {
+    "en": "Design, Tourism tech",
+    "pt": "Design, Tecnologia para o turismo",
+    "es": "Diseño, Tecnología para el turismo",
+    "fr": "Design, Technologie pour le tourisme"
+   }
+  },
+  {
+   "id": "n2",
+   "simulated": true,
+   "town": "portimao",
+   "role": "talent",
+   "who": {
+    "en": "An SME in Portimão (simulated)",
+    "pt": "Uma PME em Portimão (simulada)",
+    "es": "Una pyme en Portimão (simulada)",
+    "fr": "Une PME à Portimão (simulée)"
+   },
+   "what": {
+    "en": "Someone to set up an AI email assistant for reservations",
+    "pt": "Alguém que configure um assistente de email com IA para reservas",
+    "es": "Alguien que configure un asistente de correo con IA para las reservas",
+    "fr": "Quelqu'un pour mettre en place un assistant e-mail avec IA pour les réservations"
+   },
+   "pay": {
+    "en": "Fixed price, €800–1,200",
+    "pt": "Preço fixo, 800–1.200 €",
+    "es": "Precio fijo, 800–1.200 €",
+    "fr": "Prix fixe, 800–1 200 €"
+   },
+   "tags": {
+    "en": "AI, Hospitality",
+    "pt": "IA, Hotelaria",
+    "es": "IA, Hostelería",
+    "fr": "IA, Hôtellerie"
+   }
+  },
+  {
+   "id": "n3",
+   "simulated": true,
+   "town": "faro",
+   "role": "mentor",
+   "who": {
+    "en": "A UAlg student team (simulated)",
+    "pt": "Uma equipa de estudantes da UAlg (simulada)",
+    "es": "Un equipo de estudiantes de la UAlg (simulado)",
+    "fr": "Une équipe d'étudiants de l'UAlg (simulée)"
+   },
+   "what": {
+    "en": "A mentor for a sea-economy hardware prototype",
+    "pt": "Um mentor para um protótipo de hardware da economia do mar",
+    "es": "Un mentor para un prototipo de hardware de la economía del mar",
+    "fr": "Un mentor pour un prototype matériel de l'économie de la mer"
+   },
+   "pay": {
+    "en": "Mentoring, unpaid",
+    "pt": "Mentoria, não paga",
+    "es": "Mentoría, no remunerada",
+    "fr": "Mentorat, non rémunéré"
+   },
+   "tags": {
+    "en": "Hardware, Sea economy",
+    "pt": "Hardware, Economia do mar",
+    "es": "Hardware, Economía del mar",
+    "fr": "Matériel, Économie de la mer"
+   }
+  },
+  {
+   "id": "n4",
+   "simulated": true,
+   "town": "loule",
+   "role": "investor",
+   "who": {
+    "en": "A startup in Loulé (simulated)",
+    "pt": "Uma startup em Loulé (simulada)",
+    "es": "Una startup en Loulé (simulada)",
+    "fr": "Une start-up à Loulé (simulée)"
+   },
+   "what": {
+    "en": "Pre-seed investment, €150k, after a pilot with two hotels",
+    "pt": "Investimento pre-seed, 150 mil €, depois de um piloto com dois hotéis",
+    "es": "Inversión pre-seed, 150.000 €, después de un piloto con dos hoteles",
+    "fr": "Investissement de pré-amorçage, 150 000 €, après un pilote avec deux hôtels"
+   },
+   "pay": {
+    "en": "Equity",
+    "pt": "Capital",
+    "es": "Participación en el capital",
+    "fr": "Prise de participation"
+   },
+   "tags": {
+    "en": "Investor, Tourism tech",
+    "pt": "Investidor, Tecnologia para o turismo",
+    "es": "Inversor, Tecnología para el turismo",
+    "fr": "Investisseur, Technologie pour le tourisme"
+   }
+  }
+ ]
+}

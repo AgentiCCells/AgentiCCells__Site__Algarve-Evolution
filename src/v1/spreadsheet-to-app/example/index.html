@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Closing the House</title>
+<link rel="stylesheet" href="/v1/assets/chrome.css">
+<style>
+/* Layout: one phone-width column; the essentials first, then the rest of the phase, then the history of past runs */
+:root{--bg:#f4f6f3;--panel:#ffffff;--ink:#1c2420;--muted:#5f6d66;--line:#dfe5e0;--key:#1d6b52;--key-soft:#e2f0ea;--sun:#b0641c;--sun-soft:#f7ecdf;
+--display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;--body:"Source Sans 3","Segoe UI",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111614;--panel:#19211d;--ink:#e6ede9;--muted:#9fb0a7;--line:#2a3530;--key:#6cc7a3;--key-soft:#173229;--sun:#e2a565;--sun-soft:#33261a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111614;--panel:#19211d;--ink:#e6ede9;--muted:#9fb0a7;--line:#2a3530;--key:#6cc7a3;--key-soft:#173229;--sun:#e2a565;--sun-soft:#33261a;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--sun);background:var(--sun-soft);padding:3px 8px;border-radius:4px;align-self:flex-start}
+h1{font-family:var(--display);font-size:30px;margin:0;letter-spacing:-.3px}
+.sub{color:var(--muted);margin:0}
+.phases{display:flex;gap:6px;flex-wrap:wrap}
+.phases button{font:inherit;font-weight:600;font-size:15px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.phases button[aria-pressed="true"]{background:var(--key);border-color:var(--key);color:var(--panel)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.card h2{font-family:var(--display);font-size:18px;margin:0}
+.progress{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}.bar i{display:block;height:100%;background:var(--key)}
+label.step{display:flex;gap:10px;align-items:flex-start;padding:8px 4px;border-top:1px solid var(--line);cursor:pointer}
+label.step:first-of-type{border-top:0}
+label.step input{width:20px;height:20px;margin-top:2px;accent-color:var(--key);flex:none}
+label.step.key span{font-weight:600}
+label.step.done span{color:var(--muted);text-decoration:line-through}
+.essential{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--key);background:var(--key-soft);padding:1px 6px;border-radius:4px;margin-left:6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.main{font:inherit;font-weight:600;padding:10px 16px;border-radius:8px;border:1px solid var(--key);background:var(--key);color:var(--panel);cursor:pointer}
+button.ghost{font:inherit;font-weight:600;padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+input.add,textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);flex:1 1 200px;min-width:0}
+.hist li{font-size:14px;padding:6px 0;border-top:1px solid var(--line)}.hist{list-style:none;margin:0;padding:0}
+.hist b{font-family:var(--mono);font-weight:400;font-size:13px;color:var(--muted)}
+.next{color:var(--muted);font-size:14px}
+.toast{color:var(--key);font-weight:600;font-size:14px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+</style>
+</head><body>
+<!-- Added by this site: the prototype banner every page carries. Everything below is the pack app unchanged. -->
+<div class="ae-proto" role="note" data-design="app" style="margin:-18px -16px 0"><span>A prototype website made by the PrompTugal team for Algarve Evolution; not yet approved by Algarve Evolution.</span> <a href="https://www.algarveevolution.pt/" rel="noopener">Its official site is algarveevolution.pt</a> <button type="button" class="ae-proto-pick" data-ae-picker>Choose a design</button> <a class="ae-proto-lang" href="/v1/spreadsheet-to-app/">Back to Spreadsheet to App</a></div><nav class="ae-ideas ae-ideas-in" aria-label="Working ideas" style="margin:0 -16px 16px"><span class="ae-ideas-label">Working ideas</span><a class="ae-ideas-site" href="/v1/">Back to the site</a><a class="ae-ideas-app" href="/v1/talent-map/">Talent map</a><a class="ae-ideas-app" href="/v1/spreadsheet-to-app/" aria-current="page"><span class="ae-ideas-here">You are here:</span> Spreadsheet to App</a></nav><div class="wrap">
+  <span class="tag">A converted example · invented content</span>
+  <h1>Closing the House</h1>
+  <p class="sub">A holiday home checklist, kept for years as a document, turned into an app with five prompts. The bold steps come first.</p>
+  <div class="phases" role="group" aria-label="Phase">
+    <button type="button" data-p="before">The day before</button>
+    <button type="button" data-p="day">On the day</button>
+    <button type="button" data-p="back">When we arrive back</button>
+  </div>
+  <section class="card" aria-live="polite">
+    <h2 id="title"></h2>
+    <div class="progress" id="prog"></div><div class="bar"><i id="barfill"></i></div>
+    <div id="essentials"></div>
+    <p class="next" id="nexttxt"></p>
+    <div id="rest"></div>
+  </section>
+  <section class="card">
+    <h2>Add a step</h2>
+    <div class="row"><input class="add" id="newstep" aria-label="New step" placeholder="e.g. Switch off the pool pump"><label class="row" style="font-size:14px"><input type="checkbox" id="newkey"> Essential</label><button type="button" class="ghost" id="addbtn">Add</button></div>
+  </section>
+  <section class="card">
+    <h2>Finish this run</h2>
+    <textarea id="note" rows="2" aria-label="Note for this run" placeholder="Anything to remember next time? e.g. the alarm app took two tries"></textarea>
+    <div class="row"><button type="button" class="main" id="finish">Save this run</button><span class="toast" id="saved" aria-live="polite"></span></div>
+  </section>
+  <section class="card">
+    <h2>History</h2>
+    <ul class="hist" id="hist"></ul>
+  </section>
+  <section class="card">
+    <h2>About</h2>
+    <p class="next">Everything is kept in this browser, nowhere else. There is no login and no server. Not yet: sharing between two phones, reminders, or a printed copy. Those are the next prompts.</p>
+  </section>
+</div>
+<script>
+const BASE={before:{t:"The day before",s:[["Call the neighbour to say we are leaving tomorrow",1],["Check the weather for the drive to the airport",0],["Confirm the cleaner for Thursday",1],["Empty the fridge; give the fresh food to the neighbour",0],["Take the bins out (collection is Monday and Thursday)",0]]},
+day:{t:"On the day",s:[["Turn off the gas at the bottle",1],["Turn off the water heater",1],["Turn off the water at the main tap if away more than two weeks",0],["Unplug the TV, router and microwave",0],["Close all the shutters",1],["Water the plants on the terrace",0],["Leave the key in the agreed place",0],["Set the alarm and check the app shows it armed",1],["Lock both doors and check the gate",1]]},
+back:{t:"When we arrive back",s:[["Turn the water back on before the water heater",1],["Open the shutters and air the house",0],["Check the fridge and the freezer",0],["Message the neighbour that we are back",0]]}};
+let st={phase:"day",extra:{before:[],day:[],back:[]},done:{},hist:[{d:"2026-08-30",p:"On the day",n:9,of:9,note:"All done; the gate lock is stiff"},{d:"2026-06-14",p:"On the day",n:8,of:9,note:"Forgot to unplug the router"}]};
+try{const s=JSON.parse(localStorage.getItem("cth")||"null");if(s)st=Object.assign(st,s)}catch(e){}
+const save=()=>{try{localStorage.setItem("cth",JSON.stringify(st))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const steps=p=>BASE[p].s.concat(st.extra[p]);
+function draw(){
+  document.querySelectorAll(".phases button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===st.phase));
+  const p=st.phase,all=steps(p),key=all.map((s,i)=>[s,i]).filter(x=>x[0][1]),rest=all.map((s,i)=>[s,i]).filter(x=>!x[0][1]);
+  const d=i=>!!st.done[p+":"+i];
+  const n=all.filter((s,i)=>d(i)).length;
+  document.getElementById("title").textContent=BASE[p].t;
+  document.getElementById("prog").textContent=n+" of "+all.length+" done";
+  document.getElementById("barfill").style.width=(100*n/all.length)+"%";
+  const item=([s,i],k)=>`<label class="step${k?" key":""}${d(i)?" done":""}"><input type="checkbox" data-i="${i}"${d(i)?" checked":""}><span>${esc(s[0])}${k?'<span class="essential">essential</span>':""}</span></label>`;
+  document.getElementById("essentials").innerHTML=key.map(x=>item(x,1)).join("");
+  const keyLeft=key.filter(([s,i])=>!d(i)).length;
+  document.getElementById("nexttxt").textContent=keyLeft?`${keyLeft} essential step${keyLeft>1?"s":""} first. The rest follow.`:"The essentials are done. Now the rest:";
+  document.getElementById("rest").innerHTML=rest.map(x=>item(x,0)).join("");
+  document.querySelectorAll("label.step input").forEach(c=>c.addEventListener("change",e=>{const k=p+":"+e.target.dataset.i;if(e.target.checked)st.done[k]=1;else delete st.done[k];save();draw()}));
+  document.getElementById("hist").innerHTML=st.hist.map(h=>`<li><b>${esc(h.d)}</b> · ${esc(h.p)} · ${h.n} of ${h.of}${h.note?" · "+esc(h.note):""}</li>`).join("");
+}
+document.querySelectorAll(".phases button").forEach(b=>b.addEventListener("click",()=>{st.phase=b.dataset.p;save();draw()}));
+document.getElementById("addbtn").addEventListener("click",()=>{const v=document.getElementById("newstep").value.trim();if(!v)return;st.extra[st.phase].push([v,document.getElementById("newkey").checked?1:0]);document.getElementById("newstep").value="";save();draw()});
+document.getElementById("finish").addEventListener("click",()=>{const p=st.phase,all=steps(p),n=all.filter((s,i)=>st.done[p+":"+i]).length;
+  st.hist.unshift({d:new Date().toISOString().slice(0,10),p:BASE[p].t,n,of:all.length,note:document.getElementById("note").value.trim()});
+  for(const k of Object.keys(st.done))if(k.startsWith(p+":"))delete st.done[k];
+  document.getElementById("note").value="";save();draw();document.getElementById("saved").textContent="Saved to the history; the checklist is ready for next time."});
+draw();try{parent.postMessage({type:"sg-app-ready"},"*")}catch(e){}
+</script>
+<script src="/v1/assets/chrome.js" data-lang="en" data-slug="app" data-version="v0.1.16, parked as V1" defer></script>
+</body></html>

@@ -1,0 +1,197 @@
+{
+ "default": "coast",
+ "designs": [
+  {
+   "slug": "coast",
+   "order": 1,
+   "group": "classic",
+   "name": {
+    "en": "The Coast",
+    "pt": "A Costa",
+    "es": "La Costa",
+    "fr": "La Côte"
+   },
+   "tagline": {
+    "en": "Warm, editorial, the default",
+    "pt": "Quente, editorial, o padrão",
+    "es": "Cálido, editorial, el predeterminado",
+    "fr": "Chaleureux, éditorial, par défaut"
+   },
+   "paths": {
+    "en": "/v1/",
+    "pt": "/v1/pt/",
+    "es": "/v1/es/",
+    "fr": "/v1/fr/"
+   },
+   "thumb": "/v1/assets/designs/coast.jpg"
+  },
+  {
+   "slug": "corporate",
+   "order": 2,
+   "group": "classic",
+   "name": {
+    "en": "The Institution",
+    "pt": "A Instituição",
+    "es": "La Institución",
+    "fr": "L'Institution"
+   },
+   "tagline": {
+    "en": "Corporate, clear, annual-report grade",
+    "pt": "Corporativo, claro, ao nível de um relatório anual",
+    "es": "Corporativo, claro, a la altura de una memoria anual",
+    "fr": "Institutionnel, clair, au niveau d'un rapport annuel"
+   },
+   "paths": {
+    "en": "/v1/d/corporate/",
+    "pt": "/v1/pt/d/corporate/",
+    "es": "/v1/es/d/corporate/",
+    "fr": "/v1/fr/d/corporate/"
+   },
+   "thumb": "/v1/assets/designs/corporate.jpg"
+  },
+  {
+   "slug": "brief",
+   "order": 3,
+   "group": "classic",
+   "name": {
+    "en": "The Brief",
+    "pt": "O Resumo",
+    "es": "El Resumen",
+    "fr": "L’Essentiel"
+   },
+   "tagline": {
+    "en": "Read it in two minutes",
+    "pt": "Leia em dois minutos",
+    "es": "Léalo en dos minutos",
+    "fr": "À lire en deux minutes"
+   },
+   "paths": {
+    "en": "/v1/d/brief/",
+    "pt": "/v1/pt/d/brief/",
+    "es": "/v1/es/d/brief/",
+    "fr": "/v1/fr/d/brief/"
+   },
+   "thumb": "/v1/assets/designs/brief.jpg"
+  },
+  {
+   "slug": "azulejo",
+   "order": 4,
+   "group": "classic",
+   "name": {
+    "en": "Azulejo",
+    "pt": "Azulejo",
+    "es": "Azulejo",
+    "fr": "Azulejo"
+   },
+   "tagline": {
+    "en": "Playful, Portuguese, full of colour",
+    "pt": "Divertido, português, cheio de cor",
+    "es": "Alegre, portugués, lleno de color",
+    "fr": "Ludique, portugais, plein de couleurs"
+   },
+   "paths": {
+    "en": "/v1/d/azulejo/",
+    "pt": "/v1/pt/d/azulejo/",
+    "es": "/v1/es/d/azulejo/",
+    "fr": "/v1/fr/d/azulejo/"
+   },
+   "thumb": "/v1/assets/designs/azulejo.jpg"
+  },
+  {
+   "slug": "mission",
+   "order": 5,
+   "group": "bold",
+   "name": {
+    "en": "Mission Control",
+    "pt": "Centro de Comando",
+    "es": "Centro de Control",
+    "fr": "Centre de contrôle"
+   },
+   "tagline": {
+    "en": "The ecosystem as a live dashboard",
+    "pt": "O ecossistema como um painel ao vivo",
+    "es": "El ecosistema como un panel en directo",
+    "fr": "L'écosystème en tableau de bord, en direct"
+   },
+   "paths": {
+    "en": "/v1/d/mission/",
+    "pt": "/v1/pt/d/mission/",
+    "es": "/v1/es/d/mission/",
+    "fr": "/v1/fr/d/mission/"
+   },
+   "thumb": "/v1/assets/designs/mission.jpg"
+  },
+  {
+   "slug": "atlas",
+   "order": 6,
+   "group": "bold",
+   "name": {
+    "en": "The Atlas",
+    "pt": "O Atlas",
+    "es": "El Atlas",
+    "fr": "L'Atlas"
+   },
+   "tagline": {
+    "en": "The Algarve, mapped",
+    "pt": "O Algarve, no mapa",
+    "es": "El Algarve, en el mapa",
+    "fr": "L'Algarve, en carte"
+   },
+   "paths": {
+    "en": "/v1/d/atlas/",
+    "pt": "/v1/pt/d/atlas/",
+    "es": "/v1/es/d/atlas/",
+    "fr": "/v1/fr/d/atlas/"
+   },
+   "thumb": "/v1/assets/designs/atlas.jpg"
+  },
+  {
+   "slug": "future",
+   "order": 7,
+   "group": "bold",
+   "name": {
+    "en": "The Future",
+    "pt": "O Futuro",
+    "es": "El Futuro",
+    "fr": "Le Futur"
+   },
+   "tagline": {
+    "en": "Cinematic, AI-made imagery and infographics",
+    "pt": "Imagens e infografias cinematográficas feitas com IA",
+    "es": "Imágenes e infografías cinematográficas hechas con IA",
+    "fr": "Images et infographies cinématographiques faites avec l'IA"
+   },
+   "paths": {
+    "en": "/v1/d/future/",
+    "pt": "/v1/pt/d/future/",
+    "es": "/v1/es/d/future/",
+    "fr": "/v1/fr/d/future/"
+   },
+   "thumb": "/v1/assets/designs/future.jpg"
+  },
+  {
+   "slug": "agent",
+   "order": 8,
+   "group": "bold",
+   "name": {
+    "en": "Ask the Agent",
+    "pt": "Pergunte ao Agente",
+    "es": "Pregunte al Agente",
+    "fr": "Demandez à l'Agent"
+   },
+   "tagline": {
+    "en": "An AI-native site you talk to",
+    "pt": "Um site nativo de IA com quem fala",
+    "es": "Un sitio nativo de IA con el que se habla",
+    "fr": "Un site natif de l'IA, à qui l'on parle"
+   },
+   "paths": {
+    "en": "/v1/d/agent/",
+    "pt": "/v1/pt/d/agent/",
+    "es": "/v1/es/d/agent/",
+    "fr": "/v1/fr/d/agent/"
+   },
+   "thumb": "/v1/assets/designs/agent.jpg"
+  }
+ ]
+}

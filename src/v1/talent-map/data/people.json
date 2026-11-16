@@ -1,0 +1,428 @@
+{
+ "about": "Every person and need here is invented, for a prototype. From the public vault cig07f79 (Algarve Talent Map prototype, SGit Newsroom, 31 October 2026, CC BY 4.0), with Portuguese, Spanish and French text, municipality ids and search tags added by sites-dev@AgentiCCells.dinis. Nobody real is listed.",
+ "people": [
+  {
+   "id": "p01",
+   "name": "Marta Vilanova",
+   "simulated": true,
+   "town": "faro",
+   "roles": [
+    "talent"
+   ],
+   "sector": {
+    "en": "Design",
+    "pt": "Design",
+    "es": "Diseño",
+    "fr": "Design"
+   },
+   "offer": {
+    "en": "Brand and product design for early-stage startups; Figma, design systems.",
+    "pt": "Design de marca e de produto para startups em fase inicial; Figma, sistemas de design.",
+    "es": "Diseño de marca y de producto para startups en fase inicial; Figma, sistemas de diseño.",
+    "fr": "Design de marque et de produit pour les start-up en phase de démarrage ; Figma, systèmes de design."
+   },
+   "rate": {
+    "en": "€40–60/h",
+    "pt": "40–60 €/h",
+    "es": "40–60 €/h",
+    "fr": "40–60 €/h"
+   },
+   "langs": "PT, EN",
+   "approved": true,
+   "tags": "design brand product figma ux ui startup designer"
+  },
+  {
+   "id": "p02",
+   "name": "Tom Hallworth",
+   "simulated": true,
+   "town": "lagos",
+   "roles": [
+    "mentor"
+   ],
+   "sector": {
+    "en": "SaaS",
+    "pt": "SaaS",
+    "es": "SaaS",
+    "fr": "SaaS"
+   },
+   "offer": {
+    "en": "Former SaaS founder; go-to-market and first hires. Two hours a month.",
+    "pt": "Antigo fundador de SaaS; entrada no mercado e primeiras contratações. Duas horas por mês.",
+    "es": "Antiguo fundador de SaaS; salida al mercado y primeras contrataciones. Dos horas al mes.",
+    "fr": "Ancien fondateur d'une SaaS ; mise sur le marché et premiers recrutements. Deux heures par mois."
+   },
+   "rate": {
+    "en": "Free, 2h/month",
+    "pt": "Gratuito, 2 h/mês",
+    "es": "Gratis, 2 h/mes",
+    "fr": "Gratuit, 2 h/mois"
+   },
+   "langs": "EN",
+   "approved": true,
+   "tags": "saas go-to-market sales hiring founder software"
+  },
+  {
+   "id": "p03",
+   "name": "Rui Pacheco",
+   "simulated": true,
+   "town": "loule",
+   "roles": [
+    "talent",
+    "mentor"
+   ],
+   "sector": {
+    "en": "Software",
+    "pt": "Software",
+    "es": "Software",
+    "fr": "Logiciel"
+   },
+   "offer": {
+    "en": "Full-stack developer, Python and TypeScript; mentors students from UAlg.",
+    "pt": "Programador full-stack, Python e TypeScript; é mentor de estudantes da UAlg.",
+    "es": "Desarrollador full-stack, Python y TypeScript; hace de mentor de estudiantes de la UAlg.",
+    "fr": "Développeur full-stack, Python et TypeScript ; mentor d'étudiants de l'UAlg."
+   },
+   "rate": {
+    "en": "€350/day",
+    "pt": "350 €/dia",
+    "es": "350 €/día",
+    "fr": "350 €/jour"
+   },
+   "langs": "PT, EN, ES",
+   "approved": true,
+   "tags": "developer software python typescript web app students programmer"
+  },
+  {
+   "id": "p04",
+   "name": "Inês Calado",
+   "simulated": true,
+   "town": "tavira",
+   "roles": [
+    "investor"
+   ],
+   "sector": {
+    "en": "Tourism tech",
+    "pt": "Tecnologia para o turismo",
+    "es": "Tecnología para el turismo",
+    "fr": "Technologie pour le tourisme"
+   },
+   "offer": {
+    "en": "Angel investor, tickets of €10k–50k in tourism and hospitality tech.",
+    "pt": "Investidora anjo, tickets de 10 mil a 50 mil euros em tecnologia para turismo e hotelaria.",
+    "es": "Inversora ángel, tickets de 10.000 a 50.000 € en tecnología para el turismo y la hostelería.",
+    "fr": "Investisseuse providentielle, tickets de 10 000 à 50 000 € dans la technologie pour le tourisme et l'hôtellerie."
+   },
+   "rate": {
+    "en": "€10k–50k",
+    "pt": "10–50 mil €",
+    "es": "10.000–50.000 €",
+    "fr": "10 000–50 000 €"
+   },
+   "langs": "PT, EN, FR",
+   "approved": true,
+   "tags": "angel investor tourism hospitality hotel funding"
+  },
+  {
+   "id": "p05",
+   "name": "Sven Aaltonen",
+   "simulated": true,
+   "town": "albufeira",
+   "roles": [
+    "talent"
+   ],
+   "sector": {
+    "en": "Data",
+    "pt": "Dados",
+    "es": "Datos",
+    "fr": "Données"
+   },
+   "offer": {
+    "en": "Data engineering and dashboards for SMEs; remote, in the Algarve since 2022.",
+    "pt": "Engenharia de dados e dashboards para PME; remoto, no Algarve desde 2022.",
+    "es": "Ingeniería de datos y cuadros de mando para pymes; en remoto, en el Algarve desde 2022.",
+    "fr": "Ingénierie des données et tableaux de bord pour les PME ; à distance, en Algarve depuis 2022."
+   },
+   "rate": {
+    "en": "€45/h",
+    "pt": "45 €/h",
+    "es": "45 €/h",
+    "fr": "45 €/h"
+   },
+   "langs": "EN, FI",
+   "approved": true,
+   "tags": "data dashboards analytics engineering sme"
+  },
+  {
+   "id": "p06",
+   "name": "Catarina Bentes",
+   "simulated": true,
+   "town": "portimao",
+   "roles": [
+    "talent"
+   ],
+   "sector": {
+    "en": "Marketing",
+    "pt": "Marketing",
+    "es": "Marketing",
+    "fr": "Marketing"
+   },
+   "offer": {
+    "en": "Content and social media for hotels and restaurants; Portuguese and English.",
+    "pt": "Conteúdos e redes sociais para hotéis e restaurantes; em português e inglês.",
+    "es": "Contenidos y redes sociales para hoteles y restaurantes; en portugués e inglés.",
+    "fr": "Contenus et réseaux sociaux pour hôtels et restaurants ; en portugais et en anglais."
+   },
+   "rate": {
+    "en": "€600/month package",
+    "pt": "Pacote de 600 €/mês",
+    "es": "Paquete de 600 €/mes",
+    "fr": "Forfait de 600 €/mois"
+   },
+   "langs": "PT, EN",
+   "approved": false,
+   "tags": "marketing content social media hotels restaurants hospitality"
+  },
+  {
+   "id": "p07",
+   "name": "David Okafor",
+   "simulated": true,
+   "town": "faro",
+   "roles": [
+    "mentor",
+    "investor"
+   ],
+   "sector": {
+    "en": "Fintech",
+    "pt": "Fintech",
+    "es": "Fintech",
+    "fr": "Fintech"
+   },
+   "offer": {
+    "en": "Fintech operator; mentors on fundraising, invests in pre-seed rounds.",
+    "pt": "Gestor em fintech; mentor em angariação de investimento, investe em rondas pre-seed.",
+    "es": "Directivo en fintech; mentor en captación de inversión, invierte en rondas pre-seed.",
+    "fr": "Dirigeant dans la fintech ; mentor pour les levées de fonds, investit dans des tours de pré-amorçage."
+   },
+   "rate": {
+    "en": "€25k tickets",
+    "pt": "Tickets de 25 mil €",
+    "es": "Tickets de 25.000 €",
+    "fr": "Tickets de 25 000 €"
+   },
+   "langs": "EN",
+   "approved": true,
+   "tags": "fintech fundraising investor pre-seed funding finance"
+  },
+  {
+   "id": "p08",
+   "name": "Leonor Sá",
+   "simulated": true,
+   "town": "olhao",
+   "roles": [
+    "talent"
+   ],
+   "sector": {
+    "en": "Legal",
+    "pt": "Jurídico",
+    "es": "Jurídico",
+    "fr": "Juridique"
+   },
+   "offer": {
+    "en": "Company law for startups: incorporation, shareholder agreements, visas.",
+    "pt": "Direito das sociedades para startups: constituição, acordos parassociais, vistos.",
+    "es": "Derecho de sociedades para startups: constitución, pactos de socios, visados.",
+    "fr": "Droit des sociétés pour les start-up : création, pactes d'associés, visas."
+   },
+   "rate": {
+    "en": "Fixed fees",
+    "pt": "Preço fixo",
+    "es": "Precio fijo",
+    "fr": "Forfait"
+   },
+   "langs": "PT, EN",
+   "approved": true,
+   "tags": "legal lawyer company law incorporation visas contracts"
+  },
+  {
+   "id": "p09",
+   "name": "Hanna Brandt",
+   "simulated": true,
+   "town": "lagoa",
+   "roles": [
+    "mentor"
+   ],
+   "sector": {
+    "en": "Sustainability",
+    "pt": "Sustentabilidade",
+    "es": "Sostenibilidad",
+    "fr": "Durabilité"
+   },
+   "offer": {
+    "en": "Sustainability reporting and grants; mentors impact founders.",
+    "pt": "Relatórios de sustentabilidade e apoios; mentora de fundadores de impacto.",
+    "es": "Informes de sostenibilidad y ayudas; mentora de fundadores de impacto.",
+    "fr": "Rapports de durabilité et subventions ; mentore de fondateurs à impact."
+   },
+   "rate": {
+    "en": "Free, 1h/month",
+    "pt": "Gratuito, 1 h/mês",
+    "es": "Gratis, 1 h/mes",
+    "fr": "Gratuit, 1 h/mois"
+   },
+   "langs": "DE, EN, PT",
+   "approved": true,
+   "tags": "sustainability esg grants impact funding"
+  },
+  {
+   "id": "p10",
+   "name": "Miguel Teixeira",
+   "simulated": true,
+   "town": "silves",
+   "roles": [
+    "talent"
+   ],
+   "sector": {
+    "en": "Hardware",
+    "pt": "Hardware",
+    "es": "Hardware",
+    "fr": "Matériel"
+   },
+   "offer": {
+    "en": "Embedded systems and IoT prototypes for agriculture and the sea.",
+    "pt": "Sistemas embebidos e protótipos IoT para a agricultura e o mar.",
+    "es": "Sistemas embebidos y prototipos IoT para la agricultura y el mar.",
+    "fr": "Systèmes embarqués et prototypes IoT pour l'agriculture et la mer."
+   },
+   "rate": {
+    "en": "€300/day",
+    "pt": "300 €/dia",
+    "es": "300 €/día",
+    "fr": "300 €/jour"
+   },
+   "langs": "PT, EN",
+   "approved": true,
+   "tags": "hardware embedded iot prototype sensors agriculture sea marine electronics"
+  },
+  {
+   "id": "p11",
+   "name": "Aisha Rahman",
+   "simulated": true,
+   "town": "faro",
+   "roles": [
+    "talent",
+    "mentor"
+   ],
+   "sector": {
+    "en": "AI",
+    "pt": "IA",
+    "es": "IA",
+    "fr": "IA"
+   },
+   "offer": {
+    "en": "AI engineer: agents, RAG, evaluation; runs a monthly AI meetup.",
+    "pt": "Engenheira de IA: agentes, RAG, avaliação; organiza um encontro mensal de IA.",
+    "es": "Ingeniera de IA: agentes, RAG, evaluación; organiza un encuentro mensual de IA.",
+    "fr": "Ingénieure en IA : agents, RAG, évaluation ; anime une rencontre mensuelle sur l'IA."
+   },
+   "rate": {
+    "en": "€60/h",
+    "pt": "60 €/h",
+    "es": "60 €/h",
+    "fr": "60 €/h"
+   },
+   "langs": "EN, PT",
+   "approved": true,
+   "tags": "ai agents rag llm machine learning automation developer"
+  },
+  {
+   "id": "p12",
+   "name": "João Nobre",
+   "simulated": true,
+   "town": "vila-real-de-santo-antonio",
+   "roles": [
+    "investor"
+   ],
+   "sector": {
+    "en": "Sea economy",
+    "pt": "Economia do mar",
+    "es": "Economía del mar",
+    "fr": "Économie de la mer"
+   },
+   "offer": {
+    "en": "Family office investing in the sea economy and aquaculture.",
+    "pt": "Family office que investe na economia do mar e na aquacultura.",
+    "es": "Family office que invierte en la economía del mar y la acuicultura.",
+    "fr": "Family office qui investit dans l'économie de la mer et l'aquaculture."
+   },
+   "rate": {
+    "en": "€50k–250k",
+    "pt": "50–250 mil €",
+    "es": "50.000–250.000 €",
+    "fr": "50 000–250 000 €"
+   },
+   "langs": "PT, ES, EN",
+   "approved": false,
+   "tags": "investor sea economy aquaculture marine family office funding"
+  },
+  {
+   "id": "p13",
+   "name": "Clara Moniz",
+   "simulated": true,
+   "town": "lagos",
+   "roles": [
+    "talent"
+   ],
+   "sector": {
+    "en": "Design",
+    "pt": "Design",
+    "es": "Diseño",
+    "fr": "Design"
+   },
+   "offer": {
+    "en": "UX research and usability testing; works with tourism apps.",
+    "pt": "Investigação UX e testes de usabilidade; trabalha com aplicações de turismo.",
+    "es": "Investigación UX y pruebas de usabilidad; trabaja con aplicaciones de turismo.",
+    "fr": "Recherche UX et tests d'utilisabilité ; travaille avec des applications de tourisme."
+   },
+   "rate": {
+    "en": "€400/day",
+    "pt": "400 €/dia",
+    "es": "400 €/día",
+    "fr": "400 €/jour"
+   },
+   "langs": "PT, EN",
+   "approved": true,
+   "tags": "ux research usability design tourism apps"
+  },
+  {
+   "id": "p14",
+   "name": "Pieter de Waal",
+   "simulated": true,
+   "town": "loule",
+   "roles": [
+    "mentor"
+   ],
+   "sector": {
+    "en": "Operations",
+    "pt": "Operações",
+    "es": "Operaciones",
+    "fr": "Opérations"
+   },
+   "offer": {
+    "en": "Scaled two hospitality groups; mentors on operations and hiring.",
+    "pt": "Fez crescer dois grupos hoteleiros; mentor em operações e contratação.",
+    "es": "Hizo crecer dos grupos hoteleros; mentor en operaciones y contratación.",
+    "fr": "A fait grandir deux groupes hôteliers ; mentor en opérations et recrutement."
+   },
+   "rate": {
+    "en": "Free, 2h/month",
+    "pt": "Gratuito, 2 h/mês",
+    "es": "Gratis, 2 h/mes",
+    "fr": "Gratuit, 2 h/mois"
+   },
+   "langs": "NL, EN",
+   "approved": true,
+   "tags": "operations hiring hospitality hotels scale"
+  }
+ ]
+}

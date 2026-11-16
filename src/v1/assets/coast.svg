@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice" role="img" aria-label="An Algarve coast drawn in flat shapes: a low sun, ochre cliffs with a sea arch and a stack, and the Atlantic">
+  <!-- Drawn by hand in SVG by sites-design@AgentiCCells.dinis for this site, 2026-11-16; no model or third-party source. CC BY 4.0. -->
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a8a9c"/>
+      <stop offset=".35" stop-color="#1b6f84"/>
+      <stop offset="1" stop-color="#0b3954"/>
+    </linearGradient>
+    <radialGradient id="sun" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#f6b26b"/>
+      <stop offset=".62" stop-color="#f2a65a"/>
+      <stop offset=".63" stop-color="#f2a65a" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#f2a65a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cliff" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d4733a"/>
+      <stop offset="1" stop-color="#a84f22"/>
+    </linearGradient>
+    <linearGradient id="cliffR" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c96430"/>
+      <stop offset="1" stop-color="#93431c"/>
+    </linearGradient>
+  </defs>
+  <!-- the sky is left transparent: the page paints it, so the drawing joins the hero without a seam -->
+  <circle cx="1130" cy="215" r="200" fill="url(#sun)"/>
+  <!-- distant headlands -->
+  <path d="M560 392 C 640 384 700 370 780 372 S 900 386 960 392 Z" fill="#e5b98c" opacity=".7"/>
+  <path d="M1240 392 C 1300 378 1380 366 1460 370 S 1560 380 1600 384 V 392 Z" fill="#dda57a" opacity=".75"/>
+  <!-- sea -->
+  <rect y="390" width="1600" height="210" fill="url(#sea)"/>
+  <path d="M0 404 H1600" stroke="#bfe3e8" stroke-width="2" opacity=".35"/>
+  <path d="M980 418 h220 M1020 432 h150 M1060 446 h90" stroke="#f8d2a4" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+  <path d="M0 470 C 200 460 360 478 560 468 S 920 458 1120 472 1420 462 1600 468" stroke="#bfe3e8" stroke-width="2.5" fill="none" opacity=".35"/>
+  <path d="M0 530 C 220 520 420 540 640 528 S 1040 518 1260 532 1480 524 1600 528" stroke="#bfe3e8" stroke-width="2.5" fill="none" opacity=".22"/>
+  <!-- left cliffs with an arch -->
+  <g transform="translate(0 392) scale(1 .72) translate(0 -392)">
+  <path d="M0 178 L 80 164 L 170 182 L 250 170 L 330 196 L 400 236 L 440 300 L 470 392 L 0 392 Z" fill="url(#cliff)"/>
+  <path d="M0 236 L 110 226 L 210 246 L 300 238 L 370 280 L 410 340 L 430 392 L 0 392 Z" fill="#b65a28"/>
+  <path d="M0 300 L 130 292 L 250 310 L 330 344 L 370 392 L 0 392 Z" fill="#8a3f1a"/>
+  <path d="M60 252 C 120 248 180 262 250 258 M40 318 C 110 312 200 326 290 322 M30 352 C 120 348 220 360 330 360" stroke="#7a3615" stroke-width="2" fill="none" opacity=".45"/>
+  <path d="M160 392 C 160 352 180 326 210 326 C 240 326 260 352 260 392 Z" fill="#14526b"/>
+  <path d="M0 168 L 80 152 L 170 170 L 250 158 L 330 184 L 330 194 L 250 170 L 170 184 L 80 166 L 0 182 Z" fill="#6f8f3a"/>
+  </g>
+  <!-- the stack -->
+  <path d="M540 392 L 546 330 L 560 300 L 584 292 L 600 318 L 608 392 Z" fill="url(#cliff)"/>
+  <path d="M556 392 L 562 344 L 574 326 L 590 332 L 594 392 Z" fill="#8a3f1a"/>
+  <path d="M556 298 L 584 290 L 600 316 L 596 318 L 582 296 L 558 302 Z" fill="#6f8f3a"/>
+  <!-- right cliffs -->
+  <g transform="translate(0 392) scale(1 .85) translate(0 -392)">
+  <path d="M1600 214 L 1520 206 L 1440 226 L 1370 240 L 1320 290 L 1290 340 L 1270 392 L 1600 392 Z" fill="url(#cliffR)"/>
+  <path d="M1600 270 L 1500 264 L 1420 286 L 1360 330 L 1330 392 L 1600 392 Z" fill="#8a3f1a"/>
+  <path d="M1420 300 C 1480 296 1540 304 1600 300 M1380 350 C 1460 344 1530 354 1600 350" stroke="#6e3012" stroke-width="2" fill="none" opacity=".45"/>
+  <path d="M1600 202 L 1520 194 L 1440 214 L 1370 228 L 1370 238 L 1440 224 L 1520 204 L 1600 212 Z" fill="#6f8f3a"/>
+  </g>
+  <!-- gulls -->
+  <path d="M760 250 q 10 -10 20 0 q 10 -10 20 0 M820 282 q 7 -7 14 0 q 7 -7 14 0 M700 296 q 6 -6 12 0 q 6 -6 12 0" stroke="#3d4a52" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/>
+</svg>

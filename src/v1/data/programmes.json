@@ -1,0 +1,222 @@
+{
+  "about": "Algarve Evolution's work, on its three pillars, as its own site describes it and as reported. Each programme lists its sources. Text CC BY 4.0.",
+  "pillars": [
+    {
+      "id": "education",
+      "name": {
+        "en": "Education",
+        "pt": "Educação",
+        "es": "Educación",
+        "fr": "Éducation"
+      },
+      "programmes": [
+        {
+          "id": "ualg-entrepreneurship",
+          "name": {
+            "en": "Entrepreneurship programme with the University of the Algarve",
+            "pt": "Programa de empreendedorismo com a Universidade do Algarve",
+            "es": "Programa de emprendimiento con la Universidad del Algarve",
+            "fr": "Programme d'entrepreneuriat avec l'Université de l'Algarve"
+          },
+          "summary": {
+            "en": "Students on the Penha, Gambelas and Portimão campuses develop and present ideas on the Lean Model Canvas.",
+            "pt": "Estudantes dos campi da Penha, Gambelas e Portimão desenvolvem e apresentam ideias com o Lean Model Canvas.",
+            "es": "Estudiantes de los campus de Penha, Gambelas y Portimão desarrollan y presentan ideas con el Lean Model Canvas.",
+            "fr": "Des étudiants des campus de Penha, Gambelas et Portimão développent et présentent des idées avec le Lean Model Canvas."
+          },
+          "sources": [
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        },
+        {
+          "id": "the-company",
+          "name": {
+            "en": "\"The Company\", with Junior Achievement Portugal",
+            "pt": "\"A Empresa\", com a Junior Achievement Portugal",
+            "es": "\"The Company\", con Junior Achievement Portugal",
+            "fr": "« The Company », avec Junior Achievement Portugal"
+          },
+          "summary": {
+            "en": "Secondary-school students create and run a simulated company.",
+            "pt": "Alunos do ensino secundário criam e gerem uma empresa simulada.",
+            "es": "Alumnos de secundaria crean y gestionan una empresa simulada.",
+            "fr": "Des élèves du secondaire créent et gèrent une entreprise simulée."
+          },
+          "sources": [
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        },
+        {
+          "id": "buildathons",
+          "name": {
+            "en": "Buildathons",
+            "pt": "Buildathons",
+            "es": "Buildathons",
+            "fr": "Buildathons"
+          },
+          "summary": {
+            "en": "Days of building with AI, such as Vibathon Algarve 2026.",
+            "pt": "Dias para construir com IA, como o Vibathon Algarve 2026.",
+            "es": "Jornadas para construir con IA, como Vibathon Algarve 2026.",
+            "fr": "Des journées pour construire avec l'IA, comme Vibathon Algarve 2026."
+          },
+          "sources": [
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "startups",
+      "name": {
+        "en": "Startups and smaller companies",
+        "pt": "Startups e PME",
+        "es": "Startups y pymes",
+        "fr": "Startups et PME"
+      },
+      "programmes": [
+        {
+          "id": "founder2founder",
+          "name": {
+            "en": "Founder2Founder",
+            "pt": "Founder2Founder",
+            "es": "Founder2Founder",
+            "fr": "Founder2Founder"
+          },
+          "summary": {
+            "en": "A six-month growth programme for founder-led companies with customers and revenue, launched in October 2026: eight companies chosen from 41 applications, each with a mentor and three measurable targets. It takes no equity.",
+            "pt": "Um programa de crescimento de seis meses para empresas lideradas pelos fundadores, já com clientes e receitas, lançado em outubro de 2026: oito empresas escolhidas entre 41 candidaturas, cada uma com um mentor e três metas mensuráveis. Não fica com participação no capital.",
+            "es": "Un programa de crecimiento de seis meses para empresas dirigidas por sus fundadores, con clientes e ingresos, lanzado en octubre de 2026: ocho empresas elegidas entre 41 candidaturas, cada una con un mentor y tres metas medibles. No toma participación en el capital.",
+            "fr": "Un programme de croissance de six mois pour des entreprises dirigées par leurs fondateurs, qui ont déjà des clients et des revenus, lancé en octobre 2026 : huit entreprises choisies parmi 41 candidatures, chacune avec un mentor et trois objectifs mesurables. Il ne prend aucune participation au capital."
+          },
+          "sources": [
+            "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html",
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        },
+        {
+          "id": "incubator",
+          "name": {
+            "en": "Incubator",
+            "pt": "Incubadora",
+            "es": "Incubadora",
+            "fr": "Incubateur"
+          },
+          "summary": {
+            "en": "Recognised by Startup Portugal in January 2026. Early-stage incubation, from validation to first customers, is planned for 2027.",
+            "pt": "Reconhecida pela Startup Portugal em janeiro de 2026. A incubação em fase inicial, da validação aos primeiros clientes, está prevista para 2027.",
+            "es": "Reconocida por Startup Portugal en enero de 2026. La incubación en fase inicial, de la validación a los primeros clientes, está prevista para 2027.",
+            "fr": "Reconnu par Startup Portugal en janvier 2026. L'incubation en phase de démarrage, de la validation aux premiers clients, est prévue pour 2027."
+          },
+          "sources": [
+            "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html",
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        },
+        {
+          "id": "inova-algarve-3",
+          "name": {
+            "en": "INOVA Algarve 3.0",
+            "pt": "INOVA Algarve 3.0",
+            "es": "INOVA Algarve 3.0",
+            "fr": "INOVA Algarve 3.0"
+          },
+          "summary": {
+            "en": "A consortium programme helping the region's tourism businesses understand AI and robotics, with a pilot of free, personalised consultancy for 20 of them.",
+            "pt": "Um programa em consórcio que ajuda as empresas de turismo da região a compreender a IA e a robótica, com um piloto de consultoria gratuita e personalizada para 20 delas.",
+            "es": "Un programa en consorcio que ayuda a las empresas turísticas de la región a entender la IA y la robótica, con un piloto de consultoría gratuita y personalizada para 20 de ellas.",
+            "fr": "Un programme en consortium qui aide les entreprises touristiques de la région à comprendre l'IA et la robotique, avec un pilote de conseil gratuit et personnalisé pour 20 d'entre elles."
+          },
+          "sources": [
+            "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html",
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        },
+        {
+          "id": "startup-showcase",
+          "name": {
+            "en": "Annual startup showcase",
+            "pt": "Mostra anual de startups",
+            "es": "Muestra anual de startups",
+            "fr": "Vitrine annuelle des startups"
+          },
+          "summary": {
+            "en": "Startups present to experienced professionals and investors.",
+            "pt": "Startups apresentam-se a profissionais experientes e a investidores.",
+            "es": "Las startups se presentan ante profesionales experimentados e inversores.",
+            "fr": "Des startups se présentent devant des professionnels expérimentés et des investisseurs."
+          },
+          "sources": [
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": {
+        "en": "The ecosystem",
+        "pt": "O ecossistema",
+        "es": "El ecosistema",
+        "fr": "L'écosystème"
+      },
+      "programmes": [
+        {
+          "id": "algarve-digital-innovators",
+          "name": {
+            "en": "Algarve Digital Innovators",
+            "pt": "Algarve Digital Innovators",
+            "es": "Algarve Digital Innovators",
+            "fr": "Algarve Digital Innovators"
+          },
+          "summary": {
+            "en": "A network that has mapped 24 digital communities across the region's 16 municipalities, with a development plan to 2030 that depends on funding.",
+            "pt": "Uma rede que mapeou 24 comunidades digitais nos 16 municípios da região, com um plano de desenvolvimento até 2030 que depende de financiamento.",
+            "es": "Una red que ha mapeado 24 comunidades digitales en los 16 municipios de la región, con un plan de desarrollo hasta 2030 que depende de la financiación.",
+            "fr": "Un réseau qui a recensé 24 communautés numériques dans les 16 communes de la région, avec un plan de développement jusqu'en 2030 qui dépend de financements."
+          },
+          "sources": [
+            "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html",
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        },
+        {
+          "id": "algarve-tech-hub-summit",
+          "name": {
+            "en": "Algarve Tech Hub Summit",
+            "pt": "Algarve Tech Hub Summit",
+            "es": "Algarve Tech Hub Summit",
+            "fr": "Algarve Tech Hub Summit"
+          },
+          "summary": {
+            "en": "Co-organised with the University of the Algarve and Algarve STP.",
+            "pt": "Coorganizada com a Universidade do Algarve e o Algarve STP.",
+            "es": "Coorganizada con la Universidad del Algarve y Algarve STP.",
+            "fr": "Coorganisé avec l'Université de l'Algarve et Algarve STP."
+          },
+          "sources": [
+            "https://promptugal.news/events/algarve-tech-hub-summit-2025/index.html"
+          ]
+        },
+        {
+          "id": "ccdr-digital-platform",
+          "name": {
+            "en": "Digitalisation and ICT platform for CCDR Algarve",
+            "pt": "Plataforma de digitalização e TIC da CCDR Algarve",
+            "es": "Plataforma de digitalización y TIC de la CCDR Algarve",
+            "fr": "Plateforme de digitalisation et TIC de la CCDR Algarve"
+          },
+          "summary": {
+            "en": "Leading the platform that co-creates a regional collaborative plan.",
+            "pt": "Lidera a plataforma que cocria um plano colaborativo regional.",
+            "es": "Lidera la plataforma que cocrea un plan colaborativo regional.",
+            "fr": "Pilote la plateforme qui élabore en commun un plan collaboratif régional."
+          },
+          "sources": [
+            "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+item,category,unit,in_stock,minimum,supplier,supplier_phone,order_day,price_eur,last_ordered
+Olive oil (5 L),Pantry,can,3,4,Lagar do Sul (simulated),+351 000 000 001,Monday,32.50,2026-10-20
+Rice (Carolino 5 kg),Pantry,bag,6,4,Mercearia Faro (simulated),+351 000 000 002,Monday,9.80,2026-10-13
+Sardines (fresh),Fish,kg,0,8,Lota de Olhão (simulated),+351 000 000 003,Daily,7.20,2026-10-30
+Clams,Fish,kg,2,5,Ria Formosa Bivalves (simulated),+351 000 000 004,Tuesday,14.00,2026-10-28
+Potatoes,Vegetables,kg,25,20,Horta da Serra (simulated),+351 000 000 005,Wednesday,0.90,2026-10-22
+Tomatoes,Vegetables,kg,6,10,Horta da Serra (simulated),+351 000 000 005,Wednesday,1.80,2026-10-29
+Vinho verde (house),Drinks,bottle,18,24,Adega Algarvia (simulated),+351 000 000 006,Friday,4.20,2026-10-24
+Coffee beans,Drinks,kg,2,3,Torrefação Loulé (simulated),+351 000 000 007,Friday,16.00,2026-10-17
+Lemons,Vegetables,kg,4,3,Horta da Serra (simulated),+351 000 000 005,Wednesday,1.20,2026-10-29
+Napkins,Supplies,pack,9,6,Papelaria Central (simulated),+351 000 000 008,Monthly,3.50,2026-10-01

@@ -1,0 +1,62 @@
+{
+  "about": "Proposals written for Algarve Evolution by the SGit Newsroom on 31 October 2026. They are proposals, not Algarve Evolution's programmes, and nothing in them is agreed. Text CC BY 4.0.",
+  "proposals": [
+    {
+      "id": "spreadsheet-to-app",
+      "status": "proposal",
+      "name": {
+        "en": "Spreadsheet to App sessions",
+        "pt": "Sessões Da folha de cálculo à aplicação",
+        "es": "Sesiones «De la hoja de cálculo a la app»",
+        "fr": "Sessions « Du tableur à l'app »"
+      },
+      "summary": {
+        "en": "A session programme: bring a spreadsheet from your work, with dummy data, and leave with an app. Five example spreadsheets and five prompts for anyone who arrives without one.",
+        "pt": "Um programa de sessões: traga uma folha de cálculo do seu trabalho, com dados fictícios, e saia com uma aplicação. Cinco folhas de exemplo e cinco instruções para quem chegar sem nenhuma.",
+        "es": "Un programa de sesiones: traiga una hoja de cálculo de su trabajo, con datos ficticios, y salga con una aplicación. Cinco hojas de cálculo de ejemplo y cinco instrucciones para quien llegue sin ninguna.",
+        "fr": "Un programme de sessions : apportez un tableur de votre travail, avec des données fictives, et repartez avec une application. Cinq tableurs d'exemple et cinq consignes pour qui arrive sans."
+      },
+      "sources": [
+        "https://newsroom.sgit.ai/articles/spreadsheet-to-app-sessions.html"
+      ]
+    },
+    {
+      "id": "talent-map",
+      "status": "proposal",
+      "name": {
+        "en": "An Algarve talent map",
+        "pt": "Um mapa de talento do Algarve",
+        "es": "Un mapa de talento del Algarve",
+        "fr": "Une carte des talents de l'Algarve"
+      },
+      "summary": {
+        "en": "Turn the association's mapping of services, mentors and investors into a public matchmaking site. Consent first: nobody is listed until they have seen their entry and said yes.",
+        "pt": "Transformar o levantamento de serviços, mentores e investidores da associação num site público de contactos. Consentimento primeiro: ninguém é publicado sem ver a sua entrada e dizer que sim.",
+        "es": "Convertir el mapeo de servicios, mentores e inversores de la asociación en un sitio público para poner en contacto a unos y otros. El consentimiento primero: nadie aparece hasta haber visto su ficha y haber dicho que sí.",
+        "fr": "Transformer le recensement des services, mentors et investisseurs de l'association en un site public de mise en relation. Le consentement d'abord : personne n'est inscrit avant d'avoir vu sa fiche et dit oui."
+      },
+      "sources": [
+        "https://newsroom.sgit.ai/articles/an-algarve-talent-map.html"
+      ]
+    },
+    {
+      "id": "sell-to-the-problem",
+      "status": "proposal",
+      "name": {
+        "en": "Match businesses with providers when their first app needs help",
+        "pt": "Ligar empresas a fornecedores quando a primeira aplicação precisa de ajuda",
+        "es": "Poner en contacto a las empresas con proveedores cuando su primera aplicación necesita ayuda",
+        "fr": "Mettre en relation les entreprises et les prestataires quand leur première application a besoin d'aide"
+      },
+      "summary": {
+        "en": "Encourage companies to build their own first apps, then match them with the region's service providers when five or fifty people need to use them.",
+        "pt": "Incentivar as empresas a construir as suas primeiras aplicações e ligá-las aos fornecedores da região quando cinco ou cinquenta pessoas precisarem de as usar.",
+        "es": "Animar a las empresas a crear sus primeras aplicaciones y ponerlas en contacto con los proveedores de servicios de la región cuando cinco o cincuenta personas necesiten usarlas.",
+        "fr": "Encourager les entreprises à créer leurs premières applications, puis les mettre en relation avec les prestataires de la région quand cinq ou cinquante personnes doivent les utiliser."
+      },
+      "sources": [
+        "https://newsroom.sgit.ai/articles/sell-to-the-companies-that-already-have-the-problem.html"
+      ]
+    }
+  ]
+}

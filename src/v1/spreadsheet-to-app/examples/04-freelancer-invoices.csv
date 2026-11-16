@@ -1,0 +1,7 @@
+invoice,client,project,issued,due,amount_eur,vat_pct,paid_on,notes
+2026-031,Client A (simulated),Website refresh,2026-09-05,2026-10-05,1200,23,2026-10-02,
+2026-032,Client B (simulated),Logo and cards,2026-09-18,2026-10-18,650,23,,chased once
+2026-033,Client C (simulated),Monthly social media,2026-10-01,2026-10-31,400,23,,
+2026-034,Client A (simulated),Booking page,2026-10-12,2026-11-11,900,23,,
+2026-035,Client D (simulated),Photography,2026-10-20,2026-11-19,300,23,2026-10-28,
+2026-036,Client E (simulated),Menu design,2026-10-25,2026-11-24,250,23,,

@@ -1,0 +1,335 @@
+{
+ "about": "Every source this site uses. Original sources (the organisation's own site and the press) are marked original; PrompTugal.news and the SGit Newsroom pages are secondary and list in 'primary' what they cite. Dinis Cruz, 16 November 2026: quote original sources where they can be found. Text CC BY 4.0.",
+ "sources": [
+  {
+   "url": "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+   "publisher": "SGit Newsroom",
+   "title": "Vibathon Algarve 2026: a sold-out day of building with AI at the University of the Algarve",
+   "published": "2026-10-31",
+   "read": "2026-11-16",
+   "note": "Written by a speaker at the event; Algarve Evolution's figures are its own, as published on its site on 31 October 2026.",
+   "primary": [
+    "https://www.algarveevolution.pt/about-us",
+    "https://www.algarveevolution.pt/education",
+    "https://www.algarveevolution.pt/startups-smbs",
+    "https://www.algarveevolution.pt/innovation-ecosystem",
+    "https://www.algarveevolution.pt/incubator",
+    "https://www.algarveevolution.pt/inovaalgarve",
+    "https://www.algarveevolution.pt/algarveempreende"
+   ]
+  },
+  {
+   "url": "https://newsroom.sgit.ai/articles/joining-algarve-evolution.html",
+   "publisher": "SGit Newsroom",
+   "title": "Joining Algarve Evolution",
+   "published": "2026-10-31",
+   "read": "2026-11-16",
+   "note": "The publisher's company joining as a Start member; nothing beyond the membership is agreed.",
+   "primary": [
+    "https://www.algarveevolution.pt/join-us"
+   ]
+  },
+  {
+   "url": "https://newsroom.sgit.ai/articles/an-algarve-talent-map.html",
+   "publisher": "SGit Newsroom",
+   "title": "An Algarve talent map",
+   "published": "2026-10-31",
+   "read": "2026-11-16",
+   "note": "A proposal, with a prototype using invented people."
+  },
+  {
+   "url": "https://newsroom.sgit.ai/articles/spreadsheet-to-app-sessions.html",
+   "publisher": "SGit Newsroom",
+   "title": "Spreadsheet to App: a session programme for Algarve Evolution",
+   "published": "2026-10-31",
+   "read": "2026-11-16",
+   "note": "A proposal."
+  },
+  {
+   "url": "https://newsroom.sgit.ai/articles/sell-to-the-companies-that-already-have-the-problem.html",
+   "publisher": "SGit Newsroom",
+   "title": "Sell to the companies that already have the problem",
+   "published": "2026-10-31",
+   "read": "2026-11-16",
+   "note": "A proposal."
+  },
+  {
+   "url": "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html",
+   "publisher": "PrompTugal.news",
+   "title": "Lisbon's startup awards, and the Algarve's plan beyond tourism",
+   "published": "2026-11-06",
+   "read": "2026-11-16",
+   "note": "Figures are the organisation's own, as Portugal Startup News reports them; targets are plans.",
+   "primary": [
+    "https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/"
+   ]
+  },
+  {
+   "url": "https://promptugal.news/articles/lagos-ai-community-not-a-cluster.html",
+   "publisher": "PrompTugal.news",
+   "title": "Lagos has an AI crowd, not yet an AI industry",
+   "published": "2026-11-15",
+   "read": "2026-11-16",
+   "primary": [
+    "https://www.barlavento.pt/lagos-foi-capital-da-inovacao-no-algarve-tech-hub-summit/"
+   ]
+  },
+  {
+   "url": "https://promptugal.news/articles/faro-ai-gathers-around-the-university.html",
+   "publisher": "PrompTugal.news",
+   "title": "In Faro, the AI gathers around the university",
+   "published": "2026-11-16",
+   "read": "2026-11-16"
+  },
+  {
+   "url": "https://promptugal.news/organisations/algarve-evolution/index.html",
+   "publisher": "PrompTugal.news",
+   "title": "Algarve Evolution (organisation page)",
+   "read": "2026-11-16",
+   "primary": [
+    "https://www.algarveevolution.pt/"
+   ]
+  },
+  {
+   "url": "https://promptugal.news/events/impact-algarve-2024/index.html",
+   "publisher": "PrompTugal.news",
+   "title": "Impact Algarve 2024 (event page)",
+   "read": "2026-11-16",
+   "primary": [
+    "https://postal.pt/algarve/impact-algarve-juntou-principais-intervenientes-locais-para-debaterem-o-futuro-da-regiao/"
+   ]
+  },
+  {
+   "url": "https://promptugal.news/events/algarve-digital-innovators-launch-2025/index.html",
+   "publisher": "PrompTugal.news",
+   "title": "Algarve Digital Innovators: the launch in Lagos (event page)",
+   "read": "2026-11-16",
+   "primary": [
+    "https://postal.pt/algarve/lagos-lanca-rede-algarve-digital-innovators-para-impulsionar-inovacao-e-startups/"
+   ]
+  },
+  {
+   "url": "https://promptugal.news/events/algarve-tech-hub-summit-2025/index.html",
+   "publisher": "PrompTugal.news",
+   "title": "Algarve Tech Hub Summit 2025 (event page)",
+   "read": "2026-11-16",
+   "primary": [
+    "https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/"
+   ]
+  },
+  {
+   "url": "https://promptugal.news/events/algarve-startups-at-web-summit-2025/index.html",
+   "publisher": "PrompTugal.news",
+   "title": "Algarve startups at Web Summit Lisbon 2025 (event page)",
+   "read": "2026-11-16",
+   "primary": [
+    "https://anje.pt/wp-content/uploads/Regulamento-Participacao-Startups-Websummit-2025_01_09_2025_Paginado-versao-EN.pdf"
+   ]
+  },
+  {
+   "url": "https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/",
+   "publisher": "Portugal Startup News",
+   "title": "Algarve Evolution aims to support 500 companies and help create 150 startups by 2032 in push beyond tourism",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "psn",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data).",
+   "published": "2026-11-01"
+  },
+  {
+   "url": "https://www.algarveevolution.pt/",
+   "publisher": "Algarve Evolution",
+   "title": "algarveevolution.pt, the association's own site",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "site",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://postal.pt/algarve/lagos-lanca-rede-algarve-digital-innovators-para-impulsionar-inovacao-e-startups/",
+   "publisher": "Postal do Algarve",
+   "title": "Lagos launches the Algarve Digital Innovators network",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "adi",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data).",
+   "published": "2025-09-11"
+  },
+  {
+   "url": "https://postal.pt/algarve/venture-lab-by-algarvestp-seleciona-12-empresas-para-acelerar-crescimento/",
+   "publisher": "Postal do Algarve",
+   "title": "postal.pt, Venture Lab by AlgarveSTP",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "venture",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://postal.pt/algarve/maior-evento-de-inovacao-e-tecnologia-do-algarve-esta-a-chegar-a-albufeira/",
+   "publisher": "Postal do Algarve",
+   "title": "postal.pt, 18 Oct 2024, Algarve Tech Hub Summit in Albufeira",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "aths24",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://postal.pt/algarve/mais-de-500-pessoas-participaram-na-algarve-tech-hub-summit-2025-em-lagos/",
+   "publisher": "Postal do Algarve",
+   "title": "postal.pt, Algarve Tech Hub Summit 2025 in Lagos",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "aths25",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://anje.pt/wp-content/uploads/Regulamento-Participacao-Startups-Websummit-2025_01_09_2025_Paginado-versao-EN.pdf",
+   "publisher": "ANJE",
+   "title": "ANJE, regulation of the 2025 Web Summit competition",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "ws25",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.portugalresident.com/algarve-to-be-represented-by-24-startups-at-web-summit-2025/",
+   "publisher": "Portugal Resident",
+   "title": "Portugal Resident, 24 Algarve startups at Web Summit 2025",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "ws25news",
+   "note": "Link moved on 2026-11-16 from the publisher's staging host (stg.) to its public site, same path; the public site refused automated checks (403), so it is not verified. Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.meetup.com/grow-algarve-meetup/",
+   "publisher": "Meetup",
+   "title": "Meetup, Grow Algarve Meetup",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "meetup",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://luma.com/ydjwl98z",
+   "publisher": "Luma",
+   "title": "Luma, Algarve Tech 2025 Wrap Party",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "wrap",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://luma.com/futhhudo",
+   "publisher": "Luma",
+   "title": "Luma, Algarve Tech Afterwork",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "afterwork",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.algarveevolution.pt/event/gdg-lagos-182/register",
+   "publisher": "Algarve Evolution",
+   "title": "algarveevolution.pt, DevFest Lagos 2026",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "devfest",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.algarveevolution.pt/event/tourism-management-computing-technologies-international-conference-149/register",
+   "publisher": "Algarve Evolution",
+   "title": "algarveevolution.pt, TMCT'26",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "tmct",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.algarveevolution.pt/event/private-wealth-investment-gathering-180/register",
+   "publisher": "Algarve Evolution",
+   "title": "algarveevolution.pt, Private Wealth and Investment Gathering",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "wealth",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.barlavento.pt/mais/algarve-evolution-vai-promover-empresas-de-vanguarda-tecnologica",
+   "publisher": "Barlavento",
+   "title": "Barlavento, 20 Sep 2019, the presentation",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "pres19",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://postal.pt/nacional/empresas-juntam-se-para-fazer-do-algarve-um-destino-mais-tecnologico-e-competitivo/",
+   "publisher": "Postal do Algarve",
+   "title": "postal.pt, 14 Sep 2019",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "post19",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://econews.pt/2022/02/09/algarve-to-host-first-tech-hub-summit-to-attract-investors/",
+   "publisher": "econews.pt",
+   "title": "econews.pt, 9 Feb 2022, the first Tech Hub Summit",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "econews22",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://postal.pt/algarve/impact-algarve-juntou-principais-intervenientes-locais-para-debaterem-o-futuro-da-regiao/",
+   "publisher": "Postal do Algarve",
+   "title": "Impact Algarve brought together the region's main local players",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "impact",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data).",
+   "published": "2024-06-06"
+  },
+  {
+   "url": "https://postal.pt/economia/joaquim-nascimento-e-o-novo-presidente-da-algarve-evolution/",
+   "publisher": "Postal do Algarve",
+   "title": "postal.pt, 11 Jul 2024",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "pres24",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://www.barlavento.pt/?p=397449",
+   "publisher": "Barlavento",
+   "title": "Barlavento, 20 Apr 2026",
+   "read": "2026-11-06",
+   "original": true,
+   "key": "bar26",
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026 (PrompTugal.news ecosystem data)."
+  },
+  {
+   "url": "https://promptugal.news/portugal/algarve-evolution/",
+   "publisher": "PrompTugal.news",
+   "title": "Algarve Evolution (the organisation's page, with its executive director's paragraph on the goals)",
+   "read": "2026-11-16",
+   "original": false
+  },
+  {
+   "url": "https://www.algarveevolution.pt/join-us",
+   "publisher": "Algarve Evolution",
+   "title": "Join us: membership categories",
+   "read": "2026-11-06",
+   "original": true
+  },
+  {
+   "url": "https://www.amal.pt",
+   "publisher": "AMAL",
+   "title": "AMAL, the Algarve intermunicipal community: its 16 member municipalities",
+   "read": "2026-11-06",
+   "original": true,
+   "note": "Read by researcher@PrompTugal.dinis on 6 November 2026."
+  }
+ ]
+}
