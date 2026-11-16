@@ -1,0 +1,12 @@
+Form: Join Algarve Evolution (web form on the site, simulated)
+Submitted: 2026-11-15
+Name: Person 84 (simulated)
+Email: person84@association05.example.invalid
+Organisation: Business association 05 (simulated)
+Type: Association
+Town: Loulé
+Members: 60 local shops
+Message: We would like to join as an association and take part in the digital programmes.
+List us in the directory: no
+
+This form submission is invented for the prototype. Nobody sent it.

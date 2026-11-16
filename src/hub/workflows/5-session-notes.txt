@@ -1,0 +1,23 @@
+From: Mentor 06 (simulated) <mentor06@example.invalid>
+To: sessions@hub.example.invalid
+Date: 2026-11-12
+Subject: Session notes: Startup 14 (simulated), 12 November
+
+Hi team,
+
+Had our one-to-one today with Startup 14 (simulated), online.
+Topic: hiring the first employee (a support engineer).
+
+Notes: they can afford one hire from January if the two pilots convert. We compared a
+full-time contract with a part-time contractor. The founders disagree on timing; worth a
+check-in from the programme team.
+
+Actions:
+- Write the job description by 30 November
+- Ask two pilot customers for a decision before 15 December
+
+Next session: 10 December 2026, 10:00, online.
+
+Mentor 06 (simulated)
+
+This email is invented for the prototype. Nobody sent it.

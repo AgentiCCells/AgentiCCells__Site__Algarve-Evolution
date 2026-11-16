@@ -1,0 +1,5 @@
+Nome;Email;Concelho;Interesses;Consentimento;Comunidade
+Person 102 (simulated);person102@example.invalid;Lagos;Web development;sim;GDG Lagos (Google Developer Group)
+Person 103 (simulated);person103@example.invalid;Lagos;Mobile apps;sim;GDG Lagos (Google Developer Group)
+Person 04 (simulated);person04@example.invalid;Lagos;IoT and sensors;sim;GDG Lagos (Google Developer Group)
+Person 104 (simulated);person104@example.invalid;Aljezur;Data engineering;;GDG Lagos (Google Developer Group)

@@ -1,0 +1,8 @@
+Weekly digest, as the cell's schedule starts it (every Monday at 08:00, simulated)
+Week starting: 2026-11-16
+Audience: members and the Algarve Digital Innovators mailing list (opt-in only)
+Look ahead: 14 days
+
+Items that arrived by email this week (not in Odoo yet):
+- Community 01 (simulated) runs an open evening on AI tools for small shops in Loulé on 26 November. (from an email, simulated)
+- Person 95 (simulated) asks us to share a job post for a junior developer. (from an email, simulated)

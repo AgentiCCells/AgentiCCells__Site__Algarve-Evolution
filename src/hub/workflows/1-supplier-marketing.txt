@@ -1,0 +1,18 @@
+From: Person 82 (simulated) <person82@example.invalid>
+To: hello@hub.example.invalid
+Date: 2026-11-14
+Subject: Marketing and websites for your startups
+
+Hi there,
+
+I am a freelance designer in Lagos. I provide brand design, websites and online shop set-up
+(e-commerce), and social media marketing. Happy to work with tourism and e-commerce startups,
+from idea stage to early revenue.
+
+Who would be a good fit for this?
+
+Best,
+Person 82 (simulated)
+Freelancer, Lagos
+
+This email is invented for the prototype. Nobody sent it.

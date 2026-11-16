@@ -1,0 +1,17 @@
+From: Mentor 02 (simulated) <mentor02@example.invalid>
+To: sessions@hub.example.invalid
+Date: 2026-11-13
+Subject: Clinic with Startup 14 (simulated)
+
+Hello,
+
+Quick note: I ran a pricing clinic with Startup 14 (simulated) yesterday at the hub in Faro.
+
+Notes: they want to raise prices by 20%. Their finance person can be reached on +351 900 000 099
+if you need the numbers.
+
+Next session: 2026-12-02
+
+Mentor 02 (simulated)
+
+This email is invented for the prototype. Nobody sent it.

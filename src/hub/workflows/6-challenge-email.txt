@@ -1,0 +1,20 @@
+From: Founder of Startup 12 (simulated) <founder@startup12.example.invalid>
+To: challenges@hub.example.invalid
+Date: 2026-11-16
+Subject: Energy and water readings for 40 holiday flats
+
+Hello,
+
+We manage energy dashboards for holiday flats. A group of owners in Quarteira wants to see
+the energy and water use of 40 flats every month, without changing their meters.
+
+What we need:
+- Sensors that clip onto the existing meters and send readings over the network
+- A data pipeline and a simple dashboard with a monthly report per owner
+- Data stored in the EU, GDPR-compliant
+
+Our budget is between 7,000 and 11,000 EUR, and we would like it running by the end of March.
+
+Founder of Startup 12 (simulated)
+
+This email is invented for the prototype. Nobody sent it.

@@ -1,0 +1,18 @@
+From: Person 81 (simulated) <person81@supplier31.example.invalid>
+To: hello@hub.example.invalid
+Date: 2026-11-16
+Subject: We help startups with security and GDPR. Who should I talk to?
+
+Hello,
+
+I run a small consultancy in Tavira. We provide cybersecurity reviews, GDPR and data protection
+set-up, and help with ISO 27001 readiness for startups. We mostly work with pre-seed and seed
+teams, especially in health tech and AI, and we keep prices low for early-stage companies.
+
+Who should I talk to at Algarve Evolution? Or which of your startups would be a good fit?
+
+Thank you,
+Person 81 (simulated)
+Supplier Co 31 (simulated), Tavira
+
+This email is invented for the prototype. Nobody sent it.

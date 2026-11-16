@@ -1,0 +1,24 @@
+From: Funder contact (simulated) <reports@funder01.example.invalid>
+To: hello@hub.example.invalid
+Date: 2026-11-16
+Subject: Quarterly figures for the co-financed acceleration programme
+
+Dear Algarve Evolution team,
+
+For the co-financed project, please send the figures for the period 1 July 2026 to
+30 September 2026 for the acceleration programme:
+
+- number of companies supported
+- mentoring sessions held, by type
+- jobs in the supported companies at the start and the end of the period
+- revenue of the supported companies at the start and the end of the period
+- funding raised in the period
+- events held and their participants
+- number of companies led by women
+
+We need the report by 15 December 2026.
+
+Funder contact (simulated)
+Regional programme office (simulated)
+
+This email is invented for the prototype. Nobody sent it.

@@ -1,0 +1,19 @@
+From: Person 83 (simulated) <person83@startup41.example.invalid>
+To: hello@hub.example.invalid
+Date: 2026-11-16
+Subject: Membership for our startup
+
+Good morning,
+
+I would like Startup 41 (simulated) to become a member of Algarve Evolution. We are a startup
+at idea stage in Faro, working on an app for local markets. Two founders, no revenue yet.
+Website: https://startup41.example.invalid
+VAT number (NIF): 500000000
+
+Please let me know the next steps and how to pay.
+We are happy to be listed in the hub directory.
+
+Person 83 (simulated)
+Co-founder, Startup 41 (simulated)
+
+This email is invented for the prototype. Nobody sent it.

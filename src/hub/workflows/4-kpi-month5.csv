@@ -1,0 +1,9 @@
+Company,Month,Revenue (EUR),Customers,Team size,Funding (EUR),Product stage,Submitted by
+Startup 10 (simulated),5,19900,95,3,250000,launched,founder@startup10.example.invalid
+Startup 11 (simulated),5,3700,12,2,10000,scaling,founder@startup11.example.invalid
+Startup 12 (simulated),5,7100,90,4,10000,scaling,founder@startup12.example.invalid
+Startup 13 (simulated),5,1200,6,9,80000,prototype,founder@startup13.example.invalid
+Startup 14 (simulated),5,12900,41,3,5000,launched,founder@startup14.example.invalid
+Startup 15 (simulated),5,,,,,,founder@startup15.example.invalid
+Startup 16 (simulated),5,3800,10,4,10000,launched,founder@startup16.example.invalid
+Startup 22 (simulated),5,1000,3,2,0,idea,someone@example.invalid

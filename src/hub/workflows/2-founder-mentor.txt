@@ -1,0 +1,18 @@
+From: Founder of Startup 13 (simulated) <founder@startup13.example.invalid>
+To: hello@hub.example.invalid
+Date: 2026-11-16
+Subject: Looking for a mentor on data protection and security
+
+Hello,
+
+We are Startup 13 (simulated), in the acceleration programme. Before our first clinic pilot
+we need someone who knows cybersecurity and data protection, and ideally the legal side too
+(contracts with clinics, GDPR). A second person for fundraising would also help: we plan to
+talk to investors in the spring.
+
+Can you suggest a mentor or an expert?
+
+Thanks,
+Founder of Startup 13 (simulated), Tavira
+
+This email is invented for the prototype. Nobody sent it.

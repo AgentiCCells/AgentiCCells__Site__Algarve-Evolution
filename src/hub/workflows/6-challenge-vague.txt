@@ -1,0 +1,16 @@
+From: Person 85 (simulated) <person85@association02.example.invalid>
+To: challenges@hub.example.invalid
+Date: 2026-11-15
+Subject: Help with our restaurants' bookings
+
+Hi,
+
+I chair Restaurant association 02 (simulated) in Olhão. Our members lose bookings because
+nobody answers the phone at lunchtime. Could somebody build something to take bookings
+automatically, maybe a chatbot on WhatsApp?
+
+We do not know what it should cost.
+
+Person 85 (simulated)
+
+This email is invented for the prototype. Nobody sent it.

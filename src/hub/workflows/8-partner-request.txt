@@ -1,0 +1,18 @@
+From: Partner contact (simulated) <projects@partner07.example.invalid>
+To: hello@hub.example.invalid
+Date: 2026-11-15
+Subject: Figures and participant list for our joint report
+
+Hello,
+
+For our joint report on the incubation programme, could you send the figures for
+1 April 2026 to 30 September 2026: companies supported, mentoring sessions, jobs and revenue
+at the start and the end, and events held.
+
+Please also attach the list of participants with their names and email addresses, so we
+can survey them ourselves.
+
+Partner contact (simulated)
+Project partner 07 (simulated)
+
+This email is invented for the prototype. Nobody sent it.

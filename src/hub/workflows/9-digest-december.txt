@@ -1,0 +1,7 @@
+Weekly digest, as the cell's schedule starts it (every Monday at 08:00, simulated)
+Week starting: 2026-12-07
+Audience: members only (opt-in)
+Look ahead: 21 days
+
+Items that arrived by email this week (not in Odoo yet):
+- none
