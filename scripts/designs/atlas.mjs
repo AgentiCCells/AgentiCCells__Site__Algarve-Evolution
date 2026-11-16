@@ -339,7 +339,7 @@ ${chrome.banner}
     <h2 id="h-goals">${esc(t(v.goals_title))}</h2>
     <ol class="goals">${v.goals.map(g => `<li><strong>${esc(pt && g.value_pt ? g.value_pt : g.value)}</strong><span>${esc(t(g.label))}</span></li>`).join('')}</ol>
     <p class="note">${esc(t(v.goals_note))}</p>${cite(v.goals_sources)}
-    <figure class="quote"><blockquote><p>${esc(t(q.text))}</p></blockquote><figcaption><strong>${esc(person.name)}</strong>, ${esc(t(person.role))} · <time datetime="${q.date}">${esc(h.date(q.date))}</time>${pt && q.translation_note?.pt ? ` <span class="muted">${esc(q.translation_note.pt)}</span>` : ''}${cite(q.sources)}</figcaption></figure>
+    <figure class="quote"><blockquote><p>${esc(t(q.text))}</p></blockquote><figcaption><strong>${esc(person.name)}</strong>, ${esc(t(person.role))} · <time datetime="${q.date}">${esc(h.date(q.date))}</time>${pt && q.translation_note?.pt ? ` · <span class="tnote">${esc(q.translation_note.pt)}</span>` : ''}${cite(q.sources)}</figcaption></figure>
   </div></section>
 
   ${S('pillars', esc(W.pillarsTitle), `<p class="intro">${esc(t(v.pillars_intro))}</p><div class="pillars">${data.programmes.pillars.map((p, i) => `<section class="pillar" aria-labelledby="pl-${p.id}"><p class="pillar-n">${['I', 'II', 'III'][i]}</p><h3 id="pl-${p.id}">${esc(t(p.name))}</h3><ul>${p.programmes.map(g => `<li id="prog-${g.id}"><h4>${esc(t(g.name))}</h4><p>${esc(t(g.summary))}</p>${cite(g.sources)}</li>`).join('')}</ul></section>`).join('')}</div>`)}

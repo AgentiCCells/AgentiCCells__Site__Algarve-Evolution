@@ -44,7 +44,7 @@
     if (!phone()) return f;
     const [, h] = size(), i = insets();
     const z = Math.max(f.z, Math.min(0.47, (h - i.t - i.b) / (BOX[3] - BOX[1] + 40)));
-    return { x: 650, y: (BOX[1] + BOX[3]) / 2 + 40 - ((i.t - i.b) / 2) / z, z };
+    return { x: 610, y: (BOX[1] + BOX[3]) / 2 + 40 - ((i.t - i.b) / 2) / z, z };
   }
   function clamp() {
     cam.z = Math.max(zFit * 0.85, Math.min(zFit * 10, cam.z));
@@ -173,7 +173,7 @@
     for (const a of evLinks) { const t = +a.dataset.t; a.classList.toggle('on', t <= year + 1e-6); a.classList.toggle('now', !!now && t === now.t); }
     for (const p of arcs) { const on = !!now && +p.dataset.t === now.t; if (on && !p.classList.contains('now')) { p.classList.remove('now'); void p.getBBox(); } p.classList.toggle('now', on); }
     for (const p of pips) { const t = +p.dataset.t; p.classList.toggle('on', t <= year + 1e-6); p.classList.toggle('now', !!now && t === now.t); }
-    if (atEnd) { yearEl.textContent = '2018 → 2027'; titleEl.textContent = playBtn.dataset.play; }
+    if (atEnd) { yearEl.textContent = '2018 → 2027'; titleEl.textContent = phone() ? '' : playBtn.dataset.play; }
     else { yearEl.textContent = now ? now.when.match(/\d{4}/)[0] : String(Math.floor(year)); titleEl.textContent = now ? `${now.when} · ${now.title}` : ''; }
     range.setAttribute('aria-valuetext', now ? `${now.when}: ${now.title}` : String(Math.floor(year)));
     if (!quiet && now && now.id !== lastNow && !phone()) show(now.id, { open: false });
@@ -186,7 +186,7 @@
     const i = cards.findIndex(c => c.id === lastNow);
     let j = i < 0 ? (dir > 0 ? 0 : cards.length - 1) : i + dir;
     j = Math.max(0, Math.min(cards.length - 1, j));
-    setYear(cards[j].t, { quiet: true }); show(cards[j].id, { open: phone() ? panel.classList.contains('open') : true });
+    setYear(cards[j].t, { quiet: true }); show(cards[j].id, { open: true });
   }
   $$('.sc-step').forEach(b => b.addEventListener('click', () => { stop(); stepTo(+b.dataset.step); }));
 

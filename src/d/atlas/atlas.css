@@ -296,3 +296,4 @@ html:not(.js) .atl-panel{bottom:20px}
 @media (max-width:760px){html:not(.js) .atl-panel{display:none}}
 .atl-rose{position:absolute;z-index:3;right:calc(min(380px,34vw) + 44px);top:28px;width:74px;height:74px;pointer-events:none;opacity:.9}
 @media (max-width:760px){.atl-rose{display:none}}
+.quote .tnote{color:#c9d2cf;font-style:italic}
