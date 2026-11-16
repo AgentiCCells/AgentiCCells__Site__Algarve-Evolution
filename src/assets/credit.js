@@ -89,7 +89,7 @@
     if (!list) return;
     const spent = state.entries.filter(e => e.cents < 0);
     sum.innerHTML = `<span>${L.spent} <strong>${fmt(-spent.reduce((s, e) => s + e.cents, 0))}</strong></span><span><strong>${spent.length}</strong> ${L.actions}</span>`;
-    list.innerHTML = state.entries.length ? state.entries.slice(0, 60).map(e => `<li class="${e.cents > 0 ? 'plus' : ''}"><span>${escapeHtml(e.label)}<small>${new Date(e.at).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</small></span><span>${e.cents > 0 ? '+' : '−'}${fmt(Math.abs(e.cents))}</span></li>`).join('') : `<li>${L.empty}</li>`;
+    list.innerHTML = state.entries.length ? state.entries.slice(0, 60).map(e => `<li class="${e.cents > 0 ? 'plus' : ''}"><span>${escapeHtml(e.label)}<small>${new Date(e.at).toLocaleTimeString({ en: 'en-GB', pt: 'pt-PT', es: 'es-ES', fr: 'fr-FR' }[lang] || lang, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</small></span><span>${e.cents > 0 ? '+' : '−'}${fmt(Math.abs(e.cents))}</span></li>`).join('') : `<li>${L.empty}</li>`;
   }
   function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
   function render(entry) {
