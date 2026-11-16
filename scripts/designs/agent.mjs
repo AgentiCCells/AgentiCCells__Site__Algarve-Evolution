@@ -168,7 +168,7 @@ export function render({ lang, data, h, chrome, other }) {
     data: { goals: v.goals, figures: data.figures.figures, municipalities: munis.map(m => m.name), sources: data.sources.sources.map(s => ({ url: s.url, publisher: s.publisher, title: s.title })) },
   }).replace(/</g, '\\u003c');
 
-  const orb = (cls = 'orb') => `<span class="${cls}" aria-hidden="true"><svg viewBox="0 0 40 40"><defs><radialGradient id="og-${cls}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffd27a"/><stop offset=".45" stop-color="#e8603c"/><stop offset="1" stop-color="#0e7c86"/></radialGradient></defs><circle cx="20" cy="20" r="19" fill="url(#og-${cls})"/><path d="M6 24c4-2.5 7.5 1.5 14 0s10-2.5 14 0" stroke="#fff" stroke-opacity=".85" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="20" cy="15" r="4.5" fill="#fff" fill-opacity=".92"/></svg></span>`;
+  const orb = (cls = 'orb') => `<span class="${cls}" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M6 24c4-2.5 7.5 1.5 14 0s10-2.5 14 0" stroke="#fff" stroke-opacity=".9" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="20" cy="15" r="4.5" fill="#fff" fill-opacity=".95"/></svg></span>`;
   const kbd = '<kbd>Ctrl</kbd><kbd>K</kbd>';
 
   return `<!doctype html>

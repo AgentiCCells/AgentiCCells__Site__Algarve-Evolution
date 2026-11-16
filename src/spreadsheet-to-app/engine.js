@@ -628,7 +628,7 @@
     };
     const msg = t => { const m = el.querySelector('[data-msg]'); if (m) { m.textContent = A.storeOk ? t : w.storeFail; clearTimeout(m._t); m._t = setTimeout(() => { m.textContent = ''; }, 4000); } };
     el.querySelector('[data-q]').addEventListener('input', e => { A.ui.q = e.target.value; A.ui.limit = 50; draw(); });
-    el.addEventListener('change', e => {
+    el.onchange = e => {
       if (e.target.dataset.f !== undefined) { A.ui.f[e.target.dataset.f] = e.target.value; A.ui.limit = 50; draw(); }
       if (e.target.hasAttribute('data-sort')) { const [k, d] = e.target.value.split(':'); A.ui.sort = k ? { key: k, dir: +d } : null; draw(); }
       if (e.target.hasAttribute('data-import') && e.target.files[0]) {
@@ -639,8 +639,8 @@
           A.st.rows = m2.rows; A.st.done = {}; A.changed(); list(el, A, { editable }); msg(w.imported(m2.rows.length));
         });
       }
-    });
-    el.addEventListener('click', e => {
+    };
+    el.onclick = e => {
       const b = e.target.closest('button'); if (!b || !el.contains(b)) return;
       if (b.dataset.sortk) { const k = b.dataset.sortk; A.ui.sort = A.ui.sort && A.ui.sort.key === k ? (A.ui.sort.dir === 1 ? { key: k, dir: -1 } : null) : { key: k, dir: 1 }; const s = el.querySelector('[data-sort]'); s.value = A.ui.sort ? `${A.ui.sort.key}:${A.ui.sort.dir}` : ''; draw(); }
       else if (b.hasAttribute('data-clear')) { A.ui.q = ''; A.ui.f = {}; list(el, A, { editable }); }
@@ -655,7 +655,7 @@
         if (!b.classList.contains('is-sure')) { b.classList.add('is-sure'); b.lastChild.textContent = w.resetSure; setTimeout(() => { if (b.isConnected) { b.classList.remove('is-sure'); b.lastChild.textContent = A.opts.standalone ? w.resetPub : w.reset; } }, 3500); return; }
         A.reset(); A.save(); if (A.opts.onChange) A.opts.onChange(A, 'reset'); list(el, A, { editable });
       }
-    });
+    };
     draw();
   }
   function toCSV(A) {

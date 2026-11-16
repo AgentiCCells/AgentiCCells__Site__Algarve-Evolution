@@ -132,7 +132,7 @@
     win.querySelector('[data-intro]').textContent = W.intro[step];
     win.querySelector('[data-prev]').hidden = step === 0;
     const nx = win.querySelector('[data-next]'); nx.hidden = step === 4; if (step < 4) nx.textContent = W.next(D.prompts[step + 1].title) + ' →';
-    const body = win.querySelector('[data-body]'); body.className = 's2p-stepbody s2a is-step' + (step + 1);
+    const old = win.querySelector('[data-body]'), body = document.createElement('div'); body.dataset.body = ''; body.className = 's2p-stepbody s2a is-step' + (step + 1); old.replaceWith(body);
     A.opts.onChange = (a, why) => { const rc = win.querySelector('[data-rc]'); if (rc) rc.textContent = W.rc(A.st.rows.length, A.st.cols.length); if (why === 'reset') { A.restored = false; win.querySelector('.s2p-restored')?.remove(); } };
     if (step === 0) { body.innerHTML = '<div data-und></div><div data-list></div>'; understood(body.querySelector('[data-und]')); S.list(body.querySelector('[data-list]'), A, { editable: false }); }
     else if (step === 1) S.list(body, A, { editable: true });
@@ -193,10 +193,10 @@
       try { html = await buildHTML(r.name, r.about); } catch { el.querySelector('[data-dlnote]').textContent = W.fail; return; }
       frame.srcdoc = html; el.querySelector('[data-dlnote]').textContent = W.dlNote(Math.max(1, Math.round(new Blob([html]).size / 1024)));
     };
-    el.addEventListener('input', () => {
+    el.oninput = () => {
       const r = read(); A.st.appName = r.name; A.st.about = r.about; A.save();
       clearTimeout(timer); timer = setTimeout(refresh, 500);
-    });
+    };
     el.querySelector('[data-reabout]').addEventListener('click', () => { delete A.st.about; A.save(); publish(el); });
     el.querySelector('[data-dl]').addEventListener('click', async () => { const r = read(); html = await buildHTML(r.name, r.about); S.download(S.slug(r.name) + '.html', html, 'text/html;charset=utf-8'); });
     refresh();
