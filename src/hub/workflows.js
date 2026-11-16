@@ -368,7 +368,10 @@ const sameName = (a, b) => norm(base(a)) === norm(base(b));
 const consentOf = v => { const n = norm(v); if (/^(yes|y|sim|s|true|1|x|ok)$/.test(n)) return 'yes'; if (/^(no|n|nao|false|0)$/.test(n)) return 'no'; return ''; };
 
 // One Odoo call: shown in a .odoo-call panel, and sent to the plan queue.
-const call = (model, method, body, why = '', note = '') => ({ model, method, body, why, note });
+// flag: { later: 'why' } for a step that waits for something (not in this plan item), or { outside: 'why' } for a
+// call the plan broker's policy (src/hub/plan-policy.js) does not allow: shown, never added to the plan.
+const call = (model, method, body, why = '', note = '', flag = {}) => ({ model, method, body, why, note, ...flag });
+const OUTSIDE = 'Not added to the plan: the plan broker writes only the hub\'s models and hub contacts (src/hub/plan-policy.js).';
 const chk = (rule, v, note = '') => ({ rule, v, note }); // v: allowed | approval | refused
 const NEEDS_APP = app => `Needs Odoo's ${app} app, which the experimentation Odoo does not have installed (the addon depends on base, mail, contacts and event).`;
 const todo = (model, id, summary, note) => call(model, 'activity_schedule', { ids: [id], act_type_xmlid: 'mail.mail_activity_data_todo', summary, note }, 'A to-do for a person at Algarve Evolution, with the draft attached. Sends nothing.');
@@ -382,7 +385,7 @@ const SIGN = 'The Algarve Evolution team\n(drafted by an agentic cell, read and 
 const OPEN = new Set(['open', 'matching']);
 const ORG_RE = /\b([A-Z][\w-]*(?: [A-Za-z][\w-]*){0,2} \d+ \(simulated\))/g;
 const orgsIn = (text, exclude = '') => uniq((String(text).match(ORG_RE) || []).map(s => s.trim())).filter(x => !sameName(x, exclude) && !/^(Founder|Person|Mentor|Registrant|Funder|Partner)\b/.test(x));
-const skillIds = list => [[6, 0, [`<aih.skill ids for: ${list.join(', ') || 'none'}>`]]];
+const skillIds = list => [[6, 0, list.map(x => `<aih.skill: ${x}>`)]];
 const ref1 = r => r?.odoo?.id ?? `<${r?.id || 'new'}>`;
 
 function runSupplier(input, { F, priv, ref, vocab }) {
@@ -424,10 +427,9 @@ function runSupplier(input, { F, priv, ref, vocab }) {
   const partnerVals = { name: org, is_company: !freelancer, email: e.from.email, city: town?.town || false, aih_is_supplier: true, aih_capability_ids: skillIds(skillList), aih_consent: false, aih_published: false, aih_simulated: true };
   const pid = known ? known.odoo.id : '<id from call 1>';
   const calls = [
-    known ? call('res.partner', 'write', { ids: [known.odoo.id], vals: { aih_capability_ids: [[4, `<aih.skill ids for: ${skillList.join(', ')}>`]] } }, `${known.name} is already in Odoo: add the services, do not create it twice.`)
+    known ? call('res.partner', 'write', { ids: [known.odoo.id], vals: { aih_capability_ids: skillList.map(x => [4, `<aih.skill: ${x}>`]) } }, `${known.name} is already in Odoo: add the services, do not create it twice.`)
       : call('res.partner', 'create', { vals_list: [partnerVals] }, 'The supplier as a contact: unpublished and without consent until they register.'),
-    call('crm.lead', 'create', { vals_list: [{ name: `Supplier: ${org} offers ${skillList.slice(0, 3).join(', ')}`, type: 'lead', partner_id: pid, email_from: e.from.email, description: `Asked who to talk to (${e.date || ref}). Fits: ${challenges.map(x => x.ch.id).join(', ') || 'no open challenge'}; companies to ask: ${top3.map(x => x.c.id).join(', ') || 'none'}.` }] }, 'A lead in the CRM, so the conversation is not lost.', NEEDS_APP('CRM')),
-    note('res.partner', pid, `<p>Email of ${e.date || ref}: offers ${esc(skillList.join(', '))}. Cell supplier-intro matched ${challenges.length} open challenge(s) and ${top3.length} company(ies) to ask (double opt-in).</p>`),
+    call('crm.lead', 'create', { vals_list: [{ name: `Supplier: ${org} offers ${skillList.slice(0, 3).join(', ')}`, type: 'lead', partner_id: pid, email_from: e.from.email, description: `Asked who to talk to (${e.date || ref}). Fits: ${challenges.map(x => x.ch.id).join(', ') || 'no open challenge'}; companies to ask: ${top3.map(x => x.c.id).join(', ') || 'none'}.` }] }, 'A lead in the CRM, so the conversation is not lost.', NEEDS_APP('CRM'), { outside: OUTSIDE }),
     todo('res.partner', pid, 'Review and send the reply drafted by the supplier-intro cell', reply),
   ];
   const checks = [
@@ -437,7 +439,7 @@ function runSupplier(input, { F, priv, ref, vocab }) {
     chk('Name programme companies to the supplier', 'refused', 'Double opt-in: each company agrees before its name or contact is shared.'),
     chk(`Ask ${top3.length} compan${top3.length === 1 ? 'y' : 'ies'} whether they want an intro`, top3.length ? 'approval' : 'allowed', top3.length ? 'Outbound email: a person approves.' : 'Nobody to ask.'),
     chk('Send the reply to the supplier', 'approval', 'Outbound email: a person reads and sends it.'),
-    chk('Create a CRM lead', 'allowed', NEEDS_APP('CRM')),
+    chk('Create a CRM lead', 'refused', `Shown as a proposal, not added to the plan: ${NEEDS_APP('CRM')} The plan broker writes hub models only.`),
   ];
   return {
     summary: `${skillList.length} service${skillList.length === 1 ? '' : 's'} read, ${challenges.length} open challenge${challenges.length === 1 ? '' : 's'} and ${top3.length} compan${top3.length === 1 ? 'y' : 'ies'} matched; 1 reply and ${intros.length} intro request${intros.length === 1 ? '' : 's'} drafted.`,
@@ -492,12 +494,12 @@ function runExpert(input, { F, priv }) {
   const asks = top.map(x => ({ label: `Ask ${base(x.p.name)} first`, to: `${x.p.name} (email in Odoo${priv && x.p.contact ? `: ${x.p.contact}` : ', private'})`, subject: `Could you help ${c ? base(c.name) : 'a startup'}?`, body: [`Hello,`, '', `${c ? `${c.name}, a ${c.sector} company in ${c.town}${c.programme_id ? ' in our programmes' : ''},` : 'A startup in our programmes'} is looking for help with ${x.sh.join(', ')}.`, '', 'Would you be open to a first conversation? If yes, we will introduce you by email. If not, we will not share your details.', '', SIGN].join('\n') }));
   const calls = top.map(x => todo('res.partner', x.p.odoo?.id, `Ask ${x.p.name} if they will take an intro to ${c?.name || 'the startup'}`, asks.find(a => a.label.includes(base(x.p.name)))?.body || ''));
   const mentorPick = top.find(x => [...x.p.kinds].some(k => /mentor/.test(k)));
-  if (c && mentorPick) calls.push(call('aih.session', 'create', { vals_list: [{ programme_id: ix(F.programmes, c.programme_id)?.odoo?.id, company_id: c.odoo.id, mentor_id: mentorPick.p.odoo.id, kind: mentorPick.p.kinds.has('guest mentor') ? 'clinic' : 'one_to_one', date: '<agreed date>', topic: mentorPick.sh.join(', '), is_published: true, simulated: true }] }, 'Only after both sides say yes: the first session, in the programme record.'));
+  if (c && mentorPick) calls.push(call('aih.session', 'create', { vals_list: [{ programme_id: ix(F.programmes, c.programme_id)?.odoo?.id, company_id: c.odoo.id, mentor_id: mentorPick.p.odoo.id, kind: mentorPick.p.kinds.has('guest mentor') ? 'clinic' : 'one_to_one', date: '<agreed date>', topic: mentorPick.sh.join(', '), is_published: true, simulated: true }] }, 'Only after both sides say yes: the first session, in the programme record.', '', { later: 'A later step: once the expert and the founder agree a date. Not in this plan item.' }));
   return {
     summary: `${need.length} need${need.length === 1 ? '' : 's'} read; ${scored.length} people with a matching skill; top 3 with consent cover ${covered.size} of ${need.length}.`,
     extracted: [['From', `${e.from.name} <${e.from.email}>`], ['Company', c ? `${c.name}, ${c.sector}, ${c.town}` : 'not found in Odoo'], ['Needs', need.join(', ') || 'none recognised', needs.map(n => `"${n.hit}"`).join(', ')], ['Asked for', [wantMentor && 'a mentor', wantInvestor && 'an investor', /expert/i.test(text) && 'an expert'].filter(Boolean).join(', ') || 'not said']],
     groups: [{ title: 'Top 3, people with consent', note: 'Skills 60 (share of the needs), town 15, kind of help asked 10, guest mentor 5, load -5. Each next pick favours needs not yet covered.', items: top.map(x => ({ name: x.p.name, sim: x.p.sim, score: x.score, reasons: x.why, meta: `${kindOf(x.p)}${x.p.town ? ` · ${x.p.town}` : ''}${x.p.rate ? ` · ${x.p.rate}` : ''}` })) },
-      ...(held.length ? [{ title: 'Private feed: matched, but no consent', note: 'Shown to the Algarve Evolution team only. Never suggested to the founder; the team may ask them for consent first.', private: true, items: held.slice(0, 4).map(x => ({ name: x.p.name, sim: x.p.sim, score: x.score, reasons: x.why, meta: kindOf(x.p), flag: 'No consent' })) }] : [])],
+      ...(held.length ? [{ title: 'Matched, but no consent', note: 'Shown to the Algarve Evolution team only. Never suggested to the founder; the team may ask them for consent first.', private: true, items: held.slice(0, 4).map(x => ({ name: x.p.name, sim: x.p.sim, score: x.score, reasons: x.why, meta: kindOf(x.p), flag: 'No consent' })) }] : [])],
     drafts: [{ label: 'Reply to the founder', to: `${e.from.name} <${e.from.email}>`, subject: `Re: ${e.subject}`, body: reply }, ...asks],
     checks: [chk('Match only people who gave consent', 'allowed', `${pool.length + top.length} with consent considered.`), chk('Suggest people without consent', 'refused', priv ? `${held.length} matched in the private feed, held back.` : 'They are not in the public feed at all.'), chk('Ask each expert first', 'approval', 'Outbound email: a person approves each ask.'), chk('Share the founder\'s contact with the expert', 'refused', 'Only after the expert says yes (double opt-in).'), chk('Reply to the founder', 'approval', 'Outbound email.'), ...(c && mentorPick ? [chk('Create the first session', 'approval', 'Only once both sides agree a date.')] : [])],
     calls,
@@ -524,9 +526,9 @@ function runMembership(input, { F, data, ref }) {
   const welcome = [`Dear ${base(person)},`, '', `Thank you for applying to join Algarve Evolution${org !== person ? ` with ${org}` : ''}.`, cat ? `As a startup, ${org} fits the ${cat.name} category, at €${cat.price} a year. You will receive the invoice separately once our team has checked it.` : 'Our team will confirm the membership category that fits you and come back to you with the details.', '',
     'What membership opens up: our events, the programmes and Challenge Connect, and the Algarve Digital Innovators network.', listing === 'yes' ? 'You told us you are happy to be listed in the hub directory; we will publish your listing once our team has reviewed it.' : 'We will not list you in the hub directory unless you ask us to.', '', 'Welcome,', SIGN].join('\n');
   const calls = [
-    call('res.partner', 'create', { vals_list: [{ name: org, is_company: true, city: town?.town || false, website: site || false, vat: nif ? `PT${nif}` : false, aih_consent: listing === 'yes', aih_published: false, aih_simulated: true }] }, dup ? `Check first: "${dup.name}" is already in Odoo. If it is the same, write to it instead.` : 'The member organisation, unpublished.'),
-    ...(org !== person ? [call('res.partner', 'create', { vals_list: [{ name: person, parent_id: '<id from call 1>', email, function: f.role || (text.match(/\n(Co-?founder|Founder|Chair|Director)[^\n]*/i) || [])[1] || false, aih_simulated: true }] }, 'The person who applied, as a contact of the organisation.')] : []),
-    ...(cat ? [call('account.move', 'create', { vals_list: [{ move_type: 'out_invoice', partner_id: '<id from call 1>', invoice_origin: `Membership application ${e.date || f.submitted || ref}`, invoice_line_ids: [[0, 0, { name: `Algarve Evolution membership: ${cat.name}, 12 months`, quantity: 1, price_unit: cat.price }]] }] }, 'A draft invoice: Odoo creates it in state draft; the cell never posts it.', `${NEEDS_APP('Invoicing')} Taxes are left to staff: we do not know Algarve Evolution's VAT treatment of memberships. If Algarve Evolution uses Odoo's Members app, the same is a membership line on the contact.`)] : []),
+    call('res.partner', 'create', { vals_list: [{ name: org, is_company: true, city: town?.town || false, website: site || false, aih_consent: listing === 'yes', aih_published: false, aih_simulated: true }] }, dup ? `Check first: "${dup.name}" is already in Odoo. If it is the same, write to it instead.` : 'The member organisation, unpublished.'),
+    ...(org !== person ? [call('res.partner', 'create', { vals_list: [{ name: person, parent_id: '<id from call 1>', email, function: f.role || (text.match(/\n(Co-?founder|Founder|Chair|Director)[^\n]*/i) || [])[1] || false, aih_simulated: true }] }, 'The person who applied, as a contact of the organisation.', '', { outside: 'Not added to the plan: parent_id and function are outside the hub fields the plan broker may write (a proposal: allow them).' })] : []),
+    ...(cat ? [call('account.move', 'create', { vals_list: [{ move_type: 'out_invoice', partner_id: '<id from call 1>', invoice_origin: `Membership application ${e.date || f.submitted || ref}`, invoice_line_ids: [[0, 0, { name: `Algarve Evolution membership: ${cat.name}, 12 months`, quantity: 1, price_unit: cat.price }]] }] }, 'A draft invoice: Odoo creates it in state draft; the cell never posts it.', `${NEEDS_APP('Invoicing')} Taxes are left to staff: we do not know Algarve Evolution's VAT treatment of memberships. If Algarve Evolution uses Odoo's Members app, the same is a membership line on the contact.`, { outside: OUTSIDE })] : []),
     todo('res.partner', '<id from call 1>', cat ? 'Check and post the membership invoice; send the welcome email' : 'Choose the membership category; then the cell drafts the invoice', welcome),
   ];
   return {
@@ -624,7 +626,7 @@ function runSession(input, { F, priv }) {
   const lastNotes = priv && c ? F.sessions.filter(s => s.company_id === c.id && s.notes).sort((a, b) => b.date.localeCompare(a.date))[0] : null;
   const stop = next ? (() => { const [d, hm] = next.split(' '); const [h, mi] = hm.split(':').map(Number); return `${d} ${String(h + 1).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`; })() : null;
   const calls = [call('aih.session', 'create', { vals_list: [{ programme_id: prog?.odoo?.id ?? false, company_id: c?.odoo?.id ?? false, mentor_id: mentor?.odoo?.id ?? '<mentor not found>', kind, date, topic, notes: [notes, actions.length ? `Actions: ${actions.join('; ')}` : ''].filter(Boolean).join('\n') || false, is_published: true, simulated: true }] }, 'The session. Date, kind and topic are public, as for every session; notes stay in the private field.')];
-  if (next) calls.push(call('calendar.event', 'create', { vals_list: [{ name: `Mentoring: ${c ? base(c.name) : 'company'} with ${mentor ? base(mentor.name) : 'mentor'}`, start: `${next}:00`, stop, partner_ids: [[6, 0, [mentor?.odoo?.id ?? '<mentor>']]], description: actions.length ? `Actions from ${date}: ${actions.join('; ')}` : false }], context: { no_mail_to_attendees: true } }, 'The next session in the calendar, with no invitation sent.', NEEDS_APP('Calendar')));
+  if (next) calls.push(call('calendar.event', 'create', { vals_list: [{ name: `Mentoring: ${c ? base(c.name) : 'company'} with ${mentor ? base(mentor.name) : 'mentor'}`, start: `${next}:00`, stop, partner_ids: [[6, 0, [mentor?.odoo?.id ?? '<mentor>']]], description: actions.length ? `Actions from ${date}: ${actions.join('; ')}` : false }], context: { no_mail_to_attendees: true } }, 'The next session in the calendar, with no invitation sent.', NEEDS_APP('Calendar'), { outside: OUTSIDE }));
   return {
     summary: `${kind.replace(/_/g, '-')} on ${longDate(date)}${c ? ` with ${base(c.name)}` : ''}; topic "${topic}"; ${actions.length} action(s)${next ? `; next session ${longDate(next)}` : ''}.`,
     extracted: [['Mentor', mentor ? `${mentor.name} (${mentor.kind === 'guest' ? 'guest' : 'one-to-one'})` : `${e.from.name}: not a mentor in Odoo`], ['Company', c ? `${c.name}, ${prog ? base(prog.name) : 'no programme'}` : 'not found'], ['Date', longDate(date), dateHow], ['Kind', kind.replace(/_/g, '-')], ['Topic', topic, topics.includes(topic) ? 'matched to the topics already in Odoo' : 'new topic'], ['Private notes', notes || 'none', masked.length ? `masked: ${masked.join(', ')}` : 'kept private'], ['Actions', actions.join('; ') || 'none'], ['Next session', next ? `${longDate(next)}, ${next.slice(11)}` : 'not given', nextLine.trim()]],
@@ -664,13 +666,13 @@ function runChallenge(input, { F, priv, ref, vocab }) {
   const notices = top.map(x => ({ label: `Notice to ${base(x.s.name)} (after approval)`, to: `${x.s.name}${priv && x.s.contact ? ` <${x.s.contact}>` : ' (email in Odoo, private)'}`, subject: `New challenge on Challenge Connect: ${title}`, body: ['Hello,', '', `A new challenge fits your skills (${x.sh.join(', ')}): "${title}", in ${town?.town || 'the Algarve'}${budget ? `, budget ${eur(budget.min)} to ${eur(budget.max)}` : ''}${dl ? `, by ${longDate(dl.iso)}` : ''}.`, 'You can read it and apply on Challenge Connect: /challenge-connect/', '', SIGN].join('\n') }));
   return {
     summary: `Challenge drafted for ${base(owner)}: ${want.length} skill(s), ${budget ? 'budget found' : 'no budget'}, ${dl ? 'deadline found' : 'no deadline'}; ${gaps.length} question(s) for the owner; top ${top.length} suppliers ready to notify after approval.`,
-    extracted: [['From', `${e.from.name} <${e.from.email}>`], ['Posted by', c ? `${c.name} (programme company)` : `${owner} (not a programme company)`], ['Title', title], ['Problem', problem || '(not clear)'], ['Requirements', reqs.join('; ') || 'none found', bullets.length ? 'from the bullet list' : 'from sentences with "need", "must" or "should"'], ['Skills', want.join(', ') || 'none recognised', skills.map(s => `"${s.hit}"`).join(', ')], ['Budget', budget ? `${eur(budget.min)} to ${eur(budget.max)}` : 'not given', budget ? `"${budget.raw}"` : ''], ['Deadline', dl ? longDate(dl.iso) : 'not given', dl ? `"${dl.raw}"` : ''], ['Town', town?.town || 'not given', town ? `"${town.raw}"` : '']],
+    extracted: [['From', `${e.from.name} <${e.from.email}>`], ['Posted by', c ? `${c.name} (programme company)` : `${owner} (not a programme company)`], ['Title', title], ['Problem', problem || '(not clear)'], ['Requirements', reqs.join('; ') || 'none found', bullets.length ? 'the bullet list' : 'sentences with "need", "must" or "should"'], ['Skills', want.join(', ') || 'none recognised', skills.map(s => `"${s.hit}"`).join(', ')], ['Budget', budget ? `${eur(budget.min)} to ${eur(budget.max)}` : 'not given', budget ? `"${budget.raw}"` : ''], ['Deadline', dl ? longDate(dl.iso) : 'not given', dl ? `"${dl.raw}"` : ''], ['Town', town?.town || 'not given', town ? `"${town.raw}"` : '']],
     groups: [{ title: 'Likely matches, with Odoo\'s own rule', note: 'The addon\'s score (aih.application): skills 50, town 20, budget 30. Before anyone applies there is no price, so budget gets half marks for all.', items: top.map(x => ({ name: x.s.name, sim: x.s.simulated, score: x.score, reasons: x.why, meta: `${x.s.kind === 'company' ? 'Company' : 'Individual'} · ${x.s.town} · ${x.s.rate || ''}` })) },
-      ...(held.length ? [{ title: 'Private feed: would match, no consent', note: 'Never notified.', private: true, items: held.map(x => ({ name: x.s.name, sim: x.s.simulated, score: x.score, reasons: x.why, flag: 'No consent' })) }] : []),
+      ...(held.length ? [{ title: 'Would match, but no consent', note: 'Never notified.', private: true, items: held.map(x => ({ name: x.s.name, sim: x.s.simulated, score: x.score, reasons: x.why, flag: 'No consent' })) }] : []),
       ...(gaps.length ? [{ title: 'Missing: the cell asks, it does not guess', items: gaps.map(g => ({ name: g, score: null, reasons: [] })) }] : [])],
     drafts: [{ label: 'To the owner: confirm the draft', to: `${e.from.name} <${e.from.email}>`, subject: `Your challenge, as a draft: ${title}`, body: confirm }, ...notices],
     checks: [chk('Create the challenge, unpublished', 'allowed', 'aih.challenge create with is_published false.'), chk('Publish it', 'approval', 'The owner confirms the draft first.'), chk(`Notify ${top.length} supplier(s)`, 'approval', 'Only after it is published, and a person approves.'), ...(held.length ? [chk('Notify suppliers without consent', 'refused', `${held.length} held back.`)] : []), ...(gaps.length ? [chk('Fill in missing budget or deadline', 'refused', 'The cell asks the owner; it never invents them.')] : [])],
-    calls: [call('aih.challenge', 'create', { vals_list: [draft] }, 'The challenge draft, unpublished.'), call('aih.challenge', 'write', { ids: ['<id from call 1>'], vals: { is_published: true } }, 'After the owner confirms: publish it.'), call('aih.challenge', 'action_compute_matches', { ids: ['<id from call 1>'] }, 'Once suppliers apply: score and rank every application.')],
+    calls: [call('aih.challenge', 'create', { vals_list: [draft] }, 'The challenge draft, unpublished.'), call('aih.challenge', 'write', { ids: ['<id from call 1>'], vals: { is_published: true } }, 'After the owner confirms: publish it.', '', { later: 'A later step: after the owner confirms the draft. Not in this plan item.' }), call('aih.challenge', 'action_compute_matches', { ids: ['<id from call 1>'] }, 'Once suppliers apply: score and rank every application.', '', { later: 'A later step: once suppliers have applied. Not in this plan item.' })],
     plan: { title: `Challenge draft from ${base(owner)}: ${title}`, refs: [c?.id, ...top.map(x => x.s.id)].filter(Boolean) },
   };
 }
@@ -749,7 +751,7 @@ function runReport(input, { F }) {
     drafts: [{ label: 'Report to send', to: `${e.from.name} <${e.from.email}>`, subject: `Re: ${e.subject}`, body: report }],
     files: [{ name: `report-${pS}-to-${pE}.csv`, type: 'text/csv', text: csv }],
     checks: [chk('Aggregate figures from Odoo', 'allowed', 'Read only.'), chk('Send figures built from simulated data', 'approval', 'Simulated: never send to a real funder. With real data in Odoo, a person checks and sends.'), chk('Estimate figures Odoo does not hold', 'refused', gaps.length ? `${gaps.length} gap(s) named instead.` : 'No gaps.'), ...(wantsPersonal ? [chk('Send names and email addresses of participants', 'refused', 'Personal data: no legal basis or consent for this use.')] : []), chk('Send the report', 'approval', 'Outbound email.')],
-    calls: [call('ir.attachment', 'create', { vals_list: [{ name: `report-${pS}-to-${pE}.csv`, res_model: 'aih.programme', res_id: progs[0].odoo.id, type: 'binary', mimetype: 'text/csv', datas: '<base64 of the spreadsheet>' }] }, 'Keep the report with the programme record in Odoo.')],
+    calls: [call('ir.attachment', 'create', { vals_list: [{ name: `report-${pS}-to-${pE}.csv`, res_model: 'aih.programme', res_id: progs[0].odoo.id, type: 'binary', mimetype: 'text/csv', datas: '<base64 of the spreadsheet>' }] }, 'Keep the report with the programme record in Odoo.', '', { outside: OUTSIDE })],
     plan: { title: `Report for ${base(e.from.name)}: ${longDate(pS)} to ${longDate(pE)}`, refs: progs.map(p => p.id) },
   };
 }
@@ -780,7 +782,7 @@ function runDigest(input, { F, ref }) {
       ...(extras.length ? [{ title: 'Not in Odoo: a person checks', items: extras.map(x => ({ name: x, score: null, flag: /job|asks us/i.test(x) ? 'Personal request' : 'Unverified', reasons: [/job|asks us/i.test(x) ? 'A request from a person: share only if they agree and staff approve' : 'Arrived by email: check it and add it to Odoo, then it is a normal item'] })) }] : [])],
     drafts: [{ label: 'Newsletter draft', to: f.audience || 'The opt-in mailing list', subject: `This week at the AE Innovation Hub: ${evs.length} event${evs.length === 1 ? '' : 's'}${chs.length ? `, ${chs.length} open challenge${chs.length === 1 ? '' : 's'}` : ''}`, body }],
     checks: [chk('Use published records only', 'allowed', 'Events, challenges, Vibathons and programmes from the public feed.'), chk('Link every real event to its source', 'allowed', `${evs.length} event page(s) on algarveevolution.pt.`), ...extras.map(x => chk(`Include "${x.slice(0, 60)}${x.length > 60 ? '...' : ''}"`, 'approval', 'Not in Odoo: a person checks it.')), chk('Send the digest', 'approval', 'Outbound email to a list: a person approves.'), chk('Send to anyone outside the opt-in list', 'refused', 'Only subscribers.')],
-    calls: [call('mailing.mailing', 'create', { vals_list: [{ subject: `This week at the AE Innovation Hub (${longDate(start)})`, mailing_model_id: '<id of the mailing.list model>', contact_list_ids: [[6, 0, ['<id of the opt-in list>']]], body_html: `<p>${esc(body).replace(/\n/g, '<br>')}</p>`, state: 'draft' }] }, 'The digest as a draft mailing: nothing is sent until a person presses Send.', NEEDS_APP('Email Marketing'))],
+    calls: [call('mailing.mailing', 'create', { vals_list: [{ subject: `This week at the AE Innovation Hub (${longDate(start)})`, mailing_model_id: '<id of the mailing.list model>', contact_list_ids: [[6, 0, ['<id of the opt-in list>']]], body_html: `<p>${esc(body).replace(/\n/g, '<br>')}</p>`, state: 'draft' }] }, 'The digest as a draft mailing: nothing is sent until a person presses Send.', NEEDS_APP('Email Marketing'), { outside: OUTSIDE })],
     plan: { title: `Weekly digest, ${longDate(start)}`, refs: [...evs.map(ev => ev.id), ...chs.map(c => c.id), vib?.id].filter(Boolean) },
   };
 }
@@ -800,7 +802,7 @@ function runImport(input, { F, priv }) {
     else if (existing) { status = 'skip'; why = `Already in Odoo as ${existing.name}${existing.consent ? '' : ' (no consent recorded)'}: not duplicated`; }
     else if (consent === 'no') { status = 'refused'; why = 'Said no: dropped, only counted'; dropped++; }
     else if (!consent) { status = 'held'; why = 'Not asked: a consent request is drafted; nothing goes into Odoo yet'; ask.push({ name, email }); }
-    else { status = 'ok'; why = 'Consent yes: proposed as a contact, unpublished'; const com = coms.find(c => c.name === r[k.com]); create.push({ name, email, city: r[k.town] || false, aih_talent_kind: 'professional', aih_community_id: com?.rec ? com.rec.odoo.id : '<id from call 1>', aih_consent: true, aih_published: false, aih_simulated: true, category_id: [[6, 0, [`<res.partner.category ids for: ${r[k.tags] || 'none'}>`]]] }); }
+    else { status = 'ok'; why = 'Consent yes: proposed as a contact, unpublished'; const com = coms.find(c => c.name === r[k.com]); create.push({ name, email, city: r[k.town] || false, aih_talent_kind: 'professional', aih_community_id: com?.rec ? com.rec.odoo.id : '<id from call 1>', aih_consent: true, aih_published: false, aih_simulated: true, category_id: [[6, 0, String(r[k.tags] || '').split(/[,;]/).map(x => x.trim()).filter(Boolean).map(x => `<res.partner.category: ${x}>`)]] }); }
     if (validEmail(email)) seen.add(email);
     rows.push({ cells: [String(i + 2), name, priv ? email || r[k.email] : mask(email || r[k.email]), r[k.town] || '', r[k.tags] || '', consent || 'not asked'], status, note: why });
   });
@@ -832,7 +834,7 @@ const simB = on => (on ? ' <span class="sim-badge" title="Invented for the proto
 // With the plan queue on the page, the cell adds its calls as one item with its policy (the button under the
 // panels), so hub.js's per-panel button is switched off for these panels (data-plan="off").
 const hasPlan = () => typeof window !== 'undefined' && !!window.HUB?.plan?.add;
-const callPanel = (c, i, n) => `<details class="odoo-call"${hasPlan() ? ' data-plan="off"' : ''}${i === 0 ? ' open' : ''}><summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(c.model)}/${esc(c.method)}</code> <span class="odoo-call-flag">not sent: prototype</span></summary>${c.why ? `<p class="odoo-call-note">${n > 1 ? `${i + 1} of ${n}. ` : ''}${esc(c.why)}</p>` : ''}<pre tabindex="0"><code>${esc(JSON.stringify(c.body, null, 2))}</code></pre>${c.note ? `<p class="odoo-call-note wf-call-warn">${esc(c.note)}</p>` : ''}</details>`;
+const callPanel = (c, i, n) => `<details class="odoo-call"${hasPlan() ? ' data-plan="off"' : ''}${i === 0 ? ' open' : ''}><summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(c.model)}/${esc(c.method)}</code> <span class="odoo-call-flag">${c.outside ? 'outside the plan' : c.later ? 'a later step' : 'not sent: prototype'}</span></summary>${c.why ? `<p class="odoo-call-note">${n > 1 ? `${i + 1} of ${n}. ` : ''}${esc(c.why)}</p>` : ''}${c.outside || c.later ? `<p class="odoo-call-note wf-call-warn">${esc(c.outside || c.later)}</p>` : ''}<pre tabindex="0"><code>${esc(JSON.stringify(c.body, null, 2))}</code></pre>${c.note ? `<p class="odoo-call-note wf-call-warn">${esc(c.note)}</p>` : ''}</details>`;
 const draftHtml = d => `<article class="wf-draft"><header class="wf-draft-head"><p class="wf-draft-label">${esc(d.label)} <span class="wf-draft-flag">Draft · not sent</span></p><dl><div><dt>To</dt><dd>${esc(d.to)}</dd></div><div><dt>Subject</dt><dd>${esc(d.subject)}</dd></div></dl></header><pre class="wf-draft-body" tabindex="0">${esc(d.body)}</pre></article>`;
 const itemHtml = it => `<li class="wf-match${it.flag ? ' is-flag' : ''}"><div class="wf-match-top"><p class="wf-match-name">${it.href ? `<a href="${esc(it.href)}"${it.ext ? ' rel="noopener"' : ''}>${esc(it.name)}</a>` : esc(it.name)}${simB(it.sim)}${it.flag ? ` <span class="tag tag-warn">${esc(it.flag)}</span>` : ''}</p>${scoreHtml(it.score)}</div>${it.meta ? `<p class="wf-match-meta">${esc(it.meta)}</p>` : ''}${it.reasons?.length ? `<ul class="wf-reasons">${it.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</li>`;
 const STATUS = { ok: ['Proposed', 'tag-ok'], held: ['Held', 'tag-warn'], skip: ['Skipped', ''], refused: ['Refused', 'tag-accent'] };
@@ -841,7 +843,7 @@ const tableHtml = t => `<div class="wf-table"><p class="wf-sub">${esc(t.title)}<
 export function renderResult(cell, r, priv) {
   let k = 0; const h = t => `<h4 class="wf-res-h"><span>${++k}</span>${esc(t)}</h4>`;
   const counts = Object.fromEntries(Object.keys(VERDICT).map(v => [v, r.checks.filter(c => c.v === v).length]));
-  const plan = hasPlan(); const groups = (r.groups || []).filter(g => g.items.length);
+  const plan = hasPlan(); const ready = r.calls.filter(c => !c.later && !c.outside).length; const groups = (r.groups || []).filter(g => g.items.length);
   return `<div class="wf-res-head"><h3 class="wf-res-title" tabindex="-1">What the cell did</h3><p class="wf-res-sum">${esc(r.summary)}</p>
 <p class="wf-res-meta">Ran in this browser with transparent rules on the ${priv ? '<strong>private feed</strong> (Algarve Evolution team)' : 'public feed'}. No model was called and nothing was sent. In production a model drafts, and the policy checks every step.</p></div>
 <div class="wf-res-grid${groups.length ? '' : ' is-single'}">
@@ -855,14 +857,14 @@ ${(r.privateNotes || []).map(p => `<div class="persona-panel persona-panel-priva
 <div class="wf-res-grid wf-res-grid-b">
 <section class="wf-res-block">${h('Policy check')}<p class="wf-counts"><span class="tag tag-ok">${counts.allowed} allowed</span> <span class="tag tag-warn">${counts.approval} need approval</span> <span class="tag tag-accent">${counts.refused} refused</span></p><ul class="wf-checks">${r.checks.map(c => `<li class="wf-check is-${c.v}"><span class="tag ${VERDICT[c.v][1]}">${VERDICT[c.v][0]}</span><div><p class="wf-check-rule">${esc(c.rule)}</p>${c.note ? `<p class="wf-check-note">${esc(c.note)}</p>` : ''}</div></li>`).join('')}</ul></section>
 <section class="wf-res-block">${h(`Odoo calls it proposes (${r.calls.length})`)}${r.calls.length ? `<div class="wf-calls">${r.calls.map((c, i) => callPanel(c, i, r.calls.length)).join('')}</div>
-${plan ? `<div class="wf-plan"><button type="button" class="btn btn-primary btn-sm" data-plan aria-pressed="false">Add to the plan</button> <span class="wf-plan-msg" data-plan-msg role="status"></span></div>` : '<p class="wf-small">The plan queue is not on this page yet: each call above is its own panel.</p>'}` : '<p class="wf-small">No Odoo call: nothing to write.</p>'}</section>
+${!plan ? '<p class="wf-small">The plan queue is not on this page yet: each call above is its own panel.</p>' : ready ? `<div class="wf-plan"><button type="button" class="btn btn-primary btn-sm" data-wf-plan aria-pressed="false">Add to the plan</button> <span class="wf-plan-msg" data-plan-msg role="status"></span></div><p class="wf-small wf-broker" data-broker></p>` : '<p class="wf-small">Nothing for the plan queue: every call here is a later step or outside what the plan broker may write. A person does these in Odoo.</p>'}` : '<p class="wf-small">No Odoo call: nothing to write.</p>'}</section>
 </div>`;
 }
 
 export function planItem(cell, r) {
   return {
     source: `workflow:${cell.id}`, title: r.plan?.title || cell.title,
-    calls: r.calls.map(c => ({ method: 'POST', path: `/json/2/${c.model}/${c.method}`, body: c.body })),
+    calls: r.calls.filter(c => !c.later && !c.outside).map(c => ({ method: 'POST', path: `/json/2/${c.model}/${c.method}`, body: c.body })),
     policy: { agent: `cell:${cell.id}`, grant: cell.policy.grant, mandate: cell.policy.mandate, checks: r.checks.map(c => ({ rule: c.rule, ok: c.v !== 'refused', verdict: c.v, note: c.v === 'refused' ? `Refused: held back, not in this plan. ${c.note}` : c.note })), needs_approval: r.checks.some(c => c.v === 'approval') },
     refs: uniq(r.plan?.refs || []),
   };
@@ -870,11 +872,13 @@ export function planItem(cell, r) {
 
 // The "Add to the plan" button says whether this result's calls are already in the plan (it toggles them).
 function planState(art) {
-  const btn = art.querySelector('[data-plan]'); const msg = art.querySelector('[data-plan-msg]'); const r = art._result?.();
+  const btn = art.querySelector('[data-wf-plan]'); const msg = art.querySelector('[data-plan-msg]'); const r = art._result?.();
   if (!btn || !r || !hasPlan()) return;
   const cell = CELLS.find(c => c.id === art.dataset.cell); const item = planItem(cell, r);
   const id = window.HUB.plan.find(item.calls, item.source); const n = window.HUB.plan.list().length;
   btn.setAttribute('aria-pressed', String(!!id)); btn.textContent = id ? 'In the plan: remove' : `Add ${item.calls.length === 1 ? 'this call' : `these ${item.calls.length} calls`} to the plan`;
+  const pp = typeof globalThis !== 'undefined' && globalThis.PlanPolicy; const bx = art.querySelector('[data-broker]');
+  if (pp && bx) { const ck = pp.checkItem(item); const bad = ck.checks.filter(c => !c.ok); bx.textContent = bad.length ? `The plan broker's policy would refuse ${bad.length} check(s): ${bad.slice(0, 2).map(c => c.note).join(' ')}` : `The plan broker's own policy (the one the Plan page and the broker run): all ${ck.checks.length} checks pass for ${item.calls.length} call${item.calls.length === 1 ? '' : 's'}.`; }
   msg.innerHTML = id ? `One item from workflow:${esc(cell.id)}, with its policy checks${n > 1 ? `, among ${n} in your plan` : ''}. Kept in this browser until the team reviews and signs it. <a href="/plan/#queue">Review the plan</a>` : `Nothing is sent: the calls go to the plan queue as one item, with the cell's policy checks, for the Algarve Evolution team to review and sign.`;
 }
 async function boot() {
@@ -904,7 +908,7 @@ async function boot() {
       art.querySelectorAll('[data-sample]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); run(false);
     }));
     out.addEventListener('click', ev => {
-      const pb = ev.target.closest('[data-plan]'); const fb = ev.target.closest('[data-file]');
+      const pb = ev.target.closest('[data-wf-plan]'); const fb = ev.target.closest('[data-file]');
       if (pb && result && hasPlan()) {
         const item = planItem(cell, result); const id = window.HUB.plan.find(item.calls, item.source);
         if (id) window.HUB.plan.remove(id); else window.HUB.plan.add(item);

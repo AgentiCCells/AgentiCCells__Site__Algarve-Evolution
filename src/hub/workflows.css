@@ -242,3 +242,11 @@
 .wf-plan-msg a { font-weight: 700; }
 @media (min-width: 64rem) { .wf-res-grid.is-single { grid-template-columns: minmax(0, 1fr); } .wf-res-grid.is-single .wf-ex { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; } }
 @media (min-width: 721px) { .wf-table .hub-table-wrap { overflow-x: auto; } }
+/* base.css pads every <section>: the blocks inside a result are not page sections. */
+.wf-out section, .wf-out .wf-res-block { padding: 0; }
+/* Phones: result rows two fields to a line, the result itself on its own line. */
+@media (max-width: 720px) {
+  .wf-tbl td { display: inline-block; width: 48%; vertical-align: top; padding-right: 2%; overflow-wrap: anywhere; }
+  .wf-tbl td:last-child { display: block; width: auto; }
+}
+@media (min-width: 721px) { .wf-sum-table .num { white-space: nowrap; } .wf-sum-table td:first-child { min-width: 12rem; } .wf-sum-table td:nth-child(2) { min-width: 11rem; } }

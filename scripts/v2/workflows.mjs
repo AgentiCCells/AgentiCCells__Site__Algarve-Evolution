@@ -31,7 +31,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
   const cellCard = c => {
     const forAttr = c.for.length ? ` data-for="${esc(c.for.join(' '))}"` : '';
     const pctCell = Math.max(2, Math.round((100 * c.time.cell) / c.time.today));
-    return `<article class="wf-cell" id="cell-${c.n}" data-cell="${esc(c.id)}"${forAttr} aria-labelledby="cell-${c.n}-h">
+    return `<article class="wf-cell" id="${esc(c.id)}" data-cell="${esc(c.id)}"${forAttr} aria-labelledby="cell-${c.n}-h">
   <header class="wf-cell-head">
     <p class="wf-cell-n"><span>Cell ${pad(c.n)}</span> ${esc(c.activity)}</p>
     <h3 id="cell-${c.n}-h">${esc(c.title)}</h3>
@@ -57,7 +57,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
           <div class="wf-time-row is-cell"><span class="wf-time-k">With the cell</span><span class="wf-time-bar"><i style="width:${pctCell}%"></i></span><span class="wf-time-v">${esc(fmt(c.time.cell))}</span></div>
         </div>
         <p class="wf-small">${esc(c.time.todayText[0].toUpperCase() + c.time.todayText.slice(1))}; with the cell, ${esc(c.time.cellText)}.</p></div>
-      <p class="wf-ladder-line"><span class="wf-label">On the ladder</span> ${esc(LADDER[c.ladder].name)}. ${esc(c.ladderNote)}</p>
+      <p class="wf-ladder-line"><span class="wf-label">On the ladder</span> ${esc(c.ladderNote)}</p>
     </div>
     <div class="wf-try" role="group" aria-labelledby="try-${c.n}-h">
       <p class="wf-try-k">Try it</p>
@@ -74,16 +74,16 @@ export function render({ layout, feed, data, h, PERSONAS }) {
   };
 
   const row = c => `<tr${c.for.length ? ` data-for="${esc(c.for.join(' '))}"` : ''}>
-  <td data-th="Cell"><a href="#cell-${c.n}"><span class="wf-tn">${pad(c.n)}</span> ${esc(c.title)}</a></td>
+  <td data-th="Cell"><a href="#${esc(c.id)}"><span class="wf-tn">${pad(c.n)}</span> ${esc(c.title)}</a></td>
   <td data-th="Trigger and channel">${esc(c.trigger.what)}</td>
-  <td data-th="Writes to Odoo">${c.models.map(m => `<code>${esc(m)}</code>`).join(' ')}</td>
+  <td data-th="Proposes writes to">${c.models.map(m => `<code>${esc(m)}</code>`).join(' ')}</td>
   <td data-th="Waits for a person">${esc(c.policy.barriers.filter(b => b[0] === 'approval').map(b => b[1]).join('; '))}</td>
   <td data-th="Time, illustrative" class="num">${esc(fmt(c.time.today))} → ${esc(fmt(c.time.cell))} <span class="wf-per">${esc(c.time.per)}</span></td>
   <td data-th="Ladder">${esc(LADDER[c.ladder].name)}</td>
   <td data-th="Touches">${c.for.length ? c.for.map(p => esc(plabel(p))).join(', ') : 'The Algarve Evolution team'}</td>
 </tr>`;
 
-  const personaPanel = (id, head, nums, text) => `<div class="persona-panel" data-only="${id}" hidden><p class="persona-panel-head">${esc(head)}</p><p>${text}</p><p class="wf-jumps">${nums.map(n => `<a class="btn btn-sm" href="#cell-${n}">Cell ${n}: ${esc(CELLS[n - 1].title)}</a>`).join(' ')}</p></div>`;
+  const personaPanel = (id, head, nums, text) => `<div class="persona-panel" data-only="${id}" hidden><p class="persona-panel-head">${esc(head)}</p><p>${text}</p><p class="wf-jumps">${nums.map(n => `<a class="btn btn-sm" href="#${esc(CELLS[n - 1].id)}">Cell ${n}: ${esc(CELLS[n - 1].title)}</a>`).join(' ')}</p></div>`;
   const staffCounts = feed.meta?.withheld || {};
 
   const body = `
@@ -107,7 +107,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
   </div>
 </section>
 <nav class="wf-jump" aria-label="On this page"><div class="hub-wrap"><ul>
-  <li><a href="#why">Cells, not connectors</a></li><li><a href="#summary">The ten at a glance</a></li>${CELLS.map(c => `<li><a href="#cell-${c.n}">${c.n}</a></li>`).join('')}<li><a href="#ladder">The ladder</a></li><li><a href="#limits">What this does not claim</a></li>
+  <li><a href="#why">Cells, not connectors</a></li><li><a href="#summary">The ten at a glance</a></li>${CELLS.map(c => `<li><a href="#${esc(c.id)}">${c.n}</a></li>`).join('')}<li><a href="#ladder">The ladder</a></li><li><a href="#limits">What this does not claim</a></li>
 </ul></div></nav>
 
 <section class="hub-sec hub-sec-tight hub-sec-mist wf-personas" aria-label="Your cells">
@@ -130,7 +130,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
     <div class="hub-cols-3 wf-three">
       <div class="card"><p class="card-kicker">1 · The policy</p><h3>Grant, mandate, gap, barriers</h3><p>Every cell has an agent behaviour policy: what it can reach in Odoo and in the mailboxes (the grant), what it was asked to do (the mandate), the difference between the two (the gap), and what stops it (the barriers). Odoo's access rights are a real boundary; a sentence in a prompt is only an expectation.</p></div>
       <div class="card"><p class="card-kicker">2 · The approval</p><h3>A person decides what leaves</h3><p>Any outbound email, any invoice, any contact with someone who has not agreed: the cell drafts, a person approves. Proposed Odoo writes go to the <a href="/plan/">plan queue</a>, where the team reviews them and signs the approval with a key made in their browser.</p></div>
-      <div class="card"><p class="card-kicker">3 · The record</p><h3>What changed, and who approved it</h3><p>The signed plan, the policy checks and the result of each call are kept, longer than any chat. In Odoo, each cell leaves an internal note on the record it touched, so the history is where the team already looks.</p></div>
+      <div class="card"><p class="card-kicker">3 · The record</p><h3>What changed, and who approved it</h3><p>The signed plan, the policy checks and the result of each call are kept, longer than any chat. In Odoo, each cell leaves a to-do with its draft on the contact it touched, so the work waits where the team already looks.</p></div>
     </div>
     <ol class="wf-pipe" aria-label="How a cell runs, end to end">
       <li><b>Trigger</b><span>an email, a form, a sheet, a date</span></li>
@@ -153,7 +153,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
       <p class="hub-lede">Times are illustrative estimates for discussion, not measurements. They show where the hours go today, so the team can say which cells to try first.</p></div>
       ${h.odoo('aih.*, res.partner, event.event')}</div>
     <div class="hub-table-wrap"><table class="hub-table wf-sum-table"><caption>The ten cells: trigger, Odoo models, what waits for a person, time today against with the cell (illustrative), ladder, and who each one touches.</caption>
-      <thead><tr><th scope="col">Cell</th><th scope="col">Trigger and channel</th><th scope="col">Writes to Odoo</th><th scope="col">Waits for a person</th><th scope="col">Time, illustrative</th><th scope="col">Ladder</th><th scope="col">Touches</th></tr></thead>
+      <thead><tr><th scope="col">Cell</th><th scope="col">Trigger and channel</th><th scope="col">Proposes writes to</th><th scope="col">Waits for a person</th><th scope="col">Time, illustrative</th><th scope="col">Ladder</th><th scope="col">Touches</th></tr></thead>
       <tbody>${CELLS.map(row).join('')}</tbody></table></div>
   </div>
 </section>
@@ -173,7 +173,7 @@ ${CELLS.map(cellCard).join('\n')}
     <div class="hub-head"><p class="kicker">The AgentiCCells ladder</p><h2 class="hub-h2" id="ladder-h">From one cell to a network</h2>
       <p class="hub-lede">One agent on one workflow is the smallest cell, and nine of these ten are that size. They can start one at a time, and grow only where they earn it.</p></div>
     <ol class="wf-rungs">
-      ${LADDER.map((l, i) => { const ns = CELLS.filter(c => c.ladder === i).map(c => c.n); const extra = i === 2 ? 'All ten together, with a conductor that routes each email to the right cell, one board and a key per cell.' : i === 3 ? 'Partners, municipalities and communities each running their own cells, sharing policies and the plan queue.' : ''; return `<li class="wf-rung"><p class="wf-rung-n">${i + 1}</p><h3>${esc(l.name)}</h3><p>${esc(l.text)}</p><p class="wf-rung-cells">${ns.length ? `Here: ${ns.map(n => `<a href="#cell-${n}">cell ${n}</a>`).join(', ')}` : esc(extra)}</p></li>`; }).join('')}
+      ${LADDER.map((l, i) => { const ns = CELLS.filter(c => c.ladder === i).map(c => c.n); const extra = i === 2 ? 'All ten together, with a conductor that routes each email to the right cell, one board and a key per cell.' : i === 3 ? 'Partners, municipalities and communities each running their own cells, sharing policies and the plan queue.' : ''; return `<li class="wf-rung"><p class="wf-rung-n">${i + 1}</p><h3>${esc(l.name)}</h3><p>${esc(l.text)}</p><p class="wf-rung-cells">${ns.length ? `Here: ${ns.map(n => `<a href="#${esc(CELLS[n - 1].id)}">cell ${n}</a>`).join(', ')}` : esc(extra)}</p></li>`; }).join('')}
     </ol>
     <p class="wf-small wf-ladder-src">The ladder's sizes are AgentiCCells' (<a href="https://agenticcells.com/cells/" rel="noopener">agenticcells.com/cells</a>); where each cell sits is our proposal.</p>
   </div>
@@ -198,7 +198,7 @@ ${CELLS.map(cellCard).join('\n')}
     body,
     description: 'Ten agentic cells for the many small requests at Algarve Evolution: each workflow mapped end to end with an agent, Odoo, a behaviour policy and a person\'s approval, with a working demo of each.',
     head: '<link rel="stylesheet" href="/hub/workflows.css">',
-    scripts: '<script type="module" src="/hub/workflows.js"></script>',
+    scripts: '<script src="/hub/plan-policy.js" defer></script>\n<script type="module" src="/hub/workflows.js"></script>',
     pageClass: 'page-workflows',
   });
 }
