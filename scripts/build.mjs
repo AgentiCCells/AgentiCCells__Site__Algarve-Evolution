@@ -6,7 +6,7 @@ import { cpSync, rmSync, readdirSync, readFileSync, writeFileSync, statSync, mkd
 import { join, dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { makeRenderer } from './render.mjs';
-import { loadData, helpers, chrome, designPath } from './site-data.mjs';
+import { loadData, helpers, chrome, designPath, localise } from './site-data.mjs';
 
 const version = process.env.SITE_VERSION || 'dev';
 const out = process.env.SITE_OUT || '_site';
@@ -14,7 +14,9 @@ rmSync(out, { recursive: true, force: true });
 cpSync('src', out, { recursive: true });
 const walk = d => readdirSync(d).flatMap(f => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
 const render = makeRenderer('src/data');
-const data = loadData('src/data');
+const raw = loadData('src/data');
+const data = raw; // English view; each page gets localise(raw, lang)
+const views = { en: localise(raw, 'en'), pt: localise(raw, 'pt') };
 
 const write = (path, html) => { const f = join(out, path, 'index.html'); mkdirSync(dirname(f), { recursive: true }); writeFileSync(f, html); };
 const load = async dir => existsSync(dir)
@@ -30,8 +32,8 @@ for (const d of designs) {
   manifest.push({ slug: meta.slug, order: meta.order, group: meta.group, name: meta.name, tagline: meta.tagline });
   for (const lang of ['en', 'pt']) {
     const other = designPath(meta.slug, lang === 'en' ? 'pt' : 'en');
-    const ctx = { lang, data, h: helpers(data, lang), version, slug: meta.slug, self: designPath(meta.slug, lang), other,
-      home: designPath('coast', lang), chrome: chrome(data, lang, { slug: meta.slug, version, other }) };
+    const ctx = { lang, data: views[lang], h: helpers(views[lang], lang), version, slug: meta.slug, self: designPath(meta.slug, lang), other,
+      home: designPath('coast', lang), chrome: chrome(views[lang], lang, { slug: meta.slug, version, other }) };
     write(designPath(meta.slug, lang), d.render(ctx));
   }
 }
@@ -43,8 +45,8 @@ writeFileSync(join(out, 'designs.json'), JSON.stringify({ default: 'coast', desi
 for (const p of await load('scripts/pages')) {
   for (const lang of ['en', 'pt']) {
     const other = p.paths[lang === 'en' ? 'pt' : 'en'];
-    const ctx = { lang, data, h: helpers(data, lang), version, slug: p.name || 'app', self: p.paths[lang], other, home: designPath('coast', lang),
-      chrome: chrome(data, lang, { slug: 'app', version, other }) };
+    const ctx = { lang, data: views[lang], h: helpers(views[lang], lang), version, slug: p.name || 'app', self: p.paths[lang], other, home: designPath('coast', lang),
+      chrome: chrome(views[lang], lang, { slug: 'app', version, other }) };
     write(p.paths[lang], p.render(ctx));
   }
 }

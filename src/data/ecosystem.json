@@ -1,5 +1,5 @@
 {
- "about": "Algarve Evolution's network, timeline and places, as data. Taken on 16 November 2026 from PrompTugal.news (assets/portugal/algarve-evolution-data.json in PrompTugal/PrompTugal__News__Website, Apache-2.0 code, CC BY 4.0 text), where researcher@PrompTugal.dinis read every source on 6 November 2026. Each node, timeline entry and place names a key in 'sources', which holds the original URL. Coordinates are approximate, for drawing only. Copied by sites@AgentiCCells.dinis.",
+ "about": "Algarve Evolution's network, timeline and places, as data. Taken on 16 November 2026 from PrompTugal.news (assets/portugal/algarve-evolution-data.json in PrompTugal/PrompTugal__News__Website, Apache-2.0 code, CC BY 4.0 text), where researcher@PrompTugal.dinis read every source on 6 November 2026. Each node, timeline entry and place names a key in 'sources', which holds the original URL. Coordinates are approximate, for drawing only. Copied by sites@AgentiCCells.dinis. Portuguese text in *_pt fields (translated by sites@AgentiCCells.dinis); the build gives each language its own view of the data.",
  "from": "https://promptugal.news/graph/algarve-evolution/",
  "sources": {
   "psn": {
@@ -89,140 +89,180 @@
    "label": "Algarve Evolution",
    "kind": "centre",
    "note": "Faro-based non-profit association: community begun in 2018, officially presented in September 2019; targets by 2032: support 500 companies, help create 150 startups, impact 50,000 people.",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "Algarve Evolution",
+   "note_pt": "Associação sem fins lucrativos sediada em Faro: comunidade iniciada em 2018, apresentada oficialmente em setembro de 2019; metas para 2032: apoiar 500 empresas, ajudar a criar 150 startups, chegar a 50.000 pessoas."
   },
   {
    "id": "adi",
    "label": "Algarve Digital Innovators",
    "kind": "programme",
    "note": "Network of innovation communities across the 16 municipalities; launched in Lagos in September 2025.",
-   "src": "adi"
+   "src": "adi",
+   "label_pt": "Algarve Digital Innovators",
+   "note_pt": "Rede de comunidades de inovação nos 16 municípios; lançada em Lagos em setembro de 2025."
   },
   {
    "id": "f2f",
    "label": "Founder2Founder",
    "kind": "programme",
    "note": "Launched October 2026; 8 companies chosen from 41 applications; six months of mentoring.",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "Founder2Founder",
+   "note_pt": "Lançado em outubro de 2026; 8 empresas escolhidas entre 41 candidaturas; seis meses de mentoria."
   },
   {
    "id": "incubator",
    "label": "Incubator",
    "kind": "programme",
    "note": "Recognised by Startup Portugal in January 2026.",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "Incubadora",
+   "note_pt": "Reconhecida pela Startup Portugal em janeiro de 2026."
   },
   {
    "id": "inova",
    "label": "INOVA ALGARVE 3.0",
    "kind": "programme",
    "note": "Leads the Digital Transition Programme for Algarve tourism companies; free consultancy pilot for 20 tourism SMEs (AI, robotics).",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "INOVA ALGARVE 3.0",
+   "note_pt": "Lidera o Programa de Transição Digital para as empresas de turismo do Algarve; piloto de consultoria gratuita para 20 PME do turismo (IA, robótica)."
   },
   {
    "id": "aths",
    "label": "Algarve Tech Hub Summit",
    "kind": "programme",
    "note": "First edition 28 Mar to 3 Apr 2022 (Faro and Loulé), Algarve Evolution one of about twelve promoting entities with Algarve STP and the University of Algarve; then Albufeira (2024) and Lagos (2025); to return in 2027.",
-   "src": "econews22"
+   "src": "econews22",
+   "label_pt": "Algarve Tech Hub Summit",
+   "note_pt": "Primeira edição de 28 de março a 3 de abril de 2022 (Faro e Loulé), com a Algarve Evolution entre cerca de doze entidades promotoras, com o Algarve STP e a Universidade do Algarve; depois Albufeira (2024) e Lagos (2025); regressa em 2027."
   },
   {
    "id": "education",
    "label": "Education",
    "kind": "programme",
    "note": "With University of Algarve; Junior Achievement Portugal 'The Company'; Vibathon Algarve.",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "Educação",
+   "note_pt": "Com a Universidade do Algarve; \"A Empresa\" da Junior Achievement Portugal; Vibathon Algarve."
   },
   {
    "id": "venture",
    "label": "Venture Lab by AlgarveSTP",
    "kind": "programme",
    "note": "One of six partners; 12 startups and SMEs selected for mentoring (published 10 Jul 2026). Algarve Evolution's specific role is not described.",
-   "src": "venture"
+   "src": "venture",
+   "label_pt": "Venture Lab by AlgarveSTP",
+   "note_pt": "Um de seis parceiros; 12 startups e PME selecionadas para mentoria (publicado a 10 de julho de 2026). O papel específico da Algarve Evolution não é descrito."
   },
   {
    "id": "grow",
    "label": "Grow Algarve Meetup",
    "kind": "programme",
    "note": "Organised by Algarve Evolution; 1,623 members; monthly gatherings across Algarve municipalities.",
-   "src": "meetup"
+   "src": "meetup",
+   "label_pt": "Grow Algarve Meetup",
+   "note_pt": "Organizado pela Algarve Evolution; 1.623 membros; encontros mensais em vários municípios do Algarve."
   },
   {
    "id": "ualg",
    "label": "University of Algarve",
    "kind": "partner",
    "note": "Partner in ADI, the Tech Hub Summit, education, and the lead promoter of the 2025 Web Summit project.",
-   "src": "adi"
+   "src": "adi",
+   "label_pt": "Universidade do Algarve",
+   "note_pt": "Parceira na ADI, no Tech Hub Summit e na educação, e promotora principal do projeto Web Summit 2025."
   },
   {
    "id": "stp",
    "label": "Algarve STP",
    "kind": "partner",
    "note": "Science and technology park; partner in ADI, Venture Lab, the Tech Hub Summit and the 2025 Web Summit project.",
-   "src": "adi"
+   "src": "adi",
+   "label_pt": "Algarve STP",
+   "note_pt": "Parque de ciência e tecnologia; parceiro na ADI, no Venture Lab, no Tech Hub Summit e no projeto Web Summit 2025."
   },
   {
    "id": "amal",
    "label": "AMAL",
    "kind": "partner",
    "note": "The Algarve's intermunicipal community; partner in ADI, Venture Lab and the 2025 Web Summit project.",
-   "src": "adi"
+   "src": "adi",
+   "label_pt": "AMAL",
+   "note_pt": "A comunidade intermunicipal do Algarve; parceira na ADI, no Venture Lab e no projeto Web Summit 2025."
   },
   {
    "id": "nera",
    "label": "NERA",
    "kind": "partner",
    "note": "Business association of the Algarve; partner in ADI, Venture Lab and the 2025 Web Summit project.",
-   "src": "adi"
+   "src": "adi",
+   "label_pt": "NERA",
+   "note_pt": "Associação empresarial da região do Algarve; parceira na ADI, no Venture Lab e no projeto Web Summit 2025."
   },
   {
    "id": "anje",
    "label": "ANJE",
    "kind": "partner",
    "note": "National association of young entrepreneurs; partner in ADI and Venture Lab; ran the 2025 Web Summit competition.",
-   "src": "ws25"
+   "src": "ws25",
+   "label_pt": "ANJE",
+   "note_pt": "Associação nacional de jovens empresários; parceira na ADI e no Venture Lab; organizou o concurso Web Summit 2025."
   },
   {
    "id": "ja",
    "label": "Junior Achievement Portugal",
    "kind": "partner",
    "note": "Runs 'The Company' with Algarve Evolution's education work.",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "Junior Achievement Portugal",
+   "note_pt": "Promove \"A Empresa\" no trabalho de educação da Algarve Evolution."
   },
   {
    "id": "startupPt",
    "label": "Startup Portugal",
    "kind": "partner",
    "note": "Recognised the incubator in January 2026.",
-   "src": "psn"
+   "src": "psn",
+   "label_pt": "Startup Portugal",
+   "note_pt": "Reconheceu a incubadora em janeiro de 2026."
   },
   {
    "id": "munis",
    "label": "16 municipalities",
    "kind": "municipality",
    "note": "ADI's communities cover the Algarve's 16 municipalities; the 2030 plan names 24 communities.",
-   "src": "adi"
+   "src": "adi",
+   "label_pt": "16 municípios",
+   "note_pt": "As comunidades da ADI cobrem os 16 municípios do Algarve; o plano 2030 indica 24 comunidades."
   },
   {
    "id": "lagos",
    "label": "Câmara Municipal de Lagos",
    "kind": "municipality",
    "note": "Partner of DevFest Lagos 2026.",
-   "src": "devfest"
+   "src": "devfest",
+   "label_pt": "Câmara Municipal de Lagos",
+   "note_pt": "Parceira do DevFest Lagos 2026."
   },
   {
    "id": "gdg",
    "label": "Google Developer Group Lagos",
    "kind": "partner",
    "note": "Organiser of DevFest Lagos 2026.",
-   "src": "devfest"
+   "src": "devfest",
+   "label_pt": "Google Developer Group Lagos",
+   "note_pt": "Organizador do DevFest Lagos 2026."
   },
   {
    "id": "ws25",
    "label": "Web Summit Lisbon 2025",
    "kind": "summit",
    "note": "Algarve Evolution was a named project partner in the competition that took 24 Algarve startups to Web Summit Lisbon, 10 to 13 November 2025.",
-   "src": "ws25"
+   "src": "ws25",
+   "label_pt": "Web Summit Lisboa 2025",
+   "note_pt": "A Algarve Evolution foi parceira do projeto do concurso que levou 24 startups do Algarve à Web Summit Lisboa, de 10 a 13 de novembro de 2025."
   },
   {
    "id": "ws26",
@@ -230,14 +270,18 @@
    "kind": "summit",
    "note": "No Algarve Evolution presence at Web Summit Lisbon 2026 has been found yet (9 to 12 November 2026).",
    "src": "site",
-   "dashed": true
+   "dashed": true,
+   "label_pt": "Web Summit Lisboa 2026",
+   "note_pt": "Ainda não foi encontrada presença da Algarve Evolution na Web Summit Lisboa 2026 (9 a 12 de novembro de 2026)."
   },
   {
    "id": "devfestEv",
    "label": "DevFest Lagos 2026",
    "kind": "event",
    "note": "7 Nov 2026, Lagos; partners include Algarve Evolution.",
-   "src": "devfest"
+   "src": "devfest",
+   "label_pt": "DevFest Lagos 2026",
+   "note_pt": "7 de novembro de 2026, Lagos; a Algarve Evolution está entre os parceiros."
   },
   {
    "id": "tmctEv",
@@ -245,7 +289,9 @@
    "kind": "event",
    "note": "5 to 7 Nov 2026, Portimão; organised by others, listed on Algarve Evolution's calendar.",
    "src": "tmct",
-   "listed": true
+   "listed": true,
+   "label_pt": "TMCT'26",
+   "note_pt": "5 a 7 de novembro de 2026, Portimão; organizado por outros, listado no calendário da Algarve Evolution."
   },
   {
    "id": "wealthEv",
@@ -253,21 +299,27 @@
    "kind": "event",
    "note": "6 Nov 2026, Almancil; organised by others, invitation only, listed on Algarve Evolution's calendar.",
    "src": "wealth",
-   "listed": true
+   "listed": true,
+   "label_pt": "Private Wealth and Investment Gathering",
+   "note_pt": "6 de novembro de 2026, Almancil; organizado por outros, só por convite, listado no calendário da Algarve Evolution."
   },
   {
    "id": "wrapEv",
    "label": "Algarve Tech 2025 Wrap Party",
    "kind": "event",
    "note": "Faro, late 2025; presented with Algarve Evolution; recaps the Algarve's November 2025 series around Web Summit and Portugal Tech Week.",
-   "src": "wrap"
+   "src": "wrap",
+   "label_pt": "Algarve Tech 2025 Wrap Party",
+   "note_pt": "Faro, final de 2025; apresentado com a Algarve Evolution; recapitula a série de novembro de 2025 no Algarve, em torno da Web Summit e da Portugal Tech Week."
   },
   {
    "id": "afterEv",
    "label": "Algarve Tech Afterwork",
    "kind": "event",
    "note": "Tavira, a past event (year not shown); Algarve Evolution among the organisers, in collaboration with Portugal Tech Week.",
-   "src": "afterwork"
+   "src": "afterwork",
+   "label_pt": "Algarve Tech Afterwork",
+   "note_pt": "Tavira, um evento passado (ano não indicado); a Algarve Evolution entre os organizadores, em colaboração com a Portugal Tech Week."
   }
  ],
  "links": [
@@ -468,7 +520,10 @@
    "t": 2018.0,
    "title": "The community begins",
    "text": "A small group of local entrepreneurs starts building the region's innovation community (the organisation's own account, as reported in 2026).",
-   "src": "psn"
+   "src": "psn",
+   "when_pt": "2018",
+   "title_pt": "A comunidade começa",
+   "text_pt": "Um pequeno grupo de empresários locais começa a construir a comunidade de inovação da região (relato da própria organização, publicado em 2026)."
   },
   {
    "when": "12 Sep 2019",
@@ -476,21 +531,31 @@
    "title": "Officially presented, Faro",
    "text": "At the Centro Ciência Viva do Algarve: a non-profit association of about 29 ICT companies, aiming at critical mass and one voice at events such as Web Summit.",
    "src": "pres19",
-   "stat": "29 member companies"
+   "stat": "29 member companies",
+   "when_pt": "12 set 2019",
+   "title_pt": "Apresentação oficial, Faro",
+   "text_pt": "No Centro Ciência Viva do Algarve: uma associação sem fins lucrativos de cerca de 29 empresas de TIC, para ganhar massa crítica e falar a uma só voz em eventos como a Web Summit.",
+   "stat_pt": "29 empresas associadas"
   },
   {
    "when": "28 Mar to 3 Apr 2022",
    "t": 2022.25,
    "title": "First Algarve Tech Hub Summit",
    "text": "Hybrid, Faro and Loulé; Algarve Evolution one of about twelve promoting entities with Algarve STP and the University of Algarve.",
-   "src": "econews22"
+   "src": "econews22",
+   "when_pt": "28 mar a 3 abr 2022",
+   "title_pt": "Primeiro Algarve Tech Hub Summit",
+   "text_pt": "Híbrido, Faro e Loulé; a Algarve Evolution entre cerca de doze entidades promotoras, com o Algarve STP e a Universidade do Algarve."
   },
   {
    "when": "1 Jun 2024",
    "t": 2024.42,
    "title": "Impact Algarve",
    "text": "Organised by Get Real and Algarve Evolution at the University of Algarve's Tec Campus, Faro (the year is inferred from the page).",
-   "src": "impact"
+   "src": "impact",
+   "when_pt": "1 jun 2024",
+   "title_pt": "Impact Algarve",
+   "text_pt": "Organizado pela Get Real e pela Algarve Evolution no Tec Campus da Universidade do Algarve, em Faro (o ano é deduzido da página)."
   },
   {
    "when": "11 Jul 2024",
@@ -498,63 +563,91 @@
    "title": "A new president elected",
    "text": "The association elects a president for 2024 to 2027, after the outgoing president.",
    "src": "pres24",
-   "stat": "about 70 companies and individuals"
+   "stat": "about 70 companies and individuals",
+   "when_pt": "11 jul 2024",
+   "title_pt": "Eleito um novo presidente",
+   "text_pt": "A associação elege um presidente para 2024 a 2027, sucedendo ao presidente cessante.",
+   "stat_pt": "cerca de 70 empresas e particulares"
   },
   {
    "when": "23 to 25 Oct 2024",
    "t": 2024.8,
    "title": "Summit, Albufeira",
    "text": "Algarve Tech Hub Summit at Hotel Alisios, Albufeira.",
-   "src": "aths24"
+   "src": "aths24",
+   "when_pt": "23 a 25 out 2024",
+   "title_pt": "Summit, Albufeira",
+   "text_pt": "Algarve Tech Hub Summit no Hotel Alisios, em Albufeira."
   },
   {
    "when": "Sep 2025",
    "t": 2025.68,
    "title": "Algarve Digital Innovators launched",
    "text": "Launched in Lagos with a roadshow from September to November 2025.",
-   "src": "adi"
+   "src": "adi",
+   "when_pt": "set 2025",
+   "title_pt": "Lançada a Algarve Digital Innovators",
+   "text_pt": "Lançada em Lagos, com um roadshow de setembro a novembro de 2025."
   },
   {
    "when": "6 to 7 Nov 2025",
    "t": 2025.85,
    "title": "Summit, Lagos",
    "text": "Algarve Tech Hub Summit with over 500 participants reported (a headline only was read).",
-   "src": "aths25"
+   "src": "aths25",
+   "when_pt": "6 a 7 nov 2025",
+   "title_pt": "Summit, Lagos",
+   "text_pt": "Algarve Tech Hub Summit, com mais de 500 participantes noticiados (foi lido apenas o título)."
   },
   {
    "when": "10 to 13 Nov 2025",
    "t": 2025.87,
    "title": "24 Algarve startups at Web Summit",
    "text": "Algarve Evolution is a named partner of the project that takes them to Web Summit Lisbon.",
-   "src": "ws25"
+   "src": "ws25",
+   "when_pt": "10 a 13 nov 2025",
+   "title_pt": "24 startups do Algarve na Web Summit",
+   "text_pt": "A Algarve Evolution é parceira do projeto que as leva à Web Summit Lisboa."
   },
   {
    "when": "Late 2025",
    "t": 2025.97,
    "title": "Wrap Party, Faro",
    "text": "Recaps the Algarve's November series, from Buildathon to Web Summit.",
-   "src": "wrap"
+   "src": "wrap",
+   "when_pt": "final de 2025",
+   "title_pt": "Wrap Party, Faro",
+   "text_pt": "Recapitula a série de novembro no Algarve, do Buildathon à Web Summit."
   },
   {
    "when": "Jan 2026",
    "t": 2026.05,
    "title": "Incubator recognised",
    "text": "Recognised by Startup Portugal.",
-   "src": "psn"
+   "src": "psn",
+   "when_pt": "jan 2026",
+   "title_pt": "Incubadora reconhecida",
+   "text_pt": "Reconhecida pela Startup Portugal."
   },
   {
    "when": "Jul 2026",
    "t": 2026.55,
    "title": "Venture Lab and the 2030 plan",
    "text": "Venture Lab by AlgarveSTP selects 12 companies (10 Jul); the ADI 2030 plan names 24 communities.",
-   "src": "venture"
+   "src": "venture",
+   "when_pt": "jul 2026",
+   "title_pt": "Venture Lab e o plano 2030",
+   "text_pt": "O Venture Lab by AlgarveSTP seleciona 12 empresas (10 de julho); o plano 2030 da ADI indica 24 comunidades."
   },
   {
    "when": "Oct 2026",
    "t": 2026.8,
    "title": "Founder2Founder launched",
    "text": "8 companies chosen from 41 applications.",
-   "src": "psn"
+   "src": "psn",
+   "when_pt": "out 2026",
+   "title_pt": "Lançado o Founder2Founder",
+   "text_pt": "8 empresas escolhidas entre 41 candidaturas."
   },
   {
    "when": "5 to 7 Nov 2026",
@@ -562,7 +655,11 @@
    "title": "This week in the Algarve",
    "text": "TMCT'26 in Portimão (5 to 7), the Private Wealth gathering in Almancil (6), DevFest Lagos (7): the first two are listed by Algarve Evolution, the third has it as a partner.",
    "src": "site",
-   "stat": "118 active members"
+   "stat": "118 active members",
+   "when_pt": "5 a 7 nov 2026",
+   "title_pt": "Esta semana no Algarve",
+   "text_pt": "TMCT'26 em Portimão (5 a 7), o encontro Private Wealth em Almancil (6), DevFest Lagos (7): os dois primeiros estão listados pela Algarve Evolution, no terceiro é parceira.",
+   "stat_pt": "118 membros ativos"
   },
   {
    "when": "2027",
@@ -570,7 +667,10 @@
    "title": "Tech Hub Summit returns",
    "text": "Confirmed to return; dates and venue not announced.",
    "src": "psn",
-   "future": true
+   "future": true,
+   "when_pt": "2027",
+   "title_pt": "O Tech Hub Summit regressa",
+   "text_pt": "Regresso confirmado; datas e local por anunciar."
   }
  ],
  "places": [
@@ -582,7 +682,8 @@
    ],
    "note": "Where Algarve Evolution is based; presented here in 2019 (Centro Ciência Viva); Tech Hub Summit 2022 (with Loulé); Wrap Party; Grow Algarve Meetup.",
    "src": "psn",
-   "hq": true
+   "hq": true,
+   "note_pt": "Onde a Algarve Evolution está sediada; apresentada aqui em 2019 (Centro Ciência Viva); Tech Hub Summit 2022 (com Loulé); Wrap Party; Grow Algarve Meetup."
   },
   {
    "name": "Lagos",
@@ -591,7 +692,8 @@
     37.103
    ],
    "note": "ADI launched here (Sep 2025); Tech Hub Summit 2025; DevFest Lagos on 7 Nov 2026.",
-   "src": "adi"
+   "src": "adi",
+   "note_pt": "A ADI foi lançada aqui (set 2025); Tech Hub Summit 2025; DevFest Lagos a 7 nov 2026."
   },
   {
    "name": "Portimão",
@@ -600,7 +702,8 @@
     37.139
    ],
    "note": "TMCT'26, 5 to 7 Nov 2026 (Hotel Pestana Alvor Praia), listed by Algarve Evolution.",
-   "src": "tmct"
+   "src": "tmct",
+   "note_pt": "TMCT'26, 5 a 7 nov 2026 (Hotel Pestana Alvor Praia), listado pela Algarve Evolution."
   },
   {
    "name": "Albufeira",
@@ -609,7 +712,8 @@
     37.089
    ],
    "note": "Second Tech Hub Summit, 23 to 25 Oct 2024.",
-   "src": "aths24"
+   "src": "aths24",
+   "note_pt": "Segundo Tech Hub Summit, 23 a 25 out 2024."
   },
   {
    "name": "Almancil",
@@ -618,7 +722,8 @@
     37.086
    ],
    "note": "Private Wealth and Investment Gathering, 6 Nov 2026 (invitation only), listed by Algarve Evolution.",
-   "src": "wealth"
+   "src": "wealth",
+   "note_pt": "Private Wealth and Investment Gathering, 6 nov 2026 (só por convite), listado pela Algarve Evolution."
   },
   {
    "name": "Tavira",
@@ -627,7 +732,8 @@
     37.127
    ],
    "note": "Algarve Tech Afterwork, a past event with Algarve Evolution among the organisers.",
-   "src": "afterwork"
+   "src": "afterwork",
+   "note_pt": "Algarve Tech Afterwork, um evento passado com a Algarve Evolution entre os organizadores."
   },
   {
    "name": "Salir",
@@ -636,7 +742,8 @@
     37.236
    ],
    "note": "Among the places of Grow Algarve Meetup's past gatherings (year not shown).",
-   "src": "meetup"
+   "src": "meetup",
+   "note_pt": "Um dos locais de encontros passados do Grow Algarve Meetup (ano não indicado)."
   },
   {
    "name": "Monchique",
@@ -645,7 +752,8 @@
     37.317
    ],
    "note": "Among the places of Grow Algarve Meetup's past gatherings (year not shown).",
-   "src": "meetup"
+   "src": "meetup",
+   "note_pt": "Um dos locais de encontros passados do Grow Algarve Meetup (ano não indicado)."
   }
  ]
 }

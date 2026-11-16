@@ -10,6 +10,20 @@ export function loadData(dir = 'src/data') {
   return data;
 }
 
+// A view of the data for one language: wherever an object has both k and k_<lang> (for example title and
+// title_pt), k takes the translated value. Designs then read e.title and get the page's language.
+export function localise(data, lang) {
+  const walk = v => {
+    if (Array.isArray(v)) return v.map(walk);
+    if (!v || typeof v !== 'object') return v;
+    const o = {};
+    for (const [k, x] of Object.entries(v)) o[k] = walk(x);
+    if (lang !== 'en') for (const k of Object.keys(o)) if (o[`${k}_${lang}`] !== undefined && !k.endsWith(`_${lang}`)) o[k] = o[`${k}_${lang}`];
+    return o;
+  };
+  return walk(data);
+}
+
 const WORDS = {
   en: { source: 'Source', sources: 'Sources', proposal: 'Proposal', target: 'target', designs: 'Designs', choose: 'Choose a design', lang: 'Português', langShort: 'PT' },
   pt: { source: 'Fonte', sources: 'Fontes', proposal: 'Proposta', target: 'meta', designs: 'Designs', choose: 'Escolha um design', lang: 'English', langShort: 'EN' },
