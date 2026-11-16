@@ -280,3 +280,7 @@
 .imp-prev tr.row-error .imp-rec-n { color: var(--ink-3); }
 .iss-ok { color: #1b5e37; } .iss-ok::before { background: #2e8a57; }
 @media (min-width: 721px) { .imp-prev .imp-rec { min-width: 16rem; } }
+.fx-pf th { text-align: left; }
+.fx-pf td code { white-space: nowrap; font-size: 11.5px; }
+.fx-pf td:last-child { overflow-wrap: normal; }
+.req-board { align-items: start; }

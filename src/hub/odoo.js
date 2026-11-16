@@ -466,11 +466,11 @@
     }
     const pf = [
       ['Session notes', PRIV.sessions.filter(s => s.notes).length, 'aih.session.notes'],
-      ['Supplier contacts', PRIV.suppliers.filter(s => s.contact).length, 'res.partner email, phone'],
+      ['Supplier contacts', PRIV.suppliers.filter(s => s.contact).length, 'res.partner email'],
       ['Vibathon participants', countOf(PRIV, 'participants'), 'aih.vibathon.participant'],
       ['Jury scores', countOf(PRIV, 'scores'), 'aih.project.score'],
       ['Team names without consent', PRIV.projects.reduce((n, p) => n + p.team.length, 0) - PUB.projects.reduce((n, p) => n + p.team.length, 0), 'aih.project.team_ids'],
-      ['Links emptied (a session\'s mentor, an application\'s supplier)', PUB.sessions.filter(s => s.mentor_id === null).length + PUB.applications.filter(a => a.supplier_id === null).length, 'set to null'],
+      ['Links emptied (to a mentor or supplier who is not public)', PUB.sessions.filter(s => s.mentor_id === null).length + PUB.applications.filter(a => a.supplier_id === null).length + PUB.projects.filter(p => p.mentor_id === null && PRIV.projects.find(q => q.id === p.id)?.mentor_id).length, 'set to null'],
     ];
     const label = ({ e, r }) => r.name || r.title || (e === 'sessions' ? `${r.topic} (${r.date})` : e === 'kpis' ? `${r.company_id}, month ${r.month}` : r.id);
     box.innerHTML = `<h4>Withheld from the public feed, record by record</h4>${Object.entries(groups).map(([why, list]) => `<details class="fx-g"${list.length < 8 ? ' open' : ''}><summary><b>${esc(why)}</b> · ${list.length}</summary><ul>${list.map(x => `<li><span class="fx-e">${esc(x.e)}</span> ${esc(label(x))} ${x.r.simulated ? '<span class="sim-badge">Simulated</span>' : ''}${x.full !== why ? `<span class="fx-why2">${esc(x.full.slice(why.length).replace(/^ \(|\)$/g, ''))}</span>` : ''}</li>`).join('')}</ul></details>`).join('')}
