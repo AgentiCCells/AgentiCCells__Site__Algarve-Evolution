@@ -35,6 +35,7 @@ const GAPS = [
 // Which hub activity each real programme belongs to (our grouping, from the whiteboard's four boxes).
 const PROG_ACT = { founder2founder: 'inc-acc', f2f: 'inc-acc', incubator: 'inc-acc', 'inova-algarve-3': 'inc-acc', inova: 'inc-acc', 'startup-showcase': 'inc-acc',
   buildathons: 'vibathon', 'algarve-tech-hub-summit': 'vibathon', aths: 'vibathon', 'algarve-digital-innovators': 'talent', adi: 'talent', grow: 'talent', venture: 'inc-acc' };
+const ORG_SHORT = { support: 'Support', incubation: 'Incubation', education: 'Education', public: 'Public bodies', company: 'Companies', funding: 'Funding' };
 const ORG_KINDS = { support: 'Support', incubation: 'Incubation and mentoring', education: 'Education and research', public: 'Public bodies', company: 'Companies', funding: 'Investment and grants', community: 'Communities' };
 const WORDNUM = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
 
@@ -297,7 +298,7 @@ export function render(ctx) {
     add({ id, kind: 'community', label: c.name, short: c.name.replace(/\s*\(.*\)\s*$/, '').replace(/\s+-\s+.*$/, ''), note: `${c.kind ? c.kind[0].toUpperCase() + c.kind.slice(1) : 'Community'}${c.municipality ? `, ${c.municipality}` : ', place not given'}${c.members ? `, ${num(c.members)} members (their page)` : ''}.${c.adi === true ? ' Named on the list of the ADI network on their Odoo.' : c.adi === false ? ' Found in public research; not on the ADI list.' : ''}${c.summary ? ` ${c.summary}` : ''}`, src: c.source, url: c.url });
     links.push(c.adi === false || !ids0.has('adi') ? ['act-talent', id, 'found in research'] : ['adi', id, 'maps']); }
   const byKind = {}; for (const o of X.organisations) (byKind[o.kind] ||= []).push(o);
-  for (const [k, list] of Object.entries(byKind)) { if (k === 'community' || !ORG_KINDS[k]) continue; add({ id: `org-${k}`, kind: 'orgs', label: `${ORG_KINDS[k]}: ${list.length} organisations`, short: `${ORG_KINDS[k]} (${list.length})`, note: `${list.length} organisations in the Algarve, from public sources. Organisations only, no people.`, src: X.orgSource, orgs: list }); links.push(['act-talent', `org-${k}`, 'maps']); }
+  for (const [k, list] of Object.entries(byKind)) { if (k === 'community' || !ORG_KINDS[k]) continue; add({ id: `org-${k}`, kind: 'orgs', label: `${ORG_KINDS[k]}: ${list.length} organisations`, short: `${ORG_SHORT[k] || ORG_KINDS[k]} (${list.length})`, note: `${list.length} organisations in the Algarve, from public sources. Organisations only, no people.`, src: X.orgSource, orgs: list }); links.push(['act-talent', `org-${k}`, 'maps']); }
   const GW = 1100, GH = 720;
   const pos = layout(nodes, links, GW, GH);
   const shortOf = id => nodes.find(n => n.id === id)?.short || id;
@@ -307,7 +308,7 @@ export function render(ctx) {
   const lab = new Map(); const aeP = pos.get('ae');
   const ov = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
   for (const n of nodes) { const p = pos.get(n.id), r = R[n.kind] || 10, fs = n.kind === 'community' ? 6.8 : n.kind === 'activity' ? 10.6 : n.kind === 'centre' ? 11.8 : 7.6, w = n.short.length * fs + 6, hh = 16;
-    const c = n.id === 'ae' ? [[0, r + 18, 'middle']] : [[r + 6, 4, 'start'], [-(r + 6), 4, 'end'], [0, -(r + 7), 'middle'], [0, r + 16, 'middle'], [r + 2, -(r + 4), 'start'], [-(r + 2), -(r + 4), 'end'], [r + 2, r + 14, 'start'], [-(r + 2), r + 14, 'end']];
+    const c = n.id === 'ae' ? [[0, r + 18, 'middle'], [0, -(r + 9), 'middle']] : [[r + 6, 4, 'start'], [-(r + 6), 4, 'end'], [0, -(r + 7), 'middle'], [0, r + 16, 'middle'], [r + 2, -(r + 4), 'start'], [-(r + 2), -(r + 4), 'end'], [r + 2, r + 14, 'start'], [-(r + 2), r + 14, 'end']];
     let best = null;
     for (const [dx, dy, an] of c) { const x0 = an === 'start' ? p.x + dx : an === 'end' ? p.x + dx - w : p.x - w / 2; const bx = [x0, p.y + dy - 11, x0 + w, p.y + dy - 11 + hh];
       let sc = boxes.reduce((s, b) => s + ov(bx, b), 0) + [...lab.values()].reduce((s, b) => s + ov(bx, b.box) * 1.5, 0);
@@ -315,7 +316,8 @@ export function render(ctx) {
       if (!best || sc < best.sc) best = { sc, dx, dy, an, box: bx }; }
     lab.set(n.id, best); boxes.push(best.box); }
   const KINDS = { centre: 'Centre', activity: 'Hub activity', programme: 'Programme', partner: 'Partner', community: 'Community', orgs: 'Organisations', municipality: 'Municipalities' };
-  const nodeSVG = nodes.map(n => { const p = pos.get(n.id); const r = R[n.kind] || 10; const lb = lab.get(n.id);
+  // Algarve Evolution is drawn last, so its label sits above any node near it.
+  const nodeSVG = [...nodes.filter(n => n.id !== 'ae'), ...nodes.filter(n => n.id === 'ae')].map(n => { const p = pos.get(n.id); const r = R[n.kind] || 10; const lb = lab.get(n.id);
     return `<g class="nd k-${n.kind}" data-id="${esc(n.id)}" data-r="${r}" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})" tabindex="0" role="button" aria-label="${esc(n.label)}: ${esc(KINDS[n.kind])}">
       <circle class="nd-halo" r="${r + 7}"/>${n.kind === 'activity' ? `<rect class="nd-c" x="${-r}" y="${-r}" width="${2 * r}" height="${2 * r}" transform="rotate(45)"/>` : `<circle class="nd-c" r="${r}"/>`}${n.id === 'ae' ? '<text class="nd-ae" y="5" text-anchor="middle">AE</text>' : ''}
       <text class="nd-l" x="${lb.dx}" y="${lb.dy}" text-anchor="${lb.an}">${esc(n.short)}</text></g>`; }).join('');

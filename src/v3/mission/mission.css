@@ -419,6 +419,9 @@ html.js .news.rx li.on{opacity:1;transform:none}
 .blip.live .bp{fill:var(--amber);filter:drop-shadow(0 0 6px var(--amber))}
 .bp-l{font:700 10.5px var(--mono);fill:#d8ffe8;letter-spacing:.06em}
 .blip.live .bp-l{fill:#ffe2b0}
+.blip.hq .bp{fill:var(--mag);filter:drop-shadow(0 0 8px var(--mag))}
+.blip.hq .bp-p{stroke:var(--mag)}
+.blip.hq .bp-l{fill:#ffc2f1}
 .rd-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--tx-2)}
 .rd-key li{display:flex;align-items:center}
 .ring-k{display:inline-block;width:12px;height:12px;border-radius:50%;border:1px dashed var(--green);margin-right:8px}
