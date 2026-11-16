@@ -114,6 +114,7 @@
     function loop() { step(); draw(); alpha *= 0.985; if (alpha > 0.004 && !calm) raf = requestAnimationFrame(loop); else raf = 0; }
     kick = (a = 0.25) => { alpha = Math.max(alpha, a); if (!raf && !calm) raf = requestAnimationFrame(loop); };
     kick(0.03);
+    const box = svg.parentElement; if (box.scrollWidth > box.clientWidth) box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2;
 
     // selection and the inspector
     let sel = 'ae';

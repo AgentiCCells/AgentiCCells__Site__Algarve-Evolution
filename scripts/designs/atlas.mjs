@@ -198,8 +198,8 @@ export function render({ lang, data, h, chrome, other }) {
     const p = where(name); const lis = name === 'Lisboa';
     const arc = name === 'Faro' ? '' : (() => { const dx = p[0] - faroP[0], dy = p[1] - faroP[1]; const d = Math.hypot(dx, dy); const mx = (p[0] + faroP[0]) / 2 + dy * 0.18, my = (p[1] + faroP[1]) / 2 - Math.abs(dx) * 0.18 - d * 0.08;
       return `<path class="ev-arc" data-t="${e.t}" d="M${faroP}Q${mx.toFixed(1)},${my.toFixed(1)} ${p}" pathLength="1"/>`; })();
-    return { arc, mark: `<a href="#${evId(e)}" class="mk-link ev-link" data-card="${evId(e)}" data-t="${e.t}" aria-label="${esc(e.when)}: ${esc(e.title)}">${mk('mk-ev', p,
-      `<circle r="12" class="ev-ring"/><circle r="4" class="ev-dot"/>${lis ? `<text class="lbl lbl-lis" x="-8" y="-18">↑ ${esc(W.lisbon)}</text>` : ''}<text class="ev-yr" y="-17" text-anchor="middle">${esc(e.when.match(/\d{4}/)[0])}</text>`, ` data-t="${e.t}" data-i="${i}"`)}</a>` };
+    return { arc, mark: `<a href="#${evId(e)}" class="mk-link ev-link" data-card="${evId(e)}" data-t="${e.t}" tabindex="-1" aria-label="${esc(e.when)}: ${esc(e.title)}">${mk('mk-ev', p,
+      `<circle r="12" class="ev-ring"/><circle r="4" class="ev-dot"/>${lis ? `<text class="lbl lbl-lis" x="-8" y="-18">↑ ${esc(W.lisbon)}</text>` : ''}`, ` data-t="${e.t}" data-i="${i}"`)}</a>` };
   }));
 
   const PIN_OFF = { Salir: [-14, -14], Monchique: [17, 2] };
@@ -229,7 +229,7 @@ export function render({ lang, data, h, chrome, other }) {
 <path d="${pathOf(O.border, { closed: false, smooth: 0.3 })}" class="border"/>
 <path d="${coastD}" class="coast"/>
 <g class="grat-l">${gratLabels.join('')}</g>
-<text class="sea-l" x="${proj([-8.36, 36.9])[0]}" y="${proj([0, 36.9])[1]}" text-anchor="middle">${esc(W.sea)}</text>
+<text class="sea-l" x="${proj([-8.12, 36.9])[0]}" y="${proj([0, 36.9])[1]}" text-anchor="middle">${esc(W.sea)}</text>
 <text class="spain-l" transform="translate(${proj([-7.405, 37.43]).join(' ')}) rotate(-78)" text-anchor="middle">${esc(W.spain)}</text>
 <text class="region-l" x="${proj([-8.12, 37.4])[0]}" y="${proj([0, 37.4])[1]}" text-anchor="middle">${esc(W.region)}</text>
 <g class="layer layer-net" data-layer="net"><g class="net-lines" fill="none">${netLines}</g>${netMuni}</g>
@@ -301,6 +301,10 @@ ${chrome.banner}
     <button type="button" data-zoom="out" aria-label="${esc(W.zoomOut)}" title="${esc(W.zoomOut)}">−</button>
     <button type="button" data-zoom="reset" aria-label="${esc(W.reset)}" title="${esc(W.reset)}"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
   </div>
+  <svg class="atl-rose" viewBox="-50 -50 100 100" aria-hidden="true"><circle r="34" fill="rgba(251,248,241,.7)" stroke="#5f6c6e" stroke-width=".8"/><circle r="28" fill="none" stroke="#5f6c6e" stroke-width=".5" stroke-dasharray="1.5 2.5"/>
+    <path d="M0,-44L6,-6L0,0Z" fill="#1c2a2f"/><path d="M0,-44L-6,-6L0,0Z" fill="#a8431c"/><path d="M0,44L6,6L0,0Z" fill="#a8431c"/><path d="M0,44L-6,6L0,0Z" fill="#1c2a2f"/>
+    <path d="M44,0L6,-6L0,0Z" fill="#a8431c"/><path d="M44,0L6,6L0,0Z" fill="#1c2a2f"/><path d="M-44,0L-6,6L0,0Z" fill="#a8431c"/><path d="M-44,0L-6,-6L0,0Z" fill="#1c2a2f"/>
+    <text y="-46" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-weight="700" font-size="14" fill="#1c2a2f">N</text></svg>
   <div class="atl-scale" aria-hidden="true"><span class="bar"></span><span class="txt">${esc(W.km)} · ${esc(W.approx)}</span></div>
   <aside class="atl-panel" aria-label="${pt ? 'Detalhe' : 'Detail'}" tabindex="-1">
     <button type="button" class="atl-close" aria-label="${esc(W.close)}">×</button>

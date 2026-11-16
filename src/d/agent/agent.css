@@ -33,8 +33,8 @@ h1,h2,h3,h4{margin:0}
 p{margin:0 0 .8em}
 
 /* shell */
-.app{display:grid;grid-template-columns:1fr;min-height:100vh}
-@media (min-width:940px){.app{grid-template-columns:292px minmax(0,1fr)}}
+.shell{display:grid;grid-template-columns:1fr;min-height:100vh}
+@media (min-width:940px){.shell{grid-template-columns:292px minmax(0,1fr)}}
 .side{display:none}
 @media (min-width:940px){.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);border-right:1px solid var(--line);padding:18px 14px 16px}}
 .brand{display:flex;gap:11px;align-items:center;padding:4px 6px 8px}
@@ -65,7 +65,7 @@ p{margin:0 0 .8em}
 /* With JavaScript the page is an app shell: the banner stays, the sidebar fills the height, the conversation scrolls. */
 @media (min-width:940px){
   .js body{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-  .js .app{flex:1;min-height:0}
+  .js .shell{flex:1;min-height:0}
   .js .main{overflow-y:auto;min-height:0;overscroll-behavior:contain}
   .js .side{position:static;height:auto;min-height:0}
   .js .topics{flex:1;min-height:0;overflow:auto}

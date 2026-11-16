@@ -148,7 +148,7 @@ export function render({ lang, data, h, chrome, other }) {
     { id: 'honest', q: L('How do you answer?', 'Como responde?'), d: L('No model, no network, only sourced data', 'Sem modelo, sem rede, só dados com fonte'),
       kw: 'how do you answer,how do you work,how does this work,are you ai,ai,artificial intelligence,llm,chatgpt,gpt,claude,bot,robot,model,real,data,privacy,private,source,sources,trust,true,accurate,como responde,como funciona,es uma ia,ia,inteligencia artificial,modelo,privacidade,dados,fonte,fontes,confianca,verdade',
       follow: ['who', 'ideas', 'numbers'],
-      body: lead(L('I am not a language model. I am this prototype site, answering from its own data files: every answer was written when the site was built, from the files below, and every fact links to its original source. When you type, your words are matched to the closest answer here in your browser. Nothing you type is sent anywhere.', 'Não sou um modelo de linguagem. Sou este protótipo de site, a responder a partir dos seus próprios ficheiros de dados: cada resposta foi escrita quando o site foi construído, a partir dos ficheiros abaixo, e cada facto liga à sua fonte original. Quando escreve, as suas palavras são comparadas com a resposta mais próxima, aqui no seu navegador. Nada do que escreve é enviado para lado nenhum.')) + dataFiles + `<p class="note">${esc(t(v.banner))} ${esc(t(v.footer_disclosure))}</p>` },
+      body: lead(L('I am not a language model. I am this prototype site, answering from its own data files: every answer was written when the site was built, from the files below, and every fact links to its original source. When you type, your words are matched to the closest answer here in your browser. Nothing you type is sent anywhere.', 'Não sou um modelo de linguagem. Sou este protótipo de site, a responder a partir dos seus próprios ficheiros de dados: cada resposta foi escrita quando o site foi construído, a partir dos ficheiros abaixo, e cada facto liga à sua fonte original. Quando escreve, as suas palavras são comparadas com a resposta mais próxima, aqui no seu navegador. Nada do que escreve é enviado para lado nenhum.')) + dataFiles + `<p class="note">${esc(t(v.banner))}</p>` },
   ];
   const byId = Object.fromEntries(A.map(a => [a.id, a]));
   const suggest = ['who', 'goals', 'programmes', 'where', 'partners', 'join', 'y2025', 'ideas'];
@@ -185,7 +185,7 @@ ${chrome.head}
 <body>
 ${chrome.banner}
 <a class="skip" href="#log">${L('Skip to the conversation', 'Saltar para a conversa')}</a>
-<div class="app">
+<div class="shell">
   <aside class="side" aria-label="${L('Topics', 'Temas')}">
     <div class="brand">${orb()}<div><strong>Algarve Evolution</strong><span>${L('Assistant', 'Assistente')} <em>${L('prototype', 'protótipo')}</em></span></div></div>
     <button type="button" class="newchat" data-new hidden><span aria-hidden="true">+</span> ${L('New conversation', 'Nova conversa')}</button>

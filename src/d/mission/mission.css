@@ -300,7 +300,7 @@ html.calm .sweep{display:none}
 }
 @media (max-width:760px){
   body{font-size:14px}
-  .hud{font-size:10.5px;padding:8px 16px;flex-wrap:wrap;gap:6px}
+  .hud{position:relative;font-size:10.5px;padding:8px 16px;flex-wrap:wrap;gap:6px}
   .hud .hud-mid{display:none}
   .tl-k{display:none}
   .hud-r{gap:8px !important}
@@ -316,9 +316,11 @@ html.calm .sweep{display:none}
   .br{grid-template-columns:1fr;gap:4px;padding:12px}
   .br-h{display:none}
   .b-p{order:-1}
-  .nd-l{font-size:15px}
-  .net .nd.k-event .nd-l,.net .nd.k-partner .nd-l{font-size:14px}
   .bm-l{display:none}
+  .graph{overflow-x:auto;overscroll-behavior-x:contain}
+  .net{width:860px;max-width:none;touch-action:pan-x pan-y}
+  .net .nd{touch-action:none}
+  .legend{position:sticky;left:0;width:min(100%,calc(100vw - 64px))}
   .bp-l{font-size:15px}
   .term{max-height:520px;font-size:12.5px}
 }
