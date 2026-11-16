@@ -58,6 +58,12 @@ export function eventDate(e, h) {
   return about + r.from + (y1 === y2 && m1 === m2 ? `${day1}${r.to}${h.date(e.end)}` : `${h.date(e.start)}${r.to}${h.date(e.end)}`);
 }
 
+// Escaped text in which a short hyphenated word ("au-delà", "co-founder") never breaks at its hyphen,
+// for the big headings, where a broken compound reads badly.
+export function keepHyphens(h, text) {
+  return h.esc(text).replace(/(^|\s)([^\s-]{1,7}-[^\s-]{1,8})(?=[\s.,;:!?]|$)/gu, '$1<span class="nw">$2</span>');
+}
+
 // Our menu also carries the two working ideas (the apps), and our footer every language, from ctx.alt.
 export function appLinks(h, langPath, APPS, cls = '') {
   return APPS.map(a => `<a class="${cls}" href="${h.esc(langPath(a.path, h.lang))}" data-app="${h.esc(a.id)}">${h.esc(a.name[h.lang] || a.name.en)}</a>`).join('');
@@ -75,7 +81,7 @@ const W = {
     target: 'Target', figuresIntro: 'Our own figures, as reported. Nobody outside has audited them; where two sources differ, we show both.',
     quoteBy: 'executive director, on our goals for 2032', eventsIntro: 'Days we ran, co-ran or joined as a partner, newest first. All are past; our current calendar is on algarveevolution.pt.',
     future: 'Next', proposal: 'Proposal, nothing agreed', open: 'Open the working prototype', membership: 'Membership categories on algarveevolution.pt',
-    notesIntro: 'Each number in the text points here. Each note links to the page where the fact was read.', published: 'published', read: 'read', cites: 'which cites',
+    notesIntro: 'Each number in the text points here. Each note links to the page where the fact was read.', published: 'published', read: 'read', cites: 'It cites',
     version: 'Version', licence: 'Code Apache-2.0; text CC BY 4.0. Set in Inter (SIL Open Font License 1.1).', note: 'Note',
     qo: '“', qc: '”',
   },
@@ -85,7 +91,7 @@ const W = {
     target: 'Meta', figuresIntro: 'Os nossos próprios números, tal como foram noticiados. Ninguém de fora os auditou; quando duas fontes divergem, mostramos ambas.',
     quoteBy: 'diretor executivo, sobre os nossos objetivos para 2032', eventsIntro: 'Dias que organizámos, coorganizámos ou em que fomos parceiros, do mais recente para o mais antigo. Todos já passaram; o calendário atual está em algarveevolution.pt.',
     future: 'A seguir', proposal: 'Proposta, nada acordado', open: 'Abrir o protótipo a funcionar', membership: 'Categorias de membro em algarveevolution.pt',
-    notesIntro: 'Cada número no texto remete para aqui. Cada nota liga à página onde o facto foi lido.', published: 'publicado a', read: 'lido a', cites: 'que cita',
+    notesIntro: 'Cada número no texto remete para aqui. Cada nota liga à página onde o facto foi lido.', published: 'publicado a', read: 'lido a', cites: 'Cita',
     version: 'Versão', licence: 'Código Apache-2.0; texto CC BY 4.0. Composto em Inter (SIL Open Font License 1.1).', note: 'Nota',
     qo: '«', qc: '»',
   },
@@ -95,7 +101,7 @@ const W = {
     target: 'Meta', figuresIntro: 'Nuestras propias cifras, tal como se publicaron. Nadie de fuera las ha auditado; cuando dos fuentes difieren, mostramos ambas.',
     quoteBy: 'director ejecutivo, sobre nuestros objetivos para 2032', eventsIntro: 'Jornadas que organizamos, coorganizamos o en las que participamos como socios, de la más reciente a la más antigua. Todas han pasado; nuestro calendario actual está en algarveevolution.pt.',
     future: 'Próximo', proposal: 'Propuesta, nada acordado', open: 'Abrir el prototipo en funcionamiento', membership: 'Categorías de socio en algarveevolution.pt',
-    notesIntro: 'Cada número del texto remite aquí. Cada nota enlaza con la página donde se leyó el dato.', published: 'publicado el', read: 'leído el', cites: 'que cita',
+    notesIntro: 'Cada número del texto remite aquí. Cada nota enlaza con la página donde se leyó el dato.', published: 'publicado el', read: 'leído el', cites: 'Cita',
     version: 'Versión', licence: 'Código Apache-2.0; texto CC BY 4.0. Compuesto en Inter (SIL Open Font License 1.1).', note: 'Nota',
     qo: '«', qc: '»',
   },
@@ -105,7 +111,7 @@ const W = {
     target: 'Objectif', figuresIntro: 'Nos propres chiffres, tels que publiés. Personne d\'extérieur ne les a audités\u202f; quand deux sources divergent, nous montrons les deux.',
     quoteBy: 'directeur exécutif, à propos de nos objectifs pour 2032', eventsIntro: 'Les journées que nous avons organisées, co-organisées ou rejointes comme partenaire, de la plus récente à la plus ancienne. Toutes sont passées\u202f; notre calendrier actuel est sur algarveevolution.pt.',
     future: 'À venir', proposal: 'Proposition, rien de convenu', open: 'Ouvrir le prototype', membership: 'Catégories de membre sur algarveevolution.pt',
-    notesIntro: 'Chaque numéro du texte renvoie ici. Chaque note mène à la page où le fait a été lu.', published: 'publié le', read: 'lu le', cites: 'qui cite',
+    notesIntro: 'Chaque numéro du texte renvoie ici. Chaque note mène à la page où le fait a été lu.', published: 'publié le', read: 'lu le', cites: 'Cite\u202f',
     version: 'Version', licence: 'Code Apache-2.0\u202f; texte CC BY 4.0. Composé en Inter (SIL Open Font License 1.1).', note: 'Note',
     qo: '«\u00a0', qc: '\u00a0»',
   },
@@ -151,7 +157,7 @@ export function render({ lang, data, h, chrome, alt }) {
     sec('figures', `<p class="intro">${esc(w.figuresIntro)}</p>
 <dl class="figs">${figures.map(f => `<div class="fig"><dt>${esc(t(f.value))}</dt><dd><span class="fl">${esc(t(f.label))}</span>${f.note ? `<span class="fn">${esc(t(f.note))}</span>` : ''}${cite(f.sources)}</dd></div>`).join('')}</dl>`),
 
-    sec('quote', `<figure class="quote"><blockquote><p>${w.qo}${esc(t(quote.text))}${w.qc}</p></blockquote>
+    sec('quote', `<figure class="quote"><blockquote><p><span class="qo" aria-hidden="true">${w.qo}</span>${esc(t(quote.text))}<span aria-hidden="true">${w.qc}</span></p></blockquote>
 <figcaption><strong>${esc(person.name)}</strong>, ${esc(w.quoteBy)}, <time datetime="${esc(quote.date)}">${esc(h.date(quote.date))}</time>.${quote.translation_note && quote.translation_note[lang] ? ` <span class="tn">${esc(quote.translation_note[lang])}</span>` : ''}</figcaption></figure>${cite(quote.sources)}`, 'row-quote'),
 
     sec('pillars', `<p class="intro">${esc(t(v.pillars_intro))}</p>
@@ -177,7 +183,7 @@ export function render({ lang, data, h, chrome, alt }) {
   const hero = `
 <header class="hero" id="top">
   <p class="kicker"><span>Algarve Evolution</span><span>${esc(w.where)}</span><span>${esc(w.since)}</span></p>
-  <h1>${esc(t(v.tagline))}</h1>
+  <h1>${keepHyphens(h, t(v.tagline))}</h1>
   <div class="row row-hero">
     <div class="lab"><span class="no" aria-hidden="true">00</span><h2 id="h-who">${esc(w.s.who)}</h2></div>
     <div class="body"><p class="lede">${esc(t(v.hero_lede))}</p>__HERO_CITE__</div>

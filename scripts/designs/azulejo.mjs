@@ -3,7 +3,7 @@
 // drawn icons (sun, wave, orange, boat, laptop), sticker figures, and a mosaic of the 16 municipalities whose
 // tiles turn over to show what happened there. Every fact is cited with h.cite().
 // By sites-design@AgentiCCells.dinis, 16 November 2026. Code Apache-2.0, text and drawings CC BY 4.0.
-import { timelineEntry, PARTNERS, eventDate, langLinks } from './brief.mjs';
+import { timelineEntry, PARTNERS, eventDate, langLinks, keepHyphens } from './brief.mjs';
 import { APPS, langPath } from '../site-data.mjs';
 
 export const meta = {
@@ -58,7 +58,7 @@ const W = {
     partners: 'Who we work with',
     events: 'Events', eventsIntro: 'Days we ran, co-ran or joined as a partner, newest first. All are past; our current calendar is on algarveevolution.pt.',
     joinCta: 'See the membership categories', proposal: 'Proposal', open: 'Open the prototype',
-    sources: 'Sources', sourcesIntro: 'Every fact on this page links to one of these.', published: 'published', read: 'read', cites: 'which cites',
+    sources: 'Sources', sourcesIntro: 'Every fact on this page links to one of these.', published: 'published', read: 'read', cites: 'It cites',
     version: 'Version', licence: 'Code Apache-2.0; text and drawings CC BY 4.0. Type: Fredoka and Nunito (SIL Open Font License 1.1).', top: 'Back to the top',
     qo: '“', qc: '”',
   },
@@ -75,7 +75,7 @@ const W = {
     partners: 'Com quem trabalhamos',
     events: 'Eventos', eventsIntro: 'Dias que organizámos, coorganizámos ou em que fomos parceiros, do mais recente para o mais antigo. Todos já passaram; o calendário atual está em algarveevolution.pt.',
     joinCta: 'Ver as categorias de membro', proposal: 'Proposta', open: 'Abrir o protótipo',
-    sources: 'Fontes', sourcesIntro: 'Cada facto nesta página liga a uma destas fontes.', published: 'publicado a', read: 'lido a', cites: 'que cita',
+    sources: 'Fontes', sourcesIntro: 'Cada facto nesta página liga a uma destas fontes.', published: 'publicado a', read: 'lido a', cites: 'Cita',
     version: 'Versão', licence: 'Código Apache-2.0; texto e desenhos CC BY 4.0. Tipos de letra: Fredoka e Nunito (SIL Open Font License 1.1).', top: 'Voltar ao início',
     qo: '«', qc: '»',
   },
@@ -92,7 +92,7 @@ const W = {
     partners: 'Con quién trabajamos',
     events: 'Eventos', eventsIntro: 'Jornadas que organizamos, coorganizamos o en las que participamos como socios, de la más reciente a la más antigua. Todas han pasado; nuestro calendario actual está en algarveevolution.pt.',
     joinCta: 'Ver las categorías de socio', proposal: 'Propuesta', open: 'Abrir el prototipo',
-    sources: 'Fuentes', sourcesIntro: 'Cada dato de esta página enlaza con una de estas fuentes.', published: 'publicado el', read: 'leído el', cites: 'que cita',
+    sources: 'Fuentes', sourcesIntro: 'Cada dato de esta página enlaza con una de estas fuentes.', published: 'publicado el', read: 'leído el', cites: 'Cita',
     version: 'Versión', licence: 'Código Apache-2.0; texto y dibujos CC BY 4.0. Tipografías: Fredoka y Nunito (SIL Open Font License 1.1).', top: 'Volver arriba',
     qo: '«', qc: '»',
   },
@@ -109,7 +109,7 @@ const W = {
     partners: 'Avec qui nous travaillons',
     events: 'Événements', eventsIntro: 'Les journées que nous avons organisées, co-organisées ou rejointes comme partenaire, de la plus récente à la plus ancienne. Toutes sont passées\u202f; notre calendrier actuel est sur algarveevolution.pt.',
     joinCta: 'Voir les catégories de membre', proposal: 'Proposition', open: 'Ouvrir le prototype',
-    sources: 'Sources', sourcesIntro: 'Chaque fait de cette page renvoie à l\'une de ces sources.', published: 'publié le', read: 'lu le', cites: 'qui cite',
+    sources: 'Sources', sourcesIntro: 'Chaque fait de cette page renvoie à l\'une de ces sources.', published: 'publié le', read: 'lu le', cites: 'Cite\u202f',
     version: 'Version', licence: 'Code Apache-2.0\u202f; texte et dessins CC BY 4.0. Polices\u202f: Fredoka et Nunito (SIL Open Font License 1.1).', top: 'Retour en haut',
     qo: '«', qc: '»',
   },
@@ -156,7 +156,7 @@ export function render({ lang, data, h, chrome, alt }) {
   <div class="wrap hero-grid">
     <div class="panel hero-panel"><div class="pin">
       <p class="kick">${esc(w.kicker)}</p>
-      <h1 id="h-top">${esc(t(v.tagline))}</h1>
+      <h1 id="h-top">${keepHyphens(h, t(v.tagline))}</h1>
       <p class="lede">${esc(t(v.hero_lede))}</p>
       <p class="ctas"><a class="btn btn-y" href="#join">${esc(w.cta1)}</a> <a class="btn btn-b" href="#ideas">${esc(w.cta2)}</a></p>
       ${cite(['psn', ...founded.sources])}
@@ -192,7 +192,7 @@ export function render({ lang, data, h, chrome, alt }) {
   <div class="wrap">
     <h2 id="h-quote" class="sr-only">${esc(w.quote)}</h2>
     <figure class="panel quote-panel"><div class="pin">
-      <span class="qmark" aria-hidden="true">${w.qo}</span>
+      <span class="qmark${w.qo === '«' ? ' qmark-g' : ''}" aria-hidden="true">${w.qo}</span>
       <blockquote><p>${esc(t(quote.text))}</p></blockquote>
       <figcaption><span class="q-badge" aria-hidden="true">${icon('sun')}</span><span><strong>${esc(person.name)}</strong>${esc(t(person.role))}, ${esc(w.about)}, <time datetime="${esc(quote.date)}">${esc(h.date(quote.date))}</time>${quote.translation_note && quote.translation_note[lang] ? `<em>${esc(quote.translation_note[lang])}</em>` : ''}</span></figcaption>
       ${cite(quote.sources)}

@@ -39,9 +39,9 @@ body.brief{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 v
 .mast-apps .app{display:inline-flex;align-items:center;gap:.5em;font-weight:550;text-decoration:none!important;border:1px solid var(--rule);padding:.2rem .7rem .2rem .6rem;border-radius:999px;white-space:nowrap}
 .mast-apps .app::before{content:"";flex:none;width:.5em;height:.5em;background:var(--accent)}
 .mast-apps .app:hover{border-color:var(--accent)}
-@media (max-width:520px){.mast-sub{display:none}}
-@media (max-width:719px){
-  .mast-in{flex-wrap:wrap;row-gap:0}
+@media (max-width:899px){.mast-sub{display:none}}
+@media (max-width:599px){
+  .mast-in{flex-wrap:wrap;row-gap:7px;min-height:0;padding-top:10px}
   .mast-t{display:none}
   .mast-apps{order:3;flex:1 1 100%;padding:0 0 9px}
   .mast-apps .app{flex:1 1 0;min-width:0;justify-content:center;font-size:13.5px;padding:.3rem .5rem;white-space:normal;text-align:center;line-height:1.2}
@@ -118,7 +118,9 @@ body.brief{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 v
 @media (min-width:760px){.fig{grid-template-columns:minmax(12rem,3fr) 6fr;align-items:baseline}}
 
 /* 04 Quote. */
-.quote blockquote p{font-size:clamp(1.7rem,1rem + 2.7vw,3.3rem);line-height:1.1;font-weight:520;letter-spacing:-.03em;max-width:23ch;text-indent:-.42em;text-wrap:pretty}
+.quote blockquote p{font-size:clamp(1.7rem,1rem + 2.7vw,3.3rem);line-height:1.1;font-weight:520;letter-spacing:-.03em;max-width:23ch;text-wrap:pretty;position:relative}
+/* The opening mark hangs in the margin, by exactly its own width in every language (“ or « with its space). */
+@media (min-width:760px){.quote blockquote .qo{position:absolute;right:100%;top:0;white-space:pre}}
 .quote figcaption{margin-top:24px;font-size:16px;line-height:1.45;max-width:36em;color:var(--ink-2)}
 .quote figcaption strong{font-weight:650;color:var(--ink)}
 .tn{display:block;color:var(--grey);font-size:14px;margin-top:4px}
@@ -240,3 +242,4 @@ body.brief{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 v
 }
 @media screen and (max-width:520px){.kicker span:first-child{display:none}.kicker span:nth-child(2)::before{display:none}}
 .notes .pc a{text-decoration-color:var(--rule)}
+.nw{white-space:nowrap}

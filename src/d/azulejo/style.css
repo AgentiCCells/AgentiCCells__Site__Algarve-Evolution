@@ -21,7 +21,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:16px
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 body.az{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased}
 :where(.az) :where(h1,h2,h3,h4,p,ol,ul,figure,blockquote){margin:0}
-.az :where(h1,h2,h3,h4){overflow-wrap:break-word;hyphens:auto}
+.az :where(h1,h2,h3,h4){overflow-wrap:break-word}
 :where(.az) :where(ol,ul){padding:0;list-style:none}
 .az :where(main,.top,.foot) a{color:var(--cobalt);text-decoration-thickness:2px;text-underline-offset:.18em}
 .az :where(main,.top,.foot) a:hover{color:var(--terra-dark)}
@@ -69,17 +69,11 @@ body.az{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var
   .nav{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
   .nav ul{padding-right:28px}
 }
-/* Laptops: the logo and the two ideas on one row, every section on the next, nothing hidden. */
+/* Wider screens: the logo and the two ideas on one row, every section on the next, nothing hidden
+   (one row would not hold the Spanish and French labels). */
 @media (min-width:1080px){
   .nav{margin:0;padding:0;overflow:visible}
   .nav ul{width:auto;flex-wrap:wrap}
-}
-/* Wide screens: everything on one row (long Spanish and French labels need the room). */
-@media (min-width:1500px){
-  .nav{order:0;flex:1;flex-basis:auto}
-  .nav ul{justify-content:center}
-  .nav a{background:none;padding:.6rem .7rem}
-  .apps{margin-left:0}
 }
 .foot-langs [aria-current]{font-weight:800}
 
@@ -183,6 +177,8 @@ body.az{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var
 /* Quote. */
 .quote-panel .pin{padding:clamp(28px,5vw,64px);padding-top:clamp(56px,6vw,72px)}
 .qmark{position:absolute;top:-6px;left:clamp(18px,3vw,40px);font:700 140px/1 var(--round);color:var(--yellow)}
+/* A guillemet sits lower in the line than an English quotation mark: lift it clear of the text. */
+.qmark-g{transform:translateY(-.3em)}
 .quote-panel blockquote p{font:500 clamp(1.5rem,1rem + 2vw,2.65rem)/1.22 var(--round);color:var(--blue);max-width:28em;text-wrap:pretty;position:relative}
 .quote-panel figcaption{display:flex;align-items:center;gap:14px;margin-top:28px;font-size:16px;line-height:1.4}
 .quote-panel figcaption strong{display:block;font:600 20px/1.2 var(--round);color:var(--ink)}
@@ -342,3 +338,4 @@ html:not(.js) .mt-card:focus-within .mt-in,.js .mt-card:focus-visible .mt-in,.js
   .mt-back p{font-size:12px;line-height:1.25}
   .az .mt-back p.mt-src{font-size:10px}
 }
+.nw{white-space:nowrap}
