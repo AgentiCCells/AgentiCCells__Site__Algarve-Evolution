@@ -55,7 +55,7 @@ ${head}
 </head>
 <body class="${esc(pageClass)}" data-persona="visitor">
 <a class="skip" href="#main">Skip to content</a>
-<div class="proto" role="note"><span>${esc(v.banner.en)}</span> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(v.banner_link.en)}</a> <a class="proto-v1" href="/v1/">V1 experiments</a></div>
+<div class="proto" role="note"><span>${esc(v.banner.en)}</span> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(v.banner_link.en)}</a> <a class="proto-v1 proto-v3" href="/v3/">V3: real data only</a> <a class="proto-v1" href="/decks/">Decks</a> <a class="proto-v1" href="/v1/">V1 experiments</a></div>
 <header class="hub-top">
   <div class="hub-wrap hub-top-row">
     <a class="hub-brand" href="/"><span class="hub-mark" aria-hidden="true"></span><span><strong>AE Innovation Hub</strong><small>Algarve Evolution</small></span></a>
