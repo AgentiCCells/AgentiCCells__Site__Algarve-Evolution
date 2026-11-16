@@ -171,6 +171,8 @@
   function closePanel() { panel.classList.remove('open'); $$('.mk-link.is-sel').forEach(a => a.classList.remove('is-sel'));
     if (!phone()) { body.innerHTML = welcomeHTML; current = null; } }
   $('.atl-close').addEventListener('click', closePanel);
+  // On phones the detail sheet is fixed to the screen: close it when the map scrolls out of view.
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (!es[0].isIntersecting && phone()) panel.classList.remove('open'); }).observe(root);
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) closePanel(); });
   root.addEventListener('click', e => {
     const a = e.target.closest('a[data-card]'); if (!a || !root.contains(a)) return;

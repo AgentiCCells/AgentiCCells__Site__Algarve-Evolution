@@ -40,7 +40,8 @@ a:hover{color:var(--terra)}
 .atl-app:hover{background:var(--terra);color:#fff}
 .atl-nav a:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
 @media (max-width:1240px){.atl-nav-k{display:none}}
-@media (max-width:1040px){.atl-brand span{display:none}}
+@media (max-width:1180px){.atl-brand span{display:none}}
+@media (max-width:1040px){.atl-brand{display:none}.atl-nav{justify-content:space-between}}
 
 /* ---------- the map ---------- */
 .atl-map{position:relative;z-index:5;height:calc(100svh - var(--bh));min-height:560px;max-height:1100px;overflow:hidden;background:#b6d3d6}
