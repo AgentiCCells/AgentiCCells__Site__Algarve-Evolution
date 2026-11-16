@@ -1,0 +1,9 @@
+Fonts vendored for the Mission Control design (no requests to other hosts at runtime).
+
+chakra-petch-latin-500-normal.woff2, chakra-petch-latin-700-normal.woff2
+  Chakra Petch, Copyright 2018 The Chakra Petch Project Authors. SIL Open Font License 1.1 (OFL-chakra-petch.txt).
+  Taken on 16 November 2026 from the npm package @fontsource/chakra-petch 5.3.0 (latin subset).
+
+jetbrains-mono-latin-400-normal.woff2, jetbrains-mono-latin-700-normal.woff2
+  JetBrains Mono, Copyright 2020 The JetBrains Mono Project Authors. SIL Open Font License 1.1 (OFL-jetbrains-mono.txt).
+  Taken on 16 November 2026 from the npm package @fontsource/jetbrains-mono 5.3.0 (latin subset).
