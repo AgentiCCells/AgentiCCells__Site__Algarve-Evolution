@@ -162,7 +162,7 @@ body.s2p{margin:0;background:var(--sand);color:var(--ink);font:17px/1.6 var(--sa
 .s2p-navbtn.is-next:hover{background:var(--ochre);border-color:var(--ochre);color:#fff}
 .s2p-two{display:grid;gap:16px}
 @media (min-width:62rem){.s2p-two{grid-template-columns:1.1fr .9fr;align-items:start}}
-@media (max-width:40rem){.s2p-stephead,.s2p-stepname,.s2p-stepintro{margin-left:12px;margin-right:12px}.s2p-stepbody{margin:0 8px;padding:12px 10px}.s2p-steps{padding:12px 12px 0}.s2p-winbar{padding:12px}.s2p-stepnav{padding:14px 12px 16px}.s2p-window{border-radius:16px}}
+@media (max-width:40rem){.s2p-stephead{flex-direction:column;align-items:stretch}.s2p-stephead .s2p-copy{align-self:flex-end}.s2p-bt{font-size:15px}.s2p-stephead,.s2p-stepname,.s2p-stepintro{margin-left:12px;margin-right:12px}.s2p-stepbody{margin:0 8px;padding:12px 10px}.s2p-steps{padding:12px 12px 0}.s2p-winbar{padding:12px}.s2p-stepnav{padding:14px 12px 16px}.s2p-window{border-radius:16px}}
 
 /* copy buttons */
 .s2p-copy{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:40px;padding:.4rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--sea);font:700 14px var(--sans);cursor:pointer}

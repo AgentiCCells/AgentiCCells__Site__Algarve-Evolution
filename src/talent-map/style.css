@@ -207,7 +207,7 @@ html.no-js .tm-try { display: none; }
 .tm-bub-region:hover rect, .tm-bub-region:focus-visible rect { stroke: var(--sun); stroke-width: 4; }
 .tm-bub-region.is-on rect { fill: var(--bub-on); stroke: var(--sun); stroke-width: 4; }
 .tm-bub-region.is-on text { fill: var(--bub-ink); }
-@media (max-width: 40rem) { .tm-bub-l { display: none; } .tm-bub.is-on .tm-bub-l { display: inline; } .tm-bub-n { font-size: 26px; } .tm-geo { display: none; } }
+@media (max-width: 40rem) { .tm-bub-l { display: none; } .tm-bub.is-on .tm-bub-l { display: inline; font-size: 34px; } .tm-bub-n { font-size: 30px; } .tm-geo, .tm-bub-region { display: none; } .tm-map { padding: 6px; } }
 @media (prefers-reduced-motion: reduce) { .tm-bub-c { transition: none; } }
 .tm-filters { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px; box-shadow: var(--shadow); display: grid; gap: 14px; align-content: start; }
 .tm-filters label, .tm-filters legend { font-weight: 700; font-size: .85rem; }

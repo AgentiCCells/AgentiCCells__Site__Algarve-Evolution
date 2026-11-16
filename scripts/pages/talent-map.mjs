@@ -39,7 +39,7 @@ const W = {
     askLabel: 'What do you need?', askPh: 'For example: a designer in Faro', askBtn: 'Find matches',
     askHint: 'Type it as you would say it. We rank organisations and simulated people by what you ask for, the kind of help and the town, and show why each one matched.',
     tryLabel: 'Try',
-    examples: ['I need a designer in Faro', 'Funding for a hardware prototype', 'An incubator in Portimão', 'A mentor for fundraising', 'Help with AI for my hotel', 'Our first app now needs 50 users'],
+    examples: ['I need a designer in Faro', 'Funding for a hardware prototype', 'An incubator in Portimão', 'A mentor for fundraising', 'An AI developer for my hotel', 'Our first app now needs 50 users'],
     noscriptAsk: 'Matching needs JavaScript. The full list below works without it.',
     stats: [['organisations from public research'], ['municipalities, and the region'], ['simulated people'], ['simulated needs']],
     statsSrc: 'Counts of this page\'s data: organisations from PrompTugal.news research, people and needs from the proposal\'s prototype.',
@@ -96,7 +96,7 @@ const W = {
     askLabel: 'De que precisa?', askPh: 'Por exemplo: um designer em Faro', askBtn: 'Encontrar',
     askHint: 'Escreva como diria. Ordenamos organizações e pessoas simuladas pelo que pede, pelo tipo de ajuda e pelo concelho, e mostramos porque cada uma aparece.',
     tryLabel: 'Experimente',
-    examples: ['Preciso de um designer em Faro', 'Financiamento para um protótipo de hardware', 'Uma incubadora em Portimão', 'Um mentor para angariar investimento', 'Ajuda com IA para o meu hotel', 'A nossa primeira aplicação já tem 50 utilizadores'],
+    examples: ['Preciso de um designer em Faro', 'Financiamento para um protótipo de hardware', 'Uma incubadora em Portimão', 'Um mentor para angariar investimento', 'Um programador de IA para o meu hotel', 'A nossa primeira aplicação já tem 50 utilizadores'],
     noscriptAsk: 'As correspondências precisam de JavaScript. A lista completa abaixo funciona sem ele.',
     stats: [['organizações a partir de pesquisa pública'], ['concelhos, e a região'], ['pessoas simuladas'], ['necessidades simuladas']],
     statsSrc: 'Contagens dos dados desta página: organizações da pesquisa do PrompTugal.news, pessoas e necessidades do protótipo da proposta.',
@@ -343,7 +343,7 @@ ${groups}
     <h3>${w.postH}</h3><p class="tm-post-note">${w.postNote}</p>
     <label>${w.fWho}<input name="who" required maxlength="80" placeholder="${esc(w.fWhoPh)}"></label>
     <label>${w.fWhat}<textarea name="what" required maxlength="240" rows="3" placeholder="${esc(w.fWhatPh)}"></textarea></label>
-    <div class="tm-post-2"><label>${w.fTown}<select name="town">${munis.map(m => m.id).sort().map(id => `<option value="${id}">${esc(townName(id))}</option>`).join('')}</select></label>
+    <div class="tm-post-2"><label>${w.fTown}<select name="town">${munis.map(m => m.id).sort().map(id => `<option value="${id}"${id === 'faro' ? ' selected' : ''}>${esc(townName(id))}</option>`).join('')}</select></label>
     <label>${w.fRole}<select name="role">${w.fRoles.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select></label></div>
     <label>${w.fPay}<input name="pay" required maxlength="80" placeholder="${esc(w.fPayPh)}"></label>
     <button class="tm-btn tm-btn-main" type="submit">${w.fSubmit}</button>
@@ -362,7 +362,7 @@ ${groups}
    <ol class="tm-steps"><li>${lang === 'pt' ? 'Construir o site com pessoas simuladas, como este.' : 'Build the site with simulated people, like this one.'}</li><li>${lang === 'pt' ? 'Enviar a cada pessoa a pré-visualização da sua entrada.' : 'Send each person a preview of their own listing.'}</li><li>${lang === 'pt' ? 'Publicar só quem aprovar, com a data do sim.' : 'Publish only those who approve, with the date of their yes.'}</li><li>${lang === 'pt' ? 'Deixar pesquisar, publicar necessidades e pagar por contacto.' : 'Let visitors search, post needs and pay per contact.'}</li></ol>
   </div>
   <div class="tm-mail" id="tm-mail">
-   <div class="tm-mail-bar"><span></span><span></span><span></span><label class="tm-mail-pick" hidden>${w.previewFor} <select id="tm-mail-who">${people.map(p => `<option value="${p.id}"${p.id === people.find(x => !x.approved)?.id ? ' selected' : ''}>${esc(p.name)}${p.approved ? '' : ' *'}</option>`).join('')}</select></label></div>
+   <div class="tm-mail-bar"><span></span><span></span><span></span><label class="tm-mail-pick" hidden>${w.previewFor} <select id="tm-mail-who">${people.map(p => `<option value="${p.id}"${p.id === people.find(x => !x.approved)?.id ? ' selected' : ''}>${esc(p.name)}${p.approved ? '' : ` (${lang === 'pt' ? 'sem resposta' : 'no answer yet'})`}</option>`).join('')}</select></label></div>
    <div class="tm-mail-body" id="tm-mail-body">
     ${(() => { const p = people.find(x => !x.approved); return `<dl class="tm-mail-h"><dt>${w.mailFrom}</dt><dd>${w.mailFromV}</dd><dt>${w.mailTo}</dt><dd>${esc(p.name)} <span class="tm-sim">${w.simBadge}</span></dd><dt>${w.mailSubject}</dt><dd><strong>${w.mailSubjectV}</strong></dd></dl>
     <p>${w.mailHello} ${esc(p.name.split(' ')[0])},</p><p>${w.mailBody}</p>

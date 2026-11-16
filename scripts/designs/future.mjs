@@ -9,30 +9,12 @@ export const meta = {
   tagline: { en: 'Cinematic, AI-made imagery and infographics', pt: 'Imagens e infografias cinematográficas feitas com IA' },
 };
 
-// Portuguese for the ecosystem timeline (the data file holds English only). Translations, no new facts.
-export const timelinePt = {
-  '2018': { when: '2018', title: 'A comunidade começa', text: 'Um pequeno grupo de empresários locais começa a construir a comunidade de inovação da região (relato da própria organização, noticiado em 2026).' },
-  '12 Sep 2019': { when: '12 set 2019', title: 'Apresentação oficial, Faro', text: 'No Centro Ciência Viva do Algarve: uma associação sem fins lucrativos de cerca de 29 empresas de TIC, à procura de massa crítica e de uma só voz em eventos como a Web Summit.', stat: '29 empresas associadas' },
-  '28 Mar to 3 Apr 2022': { when: '28 mar a 3 abr 2022', title: 'Primeira Algarve Tech Hub Summit', text: 'Híbrida, em Faro e Loulé; a Algarve Evolution foi uma de cerca de doze entidades promotoras, com o Algarve STP e a Universidade do Algarve.' },
-  '1 Jun 2024': { when: '1 jun 2024', title: 'Impact Algarve', text: 'Organizada pela Get Real e pela Algarve Evolution no TEC Campus da Universidade do Algarve, em Faro (o ano é inferido da página).' },
-  '11 Jul 2024': { when: '11 jul 2024', title: 'Eleição de um novo presidente', text: 'A associação elege um presidente para 2024 a 2027, depois do presidente cessante.', stat: 'cerca de 70 empresas e particulares' },
-  '23 to 25 Oct 2024': { when: '23 a 25 out 2024', title: 'Summit, Albufeira', text: 'Algarve Tech Hub Summit no Hotel Alisios, em Albufeira.' },
-  'Sep 2025': { when: 'set 2025', title: 'Lançamento da Algarve Digital Innovators', text: 'Lançada em Lagos, com um roadshow de setembro a novembro de 2025.' },
-  '6 to 7 Nov 2025': { when: '6 a 7 nov 2025', title: 'Summit, Lagos', text: 'Algarve Tech Hub Summit, com mais de 500 participantes noticiados (só foi lido o título).' },
-  '10 to 13 Nov 2025': { when: '10 a 13 nov 2025', title: '24 startups algarvias na Web Summit', text: 'A Algarve Evolution é parceira nomeada do projeto que as leva à Web Summit Lisboa.' },
-  'Late 2025': { when: 'final de 2025', title: 'Wrap Party, Faro', text: 'Revê a série de novembro no Algarve, do Buildathon à Web Summit.' },
-  'Jan 2026': { when: 'jan 2026', title: 'Incubadora reconhecida', text: 'Reconhecida pela Startup Portugal.' },
-  'Jul 2026': { when: 'jul 2026', title: 'O Venture Lab e o plano 2030', text: 'O Venture Lab by AlgarveSTP seleciona 12 empresas (10 jul); o plano 2030 da ADI identifica 24 comunidades.' },
-  'Oct 2026': { when: 'out 2026', title: 'Lançamento do Founder2Founder', text: '8 empresas escolhidas entre 41 candidaturas.' },
-  '5 to 7 Nov 2026': { when: '5 a 7 nov 2026', title: 'Uma semana cheia no Algarve', text: "O TMCT'26 em Portimão (5 a 7), o encontro Private Wealth em Almancil (6) e o DevFest Lagos (7): os dois primeiros estão na agenda da Algarve Evolution, no terceiro é parceira.", stat: '118 membros ativos' },
-  '2027': { when: '2027', title: 'A Tech Hub Summit regressa', text: 'Regresso confirmado; datas e local por anunciar.' },
-};
-// The 2026 entry's own title ("This week in the Algarve") was written in its week; we date it instead.
-export const timelineEnTitle = { '5 to 7 Nov 2026': 'A busy week in the Algarve' };
-
-// Portuguese labels for the ecosystem graph.
-export const nodePt = { education: 'Educação', incubator: 'Incubadora', munis: '16 municípios', ualg: 'Universidade do Algarve', ws25: 'Web Summit Lisboa 2025', inova: 'INOVA Algarve 3.0' };
-export const nodeEn = { ualg: 'University of the Algarve', inova: 'INOVA Algarve 3.0' };
+// The data arrives already in the page's language (the build's localise()). Two small overrides:
+// the November 2026 entry's own title ("This week in the Algarve") was written in its week, so we name the week;
+// graph labels are shortened, and the links' relation words (English only in the data) are translated here.
+export const WEEK = { en: 'A busy week in the Algarve', pt: 'Uma semana cheia no Algarve' };
+export const tlTitle = (e, lang) => (e.t === 2026.86 ? WEEK[lang] : e.title);
+export const nodeShort = { en: { ualg: 'University of the Algarve', inova: 'INOVA Algarve 3.0' }, pt: { inova: 'INOVA Algarve 3.0' } };
 export const relPt = { runs: 'gere', leads: 'lidera', 'co-organises': 'coorganiza', 'one of six partners': 'um de seis parceiros', organises: 'organiza', 'created with': 'criada com', across: 'em', with: 'com', by: 'de', partner: 'parceiro', 'recognised by': 'reconhecida por', 'project partner': 'parceira do projeto', 'lead promoter': 'promotora principal', 'ran the competition': 'organizou o concurso' };
 
 export function render({ lang, data, h, chrome, other }) {
@@ -113,7 +95,7 @@ export function render({ lang, data, h, chrome, other }) {
   const keep = { centre: ['ae'], inner: ['education', 'aths', 'adi', 'venture', 'ws25', 'incubator', 'f2f', 'inova', 'grow'], outer: ['ja', 'ualg', 'stp', 'munis', 'amal', 'nera', 'anje', 'startupPt'] };
   const angle = { education: -162, aths: -126, adi: -90, venture: -54, ws25: -18, incubator: 36, f2f: 82, inova: 126, grow: 168, ja: -178, ualg: -146, stp: -116, munis: -90, amal: -64, nera: -38, anje: 2, startupPt: 42 };
   const node = id => eco.nodes.find(x => x.id === id);
-  const label = id => (lang === 'pt' ? nodePt[id] : nodeEn[id]) || node(id).label;
+  const label = id => nodeShort[lang][id] || node(id).label;
   const pos = { ae: [0, 0] };
   for (const id of keep.inner) pos[id] = P(175, angle[id]);
   for (const id of keep.outer) pos[id] = P(300, angle[id]);
@@ -159,10 +141,8 @@ export function render({ lang, data, h, chrome, other }) {
 
   // ---------- Timeline ----------
   const tlCards = tl.map(e => {
-    const p = lang === 'pt' ? timelinePt[e.when] || {} : {};
-    const title = p.title || timelineEnTitle[e.when] || e.title;
-    const stat = e.stat ? (p.stat || e.stat) : '';
-    return `<li class="tc${e.future ? ' future' : ''}"><p class="tw">${esc(p.when || e.when)}</p><h3>${esc(title)}</h3><p>${esc(p.text || e.text)}</p>${stat ? `<p class="ts">${esc(stat)}</p>` : ''}${cite(e.src)}</li>`;
+    const stat = e.stat || '';
+    return `<li class="tc${e.future ? ' future' : ''}"><p class="tw">${esc(e.when)}</p><h3>${esc(tlTitle(e, lang))}</h3><p>${esc(e.text)}</p>${stat ? `<p class="ts">${esc(stat)}</p>` : ''}${cite(e.src)}</li>`;
   }).join('') + `<li class="tc goal"><p class="tw">2032</p><h3>${esc(t(v.goals_title))}</h3><p class="tg">${v.goals.map(g => `<b>${esc(lang === 'pt' && g.value_pt ? g.value_pt : g.value)}</b> ${esc(t(g.label))}`).join('<br>')}</p><p class="ts">${esc(t(v.goals_note))}</p>${cite(v.goals_sources)}</li>`;
 
   // ---------- Big figures ----------

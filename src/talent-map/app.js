@@ -18,7 +18,7 @@
     org: n => `${n} organizaç${n === 1 ? 'ão' : 'ões'}`, ppl: n => `${n} entrada${n === 1 ? '' : 's'} aprovada${n === 1 ? '' : 's'}, simulada${n === 1 ? '' : 's'}`, in: 'em',
     best: q => `As melhores correspondências para «${q}»`, ranked: (a, b) => `${a} organizaç${a === 1 ? 'ão' : 'ões'} e ${b} pessoa${b === 1 ? '' : 's'} simulada${b === 1 ? '' : 's'}, ordenadas pelo que pediu, pelo tipo de ajuda e pelo concelho.`,
     read: 'Percebemos', kindOf: 'tipo de ajuda', where: 'onde', words: 'palavras',
-    whyKind: k => `Tipo: ${k}`, whyRole: r => `Oferece: ${r}`, whyTown: t => `Em ${t}`, whyRegion: 'Atua em todo o Algarve', whyWords: w => `Menciona ${w.map(x => `«${x}»`).join(', ')}`, whyPartner: 'Trabalha connosco',
+    whyKind: k => `Tipo: ${k}`, whyRole: r => `Oferece: ${r}`, whyTown: t => `Em ${t}`, whyRegion: 'Atua em todo o Algarve', whyWords: w => `Menciona ${w.map(x => `«${x}»`).join(', ')}`, whyPartner: 'Trabalha connosco', whyBuilds: 'Faz software ou aplicações',
     more: 'Mostrar mais', post: 'Publicar isto como necessidade', clear: 'Limpar', none: 'Ainda não há correspondências. Experimente menos palavras, outro concelho, ou publique-o como necessidade para que a pessoa certa o encontre.',
     third: 'Isto é a terceira proposta a funcionar: uma empresa cuja primeira aplicação precisa de ajuda, ligada aos fornecedores da região.',
     c: { funding: 'financiamento ou investimento', mentor: 'mentoria', space: 'espaço ou incubadora', talent: 'serviços ou talento', learn: 'ensino ou investigação', community: 'uma comunidade', public: 'uma entidade pública', app: 'ajuda com uma aplicação' },
@@ -38,7 +38,7 @@
     org: n => `${n} organisation${n === 1 ? '' : 's'}`, ppl: n => `${n} approved listing${n === 1 ? '' : 's'}, simulated`, in: 'in',
     best: q => `Best matches for “${q}”`, ranked: (a, b) => `${a} organisation${a === 1 ? '' : 's'} and ${b} simulated ${b === 1 ? 'person' : 'people'}, ranked by what you asked for, the kind of help and the town.`,
     read: 'We read', kindOf: 'kind of help', where: 'where', words: 'words',
-    whyKind: k => `Kind: ${k}`, whyRole: r => `Offers: ${r}`, whyTown: t => `In ${t}`, whyRegion: 'Works across the Algarve', whyWords: w => `Mentions ${w.map(x => `“${x}”`).join(', ')}`, whyPartner: 'Works with us',
+    whyKind: k => `Kind: ${k}`, whyRole: r => `Offers: ${r}`, whyTown: t => `In ${t}`, whyRegion: 'Works across the Algarve', whyWords: w => `Mentions ${w.map(x => `“${x}”`).join(', ')}`, whyPartner: 'Works with us', whyBuilds: 'Builds software or apps',
     more: 'Show more', post: 'Post this as a need', clear: 'Clear', none: 'No match yet. Try fewer words or another town, or post it as a need so the right person finds you.',
     third: 'This is the third proposal at work: a business whose first app needs help, matched with the region\'s providers.',
     c: { funding: 'funding or investment', mentor: 'mentoring', space: 'a space or incubator', talent: 'services or talent', learn: 'education or research', community: 'a community', public: 'a public body', app: 'help with an app' },
@@ -81,7 +81,9 @@
   const orgCards = $$('.tm-org'), alsoLinks = $$('.tm-also-a'), groups = $$('.tm-group'), personCards = $$('.tm-person:not(.tm-preview)', $('#tm-list-people'));
   const bubbles = $$('.tm-bub'), townChips = $$('.tm-town'), kindOpts = $$('#tm-f-kinds .tm-kopt'), roleOpts = $$('#tm-f-roles .tm-kopt');
   const qOk = s => !F.q || F.q.split(/\s+/).every(w => s.includes(w));
-  const radius = n => (n ? 9 + Math.sqrt(n) * 4.6 : 6);
+  const small = matchMedia('(max-width: 40rem)');
+  const radius = n => (small.matches ? (n ? 13 + Math.sqrt(n) * 6.4 : 8) : (n ? 9 + Math.sqrt(n) * 4.6 : 6));
+  small.addEventListener('change', () => apply());
   $('.tm-layer').hidden = false; $('#tm-list-org').classList.add('is-on');
 
   function setBubble(b, n) {
@@ -90,7 +92,7 @@
     b.setAttribute('aria-label', `${town(id)}: ${n}`);
     if (id === 'algarve') { b.querySelector('.tm-bub-rn').textContent = n; return; }
     const r = radius(n), x = +b.dataset.x, y = +b.dataset.y, c = b.querySelector('.tm-bub-c'), l = b.querySelector('.tm-bub-l');
-    c.setAttribute('r', r.toFixed(1)); c.style.r = `${r.toFixed(1)}px`; b.querySelector('.tm-bub-n').textContent = n;
+    c.setAttribute('r', r.toFixed(1)); c.style.r = `${r.toFixed(1)}px`; b.querySelector('.tm-bub-n').textContent = n || '';
     const side = b.dataset.side, lines = +b.dataset.lines || 1, dx = +b.dataset.dx || 0;
     const [lx, ly] = side === 'b' ? [dx, r + 26] : side === 't' ? [dx, -r - 10 - (lines - 1) * 24] : side === 'l' ? [-r - 8 + dx, 8 - (lines - 1) * 12] : [r + 8 + dx, 8 - (lines - 1) * 12];
     l.setAttribute('transform', `translate(${(x + lx).toFixed(1)} ${(y + ly).toFixed(1)})`);
@@ -154,6 +156,7 @@
     $('#tm-list-org').classList.toggle('is-on', layer === 'org'); $('#tm-list-people').classList.toggle('is-on', layer === 'people');
     $('#tm-f-kinds').hidden = layer !== 'org'; $('#tm-f-roles').hidden = layer === 'org';
     $('.tm-bub-region').style.display = layer === 'org' ? '' : 'none';
+    $('.tm-town[data-town=algarve]').hidden = layer !== 'org';
     $$('option[value=algarve]', $('#tm-ftown')).forEach(o => { o.hidden = layer !== 'org'; });
     if (layer !== 'org' && F.town === 'algarve') F.town = '';
     apply();
@@ -225,8 +228,8 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
   });
 
   // ---------- Matching ----------
-  const STOP = new Set(('i a an the for in at on of to my our we us me need needs want wants looking look someone somebody with and or who can could help please find is are be it this that from near by some any get now new would like just ' +
-    'um uma uns umas o os as de do da dos das em no na nos nas para por com e ou que preciso precisamos procuro procuramos quero queremos meu minha nosso nossa alguem ajuda ajudar ja tem temos ter').split(' '));
+  const STOP = new Set(('i a an the for in at on of to my our we us me need needs want wants looking look someone somebody with and or who can could help please find is are be it this that from near by some any get now new would like just first our your their more than ' +
+    'um uma uns umas o os as de do da dos das em no na nos nas para por com e ou que preciso precisamos procuro procuramos quero queremos meu minha nosso nossa alguem ajuda ajudar ja tem temos ter primeira primeiro sua seu mais').split(' '));
   const TOWN_ALIAS = { loule: ['quarteira', 'vilamoura', 'almancil'], 'vila-do-bispo': ['sagres'], portimao: ['alvor'], lagoa: ['ferragudo', 'carvoeiro'], 'vila-real-de-santo-antonio': ['vrsa', 'monte gordo'], faro: ['gambelas', 'penha'], olhao: ['pechao', 'marim'], 'sao-bras-de-alportel': ['sao bras'] };
   const TOWNS = Object.keys(I.towns).filter(id => id !== 'algarve').flatMap(id => [fold(I.towns[id]), ...(TOWN_ALIAS[id] || [])].map(a => [a, id])).sort((a, b) => b[0].length - a[0].length);
   const CONCEPTS = [
@@ -241,7 +244,8 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
   ].map(c => ({ ...c, set: new Set(c.w.split(' ')) }));
   const SYN = [
     'design designer designers ux ui brand branding figma usability',
-    'hardware iot embedded robot robots robotics robotica sensor sensors sensores prototype prototypes prototipo prototipos proof-of-concept electronics drones',
+    'hardware iot embedded robot robots robotics robotica sensor sensors sensores electronics drones',
+    'prototype prototypes prototipo prototipos proof-of-concept poc pilot piloto demonstration validation validacao',
     'ai ia artificial intelligence inteligencia machine learning agents agent agentes llm rag chatbot chatbots',
     'sea marine ocean aquaculture aquacultura mar maritime fish fisheries pescas blue underwater salt sal',
     'tourism tourist hotel hotels hospitality turismo hotelaria hotel hoteis guest guests booking bookings reservations reservas restaurant restaurants',
@@ -249,14 +253,16 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
     'agriculture agricultura farm farmers farming agrifood irrigation rega',
     'energy solar wind mobility energia mobilidade',
     'data dados dashboards analytics',
-    'software developer programmer app apps web platform python typescript it informatica',
+    'software developer programmer app apps application aplicacao aplicacoes web website websites site sites platform plataforma python typescript it informatica',
     'legal law lawyer juridico advogado incorporation visas contracts',
     'marketing content social media conteudos redes',
     'fundraising funding investment investor investimento financiamento',
     'startup startups founder founders fundador fundadores empreendedor empreendedores entrepreneur entrepreneurs',
   ].map(s => s.split(' '));
   const synOf = w => { const g = SYN.find(g => g.includes(w)); return g ? [...new Set([w, ...g])] : [w]; };
-  const reFor = v => new RegExp(v.length <= 3 ? `\\b${v}\\b` : `\\b${v.replace(/[-.]/g, '\\$&')}`);
+  const groupOf = w => { const i = SYN.findIndex(g => g.includes(w) || g.includes(w.replace(/s$/, ''))); return i < 0 ? w.replace(/s$/, '') : `g${i}`; };
+  const PROVIDER = /\b(software|developers?|websites?|web app|automates?|automation|automacao|automatiza|it company|it consulting|informatica|information.systems|digital solutions|chatbots?|programador|programmer|full-stack|data-driven)\b/;
+  const reFor = v => new RegExp(`\\b${v.replace(/[-.]/g, '\\$&')}${v.length > 3 ? '(?:s|es)?' : ''}\\b`);
   const KIND_WORDS = { support: 'support apoio funding financiamento', incubation: 'mentoring mentoria incubation incubacao incubator incubadora', education: 'education ensino research investigacao', community: 'community comunidade', public: 'public publico', company: 'company empresa', funding: 'investment investimento grant subvencao' };
   const idx = [
     ...orgs.map(o => ({ type: 'org', o, name: fold(o.name), text: fold([o.what, o.pt, o.ai, (o.also || []).map(a => a.what).join(' '), o.partner?.note, KIND_WORDS[o.kind]].join(' ')) })),
@@ -270,7 +276,9 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
     const toks = f.split(/[\s-]+/).filter(x => x.length > 1 && !STOP.has(x) && !/^\d+$/.test(x));
     const concepts = CONCEPTS.filter(c => toks.some(x => c.set.has(x) || c.set.has(x.replace(/s$/, ''))));
     if (hint.role) { const c = CONCEPTS.find(c => c.id === { talent: 'talent', mentor: 'mentor', investor: 'funding' }[hint.role]); if (c && !concepts.includes(c)) concepts.push(c); }
-    const terms = [...new Set(toks)].map(x => ({ word: x, vars: synOf(x).concat(x.endsWith('s') ? synOf(x.slice(0, -1)) : []).map(reFor) }));
+    const seen = new Set();
+    const terms = [...new Set(toks)].filter(x => { const k = groupOf(x); if (seen.has(k)) return false; seen.add(k); return true; })
+      .map(x => ({ word: x, key: groupOf(x), generic: CONCEPTS.some(c => c.set.has(x)) && groupOf(x) === x.replace(/s$/, ''), vars: synOf(x).concat(x.endsWith('s') ? synOf(x.slice(0, -1)) : []).map(reFor) }));
     return { town: tw, concepts, terms, orgOnly: hint.role === 'org' };
   }
   function match(q, hint) {
@@ -278,25 +286,32 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
     const out = [];
     for (const e of idx) {
       if (e.type === 'person' && (!listed(e.p) || pq.orgOnly)) continue;
-      let s = 0; const why = [], words = [];
+      let topic = 0, specific = 0; const why = [], words = [];
       for (const t of pq.terms) {
-        if (t.vars.some(r => r.test(e.name))) { s += 3; words.push(t.word); } else if (t.vars.some(r => r.test(e.text))) { s += 1.6; words.push(t.word); }
+        const w = t.vars.some(r => r.test(e.name)) ? 3 : t.vars.some(r => r.test(e.text)) ? 2 : 0;
+        if (w) { topic += t.generic ? 0.5 : w; words.push(t.word); if (!t.generic) specific += w; }
       }
       let cs = 0;
       for (const c of pq.concepts) {
-        if (e.type === 'org' && c.kinds.includes(e.o.kind)) { cs = Math.max(cs, c.kinds[0] === e.o.kind ? 4 : 2.5); }
-        if (e.type === 'person' && c.roles?.some(r => e.p.roles.includes(r))) cs = Math.max(cs, 4);
+        if (e.type === 'org' && c.kinds.includes(e.o.kind)) { cs = Math.max(cs, c.kinds[0] === e.o.kind ? 3 : 2); }
+        if (e.type === 'person' && c.roles?.some(r => e.p.roles.includes(r))) cs = Math.max(cs, 3);
       }
-      if (cs) { s += cs; why.push(e.type === 'org' ? X.whyKind(I.kinds[e.o.kind].label) : X.whyRole(e.p.roles.filter(r => pq.concepts.some(c => c.roles?.includes(r))).map(r => I.roles[r]).join(', '))); }
+      if (cs) why.push(e.type === 'org' ? X.whyKind(I.kinds[e.o.kind].label) : X.whyRole(e.p.roles.filter(r => pq.concepts.some(c => c.roles?.includes(r))).map(r => I.roles[r]).join(', ')));
+      let s = topic + cs;
+      // A business whose first app needs help: favour the region's software and service providers.
+      if (pq.concepts.some(c => c.id === 'app') && PROVIDER.test(e.text) && (e.type === 'person' || ['company', 'support'].includes(e.o.kind))) { s += 2; why.push(X.whyBuilds); }
       if (pq.orgOnly && e.type === 'org') s += 1;
       const hasWhat = s > 0;
+      // Asked for something specific that this entry never mentions: keep it, lower down.
+      if (pq.terms.some(t => !t.generic) && !specific) s *= 0.4;
       const towns = e.type === 'org' ? e.o.towns : [e.p.town];
       if (pq.town) {
-        if (towns.includes(pq.town)) { s += 4; why.push(X.whyTown(town(pq.town))); }
-        else if (towns.includes('algarve')) { s += 1; why.push(X.whyRegion); }
-        else s *= 0.55;
+        if (towns.includes(pq.town)) { s *= 1.6; why.push(X.whyTown(town(pq.town))); }
+        else if (towns.includes('algarve')) { s *= 1.15; why.push(X.whyRegion); }
+        else s *= 0.6;
       }
       if (!hasWhat && !(pq.town && !pq.terms.length && !pq.concepts.length && towns.includes(pq.town))) continue;
+      if (hasWhat && s < 2) continue; // too weak to show
       if (!hasWhat) s = 1;
       if (words.length) why.push(X.whyWords(words));
       if (e.type === 'org' && (e.o.partner || e.o.us)) { s += 0.3; if (e.o.partner) why.push(X.whyPartner); }

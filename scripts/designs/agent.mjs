@@ -2,7 +2,7 @@
 // with its sources. The page renders all questions and answers as a readable FAQ; src/d/agent/agent.js turns
 // them into a chat, with a typing effect, a free-text box matched by keywords (no model, no network) and a
 // command palette (Ctrl or Cmd + K). Code Apache-2.0; text CC BY 4.0. sites-design@AgentiCCells.dinis, 16 November 2026.
-import { timelinePt, nodePt, nodeEn, relPt } from './future.mjs';
+import { tlTitle, nodeShort, relPt } from './future.mjs';
 
 export const meta = {
   slug: 'agent', order: 8, group: 'bold',
@@ -23,7 +23,7 @@ export function render({ lang, data, h, chrome, other }) {
   const allProg = pillars.flatMap(p => p.programmes.map(g => ({ ...g, pillar: p })));
   const prog = id => allProg.find(g => g.id === id);
   const ev = id => data.events.events.find(e => e.id === id);
-  const tl = when => eco.timeline.find(e => e.when === when);
+  const tl = at => eco.timeline.find(e => e.t === at);
   const pre = lang === 'pt' ? '/pt' : '';
 
   // ---------- building blocks ----------
@@ -45,7 +45,7 @@ export function render({ lang, data, h, chrome, other }) {
   const figTile = id => { const f = fig(id); return { value: t(f.value), label: t(f.label), note: f.note ? t(f.note) : '', src: f.sources }; };
   const timeline = items => `<ol class="tline">${items.map(x => `<li><p class="tw">${esc(x.when)}</p><div><h4>${esc(x.title)}</h4>${x.text ? `<p>${esc(x.text)}</p>` : ''}${mini(x.src)}</div></li>`).join('')}</ol>`;
   const evItem = e => ({ when: `${e.approximate ? L('about ', 'cerca de ') : ''}${h.date(e.start)}${e.end ? ` ${L('to', 'a')} ${h.date(e.end)}` : ''} · ${t(e.place)}`, title: t(e.name), text: t(e.summary), src: e.sources });
-  const tlItem = when => { const e = tl(when); const p = lang === 'pt' ? timelinePt[when] || {} : {}; return { when: p.when || e.when, title: p.title || (when === '5 to 7 Nov 2026' ? 'A busy week in the Algarve' : e.title), text: p.text || e.text, src: e.src }; };
+  const tlItem = at => { const e = tl(at); return { when: e.when, title: tlTitle(e, lang), text: e.text, src: e.src }; };
   const progCard = g => `<div class="card"><p class="card-k">${esc(t(g.pillar.name))}</p><h4>${esc(t(g.name))}</h4><p>${esc(t(g.summary))}</p>${mini(g.sources)}</div>`;
   const quoteCard = () => `<figure class="qcard"><blockquote><p>${esc(t(quote.text))}</p></blockquote><figcaption><span class="qav" aria-hidden="true">AG</span><span><strong>${esc(person.name)}</strong> ${esc(t(person.role))}, Algarve Evolution · <time datetime="${quote.date}">${esc(h.date(quote.date))}</time>${lang === 'pt' && quote.translation_note ? `<em>${esc(quote.translation_note.pt)}</em>` : ''}</span></figcaption>${mini(quote.sources)}</figure>`;
   const appCard = (a, prop) => `<a class="card app" href="${pre}${a.href}"><p class="card-k">${esc(h.words.proposal)} · ${L('working prototype', 'protótipo a funcionar')}</p><h4>${esc(t(a.name))}</h4><p>${esc(t(a.summary))}</p><span class="go">${L('Open it', 'Abrir')} <span aria-hidden="true">→</span></span></a>`;
@@ -73,7 +73,7 @@ export function render({ lang, data, h, chrome, other }) {
 
   // Partners and what we do together, from the ecosystem graph.
   const node = id => eco.nodes.find(x => x.id === id);
-  const label = id => (lang === 'pt' ? nodePt[id] : nodeEn[id]) || node(id).label;
+  const label = id => nodeShort[lang][id] || node(id).label;
   const rel = r => (lang === 'pt' ? relPt[r] || r : r);
   const partnerIds = ['ualg', 'stp', 'amal', 'nera', 'anje', 'ja', 'startupPt'];
   const partnerCards = `<div class="plist">${partnerIds.map(id => {
@@ -116,11 +116,11 @@ export function render({ lang, data, h, chrome, other }) {
     { id: 'y2025', q: L('What happened in 2025?', 'O que aconteceu em 2025?'), d: L('Launches and summits', 'Lançamentos e cimeiras'),
       kw: '2025,happened,last year,web summit,tech hub summit,summit,launch,digital innovators,roadshow,aconteceu,ano passado,lancamento,cimeira',
       follow: ['y2026', 'events', 'partners'],
-      body: lead(L('2025 was a year of launches and summits:', '2025 foi um ano de lançamentos e cimeiras:')) + timeline([evItem(ev('algarve-digital-innovators-launch-2025')), evItem(ev('algarve-tech-hub-summit-2025')), evItem(ev('algarve-startups-at-web-summit-2025')), tlItem('Late 2025')]) },
+      body: lead(L('2025 was a year of launches and summits:', '2025 foi um ano de lançamentos e cimeiras:')) + timeline([evItem(ev('algarve-digital-innovators-launch-2025')), evItem(ev('algarve-tech-hub-summit-2025')), evItem(ev('algarve-startups-at-web-summit-2025')), tlItem(2025.97)]) },
     { id: 'y2026', q: L('What is new in 2026?', 'O que há de novo em 2026?'), d: L('From community to ecosystem', 'Da comunidade ao ecossistema'),
       kw: '2026,new,news,latest,recent,recently,this year,vibathon,founder2founder,venture lab,novo,novidades,noticias,recente,este ano',
       follow: ['ideas', 'goals', 'programmes'],
-      body: lead(L('We describe 2026 as the year we move from building a community to making the ecosystem work.', 'Descrevemos 2026 como o ano em que passamos de construir uma comunidade a pôr o ecossistema a funcionar.')) + mini(['psn']) + timeline([tlItem('Jan 2026'), tlItem('Jul 2026'), tlItem('Oct 2026'), evItem(ev('vibathon-algarve-2026')), tlItem('5 to 7 Nov 2026')]) },
+      body: lead(L('We describe 2026 as the year we move from building a community to making the ecosystem work.', 'Descrevemos 2026 como o ano em que passamos de construir uma comunidade a pôr o ecossistema a funcionar.')) + mini(['psn']) + timeline([tlItem(2026.05), tlItem(2026.55), tlItem(2026.8), evItem(ev('vibathon-algarve-2026')), tlItem(2026.86)]) },
     { id: 'ideas', q: L('Show me the two working ideas', 'Mostrem-me as duas ideias a funcionar'), d: L('Proposals, built as prototypes', 'Propostas, feitas protótipos'),
       kw: 'idea,ideas,proposal,proposals,prototype,prototypes,app,apps,talent map,talent,spreadsheet,spreadsheet to app,try,demo,working,show me,ideia,ideias,proposta,propostas,prototipo,prototipos,aplicacao,mapa de talento,talento,folha de calculo,experimentar,mostrem',
       follow: ['join', 'programmes', 'honest'],
@@ -132,7 +132,7 @@ export function render({ lang, data, h, chrome, other }) {
     { id: 'history', q: L('How did you start?', 'Como começaram?'), d: L('From 29 companies to 118 members', 'De 29 empresas a 118 membros'),
       kw: 'start,started,begin,began,beginning,history,story,founded,founding,origin,origins,2018,2019,grow,grew,growth,comecaram,comecar,inicio,historia,fundada,fundacao,origem,crescimento,cresceram',
       follow: ['numbers', 'y2025', 'goals'],
-      body: lead(t(v.story_intro)) + barChart + timeline([tlItem('2018'), tlItem('12 Sep 2019'), tlItem('28 Mar to 3 Apr 2022')]) },
+      body: lead(t(v.story_intro)) + barChart + timeline([tlItem(2018), tlItem(2019.7), tlItem(2022.25)]) },
     { id: 'director', q: L('Who leads Algarve Evolution?', 'Quem lidera a Algarve Evolution?'), d: L('Our executive director', 'O nosso diretor executivo'),
       kw: 'lead,leads,leader,leadership,director,executive,executive director,ceo,head,antonio,guerreiro,team,people,run by,diretor,executivo,diretor executivo,lider,lidera,lideranca,equipa,pessoas',
       follow: ['goals', 'y2026', 'who'],

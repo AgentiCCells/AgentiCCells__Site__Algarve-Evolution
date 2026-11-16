@@ -9,7 +9,7 @@
     en: {
       types: { text: 'Text', category: 'Category', number: 'Number', money: 'Money', date: 'Date', time: 'Time', bool: 'Yes/no', phone: 'Phone' },
       yes: 'Yes', no: 'No', empty: '(empty)', all: 'All', search: n => `Search ${n} rows`, showing: (n, t) => n === t ? `${t} rows` : `Showing ${n} of ${t} rows`,
-      none: 'Nothing matches. Clear the search or a filter.', sortBy: 'Sort by', asc: 'Ascending', desc: 'Descending', clear: 'Clear',
+      none: 'Nothing matches. Clear the search or a filter.', sortBy: 'Sort by', orig: 'As in the file', asc: 'Ascending', desc: 'Descending', clear: 'Clear',
       more: n => `Show ${n} more`, add: 'Add a row', edit: 'Edit', del: 'Delete', sure: 'Delete?', save: 'Save', cancel: 'Cancel',
       addTitle: 'Add a row', editTitle: 'Edit this row', exportCsv: 'Export CSV', importCsv: 'Import CSV', reset: 'Reset to the original', resetSure: 'Reset? Your changes go.',
       imported: n => `Imported ${n} rows.`, importDiff: 'That file has different columns. Load it as a new app instead.', importFail: 'Could not read that file as CSV.',
@@ -49,7 +49,7 @@
     pt: {
       types: { text: 'Texto', category: 'Categoria', number: 'Número', money: 'Dinheiro', date: 'Data', time: 'Hora', bool: 'Sim/não', phone: 'Telefone' },
       yes: 'Sim', no: 'Não', empty: '(vazio)', all: 'Todos', search: n => `Pesquisar ${n} linhas`, showing: (n, t) => n === t ? `${t} linhas` : `${n} de ${t} linhas`,
-      none: 'Nada corresponde. Limpe a pesquisa ou um filtro.', sortBy: 'Ordenar por', asc: 'Crescente', desc: 'Decrescente', clear: 'Limpar',
+      none: 'Nada corresponde. Limpe a pesquisa ou um filtro.', sortBy: 'Ordenar por', orig: 'Como no ficheiro', asc: 'Crescente', desc: 'Decrescente', clear: 'Limpar',
       more: n => `Mostrar mais ${n}`, add: 'Adicionar linha', edit: 'Editar', del: 'Apagar', sure: 'Apagar?', save: 'Guardar', cancel: 'Cancelar',
       addTitle: 'Adicionar uma linha', editTitle: 'Editar esta linha', exportCsv: 'Exportar CSV', importCsv: 'Importar CSV', reset: 'Repor o original', resetSure: 'Repor? As alterações perdem-se.',
       imported: n => `Importadas ${n} linhas.`, importDiff: 'Esse ficheiro tem outras colunas. Carregue-o como uma nova aplicação.', importFail: 'Não foi possível ler esse ficheiro como CSV.',
@@ -317,8 +317,10 @@
     const fresh = () => ({ v: 1, meta: { id: model.id, name: model.name, source: model.source, kind: model.kind, intro: model.intro || '', delim: model.delim || ',' },
       cols: JSON.parse(JSON.stringify(model.cols)), rows: JSON.parse(JSON.stringify(model.rows)), done: Object.assign({}, model.done || {}), hist: [], viewKind: null, ref: null });
     const saved = opts.noRestore ? null : store.get(key);
+    const sig = (cols, rows) => JSON.stringify([cols.map(c => [c.name, c.type]), rows.map(r => cols.map(c => r[c.key]))]);
+    const changed = saved && saved.rows && (saved.hist?.length || Object.keys(saved.done || {}).length || saved.about || saved.appName || sig(saved.cols, saved.rows) !== sig(model.cols, model.rows));
     const A = {
-      key, model, st: saved && saved.v === 1 && saved.rows ? saved : fresh(), restored: !!(saved && saved.rows), ui: { q: '', f: {}, sort: null, phase: null, limit: 50 },
+      key, model, st: saved && saved.v === 1 && saved.rows ? saved : fresh(), restored: !!changed, ui: { q: '', f: {}, sort: null, phase: null, limit: 50 },
       opts, storeOk: true,
       cols() { return A.st.cols; },
       titleCol() { return A.st.cols.find(c => c.title) || A.st.cols[0]; },
@@ -476,7 +478,7 @@
       if (ppl) tiles.push(tile(w.people, numFmt(week.reduce((x, r) => x + (numOf(r[ppl.key]) ?? 0), 0))));
       if (money) tiles.push(tile(w.takings, moneyFmt(week.reduce((x, r) => x + (numOf(r[money.key]) ?? 0), 0), money.cur)));
       const charts = [];
-      const perDay = []; for (let i = 0; i < 7; i++) { const dy = addDays(ws, i); perDay.push({ label: dateFmt(dy, { weekday: 'short', day: 'numeric', month: undefined, year: undefined }), value: week.filter(r => d(r) === dy).reduce((x, r) => x + (ppl ? (numOf(r[ppl.key]) ?? 0) : 1), 0) }); }
+      const perDay = []; for (let i = 0; i < 7; i++) { const dy = addDays(ws, i); perDay.push({ label: dateFmt(dy, { weekday: 'short', day: undefined, month: undefined, year: undefined }).replace('.', '').slice(0, 3) + ' ' + +dy.slice(8), full: dayFmt(dy), value: week.filter(r => d(r) === dy).reduce((x, r) => x + (ppl ? (numOf(r[ppl.key]) ?? 0) : 1), 0) }); }
       charts.push({ title: w.chByDay + (ppl ? ` (${nice(ppl.name).toLowerCase()})` : ''), vertical: true, data: perDay });
       if (who) charts.push({ title: `${w.chBy} ${nice(who.name).toLowerCase()}`, data: tally(week, who) });
       return { action: w.done, tiles, groups, charts, note, ref, refControl: true, keyCols: [dc, tc, who, stc, money].filter(Boolean) };
@@ -599,7 +601,7 @@
       const hasEmpty = c.type !== 'bool' && A.st.rows.some(r => r[c.key] === '');
       return `<label class="s2a-filter"><span>${esc(nice(c.name))}</span><select data-f="${c.key}">${opt('', w.all)}${vals.map(([v, t]) => opt(v, t, A.ui.f[c.key] === v)).join('')}${hasEmpty ? opt('\u0000', w.empty, A.ui.f[c.key] === '\u0000') : ''}</select></label>`;
     }).join('');
-    const sortSel = `<label class="s2a-filter s2a-sortsel"><span>${w.sortBy}</span><select data-sort>${opt('', '·')}${cols.map(c => [opt(c.key + ':1', `${nice(c.name)} ↑`, A.ui.sort && A.ui.sort.key === c.key && A.ui.sort.dir === 1), opt(c.key + ':-1', `${nice(c.name)} ↓`, A.ui.sort && A.ui.sort.key === c.key && A.ui.sort.dir === -1)].join('')).join('')}</select></label>`;
+    const sortSel = `<label class="s2a-filter s2a-sortsel"><span>${w.sortBy}</span><select data-sort>${opt('', w.orig)}${cols.map(c => [opt(c.key + ':1', `${nice(c.name)} ↑`, A.ui.sort && A.ui.sort.key === c.key && A.ui.sort.dir === 1), opt(c.key + ':-1', `${nice(c.name)} ↓`, A.ui.sort && A.ui.sort.key === c.key && A.ui.sort.dir === -1)].join('')).join('')}</select></label>`;
     el.innerHTML = `<div class="s2a-toolbar">
       <label class="s2a-search">${ICON.search}<span class="s2a-sr">${esc(w.search(A.st.rows.length))}</span><input type="search" value="${esc(A.ui.q)}" placeholder="${esc(w.search(A.st.rows.length))}" data-q></label>
       ${editable ? `<button type="button" class="s2a-btn s2a-primary" data-add>${ICON.plus}${w.add}</button>` : ''}
