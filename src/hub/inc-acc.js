@@ -105,10 +105,10 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
       const end = iso(addMonths(p.start, p.months || 6));
       const lastOne = mine.find(s => s.kind === 'one_to_one');
       let d = lastOne ? iso(addDays(lastOne.date, 30)) : pub.now; const items = [];
-      while (d < end && items.length < 3) { items.push(`<li><time datetime="${d}">${d < pub.now ? 'Due now' : `Around ${shortDate(d)}`}</time><span class="ia-kind ia-kind-one_to_one">One-to-one</span><span class="ia-ses-topic">With ${m ? esc(plain(m.name)) : 'your mentor'}</span></li>`); d = iso(addDays(d < pub.now ? pub.now : d, 30)); }
+      while (d < end && items.length < 3) { items.push([d < pub.now ? '0' : d, `<li><time datetime="${d}">${d < pub.now ? 'Due now' : `Around ${shortDate(d)}`}</time><span class="ia-kind ia-kind-one_to_one">One-to-one</span><span class="ia-ses-topic">With ${m ? esc(plain(m.name)) : 'your mentor'}</span></li>`]); d = iso(addDays(d < pub.now ? pub.now : d, 30)); }
       const due = Math.min(6, (last?.month ?? -1) + 1); const dueDate = iso(addMonths(p.start, due));
-      if ((last?.month ?? -1) < 6) items.push(`<li><time datetime="${dueDate}">${esc(shortDate(dueDate))}</time><span class="ia-kind ia-kind-kpi">KPIs</span><span class="ia-ses-topic">Month ${due} snapshot due</span></li>`);
-      next = `<ol class="ia-ses-list">${items.join('')}</ol><p class="ia-note">Projected from the programme rhythm (a one-to-one about every four weeks); not in Odoo until the session is booked.</p>`;
+      if ((last?.month ?? -1) < 6) items.push([dueDate, `<li><time datetime="${dueDate}">${esc(shortDate(dueDate))}</time><span class="ia-kind ia-kind-kpi">KPIs</span><span class="ia-ses-topic">Month ${due} snapshot due</span></li>`]);
+      next = `<ol class="ia-ses-list">${items.sort((a, b) => a[0].localeCompare(b[0])).map(i => i[1]).join('')}</ol><p class="ia-note">Projected from the programme rhythm (a one-to-one about every four weeks); not in Odoo until the session is booked.</p>`;
     } else if (n.state === 'finished') next = `<p>The programme ended on ${esc(shortDate(p.end))}. Your month 6 results are in the <a href="#results-${p.kind === 'acceleration' ? 'acc' : 'inc'}">public results</a>.</p>`;
     else next = `<p>The programme starts on ${esc(shortDate(p.start))}.</p>`;
     const tiles = KPIS.map(def => `<li class="ia-mtile"><span class="ia-tile-label">${esc(def.label)}</span><span class="ia-mtile-val">${esc(fmt(def, last?.[def.k]))}</span><span class="ia-tile-from">M0 ${esc(fmt(def, first?.[def.k]))} → M${last?.month} · <b>${esc(change(first?.[def.k], last?.[def.k]))}</b>${last?.local ? ` ${localB}` : ''}</span>${spark(ks.map(k => ({ m: k.month, v: Number(k[def.k] || 0), local: k.local })), kindCls(p).replace('ia-', 'ia-s-'))}</li>`).join('')
@@ -168,7 +168,7 @@ ${esc(JSON.stringify(body, null, 2))}</code></pre>
   const wsM = $('#ws-mentor');
   function mentor() {
     if (!wsM) return;
-    let mid = pref.get('incacc-mentor'); if (!byId(pub.mentors, mid)) mid = pub.mentors[0]?.id;
+    let mid = pref.get('incacc-mentor'); if (!byId(pub.mentors, mid)) mid = (pub.mentors.find(x => (x.company_ids || []).some(id => prog(byId(pub.companies, id)?.programme_id)?.status === 'running')) || pub.mentors[0])?.id;
     const m = byId(pub.mentors, mid); if (!m) return;
     const cos = (m.company_ids || []).map(id => byId(pub.companies, id)).filter(Boolean);
     const mine = sessionsOf(s => s.mentor_id === m.id);

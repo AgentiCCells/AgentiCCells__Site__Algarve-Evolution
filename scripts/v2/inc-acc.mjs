@@ -10,8 +10,8 @@ export const nav = 'INC/ACC';
 
 const KPIS = [
   { k: 'revenue_eur', label: 'Monthly revenue', short: 'Revenue', money: true },
-  { k: 'customers', label: 'Customers', short: 'Customers' },
-  { k: 'team_size', label: 'People in the team', short: 'Team' },
+  { k: 'customers', label: 'Customers', short: 'Customers', unit: 'customers' },
+  { k: 'team_size', label: 'People in the team', short: 'Team', unit: 'people' },
   { k: 'funding_eur', label: 'Funding raised to date', short: 'Funding', money: true },
 ];
 const PSTAGES = ['idea', 'prototype', 'mvp', 'launched', 'scaling'];
@@ -133,7 +133,7 @@ export function render({ layout, feed, h }) {
       return `<g class="${cls}"><g class="ia-line-segs">${segs}</g><g class="ia-line-dots">${dots}</g>${label}</g>`;
     }).join('');
     const bands = Array.from({ length: 7 }, (_, m) => {
-      const parts = series.map(s => { const pt = s.pts.find(q => q.m === m); return pt ? `${progName(s.p)} ${Math.round(pt.idx)} (${fmt(def, pt.v)})` : `${progName(s.p)}: not yet`; });
+      const parts = series.map(s => { const pt = s.pts.find(q => q.m === m); return pt ? `${progName(s.p)} ${Math.round(pt.idx)} (${fmt(def, pt.v)}${def.money ? '' : ` ${def.unit}`})` : `${progName(s.p)}: not yet`; });
       const tip = `Month ${m}: ${parts.join(' · ')}`;
       return `<rect class="ia-band" x="${P(x(m) - 84 / 12)}" y="0" width="${P(84 / 6)}" height="100%" tabindex="0" role="img" aria-label="${esc(tip)}" data-tip="${esc(tip)}"/>`;
     }).join('');
