@@ -4,8 +4,18 @@
     {
       "id": "antonio-guerreiro",
       "name": "António Guerreiro",
-      "role": {"en": "Executive director", "pt": "Diretor executivo"},
-      "summary": {"en": "Presented the Algarve Digital Innovators network at its launch in Lagos in September 2025, and describes 2026 as the shift from building a community to making the ecosystem work.", "pt": "Apresentou a rede Algarve Digital Innovators no lançamento em Lagos, em setembro de 2025, e descreve 2026 como a passagem de construir uma comunidade para pôr o ecossistema a funcionar."},
+      "role": {
+        "en": "Executive director",
+        "pt": "Diretor executivo",
+        "es": "Director ejecutivo",
+        "fr": "Directeur exécutif"
+      },
+      "summary": {
+        "en": "Presented the Algarve Digital Innovators network at its launch in Lagos in September 2025, and describes 2026 as the shift from building a community to making the ecosystem work.",
+        "pt": "Apresentou a rede Algarve Digital Innovators no lançamento em Lagos, em setembro de 2025, e descreve 2026 como a passagem de construir uma comunidade para pôr o ecossistema a funcionar.",
+        "es": "Presentó la red Algarve Digital Innovators en su lanzamiento en Lagos, en septiembre de 2025, y describe 2026 como el paso de construir una comunidad a hacer que el ecosistema funcione.",
+        "fr": "A présenté le réseau Algarve Digital Innovators lors de son lancement à Lagos, en septembre 2025, et décrit 2026 comme le passage de la construction d'une communauté à la mise en marche de l'écosystème."
+      },
       "sources": [
         "https://postal.pt/algarve/impact-algarve-juntou-principais-intervenientes-locais-para-debaterem-o-futuro-da-regiao/",
         "https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/",
@@ -18,10 +28,21 @@
       "id": "ambitious-goals",
       "by": "antonio-guerreiro",
       "about": "the 2032 goals: 500 companies supported, 150 startups created, 50,000 people reached",
-      "text": {"en": "These are ambitious goals, and we know we can only achieve them by working together with our partners and the wider innovation ecosystem.", "pt": "São objetivos ambiciosos, e sabemos que só os conseguiremos alcançar trabalhando em conjunto com os nossos parceiros e com todo o ecossistema de inovação."},
-      "translation_note": {"pt": "Tradução nossa; o original foi escrito em inglês."},
+      "text": {
+        "en": "These are ambitious goals, and we know we can only achieve them by working together with our partners and the wider innovation ecosystem.",
+        "pt": "São objetivos ambiciosos, e sabemos que só os conseguiremos alcançar trabalhando em conjunto com os nossos parceiros e com todo o ecossistema de inovação.",
+        "es": "Son objetivos ambiciosos, y sabemos que solo podremos alcanzarlos trabajando junto a nuestros socios y al ecosistema de innovación en su conjunto.",
+        "fr": "Ce sont des objectifs ambitieux, et nous savons que nous ne pourrons les atteindre qu'en travaillant avec nos partenaires et l'écosystème d'innovation dans son ensemble."
+      },
+      "translation_note": {
+        "pt": "Tradução nossa; o original foi escrito em inglês.",
+        "es": "Traducción nuestra; el original se escribió en inglés.",
+        "fr": "Notre traduction ; l'original a été écrit en anglais."
+      },
       "date": "2026-11-06",
-      "sources": ["https://promptugal.news/portugal/algarve-evolution/"]
+      "sources": [
+        "https://promptugal.news/portugal/algarve-evolution/"
+      ]
     }
   ]
 }

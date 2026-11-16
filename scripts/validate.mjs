@@ -51,12 +51,14 @@ const items = [
 const eco = readJson('src/data/ecosystem.json');
 for (const [kind, list] of [['nodes', eco?.nodes], ['timeline', eco?.timeline], ['places', eco?.places]])
   for (const i of list || []) { const u = eco.sources[i.src]?.url; if (!u) fail(`ecosystem.json: ${kind} ${i.id || i.title || i.name} has no source`); else if (!known.has(u)) fail(`ecosystem.json: ${u} is not in sources.json`); }
+// Every Portuguese field in the ecosystem data has its Spanish and French twin.
+for (const list of [eco?.nodes, eco?.timeline, eco?.places]) for (const i of list || []) for (const k of Object.keys(i).filter(k => k.endsWith('_pt'))) { const b = k.slice(0, -3); if (!i[`${b}_es`] || !i[`${b}_fr`]) fail(`ecosystem.json: ${i.id || i.title || i.name} has ${k} but no ${b}_es or ${b}_fr`); }
 const voice = readJson('src/data/voice.json');
 for (const k of Object.keys(voice || {}).filter(k => k.endsWith('_sources'))) for (const u of voice[k]) if (!known.has(u)) fail(`voice.json: ${k} cites ${u}, which is not in sources.json`);
 for (const [file, i] of items) {
   if (!i.sources?.length) fail(`${file}.json: ${i.id} has no source`);
   for (const u of i.sources || []) if (!known.has(u)) fail(`${file}.json: ${i.id} cites ${u}, which is not in sources.json`);
-  for (const k of ['name', 'label', 'summary', 'text', 'role']) if (i[k] && !(file === 'people' && k === 'name') && (!i[k].en || !i[k].pt)) fail(`${file}.json: ${i.id} ${k} needs en and pt`);
+  for (const k of ['name', 'label', 'summary', 'text', 'role']) if (i[k] && !(file === 'people' && k === 'name') && (!i[k].en || !i[k].pt || !i[k].es || !i[k].fr)) fail(`${file}.json: ${i.id} ${k} needs en, pt, es and fr`);
 }
 for (const [file, i] of items) if (file === 'proposals' && i.status !== 'proposal') fail(`proposals.json: ${i.id} must be marked status "proposal"`);
 for (const f of files.filter(f => f.endsWith('.html'))) {
