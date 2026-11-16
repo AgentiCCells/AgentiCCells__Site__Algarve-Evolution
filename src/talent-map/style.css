@@ -5,7 +5,7 @@
   --sea: #0b3954; --sea2: #1f7a8c; --sea-ink: #135e6b; --ochre: #c4622d; --ochre-ink: #9c4718; --sun: #f2a65a;
   --hero: #0b3954; --hero2: #0f4a6b; --hero-ink: #f7f2e8; --hero-ink2: #c9d9e2;
   --map-sea: #dcebf0; --map-wave: #c3dce5; --map-land: #fbf3e4; --map-land-line: #d9c4a0; --map-es: #efe9df; --map-es-line: #d8d0c2;
-  --bub: #c4622d; --bub-on: #0b3954; --bub-ink: #fff;
+  --bub: #b4531e; --bub-on: #0b3954; --bub-ink: #fff;
   --sim: #7a4b00; --sim-bg: #fff0cc; --sim-line: #e7b65a;
   --ok: #1d6b3f; --shadow: 0 1px 2px rgba(29,35,39,.06), 0 8px 24px rgba(29,35,39,.07);
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
@@ -370,3 +370,7 @@ html.no-js .tm-list-people { margin-top: 32px; }
 .tm-hero-in > * { min-width: 0; }
 .tm-pill { white-space: normal; }
 @media (max-width: 23rem) { .tm-brand span { display: none; } }
+html.no-js .tm-explore-grid { grid-template-columns: minmax(0, 1fr); max-width: 60rem; }
+.tm-nav a { white-space: nowrap; }
+@media (max-width: 96rem) { .tm-meter .tm-meter-n { display: none; } }
+@media (min-width: 66rem) and (max-width: 80rem) { .tm-crumb, .tm-crumb-t { display: none; } }

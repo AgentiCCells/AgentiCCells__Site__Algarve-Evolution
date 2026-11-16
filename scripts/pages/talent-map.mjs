@@ -86,7 +86,7 @@ const W = {
   pt: {
     title: 'O nosso mapa de talento: quem pode ajudar no Algarve | Algarve Evolution',
     desc: 'Um protótipo a funcionar do nosso mapa de talento: organizações reais a partir de pesquisa pública, pessoas, necessidades e correspondências simuladas. Ainda não aprovado pela Algarve Evolution.',
-    skip: 'Saltar para o conteúdo', home: 'Página inicial da Algarve Evolution', crumb: 'O nosso mapa de talento',
+    skip: 'Saltar para o conteúdo', home: 'Página inicial da Algarve Evolution', crumb: 'Mapa de talento',
     nav: [['ask', 'Pedir'], ['explore', 'Explorar'], ['needs', 'Necessidades'], ['consent', 'Consentimento'], ['how', 'Como funciona']],
     proto: 'Protótipo a funcionar de uma proposta', notAgreed: 'Nada aqui está ainda acordado',
     h1: 'O nosso mapa de talento', h1sub: 'Quem pode ajudar no Algarve, por concelho e por necessidade.',
