@@ -30,7 +30,7 @@ const load = async dir => existsSync(dir)
 // Designs: scripts/designs/<slug>.mjs exports meta and render(ctx). The default design ("coast") is the
 // template in src/index.html and src/pt/index.html, rendered by render.mjs below.
 const designs = await load('scripts/designs');
-const manifest = [{ slug: 'coast', order: 1, group: 'classic', name: { en: 'The Coast', pt: 'A Costa' }, tagline: { en: 'Warm, editorial, the default', pt: 'Quente, editorial, o padrão' } }];
+const manifest = [{ slug: 'coast', order: 1, group: 'classic', name: { en: 'The Coast', pt: 'A Costa', es: 'La Costa', fr: 'La Côte' }, tagline: { en: 'Warm, editorial, the default', pt: 'Quente, editorial, o padrão', es: 'Cálido, editorial, el predeterminado', fr: 'Chaleureux, éditorial, par défaut' } }];
 for (const d of designs) {
   const { meta } = d;
   manifest.push({ slug: meta.slug, order: meta.order, group: meta.group, name: meta.name, tagline: meta.tagline });
