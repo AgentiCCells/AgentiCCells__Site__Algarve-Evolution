@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Pull the talent map's data from its sgit vault (eii0x48f) into src/talent-map/data/.
-# The key is never stored in this repository: pass it in TALENT_VAULT_KEY (a read-only key is enough).
+# The public read-only key is the default (Dinis Cruz, 16 November 2026); the write key is never in this repository.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-: "${TALENT_VAULT_KEY:?set TALENT_VAULT_KEY to the vault eii0x48f read key}"
+TALENT_VAULT_KEY="${TALENT_VAULT_KEY:-sgit_public_read_b4073a22d002de4e3207417a9a87ad8bad1daa6b0567e243f28f6e5cb7c47adf:eii0x48f}"
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
 (cd "$tmp" && sgit clone "$TALENT_VAULT_KEY" v >/dev/null)
 cp "$tmp"/v/data/*.json "$tmp"/v/data/README.md src/talent-map/data/
