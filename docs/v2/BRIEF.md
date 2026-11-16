@@ -26,3 +26,8 @@ António (in Portuguese, our summary): the project is the Algarve Innovation Hub
 - "ODOO INFRASTRUCTURE" frames all four: Odoo is the base layer under every activity.
 - Along the bottom: "IDEIAS, NECESSIDADES" (ideas, needs): an input stream into the hub.
 - Bottom right: spreadsheets feeding into Odoo, and Odoo feeding the official site ("official ... <- ODOO").
+
+## Related reading on the SGit Newsroom (Dinis Cruz, 16 November 2026)
+- "Integrate with whatever is on the other side" (https://newsroom.sgit.ai/articles/integrate-with-whatever-is-on-the-other-side.html): never ask a customer to move; build around what they have; their system gets better and we retire our code, or ours becomes the better place. Mentions today's meeting without naming the organisation or linking the MVP.
+- "Odoo's agents can now write to the system of record" (https://newsroom.sgit.ai/articles/odoo-and-our-stack.html): use the future now (any Odoo version); plan, then apply, through a vault, with a person's signed approval and a lasting record; a behaviour policy per Odoo agent (grant, mandate, gap); Odoo Online exposes the external API only on custom plans.
+- 31 October 2026, the material V1 was built from: "Joining Algarve Evolution", "An Algarve talent map", "Spreadsheet to App", "Sell to the companies that already have the problem", "Vibathon Algarve 2026".
