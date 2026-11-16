@@ -2,7 +2,7 @@
  "about": "Organisations in the Algarve that a founder, a company or a student can turn to, compiled from PrompTugal.news public research. Organisations only: no private person is listed. Each entry keeps its source and the date it was read. Text CC BY 4.0 (PrompTugal.news); compiled by sites-dev@AgentiCCells.dinis with scripts/pages/_talent-map-data.mjs.",
  "from": {
   "repo": "https://github.com/PrompTugal/PrompTugal__News__Website",
-  "commit": "2d658174",
+  "commit": "e54f98ca",
   "files": [
    "data/by-place/faro.json",
    "data/by-place/albufeira.json",
@@ -37,30 +37,30 @@
   "funding"
  ],
  "counts": {
-  "total": 196,
+  "total": 205,
   "by_kind": {
-   "support": 23,
-   "education": 28,
-   "public": 38,
+   "support": 27,
+   "education": 29,
+   "public": 39,
    "company": 44,
-   "incubation": 27,
-   "funding": 22,
-   "community": 14
+   "community": 15,
+   "incubation": 28,
+   "funding": 23
   },
   "by_town": {
    "alcoutim": 21,
-   "loule": 24,
+   "loule": 23,
    "algarve": 20,
-   "faro": 29,
+   "faro": 32,
    "olhao": 8,
+   "silves": 6,
    "albufeira": 3,
-   "vila-real-de-santo-antonio": 4,
+   "vila-real-de-santo-antonio": 5,
    "portimao": 24,
    "castro-marim": 6,
    "lagos": 10,
    "monchique": 5,
-   "silves": 1,
-   "tavira": 6,
+   "tavira": 7,
    "vila-do-bispo": 14,
    "aljezur": 6,
    "sao-bras-de-alportel": 10,
@@ -70,17 +70,17 @@
    "alcoutim": 21,
    "loule": 24,
    "algarve": 34,
-   "faro": 29,
+   "faro": 32,
    "sao-bras-de-alportel": 11,
-   "vila-real-de-santo-antonio": 6,
+   "vila-real-de-santo-antonio": 7,
    "lagos": 13,
    "portimao": 26,
    "olhao": 8,
+   "silves": 6,
    "albufeira": 3,
    "castro-marim": 7,
    "monchique": 5,
-   "silves": 1,
-   "tavira": 6,
+   "tavira": 7,
    "vila-do-bispo": 14,
    "aljezur": 6,
    "lagoa": 5
@@ -182,6 +182,22 @@
    "ai": "Its name points to AI, which is unconfirmed.",
    "from": "PrompTugal.news research",
    "pt": "Listada como membro da Algarve Evolution. A página de membros não indica descrição, concelho nem produto: o nome sugere uma área de IA, que não confirmámos. Precisa de fonte própria."
+  },
+  {
+   "id": "ai4youth-work-erasmus-project-with-contextos-and-algarve-stp",
+   "name": "AI4Youth Work (Erasmus+ project, with Contextos and Algarve STP)",
+   "kind": "community",
+   "town": "faro",
+   "towns": [
+    "faro"
+   ],
+   "what": "An Erasmus+ project to help youth workers use AI tools, with partners in Portugal, Greece, Italy and Romania. Its Algarve session was held at UALG TEC Campus in Faro on 2 April 2025.",
+   "url": "https://www.barlavento.pt/ualg-tec-campus-acolhe-apresentacao-de-projeto-sobre-inteligencia-artificial-para-jovens/",
+   "source_url": "https://www.barlavento.pt/ualg-tec-campus-acolhe-apresentacao-de-projeto-sobre-inteligencia-artificial-para-jovens/",
+   "read_on": "2026-11-16",
+   "ai": "A European project on AI for youth work, presented in Faro.",
+   "from": "PrompTugal.news research",
+   "pt": "Um projeto Erasmus+ para ajudar animadores juvenis a usar ferramentas de IA, com parceiros em Portugal, na Grécia, em Itália e na Roménia. A sessão no Algarve realizou-se no UALG TEC Campus, em Faro, a 2 de abril de 2025."
   },
   {
    "id": "alcoutim-business-park-parque-empresarial-de-alcoutim",
@@ -541,6 +557,23 @@
    "pt": "Associação nacional de jovens empresários; parceira da ADI e do Venture Lab; organizou o concurso Web Summit 2025."
   },
   {
+   "id": "antrix-and-carvoeiro-branco-purchase-of-the-fabrica-do-ingles",
+   "name": "Antrix and Carvoeiro Branco: purchase of the Fábrica do Inglês",
+   "kind": "funding",
+   "town": "silves",
+   "towns": [
+    "silves"
+   ],
+   "what": "Two Algarve property developers bought the 1894 cork factory, empty since 2009, to reopen the cork museum, add a boutique hotel and move their offices there. Not AI.",
+   "url": "https://www.barlavento.pt/silves-imobiliarias-de-erik-de-vlieger-compram-devoluta-mas-iconica-fabrica-do-ingles/",
+   "source_url": "https://www.barlavento.pt/silves-imobiliarias-de-erik-de-vlieger-compram-devoluta-mas-iconica-fabrica-do-ingles/",
+   "read_on": "2026-11-16",
+   "amount": "not disclosed",
+   "date": "2025-09-03",
+   "from": "PrompTugal.news research",
+   "pt": "Dois promotores imobiliários algarvios compraram a fábrica de cortiça de 1894, vazia desde 2009, para reabrir o museu da cortiça, acrescentar um hotel boutique e instalar lá os seus escritórios. Não é IA."
+  },
+  {
    "id": "ap-hotels-and-resorts",
    "name": "AP Hotels & Resorts",
    "kind": "company",
@@ -799,7 +832,7 @@
    "contacts": [
     {
      "label": "Câmara Municipal de Loulé, general desk",
-     "channel": "the general email, phone and the Loulé 24 Horas incident line, as published on the linked page",
+     "channel": "geral@cm-loule.pt, phone 289 400 600, and the Loulé 24 Horas incident line 808 289 112, as published",
      "url": "http://www.cm-loule.pt/pt/menu/267/contactos-uteis.aspx",
      "source_url": "http://www.cm-loule.pt/pt/menu/267/contactos-uteis.aspx",
      "read_on": "2026-11-16"
@@ -892,6 +925,15 @@
    "read_on": "2026-11-16",
    "ai": "It hosts AI training for local businesses.",
    "from": "PrompTugal.news research",
+   "contacts": [
+    {
+     "label": "Câmara Municipal de Silves, general channel (linked from the GEL page)",
+     "channel": "expediente@cm-silves.pt, +351 282 440 800 (a call to the national fixed-line network), as published on the council's GEL page",
+     "url": "https://www.cm-silves.pt/pt/menu/67/gel---gabinete-de-empreendedorismo-local.aspx",
+     "source_url": "https://www.cm-silves.pt/pt/menu/67/gel---gabinete-de-empreendedorismo-local.aspx",
+     "read_on": "2026-11-16"
+    }
+   ],
    "pt": "A câmara municipal. Coorganiza a formação gratuita Formação + Próxima para o turismo local, que incluiu um curso avançado de IA para empresas em março de 2026, e gere o gabinete de empreendedorismo GEL."
   },
   {
@@ -1238,6 +1280,21 @@
    "pt": "Descrito num guia da Outsite (junho de 2026) como um pequeno coworking comunitário perto da Praia do Amado. Outras listagens dizem que Aljezur não tem coworking, por isso é preciso confirmar."
   },
   {
+   "id": "coworking-spaces-in-sao-marcos-da-serra-and-sao-bartolomeu-de-me",
+   "name": "Coworking spaces in São Marcos da Serra and São Bartolomeu de Messines",
+   "kind": "incubation",
+   "town": "silves",
+   "towns": [
+    "silves"
+   ],
+   "what": "The council says it opened these at the end of 2021. A 2025 opinion column said Silves had no incubator, accelerator or business centre, so we could confirm none of those.",
+   "url": "https://www.cm-silves.pt/pt/pt/noticias/32055/silves-tem-tudo-e-tem-notavel-obra-realizada.aspx",
+   "source_url": "https://www.cm-silves.pt/pt/pt/noticias/32055/silves-tem-tudo-e-tem-notavel-obra-realizada.aspx",
+   "read_on": "2026-11-15",
+   "from": "PrompTugal.news research",
+   "pt": "A câmara diz que os abriu no final de 2021. Um artigo de opinião de 2025 afirmava que Silves não tinha incubadora, aceleradora nem centro de negócios, por isso não confirmámos nenhum destes."
+  },
+  {
    "id": "cresc-algarve-2020-feder-funding-for-the-celerator-technology-hu",
    "name": "CRESC Algarve 2020 (FEDER) funding for the Celerator technology hub",
    "kind": "funding",
@@ -1386,6 +1443,21 @@
    "pt": "Investimento aprovado para os serviços digitais da câmara (infraestrutura, segurança, Wi-Fi e automação), com a IA entre as áreas do projeto."
   },
   {
+   "id": "digital-transition-funding-calls-listed-by-the-council",
+   "name": "Digital-transition funding calls listed by the council",
+   "kind": "support",
+   "town": "silves",
+   "towns": [
+    "silves"
+   ],
+   "what": "The council's calls page lists national funding such as Smart PME (Industry 4.0), Coaching 4.0 and vouchers for startups with green and digital products. The titles name no AI and the page gives no dates, so check each call at its source.",
+   "url": "https://www.cm-silves.pt/pt/404/concursos.aspx",
+   "source_url": "https://www.cm-silves.pt/pt/404/concursos.aspx",
+   "read_on": "2026-11-15",
+   "from": "PrompTugal.news research",
+   "pt": "A página de avisos da câmara lista financiamento nacional como o Smart PME (Indústria 4.0), o Coaching 4.0 e vales para startups com produtos verdes e digitais. Os títulos não referem IA e a página não indica datas, por isso confirme cada aviso na sua fonte."
+  },
+  {
    "id": "digitalgtpro",
    "name": "DigitalGTPro",
    "kind": "company",
@@ -1400,6 +1472,22 @@
    "ai": "Process automation and data-driven decisions are the usual home of AI tools, and the article does not say it uses AI.",
    "from": "PrompTugal.news research",
    "pt": "Empresa do Venture Lab by AlgarveSTP que automatiza processos de negócio e apoia decisões com base em dados."
+  },
+  {
+   "id": "drap-algarve-centro-de-experimentacao-agraria-de-tavira-ceat",
+   "name": "DRAP Algarve, Centro de Experimentação Agrária de Tavira (CEAT)",
+   "kind": "public",
+   "town": "tavira",
+   "towns": [
+    "tavira"
+   ],
+   "what": "The regional agriculture and fisheries directorate manages the CEAT in Tavira, the site that anchors the Polo de Inovação and its Mediterranean Diet research.",
+   "url": "https://agriculturaemar.com/polo-de-inovacao-de-tavira-vai-ser-centro-de-referencia-nacional-da-dieta-mediterranica/",
+   "source_url": "https://agriculturaemar.com/polo-de-inovacao-de-tavira-vai-ser-centro-de-referencia-nacional-da-dieta-mediterranica/",
+   "read_on": "2026-11-16",
+   "ai": "The public owner of the research site and its long-running crop collections, which agri-food and climate AI would draw on. The source mentions no AI.",
+   "from": "PrompTugal.news research",
+   "pt": "A direção regional de agricultura e pescas gere o CEAT em Tavira, o local que acolhe o Polo de Inovação e a sua investigação sobre a Dieta Mediterrânica."
   },
   {
    "id": "dspa-data-science-portuguese-association",
@@ -1884,6 +1972,21 @@
    "pt": "Núcleo de Faro das Geek Girls Portugal, que em 2019 fez um evento sobre mulheres na IA e na tecnologia. Não encontrámos nada mais recente."
   },
   {
+   "id": "gel-the-council-s-local-entrepreneurship-office",
+   "name": "GEL, the council's local entrepreneurship office",
+   "kind": "support",
+   "town": "silves",
+   "towns": [
+    "silves"
+   ],
+   "what": "Informs entrepreneurs about support, links them to public or private institutions, advises on the rules for EU and other funding, and helps local producers.",
+   "url": "https://www.cm-silves.pt/pt/menu/67/gel---gabinete-de-empreendedorismo-local.aspx",
+   "source_url": "https://www.cm-silves.pt/pt/menu/67/gel---gabinete-de-empreendedorismo-local.aspx",
+   "read_on": "2026-11-16",
+   "from": "PrompTugal.news research",
+   "pt": "Informa os empreendedores sobre apoios, liga-os a instituições públicas ou privadas, aconselha sobre as regras do financiamento europeu e outro, e ajuda os produtores locais."
+  },
+  {
    "id": "guepardo",
    "name": "Guepardo",
    "kind": "company",
@@ -2103,8 +2206,8 @@
    "towns": [
     "monchique"
    ],
-   "what": "Portuguese fintech founded in 2024 and based in Monchique, helping small businesses with finance using algorithms, AI and a human advisory team. Named an Impact Startup 2025.",
-   "url": "https://www.barlavento.pt/?p=384561",
+   "what": "Portuguese fintech founded in 2024 and based in Monchique, a digital finance provider for small businesses and freelancers. By its own account it combines AI, automation and a human team, and says 300,000 euros of EU funding helped develop its AI and automation applications. Named an Impact Startup 2025.",
+   "url": "https://invisiblecfo.com/pt/sobre-nos/",
    "source_url": "https://www.barlavento.pt/?p=384561",
    "read_on": "2026-11-15",
    "ai": "Its product uses AI directly in financial and tax optimisation.",
@@ -2490,6 +2593,21 @@
    "pt": "Spin-off da UAlg fundada em 2019 e sediada no UALG TEC Campus. Sensores e uma aplicação web desligam o ar condicionado dos quartos de hotel quando uma janela abre ou o quarto está vazio."
   },
   {
+   "id": "municipal-tax-exemptions-for-innovative-or-creative-investment",
+   "name": "Municipal tax exemptions for innovative or creative investment",
+   "kind": "support",
+   "town": "silves",
+   "towns": [
+    "silves"
+   ],
+   "what": "The council says it has granted tax exemptions since at least mid-2017 to investment projects such as innovative or creative activities, job creation, local products and energy efficiency.",
+   "url": "https://www.cm-silves.pt/pt/pt/noticias/32055/silves-tem-tudo-e-tem-notavel-obra-realizada.aspx",
+   "source_url": "https://www.cm-silves.pt/pt/pt/noticias/32055/silves-tem-tudo-e-tem-notavel-obra-realizada.aspx",
+   "read_on": "2026-11-15",
+   "from": "PrompTugal.news research",
+   "pt": "A câmara diz que concede isenções fiscais desde pelo menos meados de 2017 a projetos de investimento como atividades inovadoras ou criativas, criação de emprego, produtos locais e eficiência energética."
+  },
+  {
    "id": "municipio-de-albufeira",
    "name": "Município de Albufeira",
    "kind": "public",
@@ -2657,7 +2775,7 @@
    "contacts": [
     {
      "label": "NERA, general desk",
-     "channel": "the general email and phone, as published in the footer of nera.pt and on its Contactos page",
+     "channel": "nera@nera.pt, phone +351 289 415 151, as published in the footer of nera.pt",
      "url": "https://nera.pt/contactos",
      "source_url": "https://nera.pt",
      "read_on": "2026-11-16"
@@ -2775,6 +2893,38 @@
    "pt": "Protocolo de três anos assinado em setembro de 2021 para investigação em cidades inteligentes e gestão de dados."
   },
   {
+   "id": "nova-lincs-ualg-pole-engineering-laboratory-campus-da-penha",
+   "name": "NOVA LINCS, UAlg pole (engineering laboratory, Campus da Penha)",
+   "kind": "education",
+   "town": "faro",
+   "towns": [
+    "faro"
+   ],
+   "what": "A UAlg research centre in Faro. A November 2025 call for a one-year research grant starting in January 2026 places the work there, on the AI.INSIGHTS project (AI-powered real-time anonymous user monitoring), funded by Algarve FEDER, seeking computer vision and AI skills.",
+   "url": "https://www.ualg.pt/sites/default/files/procedimentos/2025-11/edital-722025-pt.pdf",
+   "source_url": "https://www.ualg.pt/sites/default/files/procedimentos/2025-11/edital-722025-pt.pdf",
+   "read_on": "2026-11-16",
+   "ai": "Runs an AI research project in Faro.",
+   "from": "PrompTugal.news research",
+   "pt": "Um centro de investigação da UAlg em Faro. Um aviso de novembro de 2025 para uma bolsa de investigação de um ano, com início em janeiro de 2026, situa ali o trabalho, no projeto AI.INSIGHTS (monitorização anónima de utilizadores em tempo real com IA), financiado pelo Algarve FEDER, procurando competências em visão computacional e IA."
+  },
+  {
+   "id": "odiana-baixo-guadiana-development-association",
+   "name": "Odiana, Baixo Guadiana development association",
+   "kind": "support",
+   "town": "vila-real-de-santo-antonio",
+   "towns": [
+    "vila-real-de-santo-antonio"
+   ],
+   "what": "Association that represents the Baixo Guadiana in the cooperation network of Agrosocial Plus, a 2,062,429.85 euro Interreg Spain-Portugal project, funded 75 percent by ERDF, whose Living Labs will test AI, IoT and smart irrigation. The article does not say whether Vila Real de Santo António is part of the project.",
+   "url": "https://www.barlavento.pt/odiana-lancamento-projeto-inovacao-agrosocial-plus/",
+   "source_url": "https://www.barlavento.pt/odiana-lancamento-projeto-inovacao-agrosocial-plus/",
+   "read_on": "2026-11-16",
+   "ai": "Its project tests AI in Living Labs, with the town's link to it unconfirmed.",
+   "from": "PrompTugal.news research",
+   "pt": "Associação que representa o Baixo Guadiana na rede de cooperação do Agrosocial Plus, um projeto Interreg Espanha-Portugal de 2.062.429,85 euros, financiado a 75 por cento pelo FEDER, cujos Living Labs vão testar IA, IoT e rega inteligente. O artigo não diz se Vila Real de Santo António faz parte do projeto."
+  },
+  {
    "id": "parkalgar",
    "name": "Parkalgar",
    "kind": "support",
@@ -2829,11 +2979,11 @@
    "towns": [
     "tavira"
    ],
-   "what": "Research, innovation and technology-transfer hub on the Mediterranean Diet, health, sustainable food and climate adaptation, funded by the PRR (1.36 million euros, 3 January 2022 to 31 December 2025), with the CCDR Algarve as direct beneficiary. It includes lab equipment and a collection of about 700 fruit and grape varieties.",
+   "what": "Research, innovation and technology-transfer hub on the Mediterranean Diet, health, sustainable food and climate adaptation, funded by the PRR (1.36 million euros, 3 January 2022 to 31 December 2025), with the CCDR Algarve as direct beneficiary. It includes lab equipment and a collection of about 700 fruit and grape varieties. At its November 2021 launch it had 23 partners, among them DRAP Algarve, the Município de Tavira, Ciência Viva, the Algarve Biomedical Center and Johns Hopkins University, and plans for a digital therapeutics centre and virtual-reality training.",
    "url": "https://transparencia.gov.pt/pt/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C05-i03/2021.PPRR-C05-i03-P-000037/",
    "source_url": "https://transparencia.gov.pt/pt/fundos-europeus/prr/beneficiarios-projetos/projeto/01/C05-i03/2021.PPRR-C05-i03-P-000037/",
    "read_on": "2026-11-16",
-   "ai": "A public research hub with labs and long-running collections produces the data that agri-food and climate AI models are trained and tested on. The page mentions no AI.",
+   "ai": "The launch plans include a digital therapeutics centre with Johns Hopkins and the Algarve Biomedical Center, a data-heavy health field where AI is the usual next step. Neither source mentions AI, and whether the centre was built is unconfirmed.",
    "from": "PrompTugal.news research",
    "pt": "Polo de investigação, inovação e transferência de tecnologia sobre a Dieta Mediterrânica, saúde, alimentação sustentável e adaptação climática, financiado pelo PRR (1,36 milhões de euros, de 3 de janeiro de 2022 a 31 de dezembro de 2025), com a CCDR Algarve como beneficiária direta. Inclui equipamento de laboratório e uma coleção de cerca de 700 variedades de fruta e uva."
   },
@@ -3155,16 +3305,25 @@
    "id": "spic",
    "name": "SPIC",
    "kind": "company",
-   "town": "loule",
+   "town": "faro",
    "towns": [
+    "faro",
     "loule"
    ],
-   "what": "Loulé creative and digital studio. It built the AI hologram used on stage by the band D'ZRT in 2023 (trained on more than 9,000 recordings), has an R&D consortium with the University of the Algarve, and is developing AI.EVENT, which reads audience reactions at events, with European funding per RTP.",
-   "url": "https://www.spic.pt",
+   "what": "A digital studio based in the Algarve (the page does not name the town) with an R&D consortium with UAlg. In 2023 it used AI trained on more than 9,000 records to build a stage hologram for the band D'ZRT.",
+   "url": "https://www.ualg.pt/banda-dzrt-regressou-aos-palcos-com-tecnologia-de-ia-desenvolvida-pela-spic",
    "source_url": "https://www.ualg.pt/banda-dzrt-regressou-aos-palcos-com-tecnologia-de-ia-desenvolvida-pela-spic",
-   "read_on": "2026-11-15",
-   "ai": "It builds an AI product.",
+   "read_on": "2026-11-16",
+   "ai": "Builds AI-made holograms and co-develops projects with UAlg.",
    "from": "PrompTugal.news research",
+   "also": [
+    {
+     "town": "loule",
+     "what": "Loulé creative and digital studio. It built the AI hologram used on stage by the band D'ZRT in 2023 (trained on more than 9,000 recordings), has an R&D consortium with the University of the Algarve, and is developing AI.EVENT, which reads audience reactions at events, with European funding per RTP.",
+     "source_url": "https://www.ualg.pt/banda-dzrt-regressou-aos-palcos-com-tecnologia-de-ia-desenvolvida-pela-spic",
+     "read_on": "2026-11-15"
+    }
+   ],
    "pt": "Estúdio criativo e digital de Loulé. Criou o holograma com IA usado em palco pelos D'ZRT em 2023, tem um consórcio de I&D com a Universidade do Algarve e desenvolve o AI.EVENT."
   },
   {
