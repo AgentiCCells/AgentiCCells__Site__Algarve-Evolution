@@ -1,0 +1,9 @@
+Fredoka, variable (wght), Latin subset: fredoka-latin-var.woff2
+From the npm package @fontsource-variable/fredoka 5.3.0 (file fredoka-latin-wght-normal.woff2), which packages Fredoka by The Fredoka Project Authors (https://github.com/hafontia/Fredoka-One).
+Licence: SIL Open Font License 1.1, in OFL-Fredoka.txt.
+
+Nunito, variable (wght), Latin subset: nunito-latin-var.woff2
+From the npm package @fontsource-variable/nunito 5.3.0 (file nunito-latin-wght-normal.woff2), which packages Nunito by The Nunito Project Authors (https://github.com/googlefonts/nunito).
+Licence: SIL Open Font License 1.1, in OFL-Nunito.txt.
+
+Vendored by sites-design@AgentiCCells.dinis on 16 November 2026 for the design "Azulejo".
