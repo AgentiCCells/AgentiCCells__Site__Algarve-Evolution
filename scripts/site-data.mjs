@@ -74,6 +74,9 @@ export const APPS = [
   { id: 'spreadsheet-to-app', path: '/spreadsheet-to-app/', name: { en: 'Spreadsheet to App', pt: 'Da folha à aplicação', es: 'De la hoja a la app', fr: 'Du tableur à l\'app' } },
 ];
 
+// Not a proposal but the integration with their core platform: their Odoo, read live (scripts/odoo/).
+export const ODOO_PAGE = { id: 'odoo', path: '/odoo/', name: { en: 'Live from Odoo', pt: 'Ao vivo do Odoo', es: 'En directo desde Odoo', fr: 'En direct d\u2019Odoo' } };
+
 // What every page carries: the prototype banner (required by the gate), the language links, the design picker,
 // and the bar of working ideas (the two apps), which marks where you are when you are inside one.
 // alt: { en, pt, es, fr } paths of this same page in each language. app: the id of the app page, if any.
@@ -84,7 +87,7 @@ export function chrome(data, lang, { slug, version, alt, app = null, home = desi
     ? `<span class="ae-proto-lang" aria-current="true" lang="${l}">${l.toUpperCase()}</span>`
     : `<a class="ae-proto-lang" href="${esc(alt[l])}" hreflang="${l}" lang="${l}" title="${esc(LANG_NAMES[l])}">${l.toUpperCase()}</a>`).join('');
   const ideas = [`<a class="ae-ideas-site" href="${esc(home)}">${esc(app ? W.back : W.site)}</a>`]
-    .concat(APPS.map(a => a.id === app
+    .concat([...APPS, ODOO_PAGE].map(a => a.id === app
       ? `<a class="ae-ideas-app" href="${esc(langPath(a.path, lang))}" aria-current="page"><span class="ae-ideas-here">${esc(W.here)}:</span> ${esc(a.name[lang] || a.name.en)}</a>`
       : `<a class="ae-ideas-app" href="${esc(langPath(a.path, lang))}">${esc(a.name[lang] || a.name.en)}</a>`)).join('');
   return {

@@ -74,7 +74,7 @@ for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
 const LANGS = ['en', 'pt', 'es', 'fr'];
 const manifest = (() => { try { return JSON.parse(readFileSync(join(out, 'designs.json'), 'utf8')); } catch { fail('designs.json missing'); return { designs: [] }; } })();
 for (const d of manifest.designs) for (const l of LANGS) { const p = d.paths?.[l]; if (!p || !existsSync(join(out, p, 'index.html'))) fail(`design ${d.slug}: no ${l} page`); }
-for (const a of ['/talent-map/', '/spreadsheet-to-app/']) for (const l of LANGS) { const p = l === 'en' ? a : `/${l}${a}`; if (!existsSync(join(out, p, 'index.html'))) fail(`app ${a}: no ${l} page`); }
+for (const a of ['/talent-map/', '/spreadsheet-to-app/', '/odoo/']) for (const l of LANGS) { const p = l === 'en' ? a : `/${l}${a}`; if (!existsSync(join(out, p, 'index.html'))) fail(`app ${a}: no ${l} page`); }
 for (const f of files.filter(f => f.endsWith('.html'))) { const m = readFileSync(f, 'utf8').match(/<html lang="([a-z]{2})/); const rel = f.slice(out.length + 1); const want = rel.match(/^(pt|es|fr)\//)?.[1] || 'en'; if (m && m[1] !== want && !rel.startsWith('spreadsheet-to-app/example/')) fail(`${f}: <html lang="${m[1]}"> but the page is under /${want === 'en' ? '' : want + '/'}`); }
 if (problems.length) { console.error(problems.join('\n')); console.error(`FAILED: ${problems.length} problem(s)`); process.exit(1); }
 console.log('OK');
