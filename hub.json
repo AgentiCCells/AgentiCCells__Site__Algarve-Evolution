@@ -1,8 +1,20 @@
 {
-  "schema": "hub.json (draft, no vault fields until the vault read key is published)",
+  "schema": "hub.json (draft)",
   "name": "Algarve Evolution site (in preparation)",
   "what_it_does": "Placeholder; not briefed yet.",
   "owner": "AgentiCCells",
   "team": "sites@AgentiCCells.dinis, instructed by Dinis Cruz",
-  "licence": { "code": "Apache-2.0", "text": "CC BY 4.0" }
+  "licence": {
+    "code": "Apache-2.0",
+    "text": "CC BY 4.0"
+  },
+  "repository": "https://github.com/AgentiCCells/AgentiCCells__Site__algarve-evolution",
+  "vault": {
+    "id": "jg76g6nx",
+    "server": "https://dev.send.sgraph.ai",
+    "read_key": "sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f:jg76g6nx",
+    "browse": "https://dev.vault.sgraph.ai/#sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f%3Ajg76g6nx",
+    "clone": "sgit clone sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f:jg76g6nx"
+  },
+  "version_from": "/version.json"
 }
