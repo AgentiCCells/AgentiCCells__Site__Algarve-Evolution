@@ -47,7 +47,7 @@ const MUNI_LABEL = {
   'castro-marim': [-8, -6, 'end'], 'vila-real-de-santo-antonio': [-8, 14, 'end', 'Vila Real de|Santo António'], alcoutim: [-9, 4, 'end'],
 };
 const PRI2 = new Set(['olhao', 'sao-bras-de-alportel', 'lagoa', 'silves', 'castro-marim', 'vila-real-de-santo-antonio', 'aljezur', 'vila-do-bispo']);
-const REGION_LL = [-8.02, 37.335], BEYOND_LL = [-8.97, 37.40];
+const REGION_LL = [-8.02, 37.335], BEYOND_LL = [-8.99, 37.215];
 
 // ---------- reading places out of text ----------
 const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -105,7 +105,7 @@ const KIND_RX = [['hackathon', /hack|buildathon|vibathon|build with|build lab|8h
   ['summit', /summit|forum|f[oó]rum|conference|conf\b|festival|fair|feira|convention|show|expo|congress|devfest|wordcamp|web summit|tedx|awards|sinfo|transfiere|vivatech|gala|world cup/i],
   ['meetup', /meetup|meeting|networking|mixer|party|night|gathering|afterwork|celebration|talks|sessions|pizza|dialogue|open mic/i]];
 const kindOf = name => (KIND_RX.find(([, rx]) => rx.test(name || '')) || ['other'])[0];
-const KIND_LABEL = { hackathon: 'Hackathon', workshop: 'Workshop', summit: 'Summit', meetup: 'Meetup', other: 'Event' };
+const KIND_LABEL = { hackathon: 'Hackathon', workshop: 'Workshop', talk: 'Talk', summit: 'Summit', conference: 'Conference', fair: 'Fair', awards: 'Awards', meetup: 'Meetup', other: 'Event' };
 // Where the timeline entries happened, as their own text says (V1's reading; keys are the entries' t values).
 const TL_PLACES = { '2019.7': ['faro'], '2022.25': ['faro', 'loule'], '2024.42': ['faro'], '2024.8': ['albufeira'], '2025.68': ['lagos'],
   '2025.85': ['lagos'], '2025.87': ['beyond'], '2025.97': ['faro'], '2026.86': ['portimao', 'loule', 'lagos'] };
@@ -135,8 +135,10 @@ function model({ real, data, h }) {
     if (e.region === 'online') at = 'online';
     else if (e.region === 'portugal' || e.region === 'abroad') at = 'beyond';
     else { at = place({ town: e.town, place: e.place, name: e.name }); if (e.region === 'algarve' && !notIn(at)) at = 'region'; }
-    return { id: e.id, name: e.name, start, end: end && end !== start ? end : null, place: e.place || '', town: e.town || null, url: e.url || e.source, register: e.register || null,
-      source: e.source || e.url, kind: e.kind || kindOf(e.name), activity: e.activity || null, at, t: yt(start), up: start >= today };
+    // Never a guest speaker's name: the feed gives name_safe for titles that name a person.
+    const name = e.names_person ? (e.name_safe || 'An event (with a guest speaker)') : (e.name_safe || (live ? e.name : String(e.name).replace(/\s+with\s+\p{Lu}\p{Ll}+(?:\s+\p{Lu}\p{Ll}+)+\s*$/u, ' (with a guest speaker)')));
+    return { id: e.id, name, start, end: end && end !== start ? end : null, place: e.place || '', town: e.town || null, url: e.url || e.source, register: e.register || null,
+      source: e.source || e.url, kind: e.kind || kindOf(name), activity: e.activity || null, at, t: yt(start), up: start >= today };
   }).sort((a, b) => a.start.localeCompare(b.start) || a.name.localeCompare(b.name));
   const eventById = new Map(events.map(e => [e.id, e]));
 
@@ -184,7 +186,8 @@ function model({ real, data, h }) {
   const orgFile = live ? null : readJson('v1-source/src/talent-map/data/organisations.json');
   const orgs = (live && arr(real.organisations).length ? real.organisations : arr(orgFile?.organisations).map(o => ({ id: o.id, name: o.name, kind: o.kind, town: o.town === 'algarve' ? 'Algarve (region)' : o.town, what: o.what, url: o.url, source: o.source_url, read: o.read_on })))
     .map(o => ({ ...o, at: place({ town: o.town }) }));
-  const gaps = (arr(real?.gaps).length ? real.gaps : GAPS);
+  // The gaps by activity, and the hub's input stream (ideas and needs) as a gap for the hub as a whole.
+  const gaps = [...(arr(real?.gaps).length ? real.gaps : GAPS), ...(live && real.hub?.inputs?.what ? [{ ...real.hub.inputs, activity: null }] : [])];
 
   // the organisation: goals (targets), the quote, the timeline (from real.json, else src/data)
   const org = live ? real.organisation || {} : {};
@@ -222,16 +225,19 @@ export function render(ctx) {
   const odooHost = M.meta.odooUrl.replace(/^https?:\/\//, '').replace(/^www\./, '');
   const odooSrc = `<p class="src">Source: <a href="${esc(M.meta.odooUrl)}" rel="noopener">their Odoo (${esc(odooHost)})</a>${M.meta.read ? `, read ${esc(d(M.meta.read))}` : ''}</p>`;
   used.set(M.meta.odooUrl, { url: M.meta.odooUrl, publisher: 'Algarve Evolution', title: `Their Odoo website (Odoo ${M.meta.odooVersion || ''}), events and news` });
-  const actName = id => M.acts.find(a => a.id === id).name;
+  const actName = id => M.acts.find(a => a.id === id)?.name || 'The hub as a whole';
 
   // ---- what is where ----
   const at = (list, id, key = 'at') => list.filter(x => (Array.isArray(x[key]) ? x[key].includes(id) : x[key] === id));
+  const progsOf = act => M.progs.filter(g => g.activity === act), pagesOf = act => M.pages.filter(p => p.activity === act);
   const byTown = id => ({
-    events: at(M.events, id), progs: at(M.progs.filter(g => g.activity !== 'challenge-connect'), id, 'towns'), chal: at(M.challengeItems, id, 'towns'),
-    vib: at(M.vibathons, id), vibEv: at(M.vibEvents, id), comms: at(M.comms, id), orgs: at(M.orgs, id),
+    events: at(M.events, id), progs: at(progsOf('inc-acc'), id, 'towns'), pagesInc: at(pagesOf('inc-acc'), id, 'towns'), chal: at(M.challengeItems, id, 'towns'),
+    vib: at(M.vibathons, id), vibProgs: at(progsOf('vibathon'), id, 'towns'), vibEv: at(M.vibEvents, id), pagesVib: at(pagesOf('vibathon'), id, 'towns'),
+    comms: at(M.comms, id), orgs: at(M.orgs, id), talProgs: at(progsOf('talent'), id, 'towns'), pagesTal: at(pagesOf('talent'), id, 'towns'), other: at(progsOf('other'), id, 'towns'),
   });
   const T = Object.fromEntries([...spots, 'beyond', 'online'].map(id => [id, byTown(id)]));
-  const badgeN = (id, act) => { const x = T[id]; return act === 'inc-acc' ? x.progs.length : act === 'challenge-connect' ? x.chal.length : act === 'vibathon' ? x.vib.length + x.vibEv.length : x.comms.length + x.orgs.length; };
+  const badgeN = (id, act) => { const x = T[id]; return act === 'inc-acc' ? x.progs.length + x.pagesInc.length : act === 'challenge-connect' ? x.chal.length
+    : act === 'vibathon' ? x.vib.length + x.vibProgs.length + x.vibEv.length + x.pagesVib.length : x.comms.length + x.orgs.length + x.talProgs.length + x.pagesTal.length; };
   const outEvents = [...T.beyond.events, ...T.online.events];
 
   // ---- timeline stops: the real timeline and each month with events on their Odoo ----
@@ -272,21 +278,25 @@ export function render(ctx) {
   const rOf = n => (n ? 7 + 2.3 * Math.sqrt(n) : 0);
   const tsOf = list => list.map(e => e.t.toFixed(3)).join(',');
 
+  // Names go in their own layer above the badges, so a badge never hides a name.
+  const labelMarks = [];
   const baseMarks = munis.map(m => {
     const hq = m.id === 'faro'; const [dx, dy, an, lines] = MUNI_LABEL[m.id] || [8, 4, 'start'];
     const n = T[m.id].events.length; const R = rOf(n);
     const inner = hq
-      ? `<circle r="22" class="hit"/><circle r="17" class="hq-pulse"/><circle r="11" class="hq-ring"/><path class="hq-star" d="M0,-8L2.2,-2.2L8,0L2.2,2.2L0,8L-2.2,2.2L-8,0L-2.2,-2.2Z"/>${label(m.name, -Math.max(16, R + 4), 6, 'end', 'lbl-place lbl-hq')}<text class="lbl-tag" x="${-Math.max(16, R + 4)}" y="21" text-anchor="end">AE base · UAlg TEC Campus</text>`
-      : `<circle r="11" class="hit"/><circle r="3.8" class="dot"/>${label(m.name, dx, dy, an, '', lines)}`;
+      ? `<circle r="22" class="hit"/><circle r="17" class="hq-pulse"/><circle r="11" class="hq-ring"/><path class="hq-star" d="M0,-8L2.2,-2.2L8,0L2.2,2.2L0,8L-2.2,2.2L-8,0L-2.2,-2.2Z"/>`
+      : `<circle r="11" class="hit"/><circle r="3.8" class="dot"/>`;
+    labelMarks.push(mk(`mk-lbl${PRI2.has(m.id) ? ' pri2' : ''}`, m.p, hq ? `${label(m.name, -Math.max(16, R + 4), 6, 'end', 'lbl-place lbl-hq')}<text class="lbl-tag" x="${-Math.max(16, R + 4)}" y="21" text-anchor="end">AE base · UAlg TEC Campus</text>` : label(m.name, dx, dy, an, '', lines)));
     return `<a href="#town-${m.id}" class="mk-link" data-card="town-${m.id}" aria-label="${esc(m.name)}${hq ? ', Algarve Evolution\'s base' : ''}">${mk(`mk-muni${hq ? ' mk-hq' : ''}${PRI2.has(m.id) ? ' pri2' : ''}`, m.p, inner)}</a>`;
   }).join('');
-  const regionMark = `<a href="#town-region" class="mk-link" data-card="town-region" aria-label="Across the region: records for the whole Algarve">${mk('mk-region', posOf('region'), `<circle r="16" class="hit"/><circle r="12" class="rg-ring"/><circle r="3" class="rg-dot"/><text class="lbl lbl-rg" y="-19" text-anchor="middle">Across the region</text>`)}</a>`;
+  const regionMark = `<a href="#town-region" class="mk-link" data-card="town-region" aria-label="Across the region: records for the whole Algarve">${mk('mk-region', posOf('region'), `<circle r="16" class="hit"/><circle r="12" class="rg-ring"/><circle r="3" class="rg-dot"/>`)}</a>`;
+  labelMarks.push(mk('mk-lbl', posOf('region'), '<text class="lbl lbl-rg" y="-19" text-anchor="middle">Across the region</text>'));
 
   // events layer: a bubble per town, its size from how many events (past solid, upcoming dashed)
   const evMarks = [...spots.filter(id => id !== 'region'), 'beyond'].map(id => {
     const list = id === 'beyond' ? outEvents : T[id].events; if (!list.length) return '';
     const past = list.filter(e => !e.up).length, up = list.length - past;
-    const lis = id === 'beyond' ? `<text class="lbl lbl-lis" x="-6" y="${-rOf(list.length) - 8}">↑ Beyond the Algarve and online</text>` : '';
+    const lis = id === 'beyond' ? `<text class="lbl lbl-lis" x="0" y="${-rOf(list.length) - 8}" text-anchor="middle"><tspan x="0">↑ Lisbon, Porto, abroad</tspan><tspan x="0" dy="16">and online</tspan></text>` : '';
     return `<a href="#town-${id}" class="mk-link ev-link" data-card="town-${id}" data-sec="events" data-ts="${tsOf(list)}" data-today="${todayT.toFixed(3)}" aria-label="${esc(nameOf(id))}: ${plural(list.length, 'event')} on their Odoo, ${num(up)} upcoming">${mk('mk-ev', posOf(id),
       `<circle class="ev-up" r="${rOf(list.length).toFixed(1)}"/><circle class="ev-past" r="${rOf(past).toFixed(1)}"/>${lis}<title>${esc(nameOf(id))}: ${plural(list.length, 'event')}, ${num(up)} upcoming</title>`, ` data-town="${id}"`)}</a>`;
   }).join('');
@@ -299,7 +309,10 @@ export function render(ctx) {
   })).join('');
 
   // activity badges, set around each place outside its event bubble
-  const ANG = { 'inc-acc': -45, vibathon: -135, talent: 45, 'challenge-connect': 135 };
+  // Each place's badges sit in an arc on the side away from its name: above a name set below, below a name set above,
+  // and to the right of a name set on the left. The four activities keep the same order in every arc.
+  const ARCS = { below: [-157.5, -112.5, -67.5, -22.5], above: [157.5, 112.5, 67.5, 22.5], left: [-67.5, -22.5, 22.5, 67.5], right: [-112.5, -157.5, 157.5, 112.5] };
+  const sideOf = id => { if (id === 'faro') return 'below'; if (id === 'region') return 'above'; const [, dy, an] = MUNI_LABEL[id] || [8, 4, 'start']; return dy > 8 ? 'below' : dy < -4 ? 'above' : an === 'end' ? 'left' : 'right'; };
   const GLYPH = {
     'inc-acc': '<rect x="-8.5" y="-8.5" width="17" height="17" rx="3" transform="rotate(45)" class="bg"/>',
     'challenge-connect': '<rect x="-9" y="-9" width="18" height="18" rx="2.5" class="bg"/>',
@@ -308,7 +321,7 @@ export function render(ctx) {
   };
   const badgeLayer = act => [...spots].map(id => {
     const n = badgeN(id, act); if (!n) return '';
-    const R = id === 'region' ? 12 : Math.max(9, rOf(T[id].events.length)); const dist = R + 9; const a = ANG[act] * Math.PI / 180;
+    const R = id === 'region' ? 12 : Math.max(9, rOf(T[id].events.length)); const dist = Math.max(R + 10, 25); const a = ARCS[sideOf(id)][ACTS.indexOf(act)] * Math.PI / 180;
     const ox = (Math.cos(a) * dist).toFixed(1), oy = (Math.sin(a) * dist).toFixed(1);
     return `<a href="#town-${id}" class="mk-link bd-link" data-card="town-${id}" data-sec="${act}" aria-label="${esc(nameOf(id))}: ${esc(ACT[act].short)}, ${num(n)} ${n === 1 ? 'record' : 'records'}">${mk(`mk-bd bd-${ACT[act].cls}`, posOf(id),
       `<g transform="translate(${ox} ${oy})"><circle r="13" class="hit"/>${GLYPH[act]}<text class="bd-n" y="${act === 'vibathon' ? 5.5 : 3.8}" text-anchor="middle">${n > 99 ? '99+' : n}</text></g>`)}</a>`;
@@ -339,16 +352,19 @@ export function render(ctx) {
 <g class="layer layer-events" data-layer="events">${arcs}${evMarks}</g>
 <g class="base">${regionMark}${baseMarks}</g>
 ${ACTS.map(a => `<g class="layer layer-${a}" data-layer="${a}">${badgeLayer(a)}</g>`).join('\n')}
+<g class="labels" aria-hidden="true">${labelMarks.join('')}</g>
 <rect x="-2000" y="-2000" width="${MAP.w + 4000}" height="${MAP.h + 4000}" fill="url(#vig)" pointer-events="none" class="vig"/>
 </svg>`;
 
   // ---- records as list items ----
   const evItem = (e, withTown) => `<li class="evi${e.up ? ' up' : ''}"><time datetime="${e.start}">${esc(range(e))}</time> <a href="${esc(e.url)}" rel="noopener">${esc(e.name)}</a> <span class="kd kd-${e.kind}">${esc(KIND_LABEL[e.kind] || 'Event')}</span>${withTown ? ` <span class="where">${esc(e.at === 'online' ? 'Online' : e.at === 'beyond' ? (e.place ? e.place.split(',').slice(-2).join(',').trim() : 'No place given') : nameOf(e.at))}</span>` : ''}${e.up ? ` <a class="reg" href="${esc(e.register || `${e.url}/register`)}" rel="noopener">Register<span class="vh">: ${esc(e.name)}</span></a>` : ''}</li>`;
   const evList = (list, withTown) => `<ul class="evl">${list.map(e => evItem(e, withTown)).join('')}</ul>`;
-  const progItem = g => `<li><strong>${esc(g.name)}</strong>${g.summary ? `<span>${esc(g.summary)}</span>` : ''}${arr(g.facts).length ? `<ul class="facts">${g.facts.map(f => `<li>${esc(f.text)}</li>`).join('')}</ul>` : ''}${g.page ? `<a class="pg" href="${esc(g.page)}" rel="noopener">Their page</a>` : ''}${cite(g.sources)}</li>`;
+  const progItem = g => `<li><strong>${esc(g.name)}</strong>${g.summary ? `<span>${esc(g.summary)}</span>` : ''}${arr(g.facts).length ? `<ul class="facts">${g.facts.map(f => `<li>${esc(f.text)}</li>`).join('')}</ul>` : ''}${g.note && !/src\//.test(g.note) ? `<span class="note-s">${esc(g.note)}</span>` : ''}${g.page ? `<a class="pg" href="${esc(g.page)}" rel="noopener">Their page on their Odoo</a>` : ''}${cite(g.sources)}</li>`;
+  const pageItem = p => `<li><a href="${esc(p.url)}" rel="noopener">${esc(p.title)}</a> <span class="where">their page</span></li>`;
+  const pageList = list => list.length ? `<p class="lead">Their pages on their Odoo</p><ul class="mini pages">${list.map(pageItem).join('')}</ul>` : '';
   const chalItem = c => `<li><strong>${c.url ? `<a href="${esc(c.url)}" rel="noopener">${esc(c.name)}</a>` : esc(c.name)}</strong>${c.date ? `<span><time datetime="${esc(c.date)}">${esc(d(c.date))}</time>, ${c.kind === 'news' ? 'on their Odoo blog' : 'their page'}</span>` : ''}${c.text ? `<span>${esc(c.text)}</span>` : ''}${cite(c.sources)}</li>`;
-  const vibItem = v => `<li><strong>${esc(v.name)}</strong><span>${v.date ? `${esc(d(String(v.date)))}` : ''}${v.place ? `, ${esc(v.place)}` : ''}</span>${arr(v.facts).length ? `<ul class="facts">${v.facts.map(f => `<li>${esc(f.text)}</li>`).join('')}</ul>` : ''}${cite(v.sources)}</li>`;
-  const commItem = c => `<li><strong>${esc(c.name)}</strong> <span class="kd">${esc(c.kind || 'community')}</span>${c.members ? ` <span class="mem">${num(c.members)} members (their own count)</span>` : ''}${cite(c.source)}</li>`;
+  const vibItem = v => `<li><strong>${esc(v.name)}</strong><span>${v.date ? `${esc(d(String(v.date)))}` : ''}${v.place ? `, ${esc(v.place)}` : ''}</span>${arr(v.facts).length ? `<ul class="facts">${v.facts.map(f => `<li>${esc(f.text)}</li>`).join('')}</ul>` : ''}${v.event ? `<a class="pg" href="${esc(v.event.url)}" rel="noopener">Its event page on their Odoo</a>` : ''}${cite(v.sources)}</li>`;
+  const commItem = (c, where) => `<li><strong>${c.url ? `<a href="${esc(c.url)}" rel="noopener">${esc(c.name)}</a>` : esc(c.name)}</strong> <span class="kd">${esc(c.kind || 'community')}</span>${c.adi ? ' <span class="kd kd-adi">ADI network</span>' : c.adi === false ? ' <span class="kd">research</span>' : ''}${where ? ` <span class="where">${esc(c.unplaced ? 'place not stated' : nameOf(c.at))}</span>` : ''}${c.members ? ` <span class="mem">${num(c.members)} members (as stated)</span>` : ''}${c.summary ? `<span>${esc(c.summary)}</span>` : ''}${cite(c.source)}</li>`;
   const orgGroups = list => { const g = {}; for (const o of list) (g[o.kind] = g[o.kind] || []).push(o);
     return Object.keys(ORG_KIND).filter(k => g[k]).map(k => `<details class="og"><summary>${esc(ORG_KIND[k])} <span>${num(g[k].length)}</span></summary><ul class="orgs">${g[k].map(o => `<li><a href="${esc(o.url || o.source)}" rel="noopener">${esc(o.name)}</a>${o.what ? `<span>${esc(o.what)}</span>` : ''}${o.source && o.source !== o.url ? cite(o.source) : ''}</li>`).join('')}</ul></details>`).join(''); };
   const gapLine = acts => `<p class="gapline"><a href="#gaps" data-card="gaps">Not public yet: ${esc(acts)}. Your Odoo would fill this →</a></p>`;
@@ -358,39 +374,46 @@ ${ACTS.map(a => `<g class="layer layer-${a}" data-layer="${a}">${badgeLayer(a)}<
   const townCard = id => {
     const x = T[id]; const m = muniById.get(id);
     const evs = id === 'beyond' ? outEvents : x.events; const up = evs.filter(e => e.up), past = evs.filter(e => !e.up).reverse();
-    const sec = (act, title, body) => body ? `<section class="sec sec-${act}" data-sec="${act}"><h4><span class="sw sw-${act === 'events' ? 'ev' : ACT[act].cls}" aria-hidden="true"></span>${esc(title)}</h4>${body}</section>` : '';
-    const kicker = id === 'faro' ? `Algarve Evolution's base · ${ll(m)}` : m ? `Municipality · ${ll(m)}` : id === 'region' ? 'The whole Algarve' : 'Outside the Algarve';
+    const sec = (act, title, body) => body ? `<section class="sec sec-${act}" data-sec="${act}"><h4><span class="sw sw-${act === 'events' ? 'ev' : ACT[act]?.cls || 'gap'}" aria-hidden="true"></span>${esc(title)}</h4>${body}</section>` : '';
+    const kicker = id === 'faro' ? `Algarve Evolution's base · ${ll(m)}` : m ? `Municipality · ${ll(m)}` : id === 'region' ? 'The whole Algarve, or place not stated' : 'Outside the Algarve';
     const intro = id === 'faro' ? '<p>Algarve Evolution is based at the UAlg TEC Campus, Campus da Penha, Faro, where many of the events on their Odoo take place.</p>'
-      : id === 'region' ? '<p>Records that cover the whole Algarve rather than one town.</p>'
+      : id === 'region' ? '<p>Records that cover the whole Algarve, and records whose source does not say where they are.</p>'
       : id === 'beyond' ? '<p>Events on their Odoo held outside the Algarve, online, or with no place given.</p>' : '';
-    const counts = [evs.length && plural(evs.length, 'event'), x.progs.length && plural(x.progs.length, 'programme'), x.chal.length && plural(x.chal.length, 'call'),
-      (x.vib.length + x.vibEv.length) && `${num(x.vib.length + x.vibEv.length)} Vibathon`, x.comms.length && plural(x.comms.length, 'community', 'communities'), x.orgs.length && plural(x.orgs.length, 'organisation')].filter(Boolean);
+    const nProg = x.progs.length + x.vibProgs.length + x.talProgs.length + x.other.length, nVib = x.vib.length + x.vibEv.length;
+    const counts = [evs.length && plural(evs.length, 'event'), nProg && plural(nProg, 'programme'), x.chal.length && plural(x.chal.length, 'call'),
+      nVib && plural(nVib, 'hackathon or workshop', 'hackathons and workshops'), x.comms.length && plural(x.comms.length, 'community', 'communities'), x.orgs.length && plural(x.orgs.length, 'organisation')].filter(Boolean);
     const evBody = evs.length ? `${up.length ? `<p class="lead">${plural(up.length, 'upcoming event')}</p>${evList(up, id === 'beyond')}` : ''}${past.length ? `<details class="past"${up.length ? '' : ' open'}><summary>${plural(past.length, 'past event')}</summary>${evList(past, id === 'beyond')}</details>` : ''}${odooSrc}` : '';
-    const missing = [!x.progs.length && 'startups and KPIs', !x.chal.length && 'challenges', !x.vib.length && !x.vibEv.length && 'projects', 'people'].filter(Boolean);
+    const missing = ['startups and KPIs', 'challenges', (x.vib.length || x.vibEv.length) && 'projects and juries', 'people'].filter(Boolean);
+    const placedC = x.comms.filter(c => !c.unplaced), unplacedC = x.comms.filter(c => c.unplaced);
     return `<article class="card town-card" id="town-${id}"><p class="card-k">${esc(kicker)}</p><h3>${esc(nameOf(id))}</h3>${intro}${counts.length ? `<p class="counts">${counts.map(c => `<span>${esc(c)}</span>`).join('')}</p>` : '<p class="muted">Nothing published for this place yet.</p>'}
 ${sec('events', 'Events on their Odoo', evBody)}
-${sec('inc-acc', `${actName('inc-acc')}: programmes`, x.progs.length ? `<ul class="plist">${x.progs.map(progItem).join('')}</ul>` : '')}
+${sec('inc-acc', `${actName('inc-acc')}: programmes`, (x.progs.length || x.pagesInc.length) ? `${x.progs.length ? `<ul class="plist">${x.progs.map(progItem).join('')}</ul>` : ''}${pageList(x.pagesInc)}` : '')}
 ${sec('challenge-connect', 'Challenge Connect: calls in public', x.chal.length ? `<ul class="plist">${x.chal.map(chalItem).join('')}</ul>` : '')}
-${sec('vibathon', 'Vibathon: hackathons and workshops', (x.vib.length || x.vibEv.length) ? `${x.vib.length ? `<ul class="plist">${x.vib.map(vibItem).join('')}</ul>` : ''}${x.vibEv.length ? `<p class="lead">${plural(x.vibEv.length, 'hackathon or workshop', 'hackathons and workshops')} on their Odoo</p>${evList([...x.vibEv].reverse(), false)}${odooSrc}` : ''}` : '')}
-${sec('talent', 'Talent: communities and organisations', (x.comms.length || x.orgs.length) ? `${x.comms.length ? `<p class="lead">${plural(x.comms.length, 'community', 'communities')} in the ADI network</p><ul class="plist comms">${x.comms.map(commItem).join('')}</ul>` : ''}${x.orgs.length ? `<p class="lead">${plural(x.orgs.length, 'organisation')} (organisations only, no people)</p>${orgGroups(x.orgs)}` : ''}` : '')}
+${sec('vibathon', 'Vibathon: hackathons and workshops', (x.vib.length || x.vibEv.length || x.vibProgs.length || x.pagesVib.length) ? `${x.vib.length ? `<ul class="plist">${x.vib.map(vibItem).join('')}</ul>` : ''}${x.vibProgs.length ? `<ul class="plist">${x.vibProgs.map(progItem).join('')}</ul>` : ''}${x.vibEv.length ? `<p class="lead">${plural(x.vibEv.length, 'hackathon or workshop', 'hackathons and workshops')} on their Odoo</p>${evList([...x.vibEv].reverse(), false)}${odooSrc}` : ''}${pageList(x.pagesVib)}` : '')}
+${sec('talent', 'Talent: communities and organisations', badgeN(id, 'talent') ? `${x.talProgs.length ? `<ul class="plist">${x.talProgs.map(progItem).join('')}</ul>` : ''}${placedC.length ? `<p class="lead">${plural(placedC.length, 'community', 'communities')}</p><ul class="plist comms">${placedC.map(c => commItem(c)).join('')}</ul>` : ''}${unplacedC.length ? `<p class="lead">${plural(unplacedC.length, 'community', 'communities')} whose place the source does not state</p><ul class="plist comms">${unplacedC.map(c => commItem(c)).join('')}</ul>` : ''}${x.orgs.length ? `<p class="lead">${plural(x.orgs.length, 'organisation')} (organisations only, no people)</p>${orgGroups(x.orgs)}` : ''}${pageList(x.pagesTal)}` : '')}
+${sec('other', 'Other programmes', x.other.length ? `<ul class="plist">${x.other.map(progItem).join('')}</ul>` : '')}
 ${id !== 'beyond' ? gapLine(missing.join(', ')) : ''}</article>`;
   };
 
   // ---- the four activities (story, and the panel's layer cards) ----
+  const gapItems = list => `<ul class="gapl">${list.map(g => `<li><p><strong>${esc(g.what)}</strong></p>${g.known ? `<p class="known">${esc(g.known)}</p>` : ''}${arr(g.odoo).length ? `<p class="gap-m">${g.odoo.map(o => `<code>${esc(o)}</code>`).join(' ')}</p>` : ''}${g.odoo_note ? `<p class="known">${esc(g.odoo_note)}</p>` : ''}</li>`).join('')}</ul>`;
   const actBody = a => {
-    const gap = M.gaps.find(g => g.activity === a.id);
+    const gs = M.gaps.filter(g => g.activity === a.id);
     const spotsWith = spots.filter(id => badgeN(id, a.id) > 0).sort((p, q) => badgeN(q, a.id) - badgeN(p, a.id));
     let exists = '';
-    if (a.id === 'inc-acc') { const list = M.progs.filter(g => g.activity === 'inc-acc'); exists = `<p class="lead">${plural(list.length, 'programme')} in public sources</p><ul class="plist">${list.map(progItem).join('')}</ul>`; }
-    if (a.id === 'challenge-connect') exists = M.challengeItems.length ? `<p class="lead">No Challenge Connect yet. What exists in public: ${plural(M.challengeItems.length, 'call')} for ideas, projects and companies on their Odoo</p><ul class="plist">${M.challengeItems.map(chalItem).join('')}</ul>` : '<p class="lead">Nothing in public yet.</p>';
-    if (a.id === 'vibathon') exists = `${M.vibathons.length ? `<ul class="plist">${M.vibathons.map(vibItem).join('')}</ul>` : ''}<p class="lead">${plural(M.vibEvents.length, 'hackathon or workshop', 'hackathons and workshops')} on their Odoo, ${num(M.vibEvents.filter(e => e.up).length)} upcoming</p>${M.vibEvents.filter(e => e.up).length ? evList(M.vibEvents.filter(e => e.up), true) : ''}${odooSrc}`;
-    if (a.id === 'talent') { const regionC = M.comms; exists = `<p class="lead">${plural(regionC.length, 'community', 'communities')} in the ADI network and ${plural(M.orgs.length, 'public organisation')} by town (organisations only, no people)</p><ul class="plist comms">${regionC.map(c => commItem(c).replace('</strong>', `</strong> <span class="where">${esc(nameOf(c.at))}</span>`)).join('')}</ul>`; }
+    if (a.id === 'inc-acc') { const list = progsOf('inc-acc'); exists = `<p class="lead">${plural(list.length, 'programme')} in public sources</p><ul class="plist">${list.map(progItem).join('')}</ul>${pageList(pagesOf('inc-acc'))}`; }
+    if (a.id === 'challenge-connect') exists = `<p class="lead">No challenge, supplier or match is published anywhere yet.</p>${M.challengeItems.length ? `<p>The nearest public records: ${plural(M.challengeItems.length, 'call')} for ideas, projects and companies on their Odoo blog (our reading of the titles).</p><ul class="plist">${M.challengeItems.map(chalItem).join('')}</ul>` : ''}`;
+    if (a.id === 'vibathon') { const upV = M.vibEvents.filter(e => e.up); exists = `${M.vibathons.length ? `<ul class="plist">${M.vibathons.map(vibItem).join('')}</ul>` : ''}${progsOf('vibathon').length ? `<ul class="plist">${progsOf('vibathon').map(progItem).join('')}</ul>` : ''}<p class="lead">${plural(M.vibEvents.length, 'other hackathon or workshop', 'other hackathons and workshops')} on their Odoo, ${num(upV.length)} upcoming</p>${upV.length ? evList(upV, true) : ''}${odooSrc}`; }
+    if (a.id === 'talent') { const adiC = M.comms.filter(c => c.adi), resC = M.comms.filter(c => !c.adi);
+      exists = `<p class="lead">${M.adi ? `${esc(M.adi.communities)} communities in the ADI network, from their own page, which states ${esc(M.adi.members)} members in total (their figure).` : `${plural(adiC.length, 'community', 'communities')} in the ADI network.`}</p>${M.adi ? cite(M.adi.source) : ''}<ul class="plist comms">${adiC.map(c => commItem(c, true)).join('')}</ul>${resC.length ? `<p class="lead">${plural(resC.length, 'more community', 'more communities')} from public research, not on their list</p><ul class="plist comms">${resC.map(c => commItem(c, true)).join('')}</ul>` : ''}<p class="lead">${plural(M.orgs.length, 'public organisation')} by town (organisations only, no people), and the programmes</p><ul class="plist">${progsOf('talent').map(progItem).join('')}</ul>`; }
     const where = spotsWith.length ? `<p class="card-sub">On the map</p><ul class="mini">${spotsWith.map(id => `<li><a href="#town-${id}" data-card="town-${id}" data-sec="${a.id}"><span>${esc(nameOf(id))}</span> <b>${num(badgeN(id, a.id))}</b></a></li>`).join('')}</ul>` : '';
-    const gapBox = gap ? `<div class="gap"><p class="gap-k">Your Odoo would fill this</p><p>${esc(gap.what)}</p><p class="gap-m">${arr(gap.odoo).map(o => `<code>${esc(o)}</code>`).join(' ')}</p><a class="gap-go" href="${esc(gap.v2 || a.v2)}">See what it could look like: V2, simulated →</a></div>` : '';
-    return { exists, where, gapBox };
+    const gapBox = gs.length ? `<div class="gap"><p class="gap-k">Your Odoo would fill this</p>${gapItems(gs)}<a class="gap-go" href="${esc(gs[0].v2 || a.v2)}">See what it could look like: V2, simulated →</a></div>` : '';
+    const gapShort = gs.length ? `<div class="gap"><p class="gap-k">Your Odoo would fill this</p><ul class="gapl short">${gs.map(g => `<li>${esc(g.what)}</li>`).join('')}</ul><a class="gap-go" href="${esc(gs[0].v2 || a.v2)}">V2: what it could look like →</a></div>` : '';
+    return { exists, where, gapBox, gapShort };
   };
-  const actCard = a => { const b = actBody(a); return `<article class="card act-card act-${a.cls}" id="act-${a.id}"><p class="card-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>Layer · ${esc(a.short)}</p><h3>${esc(a.name)}</h3><p class="kw" lang="pt">${esc(a.keywords)}</p><p>${esc(a.summary)}</p>${b.exists}${b.where}${b.gapBox}</article>`; };
-  const gapsCard = `<article class="card gaps-card" id="gaps"><p class="card-k">The gaps</p><h3>What your Odoo would fill</h3><p>These records do not exist in any public source yet. In the hub's Odoo addon each one has a place; V2 shows what they could look like, with simulated data.</p><ol class="gaps">${M.gaps.map(g => `<li><p class="gap-k"><span class="sw sw-${ACT[g.activity]?.cls}" aria-hidden="true"></span>${esc(actName(g.activity))}</p><p>${esc(g.what)}</p><p class="gap-m">${arr(g.odoo).map(o => `<code>${esc(o)}</code>`).join(' ')}</p><a class="gap-go" href="${esc(g.v2)}">V2: what it could look like →</a></li>`).join('')}</ol></article>`;
+  const actCard = a => { const b = actBody(a); return `<article class="card act-card act-${a.cls}" id="act-${a.id}"><p class="card-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>Layer · ${esc(a.short)}</p><h3>${esc(a.name)}</h3><p class="kw"><span lang="pt">${esc(a.keywords)}</span>${a.keywordsEn ? ` <span class="kw-en">(${esc(a.keywordsEn)})</span>` : ''}</p><p>${esc(a.summary)}</p>${b.exists}${b.where}${b.gapBox}</article>`; };
+  const gapGroups = [...ACTS, null].map(act => [act, M.gaps.filter(g => (g.activity || null) === act)]).filter(([, l]) => l.length);
+  const gapsCard = `<article class="card gaps-card" id="gaps"><p class="card-k">The gaps</p><h3>What your Odoo would fill</h3><p>These records do not exist in any public source yet. The hub's Odoo addon has a place for each; V2 shows what they could look like, with simulated data. This is the first piece of work: getting more data into Odoo.</p><ol class="gaps">${gapGroups.map(([act, l]) => `<li><p class="gap-k"><span class="sw sw-${act ? ACT[act].cls : 'gap'}" aria-hidden="true"></span>${esc(act ? actName(act) : 'The hub as a whole')}</p>${gapItems(l)}<a class="gap-go" href="${esc(l[0].v2 || '/')}">V2: what it could look like →</a></li>`).join('')}</ol></article>`;
 
   // ---- timeline and month cards ----
   const tlCard = e => `<article class="card tl-card${e.future ? ' is-future' : ''}" id="tl-${e.key.replace('.', '-')}" data-t="${e.t}"><p class="card-k"><time>${esc(e.when)}</time>${e.future ? ' · <span class="tag">Planned</span>' : ''}${(TL_PLACES[e.key] || []).length ? ` · ${esc(TL_PLACES[e.key].map(id => id === 'beyond' ? 'Lisbon' : nameOf(id)).join(', '))}` : ''}</p><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p>${e.stat ? `<p class="stat">${esc(e.stat)} (their own figure)</p>` : ''}${cite(e.src)}</article>`;
@@ -428,10 +451,10 @@ ${lg('<circle r="10" fill="rgba(251,248,241,.6)" stroke="#5f6c6e" stroke-width="
 
   // ---- the essentials below the map ----
   const S = (id, title, inner, cls = '') => `<section class="st ${cls}" id="${id}" aria-labelledby="h-${id}"><div class="st-in">${title ? `<h2 id="h-${id}">${title}</h2>` : ''}${inner}</div></section>`;
-  const goals = M.goals.map(g => `<li><strong>${esc(h.t(g.value))}</strong><span>${esc(h.t(g.label))}</span></li>`).join('');
+  const goals = M.goals.map(g => `<li><strong>${esc(g.value)}</strong><span>${esc(g.label)}</span></li>`).join('');
   const actCols = M.acts.map(a => { const b = actBody(a); const n = spots.reduce((s, id) => s + badgeN(id, a.id), 0);
-    return `<section class="actc act-${a.cls}" aria-labelledby="ac-${a.id}"><p class="actc-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>${esc(a.short)}</p><h3 id="ac-${a.id}">${esc(a.name)}</h3><p class="kw" lang="pt">${esc(a.keywords)}</p><p>${esc(a.summary)}</p>
-<p class="actc-n"><strong>${num(n)}</strong> real ${n === 1 ? 'record' : 'records'} on the map <button type="button" class="linkish" data-show-layer="${a.id}">Show the layer</button></p>${b.gapBox}</section>`; }).join('');
+    return `<section class="actc act-${a.cls}" aria-labelledby="ac-${a.id}"><p class="actc-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>${esc(a.short)}</p><h3 id="ac-${a.id}">${esc(a.name)}</h3><p class="kw"><span lang="pt">${esc(a.keywords)}</span>${a.keywordsEn ? ` <span class="kw-en">(${esc(a.keywordsEn)})</span>` : ''}</p><p>${esc(a.summary)}</p>
+<p class="actc-n"><strong>${num(n)}</strong> real ${n === 1 ? 'record' : 'records'} on the map <button type="button" class="linkish" data-show-layer="${a.id}">Show the layer</button></p>${b.gapShort}</section>`; }).join('');
   const upcoming = M.events.filter(e => e.up);
   const monthsDesc = [...months].reverse();
   const sources = () => [...used.values()].sort((a, b) => (a.publisher || '').localeCompare(b.publisher || '') || (a.title || '').localeCompare(b.title || ''));
@@ -443,14 +466,14 @@ ${lg('<circle r="10" fill="rgba(251,248,241,.6)" stroke="#5f6c6e" stroke-width="
     <p class="kicker">AE Innovation Hub · real data only</p>
     <h2 id="h-intro">Four activities on one Odoo, placed on the map</h2>
     <p class="lede">${esc(M.lede)}</p>
-    <p>${esc(M.mission)}</p>${cite(data.voice.story_sources)}
+    <p>${esc(M.mission)}</p>${cite(M.ledeSources)}
     <p>The hub António Guerreiro drew on the whiteboard has four activities, INC/ACC, Challenge Connect, Vibathon and the Talent Ecosystem, with Odoo under all of them. This map shows only what is published today, each record with its source. Where nothing is published yet, it says so and shows what your Odoo would fill.</p>
   </div></section>
 
   <section class="st st-goals" id="goals" aria-labelledby="h-goals"><div class="st-in">
     <h2 id="h-goals">The goals for 2032</h2>
     <ol class="goals">${goals}</ol>
-    <p class="note">Targets, not results.</p>${cite(M.goalsSources)}
+    <p class="note">${esc(M.goalsNote)}</p>${cite(M.goalsSources)}
     <figure class="quote"><blockquote><p>${esc(M.quote.text)}</p></blockquote><figcaption><strong>${esc(M.quote.by)}</strong>, ${esc(M.quote.role)}, Algarve Evolution · <time datetime="${esc(M.quote.date)}">${esc(d(M.quote.date))}</time>${cite(M.quote.sources)}</figcaption></figure>
   </div></section>
 

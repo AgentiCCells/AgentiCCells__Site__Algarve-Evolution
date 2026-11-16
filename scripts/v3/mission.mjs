@@ -105,6 +105,11 @@ const TOWNS = [
 const townOf = (e, munis) => { if (e.town) { const s = slug(e.town); if (munis.some(m => m.id === s)) return s; } const hay = `${e.place || ''}`; for (const [id, re] of TOWNS) if (re.test(hay)) return id; return null; };
 const kindOf = name => /hack|vibathon|buildathon/i.test(name) ? 'hackathon' : /workshop|bootcamp|masterclass/i.test(name) ? 'workshop' : /summit|forum|festival|conference|congress|world cup/i.test(name) ? 'summit' : /meetup|meeting|pitch|afterwork|networking/i.test(name) ? 'meetup' : 'other';
 
+// A title that names a person (a guest speaker) is shown only in its safe form (docs/v3/REAL-FEED.md, Changes).
+const safeName = e => (e.names_person ? (e.name_safe || 'An event with a guest speaker') : e.name);
+// meta.sources values may be a string, a URL or { label, url }.
+const srcMeta = v => { if (!v) return null; if (typeof v === 'object') return { label: String(v.label || v.title || v.url || ''), url: v.url || null }; const s = String(v); return { label: s, url: (s.match(/https:\/\/[^\s),]+/) || [])[0] || null }; };
+
 function hubData({ real, data, h }) {
   const R0 = real && !real.missing ? real : {};
   const odoo = data.odoo || {};
@@ -127,22 +132,27 @@ function hubData({ real, data, h }) {
   const programmes = R0.programmes?.length ? R0.programmes.map(p => ({ ...p, activity: p.activity || PROG_ACT[p.id] || null, facts: p.facts || [] }))
     : data.programmes.pillars.flatMap(pl => pl.programmes.map(g => ({ id: g.id, name: h.t(g.name), pillar: h.t(pl.name), activity: PROG_ACT[g.id] || null, summary: h.t(g.summary), facts: [{ text: h.t(g.summary), source: g.sources }] })));
   const events = (R0.events?.length ? R0.events : (odoo.events || []).map(e => ({ ...e, source: e.url })))
-    .map(e => ({ ...e, kind: e.kind || kindOf(e.name), source: e.source || e.url, day: String(e.start || '').slice(0, 10) }))
+    .map(e => ({ ...e, name: safeName(e), kind: e.kind || kindOf(e.name), source: e.source || e.url, day: String(e.start || '').slice(0, 10) }))
     .sort((a, b) => String(a.start).localeCompare(String(b.start)));
   const munis = (R0.places?.municipalities?.length ? R0.places.municipalities : data.places.municipalities).map(m => ({ ...m, id: m.id || slug(m.name) }));
   events.forEach(e => { e.muni = e.region && e.region !== 'algarve' ? null : townOf(e, munis); });
   const upcoming = events.filter(e => (e.end || e.start || '').slice(0, 10) >= today);
   const news = (R0.news?.length ? R0.news : odoo.posts || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const communities = (R0.communities?.length ? R0.communities : (pub.communities || []).filter(c => c.simulated === false && c.published !== false))
-    .map(c => ({ id: c.id, name: c.name, municipality: c.municipality || '', kind: c.kind || 'community', members: c.members, source: c.source }));
+    .map(c => ({ id: c.id, name: c.name, municipality: c.municipality || '', kind: c.kind || 'community', members: c.members, source: c.source, url: c.url || c.source, adi: c.adi, summary: c.summary }));
   const orgFile = readJ('v1-source/src/talent-map/data/organisations.json');
   const organisations = (R0.organisations?.length ? R0.organisations : (orgFile?.organisations || []).map(o => ({ id: o.id, name: o.name, kind: o.kind, town: o.town, what: o.what, url: o.url, source: o.source_url, read: o.read_on })))
     .map(o => ({ ...o, townId: slug(o.town) }));
   const net = org.network?.nodes?.length ? { nodes: org.network.nodes.map(n => ({ id: n.id, kind: n.kind, label: h.t(n.name || n.label), note: h.t(n.note), src: n.source || n.sources })), links: org.network.links.map(l => Array.isArray(l) ? l : [l.from, l.to, l.rel]) }
     : { nodes: data.ecosystem.nodes.map(n => ({ id: n.id, kind: n.kind, label: h.t(n.label), note: h.t(n.note), src: data.ecosystem.sources[n.src]?.url })), links: data.ecosystem.links };
-  const orgSource = String(R0.meta?.sources?.organisations || '').match(/https:\/\/[^\s)]+/)?.[0] || orgFile?.from?.repo || 'https://newsroom.sgit.ai/articles/an-algarve-talent-map.html';
-  const vibathons = R0.vibathons?.length ? R0.vibathons : data.events.events.filter(e => /vibathon/i.test(h.t(e.name))).map(e => ({ name: h.t(e.name), date: e.start, place: h.t(e.place), facts: [{ text: h.t(e.summary), source: e.sources }] }));
-  const gaps = R0.gaps?.length ? R0.gaps : GAPS;
+  const orgSource = (typeof R0.meta?.sources?.organisations === 'string' && /^(https:\/\/|\/)/.test(R0.meta.sources.organisations) ? R0.meta.sources.organisations : srcMeta(R0.meta?.sources?.organisations)?.url) || orgFile?.from?.repo || 'https://newsroom.sgit.ai/articles/an-algarve-talent-map.html';
+  const vibathons = (R0.vibathons?.length ? R0.vibathons.map(vb => ({ ...vb, name: safeName(vb) })) : data.events.events.filter(e => /vibathon/i.test(h.t(e.name))).map(e => ({ name: h.t(e.name), date: e.start, place: h.t(e.place), facts: [{ text: h.t(e.summary), source: e.sources }] })));
+  const labels = R0.meta?.source_labels || {};
+  const metaSources = Object.entries(R0.meta?.sources || {}).map(([k, v]) => { const m = srcMeta(v) || {}; const url = m.url || (typeof v === 'string' && /^(https:\/\/|\/)/.test(v) ? v : null); return { key: k, url, label: labels[k] ? String(labels[k]) : m.label }; }).filter(x => x.label);
+  const communitiesNote = R0.communities_note || null;
+  const inputs = R0.hub?.inputs || (R0.gaps || []).find(g => g.id === 'ideas-needs') || null;
+  const known = new Set([...(R0.meta?.sources_index || []), ...data.sources.sources].map(x => x.url));
+  const gaps = (R0.gaps?.length ? R0.gaps : GAPS).filter(g => g.activity);
   const eco = data.ecosystem;
   const ecoSrc = k => eco.sources[k]?.url || k;
   const timeline = (org.timeline?.length ? org.timeline : eco.timeline).map(e => ({ when: e.when || e.date || '', title: h.t(e.title), text: h.t(e.text), stat: e.stat, future: e.future, src: [].concat(e.sources || e.source || (e.src ? ecoSrc(e.src) : [])).map(ecoSrc) }));
@@ -152,7 +162,7 @@ function hubData({ real, data, h }) {
   const quote = { text: h.t(q0.text), date: q0.date, sources: q0.sources || [].concat(q0.source || []), about: q0.about };
   const figures = (org.figures?.length ? org.figures : data.figures.figures).map(f => ({ id: f.id, value: h.t(f.value), label: h.t(f.label), note: h.t(f.note), sources: f.sources || [].concat(f.source || []) }));
   const pages = R0.pages || [];
-  return { net, sys, activities, programmes, events, upcoming, news, communities, organisations, orgSource, vibathons, gaps, timeline, goals, goalsSources, quote, person, figures, munis, pages, today, fromReal: !!R0.meta?.built };
+  return { communitiesNote, metaSources, inputs, known, net, sys, activities, programmes, events, upcoming, news, communities, organisations, orgSource, vibathons, gaps, timeline, goals, goalsSources, quote, person, figures, munis, pages, today, fromReal: !!R0.meta?.built };
 }
 
 export function render(ctx) {
@@ -160,7 +170,9 @@ export function render(ctx) {
   const { esc, num } = h; const t = v => h.t(v);
   const X = hubData(ctx);
   const cited = new Map();
-  const note = refs => { for (const r of [].concat(refs || []).filter(Boolean)) { try { const s = h.source(r); if (!cited.has(s.url)) cited.set(s.url, s); } catch { /* not a URL */ } } };
+  // The sources list holds the published documents cited here (src/data/sources.json and the feed's sources_index), not every record link.
+  const note = refs => { for (const r of [].concat(refs || []).filter(Boolean)) { try { const s = h.source(r); if (X.known.has(s.url) && !cited.has(s.url)) cited.set(s.url, s); } catch { /* not a URL */ } } };
+  const srcLine = (url, label) => `<p class="src">Source: <a href="${esc(url)}" rel="noopener">${esc(label)}</a></p>`;
   const cite = (refs, cls) => { note(refs); try { return h.cite(refs, cls); } catch { return ''; } };
   const ext = (url, text, cls = '') => { note(url); return `<a href="${esc(url)}"${cls ? ` class="${cls}"` : ''} rel="noopener">${esc(text)}</a>`; };
   const dateEn = iso => { try { return h.date(String(iso).slice(0, 10)); } catch { return String(iso); } };
@@ -189,7 +201,11 @@ export function render(ctx) {
   const workshops = X.events.filter(e => e.kind === 'workshop');
   const pagesOf = id => X.pages.filter(p => p.activity === id);
   const orgCount = X.organisations.length; const orgCompanies = X.organisations.filter(o => o.kind === 'company').length;
-  const stat = (val, label, src, { cls = '', count = true } = {}) => `<li class="st ${cls}"><strong class="st-v"${count ? ' data-count' : ''}>${esc(val)}</strong><span class="st-l">${esc(label)}</span>${src && [].concat(src).length ? cite(src) : ''}</li>`;
+  const stat = (val, label, src, { cls = '', count = true } = {}) => `<li class="st ${cls}"><strong class="st-v"${count ? ' data-count' : ''}>${esc(val)}</strong><span class="st-l">${esc(label)}</span>${src?.html ? src.html : src && [].concat(src).length ? cite(src) : ''}</li>`;
+  const orgSrc = { html: srcLine(X.orgSource, 'PrompTugal.news research') };
+  const odooEv = { html: srcLine(X.sys.url + '/event', 'their Odoo calendar') };
+  const adiComs = X.communities.filter(c => c.adi === true), resComs = X.communities.filter(c => c.adi === false);
+  const adiPage = adiComs[0]?.source;
   const statGap = label => `<li class="st st-gap"><strong class="st-v"><span aria-hidden="true">--</span><span class="vh">No public figure:</span></strong><span class="st-l">${esc(label)}</span></li>`;
   const pagesStat = id => { const ps = pagesOf(id); return ps.length ? stat(String(ps.length), `public pages about it on their Odoo`, X.sys.pagesFrom || X.sys.url) : ''; };
   const STATS = {
@@ -201,19 +217,20 @@ export function render(ctx) {
     ],
     'challenge-connect': [
       statGap('challenges published'), statGap('supplier applications'), statGap('matching results'),
-      orgCompanies ? stat(String(orgCompanies), `companies among ${orgCount} organisations in the public map; none has said it wants to be a supplier`, X.orgSource) : '',
+      orgCompanies ? stat(String(orgCompanies), `companies among ${orgCount} organisations in the public map; none has said it wants to be a supplier`, orgSrc) : '',
     ],
     vibathon: [
       vibMain ? stat(dateEn(vibMain.date || vibMain.start), `${vibMain.name}, ${vibMain.place || vibMain.town || ''}`, srcsOf(factOf(vibMain)).concat(srcsOf(vibMain)).slice(0, 2), { count: false, cls: 'st-date' }) : '',
-      stat(String(vibs.length), 'hackathons and buildathons on record', X.sys.url + '/event'),
-      workshops.length ? stat(String(workshops.length), 'workshops on their Odoo calendar', X.sys.url + '/event') : '',
+      stat(String(vibs.length), 'hackathons and buildathons on record', odooEv),
+      workshops.length ? stat(String(workshops.length), 'workshops on their Odoo calendar', odooEv) : '',
       statGap('projects, jury and scores published'),
     ],
     talent: [
-      comFig ? stat(comFig.value, 'digital communities mapped by ADI (their figure)', comFig.sources) : '',
+      comFig && !adiComs.length ? stat(comFig.value, 'digital communities mapped by ADI (their figure)', comFig.sources) : '',
       comMembers ? stat(comMembers, 'members between them (their figure)', comFig.sources) : '',
-      stat(String(X.communities.length), 'communities found in public sources', X.communities.map(c => c.source).slice(0, 1)),
-      stat(String(orgCount), 'organisations mapped from public sources (no people)', X.orgSource),
+      adiComs.length ? stat(String(X.communitiesNote?.adi_listed ?? adiComs.length), 'communities in the ADI network, named on their page', { html: srcLine(X.communitiesNote?.source || adiPage, 'their ADI page on Odoo') }) : stat(String(X.communities.length), 'communities found in public sources', X.communities.map(c => c.source).slice(0, 1)),
+      resComs.length ? stat(String(X.communitiesNote?.other_public ?? resComs.length), 'more communities with a public record in research, not on their list', X.communitiesNote?.research_source ? { html: srcLine(X.communitiesNote.research_source, 'PrompTugal.news research') } : orgSrc) : '',
+      stat(String(orgCount), 'organisations mapped from public sources (no people)', orgSrc),
     ],
   };
   const progLi = p => `<li><strong>${esc(t(p.name))}</strong> ${esc(t(factOf(p).text || p.summary || ''))}${p.page ? ` ${ext(p.page, 'Their page')}` : ''}</li>`;
@@ -223,7 +240,7 @@ export function render(ctx) {
     vibathon: (vibMain ? `<li><strong>${esc(vibMain.name)}</strong> ${(vibMain.facts || []).slice(0, 3).map(f => esc(t(f.text))).join(' ')}</li>` : '')
       + vibs.filter(vb => vb !== vibMain).slice(0, 6).map(vb => `<li><span class="mono-d">${esc(String(vb.date || vb.start || '').slice(0, 10))}</span> ${vb.url ? ext(vb.url, vb.name) : esc(vb.name)}${vb.town ? ` · ${esc(vb.town)}` : ''}</li>`).join('')
       + progsOf('vibathon').map(progLi).join(''),
-    talent: progsOf('talent').map(progLi).join(''),
+    talent: (X.communitiesNote?.text ? `<li>${esc(X.communitiesNote.text)}</li>` : '') + progsOf('talent').map(progLi).join(''),
   };
   const modelName = m => String(m).replace(/\s*\(.*$/, '');
   const modelCode = m => { const n = modelName(m), rest = String(m).slice(n.length).trim(); return `<code${rest ? ` title="${esc(rest.replace(/^\(|\)$/g, ''))}"` : ''}>${esc(n)}</code>`; };
@@ -244,9 +261,9 @@ export function render(ctx) {
   };
 
   // ---------- coming up from their Odoo ----------
-  const evKind = { hackathon: 'Hackathon', workshop: 'Workshop', summit: 'Summit', conference: 'Conference', meetup: 'Meetup', other: 'Event' };
+  const evKind = { hackathon: 'Hackathon', workshop: 'Workshop', summit: 'Summit', conference: 'Conference', talk: 'Talk', fair: 'Fair', awards: 'Awards', meetup: 'Meetup', other: 'Event' };
   const munisById = new Map(X.munis.map(m => [m.id, m]));
-  const where = e => e.muni ? munisById.get(e.muni)?.name : /online/i.test(e.place) ? 'Online' : (String(e.place).split(',').map(s => s.trim()).filter(Boolean).slice(-1)[0] || '');
+  const where = e => e.muni ? munisById.get(e.muni)?.name : e.region === 'online' || /online/i.test(e.place) ? 'Online' : e.town ? e.town : (String(e.place).split(',').map(s => s.trim()).filter(Boolean).slice(-1)[0] || '');
   const upList = X.upcoming.slice(0, 12);
   const upHTML = upList.length ? `<ol class="up">${upList.map((e, i) => `<li class="up-i${i === 0 ? ' next' : ''}" data-start="${esc(e.start)}" data-end="${esc(e.end || e.start)}">
     <div class="up-when"><span class="up-d">${esc(dateEn(e.day))}</span>${timeOf(e.start) ? `<span class="up-t">${esc(timeOf(e.start))}</span>` : ''}<span class="up-in" data-in aria-hidden="true"></span></div>
@@ -257,7 +274,7 @@ export function render(ctx) {
   const upcoming = `${upHTML}<p class="src">Source: ${ext(X.sys.url + '/event', `their Odoo calendar (${odooLabel}, read ${X.sys.read})`)}. Registration happens on their site.</p>`;
 
   // ---------- news feed ----------
-  const newsHTML = `<ol class="news">${X.news.slice(0, 9).map((n, i) => `<li${i === 0 ? ' class="fresh"' : ''}><p class="nw-k"><time datetime="${esc(n.date)}">${esc(n.date)}</time> · ${esc(n.blog || 'Blog')}</p><h3>${ext(n.url, n.title)}</h3></li>`).join('')}</ol>
+  const newsHTML = `<ol class="news">${X.news.slice(0, 14).map((n, i) => `<li${i === 0 ? ' class="fresh"' : ''}><p class="nw-k"><time datetime="${esc(n.date)}">${esc(n.date)}</time> · ${esc(n.blog || 'Blog')}</p><h3>${ext(n.url, n.title)}</h3></li>`).join('')}</ol>
     <p class="src">Source: their blog feeds on ${ext(X.sys.url + '/blog', odooHost)} (${X.news.length} posts read ${esc(X.sys.read)}).</p>`;
 
   // ---------- network ----------
@@ -277,8 +294,8 @@ export function render(ctx) {
   for (let i = nodes.length - 1; i > 0; i--) if (!links.some(([a, b]) => a === nodes[i].id || b === nodes[i].id)) nodes.splice(i, 1);
   const adiName = slug(netNode('adi')?.label || 'Algarve Digital Innovators');
   for (const c of X.communities) { if (slug(c.name) === adiName) continue; const id = `com-${slug(c.id || c.name)}`;
-    add({ id, kind: 'community', label: c.name, short: c.name.replace(/\s*\(.*\)\s*$/, '').replace(/\s+-\s+.*$/, ''), note: `${c.kind ? c.kind[0].toUpperCase() + c.kind.slice(1) : 'Community'}${c.municipality ? `, ${c.municipality}` : ', place not given'}${c.members ? `, ${num(c.members)} members (their page)` : ''}.${c.summary ? ` ${c.summary}` : ''}`, src: c.source });
-    links.push([ids0.has('adi') ? 'adi' : 'act-talent', id, 'community']); }
+    add({ id, kind: 'community', label: c.name, short: c.name.replace(/\s*\(.*\)\s*$/, '').replace(/\s+-\s+.*$/, ''), note: `${c.kind ? c.kind[0].toUpperCase() + c.kind.slice(1) : 'Community'}${c.municipality ? `, ${c.municipality}` : ', place not given'}${c.members ? `, ${num(c.members)} members (their page)` : ''}.${c.adi === true ? ' Named on the list of the ADI network on their Odoo.' : c.adi === false ? ' Found in public research; not on the ADI list.' : ''}${c.summary ? ` ${c.summary}` : ''}`, src: c.source, url: c.url });
+    links.push(c.adi === false || !ids0.has('adi') ? ['act-talent', id, 'found in research'] : ['adi', id, 'maps']); }
   const byKind = {}; for (const o of X.organisations) (byKind[o.kind] ||= []).push(o);
   for (const [k, list] of Object.entries(byKind)) { if (k === 'community' || !ORG_KINDS[k]) continue; add({ id: `org-${k}`, kind: 'orgs', label: `${ORG_KINDS[k]}: ${list.length} organisations`, short: `${ORG_KINDS[k]} (${list.length})`, note: `${list.length} organisations in the Algarve, from public sources. Organisations only, no people.`, src: X.orgSource, orgs: list }); links.push(['act-talent', `org-${k}`, 'maps']); }
   const GW = 1100, GH = 720;
@@ -289,8 +306,8 @@ export function render(ctx) {
   const boxes = nodes.map(n => { const p = pos.get(n.id), r = R[n.kind] || 10; return [p.x - r, p.y - r, p.x + r, p.y + r]; });
   const lab = new Map(); const aeP = pos.get('ae');
   const ov = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
-  for (const n of nodes) { const p = pos.get(n.id), r = R[n.kind] || 10, fs = n.kind === 'community' ? 6.6 : n.kind === 'activity' ? 8.6 : 7.4, w = n.short.length * fs + 4, hh = 15;
-    const c = n.id === 'ae' ? [[0, r + 18, 'middle']] : [[r + 6, 4, 'start'], [-(r + 6), 4, 'end'], [0, -(r + 7), 'middle'], [0, r + 16, 'middle']];
+  for (const n of nodes) { const p = pos.get(n.id), r = R[n.kind] || 10, fs = n.kind === 'community' ? 6.8 : n.kind === 'activity' ? 10.6 : n.kind === 'centre' ? 11.8 : 7.6, w = n.short.length * fs + 6, hh = 16;
+    const c = n.id === 'ae' ? [[0, r + 18, 'middle']] : [[r + 6, 4, 'start'], [-(r + 6), 4, 'end'], [0, -(r + 7), 'middle'], [0, r + 16, 'middle'], [r + 2, -(r + 4), 'start'], [-(r + 2), -(r + 4), 'end'], [r + 2, r + 14, 'start'], [-(r + 2), r + 14, 'end']];
     let best = null;
     for (const [dx, dy, an] of c) { const x0 = an === 'start' ? p.x + dx : an === 'end' ? p.x + dx - w : p.x - w / 2; const bx = [x0, p.y + dy - 11, x0 + w, p.y + dy - 11 + hh];
       let sc = boxes.reduce((s, b) => s + ov(bx, b), 0) + [...lab.values()].reduce((s, b) => s + ov(bx, b.box) * 1.5, 0);
@@ -304,7 +321,7 @@ export function render(ctx) {
       <text class="nd-l" x="${lb.dx}" y="${lb.dy}" text-anchor="${lb.an}">${esc(n.short)}</text></g>`; }).join('');
   const nodeCard = n => { const ls = links.filter(([a, b]) => a === n.id || b === n.id);
     return `<article class="ins-card" data-node="${esc(n.id)}"><p class="ins-k"><span class="led k-${n.kind}" aria-hidden="true"></span>${esc(KINDS[n.kind])}</p>
-      <h3>${esc(n.label)}</h3>${n.note ? `<p>${esc(n.note)}</p>` : ''}${n.wb ? `<p class="fine">From António Guerreiro's whiteboard, 16 November 2026. <a href="${esc(n.v2)}">What it could be (V2)</a></p>` : ''}${n.src ? cite(n.src) : ''}
+      <h3>${esc(n.label)}</h3>${n.note ? `<p>${esc(n.note)}</p>` : ''}${n.wb ? `<p class="fine">From António Guerreiro's whiteboard, 16 November 2026. <a href="${esc(n.v2)}">What it could be (V2)</a></p>` : ''}${n.url && n.url !== n.src ? `<p class="fine">${ext(n.url, 'Their own page')}</p>` : ''}${n.src ? cite(n.src) : ''}
       ${n.orgs ? `<ul class="ins-orgs">${n.orgs.slice(0, 60).map(o => `<li>${ext(o.url || o.source, o.name.replace(/\s*\(.*\)\s*$/, ''))}${o.town ? ` <span>${esc(o.town)}</span>` : ''}</li>`).join('')}</ul>` : ''}
       <p class="ins-sub">Links (${ls.length})</p><ul class="ins-links">${ls.map(([a, b, l]) => { const o = a === n.id ? b : a; const dir = a === n.id ? '→' : '←';
         return `<li><span class="arr" aria-hidden="true">${dir}</span> <span class="lk">${esc(l)}</span> <button type="button" data-goto="${esc(o)}">${esc(nodes.find(x => x.id === o)?.label || o)}</button></li>`; }).join('')}</ul></article>`; };
@@ -318,7 +335,7 @@ export function render(ctx) {
 
   // ---------- radar ----------
   const O = outline(data.places);
-  const RS = 600, C0 = [-8.17, 37.22], KR = 395, COS = Math.cos(37.2 * Math.PI / 180);
+  const RS = 600, C0 = [-8.2, 37.2], KR = 455, COS = Math.cos(37.2 * Math.PI / 180);
   const rp = ([lon, lat]) => [RS / 2 + (lon - C0[0]) * COS * KR, RS / 2 - (lat - C0[1]) * KR];
   const rpath = (ring, o = {}) => pathOf(ring, { project: rp, ...o });
   const rad = [];
@@ -338,12 +355,12 @@ export function render(ctx) {
   const ctCard = m => { const cs = comBy[m.id] || [], up = upBy(m.id), all = evBy[m.id] || [];
     return `<li id="ct-${m.id}" class="ct"><p class="ct-k">${m.id === 'faro' ? 'HQ · ' : ''}${m.ll[1].toFixed(3)}N ${Math.abs(m.ll[0]).toFixed(3)}W</p><h3>${esc(m.name)}</h3>
       <dl class="ct-n"><div><dt>Communities</dt><dd>${cs.length}</dd></div><div><dt>Coming up</dt><dd>${up.length}</dd></div><div><dt>Odoo events</dt><dd>${all.length}</dd></div><div><dt>Organisations</dt><dd>${orgBy[m.id] || 0}</dd></div></dl>
-      ${cs.length ? `<p class="ct-sub">Communities</p><ul class="ct-l">${cs.map(c => `<li>${ext(c.source, c.name.replace(/\s*\(.*\)\s*$/, ''))} <span>${esc(c.kind)}</span></li>`).join('')}</ul>` : ''}
+      ${cs.length ? `<p class="ct-sub">Communities</p><ul class="ct-l">${cs.map(c => `<li>${ext(c.url || c.source, c.name.replace(/\s*\(.*\)\s*$/, ''))} <span>${esc(c.kind)}</span></li>`).join('')}</ul>` : ''}
       ${up.length ? `<p class="ct-sub">Coming up</p><ul class="ct-l">${up.slice(0, 4).map(e => `<li><span class="mono-d">${esc(e.day)}</span> ${ext(e.url, e.name)} · <a href="${esc(e.register || e.url)}" rel="noopener">Register<span class="vh"> for ${esc(e.name)}</span></a></li>`).join('')}</ul>`
         : all.length ? `<p class="ct-sub">Latest on their calendar</p><ul class="ct-l">${all.slice(-2).reverse().map(e => `<li><span class="mono-d">${esc(e.day)}</span> ${ext(e.url, e.name)}</li>`).join('')}</ul>` : ''}
       ${cite([data.places.municipalities_source, ...(all.length ? [X.sys.url + '/event'] : [])].filter(Boolean))}</li>`; };
   const regionCard = `<li id="ct-region" class="ct"><p class="ct-k">REGION-WIDE</p><h3>Region-wide, or place not given</h3><p>Communities that work across the Algarve, or whose source gives no municipality.</p>
-      <ul class="ct-l">${regional.map(c => `<li>${ext(c.source, c.name)}${c.members ? ` <span>${num(c.members)} members, their page</span>` : ''}</li>`).join('')}</ul></li>`;
+      <ul class="ct-l">${regional.map(c => `<li>${ext(c.url || c.source, c.name)}${c.members ? ` <span>${num(c.members)} members, their page</span>` : ''}</li>`).join('')}</ul></li>`;
   const totalUpAlg = X.upcoming.filter(e => e.muni).length;
   const radar = `<div class="radar-wrap"><div class="radar"><svg viewBox="0 0 ${RS} ${RS}" role="group" aria-label="Radar of the Algarve: the 16 municipalities with their communities and events">
     <defs><clipPath id="rclip"><circle cx="300" cy="300" r="292"/></clipPath><radialGradient id="rbg"><stop offset="0" stop-color="#062a2e"/><stop offset="1" stop-color="#020b0f"/></radialGradient></defs>
@@ -377,7 +394,7 @@ export function render(ctx) {
 
   // ---------- systems: Odoo, the source of truth ----------
   const upAlg = X.upcoming.filter(e => e.muni).length;
-  const awaitingModels = [...new Set(X.gaps.flatMap(g => g.odoo || []))];
+  const awaitingModels = [...new Set(X.gaps.flatMap(g => (g.odoo || []).map(modelName)))];
   const sysRows = [
     ['ok', 'Source of truth', `${ext(X.sys.url, odooHost)} runs ${esc(odooLabel)}, their core platform`],
     ['ok', 'Last sync', `${esc(X.sys.read)}${X.sys.built ? ` (feed built ${esc(String(X.sys.built).slice(0, 16).replace('T', ' '))} UTC)` : ''}`],
@@ -385,7 +402,9 @@ export function render(ctx) {
     ['ok', 'Events read', `<b data-count>${num(X.events.length)}</b> from the sitemap and one iCal export per event; ${num(X.upcoming.length)} coming up, ${num(upAlg)} of them in the Algarve`],
     ['ok', 'Blog posts read', `<b data-count>${num(X.news.length)}</b> from ${num(X.sys.feeds.length || 6)} blog feeds`],
     ...(X.pages.length ? [['ok', 'Pages read', `<b data-count>${num(X.pages.length)}</b> public pages (title and description)`]] : []),
-    ['wait', 'Hub records', `Not on their Odoo yet: ${awaitingModels.map(m => `<code>${esc(m)}</code>`).join(' ')}`],
+    ['wait', 'Hub records', `Not on their Odoo yet (${awaitingModels.length} models): <span class="codes">${awaitingModels.map(m => `<code>${esc(m)}</code>`).join(' ')}</span>`],
+    ...(X.inputs ? [['wait', 'Ideas and needs', `${esc(X.inputs.known || 'Nothing is published.')} ${X.inputs.odoo_note ? `<span class="prop">${esc(X.inputs.odoo_note)}</span>` : ''}`]] : []),
+    ...(X.sys.classification ? [['ok', 'Our classification', esc(X.sys.classification)]] : []),
   ];
   const systems = `<div class="sys-grid"><div class="sys-t" role="table" aria-label="Odoo status">${sysRows.map(([s, k, val]) => `<div class="sr" role="row"><span role="rowheader" class="sr-k"><span class="led ${s}" aria-hidden="true"></span>${esc(k)}</span><span role="cell" class="sr-v">${val}</span></div>`).join('')}</div>
     <figure class="pipe" aria-label="How data flows: ideas, needs and spreadsheets go into Odoo; Odoo feeds their site and this page">
@@ -396,11 +415,12 @@ export function render(ctx) {
   // ---------- programme status board ----------
   const STATUS = { 'ualg-entrepreneurship': ['ok', 'Running · Penha, Gambelas, Portimão'], 'the-company': ['ok', 'Running · secondary schools'], buildathons: ['ok', 'Latest: Vibathon Algarve 2026'],
     founder2founder: ['go', 'Launched Oct 2026 · 8 of 41'], incubator: ['go', 'Recognised Jan 2026 · early stage planned 2027'], 'inova-algarve-3': ['wait', 'Pilot · 20 tourism businesses'],
-    'startup-showcase': ['ok', 'Annual'], 'algarve-digital-innovators': ['ok', '24 communities · plan to 2030'], 'algarve-tech-hub-summit': ['wait', 'Returns 2027'], 'ccdr-digital-platform': ['ok', 'Leading'] };
+    'startup-showcase': ['ok', 'Annual'], 'algarve-digital-innovators': ['ok', '24 communities · plan to 2030'], 'algarve-tech-hub-summit': ['wait', 'Returns 2027'], 'ccdr-digital-platform': ['ok', 'Leading'], 'algarve-empreende': ['ok', 'Managed by six organisations'], 'ai-robotics-tourism-pilot': ['wait', 'Applications closed 30 Apr 2026 · 15 winners'] };
+  const shortStatus = txt => { const w = String(txt).split(/\s+/); let o = ''; for (const x of w) { if ((o + ' ' + x).trim().length > 46) return o.trim() + '...'; o += ' ' + x; } return o.trim(); };
   const board = `<div class="board" role="table" aria-label="Programme status board"><div class="br br-h" role="row"><span role="columnheader">Hub activity</span><span role="columnheader">Programme</span><span role="columnheader">Status</span><span role="columnheader">Source</span></div>
-    ${X.programmes.map(p => { const [cls, txt] = STATUS[p.id] || ['ok', t(factOf(p).text || p.summary || '').slice(0, 60)]; const a = ACT[p.activity];
+    ${X.programmes.map(p => { const [cls, txt] = STATUS[p.id] || ['ok', shortStatus(t(factOf(p).text || p.summary || ''))]; const a = ACT[p.activity];
       return `<div class="br" role="row"><span role="cell" class="b-p">${a ? `${a.code} ${esc(a.short)}` : esc(p.pillar || 'Algarve Evolution')}</span><span role="cell" class="b-n">${esc(t(p.name))}</span><span role="cell" class="b-s"><span class="led ${cls}" aria-hidden="true"></span><span class="flap">${esc(txt)}</span></span><span role="cell" class="b-src">${cite((p.facts || []).flatMap(f => [].concat(f.source || [])), 'src')}</span></div>`; }).join('')}</div>
-    <details class="idx"><summary>What each programme does</summary><ul class="pg-list">${X.programmes.map(p => `<li><strong>${esc(t(p.name))}</strong> ${esc(t(factOf(p).text || p.summary || ''))}</li>`).join('')}</ul></details>`;
+    <details class="idx"><summary>What each programme does</summary><ul class="pg-list">${X.programmes.map(p => `<li><strong>${esc(t(p.name))}</strong> ${esc(t(factOf(p).text || p.summary || ''))}${p.note ? ` <em>${esc(t(p.note))}</em>` : ''}</li>`).join('')}</ul></details>`;
 
   // ---------- hero ----------
   const nextEv = X.upcoming[0];
@@ -431,7 +451,8 @@ export function render(ctx) {
   };
   const heroCites = cite(['psn']);
   const teleCites = tele;
-  const sources = panel('sources', 'P-10', 'Sources', `<ol>${sourcesList()}</ol>`, { cls: 'span-12 pn-src', sub: 'Every fact on this dashboard links to one of these.' });
+  const feedSrc = X.metaSources.length ? `<h3 class="src-h">How the feed was read</h3><ul class="feed-src">${X.metaSources.map(m => `<li><span class="fs-k">${esc(m.key)}</span> ${m.url ? `<a href="${esc(m.url)}" rel="noopener">${esc(m.label)}</a>` : esc(m.label)}</li>`).join('')}</ul>` : '';
+  const sources = panel('sources', 'P-10', 'Sources', `<h3 class="src-h">Published sources cited on this page</h3><ol>${sourcesList()}</ol>${feedSrc}<p class="fine">Each event, post, page, community and organisation also links to its own record or public page where it appears.</p>`, { cls: 'span-12 pn-src', sub: 'Every fact on this dashboard links to one of these, or to its own record.' });
 
   return `<!doctype html>
 <html lang="en">
