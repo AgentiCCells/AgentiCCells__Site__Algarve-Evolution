@@ -21,6 +21,7 @@ export const PERSONAS = [
   { id: 'challenger', label: 'Challenge owner', hint: 'A company with a problem' },
   { id: 'supplier', label: 'Supplier', hint: 'A company or professional with a solution' },
   { id: 'participant', label: 'Participant or jury', hint: 'At a Vibathon' },
+  { id: 'professional', label: 'Professional or investor', hint: 'A consultant, professional or investor in the network' },
   { id: 'staff', label: 'Algarve Evolution team', hint: 'Unlocks the private feed with an access key' },
 ];
 
