@@ -2,7 +2,7 @@
  "about": "Organisations in the Algarve that a founder, a company or a student can turn to, compiled from PrompTugal.news public research. Organisations only: no private person is listed. Each entry keeps its source and the date it was read. Text CC BY 4.0 (PrompTugal.news); compiled by sites-dev@AgentiCCells.dinis with scripts/pages/_talent-map-data.mjs.",
  "from": {
   "repo": "https://github.com/PrompTugal/PrompTugal__News__Website",
-  "commit": "7c2a2fe0",
+  "commit": "9acfe243",
   "files": [
    "data/by-place/faro.json",
    "data/by-place/albufeira.json",
@@ -1819,8 +1819,8 @@
    "also": [
     {
      "town": "algarve",
-     "what": "Organiser of the July 2026 Faro panel on how AI assistants recommend businesses. Location to confirm.",
-     "source_url": "https://www.barlavento.pt/faro-debate-inteligencia-artificial-empresas/",
+     "what": "Creative technology agency with teams in Faro and Lisbon, listed as a member of Algarve Evolution (as Flow With Us). Its services include MarTech and AI, and its site says it helps companies get found by people and AI engines. It organised the July 2026 Faro panel on how AI assistants recommend businesses.",
+     "source_url": "http://www.flowproductions.pt/",
      "read_on": "2026-11-15"
     }
    ],
@@ -2693,6 +2693,15 @@
    "read_on": "2026-11-15",
    "ai": "Digital services and geodata are the base on which AI assistants and analysis would sit. Nothing AI found yet.",
    "from": "PrompTugal.news research",
+   "contacts": [
+    {
+     "label": "Município de Aljezur, general channel (Contactos úteis page)",
+     "channel": "geral@cm-aljezur.pt, +351 282 990 010 (a call to the national fixed-line network), as published on the council's Contactos úteis page. Paços do Concelho, Rua Capitão Salgueiro Maia, 8670-005 Aljezur.",
+     "url": "https://cm-aljezur.pt/pt/menu/76/contactos-uteis.aspx",
+     "source_url": "https://cm-aljezur.pt/pt/menu/76/contactos-uteis.aspx",
+     "read_on": "2026-11-16"
+    }
+   ],
    "pt": "A câmara tem um portal de serviços online, um mapa municipal interativo, um GEO Portal e uma aplicação turística. Não encontrámos uso de IA."
   },
   {
