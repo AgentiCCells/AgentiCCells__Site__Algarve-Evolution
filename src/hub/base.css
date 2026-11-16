@@ -276,16 +276,16 @@ section { padding: 72px 0; }
   .ev-table { background: none; }
 }
 
-/* Prototypes */
+/* Prototypes (V1 cards; renamed .proto-card in V2 because .proto is the hub's prototype note) */
 .protos { background: var(--navy); color: #fff; }
 .protos .sec-head h2 { color: #fff; }
 .protos .sec-intro { color: var(--on-navy); }
 .proto-row { display: grid; gap: 1px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14); grid-template-columns: 1fr; }
 @media (min-width: 64rem) { .proto-row { grid-template-columns: 5fr 5fr 4fr; } }
-.proto { display: flex; flex-direction: column; gap: 12px; padding: 28px 24px; background: var(--navy); color: #fff; text-decoration: none; min-height: 260px; transition: background .2s; }
-@media (min-width: 64rem) { .proto { padding: 40px; } }
-a.proto:hover { background: var(--navy-2); color: #fff; }
-a.proto:hover .proto-go { color: #fff; }
+.proto-card { display: flex; flex-direction: column; gap: 12px; padding: 28px 24px; background: var(--navy); color: #fff; text-decoration: none; min-height: 260px; transition: background .2s; }
+@media (min-width: 64rem) { .proto-card { padding: 40px; } }
+a.proto-card:hover { background: var(--navy-2); color: #fff; }
+a.proto-card:hover .proto-go { color: #fff; }
 .proto-tag { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; border: 1px solid var(--accent-light); color: var(--accent-light); padding: 4px 10px; }
 .proto-num { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--on-navy-2); text-transform: uppercase; margin-top: 8px; }
 .proto-name { font-size: clamp(24px, 2.6vw, 32px); font-weight: 700; line-height: 1.12; letter-spacing: -.02em; }
