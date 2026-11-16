@@ -44,3 +44,4 @@ In the public feed: people (mentors, talent of kind professional/consultant/inve
 10. `vibathons[].event_id`: the feed id of the linked Odoo event (`event.event`), `null` when there is none or it is not public.
 11. `vibathons[].participants[].role` (private): builder, designer, business or other.
 12. `projects[].mentor_id`: the mentor who follows the project after the event; `null` in the public feed when that mentor is not public. `aih.project` now has Odoo's chatter (`mail.thread`), so a mentor's office hours can be logged with `message_post`.
+13. `meta.withheld` (public feed only): `{ talent, mentors, suppliers }`, how many published people are left out for lack of consent (talent of kind professional, consultant, investor or mentor; mentors; individual suppliers). Counts only, no ids or names.

@@ -86,7 +86,11 @@
   function refFind(field, v, feed) {
     const n = norm(v); if (!n || !feed) return null;
     const list = feed[field.ref] || [];
-    return list.find(r => norm(r.name) === n || norm(r.id) === n || (r.cohort && norm(r.cohort) === n) || (field.ref === 'vibathons' && r.date === v.trim())) || null;
+    const exact = list.find(r => norm(r.name) === n || norm(r.id) === n || (r.cohort && norm(r.cohort) === n) || (field.ref === 'vibathons' && r.date === v.trim()));
+    if (exact) return exact;
+    // "Algarve Acceleration Programme" for "Algarve Acceleration Programme, 2026 cohort (simulated)": only when one record fits
+    const starts = n.length >= 6 ? list.filter(r => norm(r.name).startsWith(n)) : [];
+    return starts.length === 1 ? starts[0] : null;
   }
   function detect(csv) {
     return C.targets.map(t => {

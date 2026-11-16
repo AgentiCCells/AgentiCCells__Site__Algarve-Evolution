@@ -223,7 +223,7 @@ export function render({ layout, feed, data, h }) {
   ${box(262, 196, 616, 124, 'd-exp', [['Experimentation Odoo', 'd-h'], ['Odoo 19 Community, run by the PrompTugal team, with the hub\'s own models', 'd-s'], [`addon algarve_innovation_hub ${addon.version}: ${newModels} new models, ${extModels} of Odoo's extended`, 'd-m'], ['The place to try things: cheap to change, simulated data where real data is missing.', 'd-s'], ['Odoo 20 can run here first, to test the addon before the official upgrade.', 'd-s']])}
   ${arrow('M570 322 L 570 382', 'ar-promote')}${T(584, 357, 'promote what works', 'd-l d-l-promote')}
   ${box(262, 388, 616, 124, 'd-off', [['Official Odoo', 'd-h'], ['algarveevolution.pt', 'd-m'], ['Odoo 19 Enterprise; upgrade to Odoo 20 planned.', 'd-s'], ['The mature system: website, events, news, contacts.', 'd-s'], [`Read today through its public pages: ${num(official.events.length)} events and ${num(official.posts.length)} news posts.`, 'd-s']])}
-  ${box(20, 196, 186, 120, 'd-in', [['Spreadsheets', 'd-h'], ['lists kept outside Odoo', 'd-s'], ['today: mentors, startups,', 'd-s'], ['suppliers, participants', 'd-s'], ['members', 'd-s']])}
+  ${box(20, 196, 186, 120, 'd-in', [['Spreadsheets', 'd-h'], ['lists kept outside Odoo', 'd-s'], ['today: mentors, startups,', 'd-s'], ['suppliers, participants,', 'd-s'], ['community members', 'd-s']])}
   ${box(20, 340, 186, 120, 'd-in', [['Public sources', 'd-h'], ['communities, partners,', 'd-s'], ['events (also from', 'd-s'], ['algarveevolution.pt), each', 'd-s'], ['with its source URL', 'd-s']])}
   ${arrow('M206 250 L 256 250')}${T(207, 240, 'importer', 'd-l')}
   ${arrow('M206 400 C 232 400 230 300 256 296')}
@@ -455,7 +455,7 @@ export function render({ layout, feed, data, h }) {
         <h3>Why a record is withheld</h3>
         <ul class="fx-rules">
           <li><b>Not published.</b> A record reaches the public feed only when someone ticks Published in Odoo. Imports arrive unpublished.</li>
-          <li><b>No consent.</b> Mentors, individual suppliers, professionals, consultants, investors, team members and jurors appear only when they agreed to be listed.</li>
+          <li><b>No consent.</b> Mentors, individual suppliers, professionals, consultants, investors, team members and jurors appear only when they agreed to be listed.${feed.meta.withheld ? ` In this export that leaves out ${num(feed.meta.withheld.talent)} talent profiles, ${num(feed.meta.withheld.mentors)} mentor${feed.meta.withheld.mentors === 1 ? '' : 's'} and ${num(feed.meta.withheld.suppliers)} individual supplier${feed.meta.withheld.suppliers === 1 ? '' : 's'} (<code>meta.withheld</code>: counts only).` : ''}</li>
           <li><b>Its parent is not public.</b> Sessions and KPIs of an unpublished company stay private; a link to someone not public becomes empty.</li>
           <li><b>Private fields.</b> Session notes, supplier contacts, Vibathon participants and jury scores are never in the public feed.</li>
         </ul>
