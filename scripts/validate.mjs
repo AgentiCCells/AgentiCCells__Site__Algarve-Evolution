@@ -64,5 +64,9 @@ for (const f of files.filter(f => f.endsWith('.html'))) {
   if (/<!-- data:[a-z]+ -->/.test(s)) fail(`${f}: data block not rendered`);
   if (!/not yet approved by Algarve Evolution|ainda não aprovado pela Algarve Evolution/.test(s)) fail(`${f}: no "not yet approved by Algarve Evolution" notice`);
 }
+// No links to a publisher's staging or test host (a source captured from stg.example.com, 2026-11-16).
+for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
+  for (const m of readFileSync(f, 'utf8').matchAll(/https?:\/\/((?:stg|staging|test|preview)\.[a-z0-9.-]+)/gi)) fail(`${f}: link to a staging or test host ${m[1]}`);
+}
 if (problems.length) { console.error(problems.join('\n')); console.error(`FAILED: ${problems.length} problem(s)`); process.exit(1); }
 console.log('OK');
