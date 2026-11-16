@@ -152,7 +152,7 @@ const LABEL = {
   faro: { side: 'l' }, olhao: { side: 'r' }, loule: { side: 'l' }, 'sao-bras-de-alportel': { side: 't', lines: ['São Brás', 'de Alportel'] },
   tavira: { side: 'b' }, 'vila-real-de-santo-antonio': { side: 'b', lines: ['Vila Real de', 'Santo António'], anchor: 'end', dx: 55 },
   'castro-marim': { side: 't' }, alcoutim: { side: 'l' }, albufeira: { side: 'b' }, lagoa: { side: 'b' }, portimao: { side: 't' },
-  silves: { side: 't' }, lagos: { side: 'b' }, 'vila-do-bispo': { side: 'b' }, aljezur: { side: 't' }, monchique: { side: 'b' },
+  silves: { side: 't' }, lagos: { side: 'b' }, 'vila-do-bispo': { side: 'b' }, aljezur: { side: 't' }, monchique: { side: 't' },
 };
 export const radius = n => (n ? 9 + Math.sqrt(n) * 4.6 : 6);
 // Where a label sits relative to its circle; app.js uses the same rule when the circles resize.

@@ -46,7 +46,7 @@ export function render({ lang, data, h, chrome, other }) {
   const timeline = items => `<ol class="tline">${items.map(x => `<li><p class="tw">${esc(x.when)}</p><div><h4>${esc(x.title)}</h4>${x.text ? `<p>${esc(x.text)}</p>` : ''}${mini(x.src)}</div></li>`).join('')}</ol>`;
   const evItem = e => ({ when: `${e.approximate ? L('about ', 'cerca de ') : ''}${h.date(e.start)}${e.end ? ` ${L('to', 'a')} ${h.date(e.end)}` : ''} · ${t(e.place)}`, title: t(e.name), text: t(e.summary), src: e.sources });
   const tlItem = at => { const e = tl(at); return { when: e.when, title: tlTitle(e, lang), text: e.text, src: e.src }; };
-  const progCard = g => `<div class="card"><p class="card-k">${esc(t(g.pillar.name))}</p><h4>${esc(t(g.name))}</h4><p>${esc(t(g.summary))}</p>${mini(g.sources)}</div>`;
+  const progCard = (g, k = true) => `<div class="card">${k ? `<p class="card-k">${esc(t(g.pillar.name))}</p>` : ''}<h4>${esc(t(g.name))}</h4><p>${esc(t(g.summary))}</p>${mini(g.sources)}</div>`;
   const quoteCard = () => `<figure class="qcard"><blockquote><p>${esc(t(quote.text))}</p></blockquote><figcaption><span class="qav" aria-hidden="true">AG</span><span><strong>${esc(person.name)}</strong> ${esc(t(person.role))}, Algarve Evolution · <time datetime="${quote.date}">${esc(h.date(quote.date))}</time>${lang === 'pt' && quote.translation_note ? `<em>${esc(quote.translation_note.pt)}</em>` : ''}</span></figcaption>${mini(quote.sources)}</figure>`;
   const appCard = (a, prop) => `<a class="card app" href="${pre}${a.href}"><p class="card-k">${esc(h.words.proposal)} · ${L('working prototype', 'protótipo a funcionar')}</p><h4>${esc(t(a.name))}</h4><p>${esc(t(a.summary))}</p><span class="go">${L('Open it', 'Abrir')} <span aria-hidden="true">→</span></span></a>`;
 
@@ -100,9 +100,9 @@ export function render({ lang, data, h, chrome, other }) {
     { id: 'programmes', q: L('What do you run?', 'O que fazem?'), d: L('Three pillars, ten programmes', 'Três pilares, dez programas'),
       kw: 'run,programme,programmes,program,programs,what do you do,do you do,work,pillar,pillars,founder2founder,incubator,inova,buildathon,buildathons,education,showcase,projects,services,fazem,programa,programas,pilar,pilares,incubadora,educacao,projetos,servicos,trabalho',
       follow: ['ideas', 'join', 'tourism'],
-      body: lead(t(v.pillars_intro)) + pillars.map(p => `<h3 class="grp">${esc(t(p.name))}</h3><div class="cards">${p.programmes.map(g => progCard({ ...g, pillar: p })).join('')}</div>`).join('') },
+      body: lead(t(v.pillars_intro)) + pillars.map(p => `<h3 class="grp">${esc(t(p.name))}</h3><div class="cards">${p.programmes.map(g => progCard({ ...g, pillar: p }, false)).join('')}</div>`).join('') },
     { id: 'where', q: L('Where are you?', 'Onde estão?'), d: L('Faro, and all 16 municipalities', 'Faro, e os 16 municípios'),
-      kw: 'where,location,located,based,faro,map,region,municipalities,municipality,town,towns,office,address,algarve,onde,localizacao,sede,mapa,regiao,municipios,municipio,concelho,concelhos,lagos,portimao,tavira',
+      kw: 'where,location,located,based,faro,map,region,municipalities,municipality,town,towns,office,offices,address,headquarters,algarve,onde,localizacao,sede,morada,escritorio,escritorios,ficam,situados,mapa,regiao,municipios,municipio,concelho,concelhos,lagos,portimao,tavira',
       follow: ['partners', 'join', 'y2025'],
       body: lead(L('We are based in Faro, and our work reaches all 16 of the Algarve\'s municipalities: Algarve Digital Innovators has mapped 24 digital communities across them.', 'Estamos sediados em Faro, e o nosso trabalho chega aos 16 municípios do Algarve: a Algarve Digital Innovators mapeou 24 comunidades digitais em todos eles.')) + miniMap + `<ul class="tags">${munis.map(m => `<li${m.id === 'faro' ? ' class="hq"' : ''}>${esc(m.name)}</li>`).join('')}</ul>` + chips(['psn', ...prog('algarve-digital-innovators').sources, 'adi', ...eco.places.map(p => p.src)]) },
     { id: 'partners', q: L('Who do you work with?', 'Com quem trabalham?'), d: L('Universities, parks, associations', 'Universidades, parques, associações'),
@@ -110,7 +110,7 @@ export function render({ lang, data, h, chrome, other }) {
       follow: ['programmes', 'where', 'y2025'],
       body: lead(t(v.network_intro)) + `<p class="sub">${L('Partners, and what we do together:', 'Parceiros, e o que fazemos em conjunto:')}</p>` + partnerCards + chips(['adi', 'venture', 'ws25', 'econews22', 'psn']) },
     { id: 'join', q: L('How do I join?', 'Como me posso juntar?'), d: L('Events, communities, membership', 'Eventos, comunidades, adesão'),
-      kw: 'join,joining,member,membership,sign up,signup,become,price,cost,fee,fees,150,start,take part,participate,involved,aderir,adesao,membro,socio,juntar,inscrever,inscricao,preco,custo,quota,participar,envolver',
+      kw: 'join,joining,member,membership,sign up,signup,become,price,cost,fee,fees,150,start,take part,participate,involved,aderir,adesao,membro,socio,juntar,inscrever,inscricao,preco,custo,custa,quanto custa,pagar,pay,quota,participar,envolver',
       follow: ['where', 'programmes', 'ideas'],
       body: lead(L('Three ways in, from the lightest to the most committed:', 'Três formas de chegar, da mais leve à mais comprometida:')) + steps + `<p class="note">${L('This prototype takes no sign-ups and keeps no data. Everything happens through Algarve Evolution itself, on algarveevolution.pt; check there for current terms.', 'Este protótipo não faz inscrições nem guarda dados. Tudo acontece através da própria Algarve Evolution, em algarveevolution.pt; confirme lá as condições atuais.')}</p>` + chips(v.join_sources) },
     { id: 'y2025', q: L('What happened in 2025?', 'O que aconteceu em 2025?'), d: L('Launches and summits', 'Lançamentos e cimeiras'),
@@ -204,6 +204,7 @@ ${chrome.banner}
     </header>
 
     <div class="log" id="log" tabindex="-1" aria-label="${L('Conversation', 'Conversa')}">
+      <div class="hello">${orb('orb xl')}<h2>${L('Ask us anything about Algarve Evolution', 'Pergunte-nos o que quiser sobre a Algarve Evolution')}</h2><p>${L(`${A.length} sourced answers · English and Portuguese · no model, no network`, `${A.length} respostas com fonte · português e inglês · sem modelo, sem rede`)}</p></div>
       <div class="msg bot greet"><div class="av">${orb('orb av-o')}</div><div class="body"><p class="lead">${esc(UI.greet)}</p>
         <div class="sugg" data-sugg>${suggest.map(id => `<a class="sg" href="#a-${id}" data-ask="${id}"><strong>${esc(byId[id].q)}</strong><span>${esc(byId[id].d)}</span></a>`).join('')}</div>
         <noscript><p class="note">${L('JavaScript is off, so here is the whole conversation: every question I can answer, with its answer and sources.', 'O JavaScript está desligado, por isso aqui está a conversa toda: cada pergunta a que sei responder, com a resposta e as fontes.')}</p></noscript>
@@ -225,6 +226,7 @@ ${A.map(a => `      <article class="qa" id="a-${a.id}" data-id="${a.id}" aria-la
       <p class="disclaim">${L('Matches your words to answers written from sourced data, in your browser. No model, no network.', 'Compara as suas palavras com respostas escritas a partir de dados com fonte, no seu navegador. Sem modelo, sem rede.')} <span class="disc-k">${L('Press', 'Prima')} ${kbd} ${L('to jump', 'para saltar')}.</span></p>
     </div>
     <p class="vh" aria-live="polite" data-live></p>
+    <footer class="foot"><p>${esc(t(v.footer_disclosure))}</p><p>${esc(t(v.banner))} <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(t(v.banner_link))}</a> · ${L('Version', 'Versão')} ${esc(chrome.version)} · ${L('Code Apache-2.0; text CC BY 4.0', 'Código Apache-2.0; texto CC BY 4.0')} · <a href="/d/agent/fonts/README.md">${L('Fonts', 'Tipos de letra')}</a></p></footer>
   </main>
 </div>
 
@@ -236,7 +238,7 @@ ${A.map(a => `      <article class="qa" id="a-${a.id}" data-id="${a.id}" aria-la
   </div>
 </dialog>
 
-<footer class="foot"><p>${esc(t(v.footer_disclosure))}</p><p>${esc(t(v.banner))} <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(t(v.banner_link))}</a> · ${L('Version', 'Versão')} ${esc(chrome.version)} · ${L('Code Apache-2.0; text CC BY 4.0', 'Código Apache-2.0; texto CC BY 4.0')} · <a href="/d/agent/fonts/README.md">${L('Fonts', 'Tipos de letra')}</a></p></footer>
+
 <script type="application/json" id="agent-data">${json}</script>
 <script src="/d/agent/agent.js" defer></script>
 ${chrome.foot}

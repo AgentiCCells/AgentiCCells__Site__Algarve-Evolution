@@ -78,24 +78,28 @@ const SHORT = {
   pt: { munis: '16 municípios', education: 'Educação', incubator: 'Incubadora', wealthEv: 'Private Wealth' },
 };
 
-// ---- build-time force layout (the browser continues it) ----
+// ---- build-time force layout (the browser continues it with the same forces, in mission.js) ----
+export function tickForces(P, E, W, H, alpha) {
+  for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) {
+    const a = P[i], b = P[j]; let dx = b.x - a.x, dy = b.y - a.y; const d2 = dx * dx + dy * dy + 0.01, d = Math.sqrt(d2);
+    const f = Math.min(40, 16000 / d2) * alpha; dx /= d; dy /= d; a.vx -= dx * f; a.vy -= dy * f; b.vx += dx * f; b.vy += dy * f;
+    const min = (a.r || 12) + (b.r || 12) + 34; if (d < min) { const push = (min - d) / 2; a.x -= dx * push; a.y -= dy * push; b.x += dx * push; b.y += dy * push; }
+  }
+  for (const [a, b] of E) { const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1; const rest = a.id === 'ae' || b.id === 'ae' ? 175 : 125;
+    const f = (d - rest) * 0.03 * alpha; a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f; }
+  for (const p of P) { const g = p.id === 'ae' ? 30 : 1; p.vx += (W / 2 - p.x) * 0.0018 * alpha * g; p.vy += (H / 2 - p.y) * 0.0036 * alpha * g;
+    p.vx *= 0.8; p.vy *= 0.8; if (!p.fixed) { p.x = Math.max(80, Math.min(W - 80, p.x + p.vx)); p.y = Math.max(36, Math.min(H - 36, p.y + p.vy)); } }
+}
+const R = { centre: 30, programme: 15, partner: 12, municipality: 12, summit: 11, event: 9 };
 function layout(nodes, links, W, H) {
   let seed = 3; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
   const ring = { centre: 0, programme: 150, partner: 290, municipality: 300, summit: 250, event: 230 };
-  const P = nodes.map((n, i) => { const a = i * 2.39996 + rnd() * 0.3, r = ring[n.kind] ?? 200; return { id: n.id, x: W / 2 + Math.cos(a) * r * 1.3, y: H / 2 + Math.sin(a) * r * 0.85, vx: 0, vy: 0 }; });
+  const P = nodes.map((n, i) => { const a = i * 2.39996 + rnd() * 0.3, r = ring[n.kind] ?? 200; return { id: n.id, r: R[n.kind] || 10, x: W / 2 + Math.cos(a) * r * 1.3, y: H / 2 + Math.sin(a) * r * 0.85, vx: 0, vy: 0 }; });
   const by = new Map(P.map(p => [p.id, p]));
   const E = links.map(([a, b]) => [by.get(a), by.get(b)]);
-  const deg = new Map(); for (const [a, b] of links) { deg.set(a, (deg.get(a) || 0) + 1); deg.set(b, (deg.get(b) || 0) + 1); }
-  for (let it = 0; it < 900; it++) {
-    const alpha = 1 - it / 900;
-    for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) {
-      const a = P[i], b = P[j]; let dx = b.x - a.x, dy = b.y - a.y; let d2 = dx * dx + dy * dy + 0.01; const d = Math.sqrt(d2);
-      const f = Math.min(8, 5200 / d2) * alpha; dx /= d; dy /= d; a.vx -= dx * f; a.vy -= dy * f; b.vx += dx * f; b.vy += dy * f;
-    }
-    for (const [a, b] of E) { const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1; const rest = a.id === 'ae' || b.id === 'ae' ? 150 : 105;
-      const f = (d - rest) * 0.035 * alpha; a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f; }
-    for (const p of P) { p.vx += (W / 2 - p.x) * 0.004 * alpha * (1 + (p.id === 'ae' ? 20 : 0)); p.vy += (H / 2 - p.y) * 0.007 * alpha * (1 + (p.id === 'ae' ? 20 : 0));
-      p.vx *= 0.82; p.vy *= 0.82; p.x = Math.max(60, Math.min(W - 60, p.x + p.vx)); p.y = Math.max(40, Math.min(H - 40, p.y + p.vy)); }
+    for (let it = 0; it < 1400; it++) {
+    const alpha = Math.max(0.02, 1 - it / 1200);
+    tickForces(P, E, W, H, alpha);
   }
   return by;
 }
@@ -129,15 +133,26 @@ export function render({ lang, data, h, chrome, other }) {
   <div class="tminus"><span class="tm-k">${esc(W.tminus)}</span><strong class="tm-v" data-tminus>${num(days)}</strong><span class="tm-l">${esc(W.days)}</span><p class="fine">${esc(W.calc)}</p></div>`;
 
   // Network graph
-  const GW = 900, GH = 620;
+  const GW = 1000, GH = 640;
   const pos = layout(E.nodes, E.links, GW, GH);
-  const R = { centre: 30, programme: 15, partner: 12, municipality: 12, summit: 11, event: 9 };
   const edgeSVG = E.links.map(([a, b, l], i) => { const p = pos.get(a), q = pos.get(b); const dashed = E.nodes.find(n => n.id === b)?.dashed;
     return `<line class="ed${dashed ? ' dash' : ''}" data-a="${a}" data-b="${b}" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}"><title>${esc(short(a))} · ${esc(l)} · ${esc(short(b))}</title></line>`; }).join('');
-  const nodeSVG = E.nodes.map(n => { const p = pos.get(n.id); const r = R[n.kind] || 10; const right = p.x < GW / 2 + 40;
+  // Label placement: try right, left, above, below; keep the one that overlaps least with nodes and labels placed so far.
+  const boxes = E.nodes.map(n => { const p = pos.get(n.id), r = R[n.kind] || 10; return [p.x - r, p.y - r, p.x + r, p.y + r]; });
+  const lab = new Map(); const aeP = pos.get('ae');
+  const ov = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  for (const n of E.nodes) { const p = pos.get(n.id), r = R[n.kind] || 10, w = short(n.id).length * 7.7 + 4, hh = 15;
+    const c = n.id === 'ae' ? [[0, r + 18, 'middle']] : [[r + 6, 4, 'start'], [-(r + 6), 4, 'end'], [0, -(r + 7), 'middle'], [0, r + 16, 'middle']];
+    let best = null;
+    for (const [dx, dy, an] of c) { const x0 = an === 'start' ? p.x + dx : an === 'end' ? p.x + dx - w : p.x - w / 2; const bx = [x0, p.y + dy - 11, x0 + w, p.y + dy - 11 + hh];
+      let sc = boxes.reduce((t, b) => t + ov(bx, b), 0) + [...lab.values()].reduce((t, b) => t + ov(bx, b.box) * 1.5, 0);
+      if (bx[0] < 4 || bx[2] > GW - 4) sc += 5000; if ((an === 'start') !== (p.x > aeP.x) && an !== 'middle') sc += 30;
+      if (!best || sc < best.sc) best = { sc, dx, dy, an, box: bx }; }
+    lab.set(n.id, best); boxes.push(best.box); }
+  const nodeSVG = E.nodes.map(n => { const p = pos.get(n.id); const r = R[n.kind] || 10; const lb = lab.get(n.id);
     return `<g class="nd k-${n.kind}${n.dashed ? ' dash' : ''}${n.listed ? ' listed' : ''}" data-id="${n.id}" data-r="${r}" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})" tabindex="0" role="button" aria-label="${esc(n.label)}: ${esc(W.kinds[n.kind])}">
       <circle class="nd-halo" r="${r + 7}"/><circle class="nd-c" r="${r}"/>${n.id === 'ae' ? '<text class="nd-ae" y="5" text-anchor="middle">AE</text>' : ''}
-      <text class="nd-l" x="${n.id === 'ae' ? 0 : (right ? r + 6 : -(r + 6))}" y="${n.id === 'ae' ? r + 18 : 4}" text-anchor="${n.id === 'ae' ? 'middle' : (right ? 'start' : 'end')}">${esc(short(n.id))}</text></g>`; }).join('');
+      <text class="nd-l" x="${lb.dx}" y="${lb.dy}" text-anchor="${lb.an}">${esc(short(n.id))}</text></g>`; }).join('');
   const nodeCard = n => { const ls = E.links.filter(([a, b]) => a === n.id || b === n.id);
     return `<article class="ins-card" data-node="${n.id}"><p class="ins-k"><span class="led k-${n.kind}" aria-hidden="true"></span>${esc(W.kinds[n.kind])}${n.dashed ? ` · ${esc(W.dashed)}` : ''}${n.listed ? ` · ${esc(W.listed)}` : ''}</p>
       <h3>${esc(n.label)}</h3><p>${esc(n.note)}</p>${cite(n.src)}
@@ -160,8 +175,9 @@ export function render({ lang, data, h, chrome, other }) {
   for (let a = 0; a < 360; a += 10) { const rr = a % 30 ? 284 : 276; const x1 = 300 + Math.sin(a * Math.PI / 180) * rr, y1 = 300 - Math.cos(a * Math.PI / 180) * rr, x2 = 300 + Math.sin(a * Math.PI / 180) * 292, y2 = 300 - Math.cos(a * Math.PI / 180) * 292;
     rad.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="rd-tk"/>`); }
   const ecoNames = new Set(E.places.map(p => p.name));
-  const munis = data.places.municipalities.filter(m => !ecoNames.has(m.name)).map(m => { const [x, y] = rp(m.ll);
-    return `<a href="#ct-m-${m.id}" class="blip-m" data-ct="ct-m-${m.id}" aria-label="${esc(m.name)}"><g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="9" class="hit"/><circle r="3" class="bm"/><text x="6" y="-5" class="bm-l">${esc(m.name.toUpperCase())}</text></g></a>`; }).join('');
+  const ML = { 'vila-do-bispo': [-6, 12, 'end'], 'castro-marim': [-6, -6, 'end'], 'vila-real-de-santo-antonio': [-6, 12, 'end'], olhao: [6, 12, 'start'], lagoa: [5, -6, 'start'], silves: [5, -6, 'start'], loule: [-6, -6, 'end'], 'sao-bras-de-alportel': [6, -6, 'start'], aljezur: [6, -6, 'start'], alcoutim: [-6, -6, 'end'] };
+  const munis = data.places.municipalities.filter(m => !ecoNames.has(m.name)).map(m => { const [x, y] = rp(m.ll); const [lx, ly, la] = ML[m.id] || [6, -5, 'start'];
+    return `<a href="#ct-m-${m.id}" class="blip-m" data-ct="ct-m-${m.id}" aria-label="${esc(m.name)}"><g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="9" class="hit"/><circle r="3" class="bm"/><text x="${lx}" y="${ly}" text-anchor="${la}" class="bm-l">${esc(m.name.toUpperCase())}</text></g></a>`; }).join('');
   const PL = { Faro: [0, 20, 'middle'], Almancil: [-9, -8, 'end'], Lagos: [-8, 16, 'end'], Portimão: [6, 16, 'start'], Albufeira: [0, 18, 'middle'], Tavira: [0, 18, 'middle'], Salir: [8, -6, 'start'], Monchique: [8, -7, 'start'] };
   const blips = E.places.map((p, i) => { const [x, y] = rp(p.ll); const [dx, dy, an] = PL[p.name] || [8, -6, 'start'];
     return `<a href="#ct-${i}" class="blip${p.hq ? ' hq' : ''}" data-ct="ct-${i}" aria-label="${esc(p.name)}" style="--d:${(i * 0.37).toFixed(2)}s"><g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="14" class="hit"/><circle r="${p.hq ? 13 : 9}" class="bp-p"/><circle r="${p.hq ? 6 : 4.5}" class="bp"/><text x="${dx}" y="${dy}" text-anchor="${an}" class="bp-l">${esc(p.name.toUpperCase())}</text></g></a>`; }).join('');
@@ -231,12 +247,19 @@ ${chrome.banner}
       <p class="mandate"><span>${esc(W.mission)}</span> ${esc(t(v.mission))}</p>
       ${cite(['psn'])}
     </div>
+    <div class="hero-side">
+    <svg class="reticle" viewBox="0 0 300 300" aria-hidden="true"><g fill="none">
+      <circle cx="150" cy="150" r="140" class="rt-1"/><circle cx="150" cy="150" r="112" class="rt-2"/><circle cx="150" cy="150" r="70" class="rt-3"/>
+      <g class="rt-spin"><path d="M150 10a140 140 0 0 1 121 70" class="rt-arc"/><path d="M150 290a140 140 0 0 1-121-70" class="rt-arc"/></g>
+      <g class="rt-spin2"><path d="M38 150a112 112 0 0 1 33-79" class="rt-arc2"/><path d="M262 150a112 112 0 0 1-33 79" class="rt-arc2"/></g>
+      <path d="M150 0v60M150 240v60M0 150h60M240 150h60" class="rt-x"/><circle cx="150" cy="150" r="5" class="rt-c"/>
+    </g><text x="150" y="196" text-anchor="middle" class="rt-t">FARO HQ</text><text x="150" y="212" text-anchor="middle" class="rt-t2">37.02N 7.93W</text></svg>
     <dl class="hero-sys">
       <div><dt>${esc(W.base)}</dt><dd>Faro, Algarve</dd>${cite('psn')}</div>
       <div><dt>${esc(W.phase)}</dt><dd>${esc(W.phaseV)}</dd>${cite(person.sources[1])}</div>
       <div><dt>${esc(W.next)}</dt><dd>${esc(W.nextV)}</dd>${cite('psn')}</div>
       <div><dt>${esc(W.growth)}</dt><dd>${esc(t(v.story_intro))}</dd>${cite(v.story_sources)}</div>
-    </dl>
+    </dl></div>
   </section>
   <div class="grid">
     ${panel('tele', 'P-01', esc(W.p1), figHTML + sig, { cls: 'span-7', sub: esc(W.p1s), live: 'LIVE' })}
@@ -248,8 +271,8 @@ ${chrome.banner}
     ${panel('trans', 'P-07', esc(W.p7), trans, { cls: 'span-7 pn-trans', live: 'RX' })}
     ${panel('modules', 'P-08', esc(W.p8), mods, { cls: 'span-5' })}
     ${panel('events', 'P-09', esc(W.p9), evs, { cls: 'span-7' })}
-    ${panel('join', 'P-10', esc(t(v.join_title)), join, { cls: 'span-5', sub: esc(W.p10) })}
-    ${panel('allies', 'P-11', esc(W.p11), allies, { cls: 'span-12' })}
+    ${panel('allies', 'P-10', esc(W.p11), allies, { cls: 'span-5' })}
+    ${panel('join', 'P-11', esc(t(v.join_title)), join, { cls: 'span-12', sub: esc(W.p10) })}
     ${panel('sources', 'P-12', esc(W.p12), '<!-- data:sources -->', { cls: 'span-12 pn-src', sub: esc(W.p12s) })}
   </div>
 </main>

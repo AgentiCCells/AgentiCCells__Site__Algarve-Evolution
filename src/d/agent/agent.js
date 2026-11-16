@@ -20,7 +20,7 @@
     : { copy: 'Copy link', again: 'Ask again' };
 
   // ---------- matching: deterministic keyword scores ----------
-  const GENERIC = new Set(['about', 'who', 'what', 'how', 'where', 'why', 'new', 'start', 'real', 'true', 'work', 'do', 'run', 'show me', 'sobre', 'quem', 'onde', 'porque', 'novo', 'trabalho', 'ai', 'ia', 'data', 'dados', 'try', 'algarve']);
+  const GENERIC = new Set(['about', 'who', 'what', 'how', 'why', 'new', 'start', 'real', 'true', 'work', 'do', 'run', 'show me', 'sobre', 'quem', 'porque', 'novo', 'trabalho', 'ai', 'ia', 'data', 'dados', 'try', 'algarve']);
   const score = text => {
     const n = norm(text), toks = n.split(' ').filter(Boolean), padded = ` ${n} `;
     return D.answers.map(a => {
@@ -64,7 +64,7 @@
     body.classList.add('show'); requestAnimationFrame(() => body.classList.remove('pend'));
   };
   const followUps = (ids, label) => `<div class="follow"><span class="follow-l">${esc(label)}</span>${ids.filter(id => byId[id]).map(id => `<button type="button" class="fu" data-ask="${id}">${esc(byId[id].q)}</button>`).join('')}</div>`;
-  const setCurrent = id => $$('.topics a').forEach(a => a.toggleAttribute('aria-current', a.dataset.ask === id) || (a.dataset.ask === id && a.setAttribute('aria-current', 'true')));
+  const setCurrent = id => $$('.topics a').forEach(a => { if (a.dataset.ask === id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
 
   let busy = false;
   const answer = (id, typed, ranked) => {
@@ -102,7 +102,7 @@
   const askText = text => {
     const q = text.trim(); if (!q) return;
     const r = score(q);
-    if (r[0].s >= 0.9) answer(r[0].id, q, r); else noAnswer(q);
+    if (r[0].s >= 0.7) answer(r[0].id, q, r); else noAnswer(q);
   };
 
   // ---------- composer ----------
@@ -122,7 +122,7 @@
       const ok = () => { c.lastChild.textContent = D.ui.copied; setTimeout(() => { c.lastChild.textContent = T.copy; }, 1800); };
       if (navigator.clipboard) navigator.clipboard.writeText(url).then(ok, () => {}); return;
     }
-    if (e.target.closest('[data-new]')) { thread.innerHTML = ''; setCurrent(null); try { history.replaceState(null, '', location.pathname); } catch (er) { /* ignore */ } window.scrollTo(0, 0); ta.focus(); }
+    if (e.target.closest('[data-new]')) { thread.innerHTML = ''; setCurrent(null); try { history.replaceState(null, '', location.pathname); } catch (er) { /* ignore */ } $('.main').scrollTo(0, 0); window.scrollTo(0, 0); ta.focus(); }
   });
 
   // ---------- theme ----------
@@ -171,8 +171,7 @@
   const g = $('.greet .lead'), sg = $('[data-sugg]');
   sg.classList.add('pend');
   typeInto(g, () => {
-    reveal(sg.parentElement.querySelector('[data-sugg]').parentElement === sg.parentElement ? sg : sg);
-    sg.classList.remove('pend');
+    reveal(sg);
     const m = location.hash.match(/^#a-([a-z0-9-]+)$/);
     if (m && byId[m[1]]) answer(m[1]);
   });

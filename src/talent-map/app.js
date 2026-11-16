@@ -22,7 +22,7 @@
     more: 'Mostrar mais', post: 'Publicar isto como necessidade', clear: 'Limpar', none: 'Ainda não há correspondências. Experimente menos palavras, outro concelho, ou publique-o como necessidade para que a pessoa certa o encontre.',
     third: 'Isto é a terceira proposta a funcionar: uma empresa cuja primeira aplicação precisa de ajuda, ligada aos fornecedores da região.',
     c: { funding: 'financiamento ou investimento', mentor: 'mentoria', space: 'espaço ou incubadora', talent: 'serviços ou talento', learn: 'ensino ou investigação', community: 'uma comunidade', public: 'uma entidade pública', app: 'ajuda com uma aplicação' },
-    close: 'Fechar', original: 'Texto original (inglês)', aiNote: 'Ligação à IA (nota do PrompTugal.news, em inglês)', also: t => `Também em ${t}`, reach: 'Como contactar (canal público)', partner: 'Trabalha connosco',
+    close: 'Fechar', original: 'Texto original (inglês)', aiNote: 'Ligação à IA (nota do PrompTugal.news, em inglês)', also: t => `Também em ${t}`, alsoRegion: 'Também em todo o Algarve', reach: 'Como contactar (canal público)', partner: 'Trabalha connosco',
     their: 'A página deles', source: 'Fonte', from: (d) => `Da pesquisa pública do PrompTugal.news, lida a ${d}. As páginas públicas abrem-se de graça: não usa crédito.`,
     amount: 'Montante', date: 'Data', town: 'Concelho', sector: 'Setor', rate: 'Preço ou ticket', langs: 'Línguas',
     simNote: 'Inventada para este protótipo. No mapa real, esta entrada só apareceria depois de a pessoa a aprovar.',
@@ -42,7 +42,7 @@
     more: 'Show more', post: 'Post this as a need', clear: 'Clear', none: 'No match yet. Try fewer words or another town, or post it as a need so the right person finds you.',
     third: 'This is the third proposal at work: a business whose first app needs help, matched with the region\'s providers.',
     c: { funding: 'funding or investment', mentor: 'mentoring', space: 'a space or incubator', talent: 'services or talent', learn: 'education or research', community: 'a community', public: 'a public body', app: 'help with an app' },
-    close: 'Close', original: '', aiNote: 'Link to AI (PrompTugal.news note)', also: t => `Also in ${t}`, reach: 'How to reach them (public channel)', partner: 'Works with us',
+    close: 'Close', original: '', aiNote: 'Link to AI (PrompTugal.news note)', also: t => `Also in ${t}`, alsoRegion: 'Across the Algarve too', reach: 'How to reach them (public channel)', partner: 'Works with us',
     their: 'Their page', source: 'Source', from: d => `From PrompTugal.news public research, read on ${d}. Public pages are free to open: no credit is used.`,
     amount: 'Amount', date: 'Date', town: 'Town', sector: 'Sector', rate: 'Rate or ticket', langs: 'Languages',
     simNote: 'Invented for this prototype. In the real map, this listing would appear only after the person approved it.',
@@ -73,7 +73,7 @@
 
   // Meter
   const meter = $('#tm-meter');
-  const drawMeter = () => { meter.innerHTML = `<span class="tm-sim">${X.sim}</span><span>${X.credit} <b>${euro(S.credit)}</b></span><span class="tm-meter-n">${X.contacts(S.uses)}</span><button type="button" id="tm-topup">${X.add}</button>`; $('#tm-topup').onclick = () => { S.credit += 5; save(); drawMeter(); }; };
+  const drawMeter = () => { meter.innerHTML = `<span class="tm-sim">${X.sim}</span><span><span class="tm-meter-l">${X.credit} </span><b>${euro(S.credit)}</b></span><span class="tm-meter-n">${X.contacts(S.uses)}</span><button type="button" id="tm-topup">${X.add}</button>`; $('#tm-topup').onclick = () => { S.credit += 5; save(); drawMeter(); }; };
   meter.hidden = false; drawMeter();
 
   // ---------- Explore: filters, map, list ----------
@@ -182,7 +182,7 @@
   // ---------- Profile dialog ----------
   const dlg = $('#tm-dialog'), din = $('#tm-d-in');
   const kindChip = o => `<span class="tm-kind k-${o.kind}">${esc(I.kinds[o.kind].label)}</span>`;
-  const box = (h, body) => `<div class="tm-d-box"><h3>${h}</h3>${body}</div>`;
+  const box = (h, body, en) => `<div class="tm-d-box"><h3>${h}${en && pt ? ' (em inglês)' : ''}</h3>${body}</div>`;
   function openOrg(o) {
     const text = pt && o.pt ? o.pt : o.what;
     din.innerHTML = `<button type="button" class="tm-d-close" aria-label="${X.close}">×</button>
@@ -192,9 +192,9 @@
 ${pt && o.pt ? `<details><summary>${X.original}</summary><p lang="en">${esc(o.what)}</p></details>` : ''}
 ${o.amount || o.date ? `<div class="tm-d-kv">${o.amount ? `<div><span>${X.amount}</span>${esc(o.amount)}</div>` : ''}${o.date ? `<div><span>${X.date}</span>${esc(day(o.date))}</div>` : ''}</div>` : ''}
 ${o.ai ? box(X.aiNote, `<p lang="en">${esc(o.ai)}</p>`) : ''}
-${(o.also || []).map(a => box(X.also(town(a.town)), `<p lang="en">${esc(a.what)}</p><p class="tm-d-note">${esc(X.source)}: <a href="${esc(a.source_url)}" rel="noopener">${esc(host(a.source_url))}</a>, ${esc(day(a.read_on))}</p>`)).join('')}
-${(o.contacts || []).map(c => box(X.reach, `<p lang="en">${esc(c.channel || c.label)}</p><p class="tm-d-note"><a href="${esc(c.url)}" rel="noopener">${esc(host(c.url))}</a>, ${esc(day(c.read_on))}</p>`)).join('')}
-${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="tm-d-note">${esc(X.source)}: <a href="${esc(o.partner.source_url)}" rel="noopener">${esc(host(o.partner.source_url))}</a></p>`) : ''}
+${(o.also || []).map(a => box(a.town === 'algarve' ? X.alsoRegion : X.also(town(a.town)), `<p lang="en">${esc(a.what)}</p><p class="tm-d-note">${esc(X.source)}: <a href="${esc(a.source_url)}" rel="noopener">${esc(host(a.source_url))}</a>, ${esc(day(a.read_on))}</p>`, true)).join('')}
+${(o.contacts || []).map(c => box(X.reach, `<p lang="en">${esc(c.channel || c.label)}</p><p class="tm-d-note"><a href="${esc(c.url)}" rel="noopener">${esc(host(c.url))}</a>, ${esc(day(c.read_on))}</p>`, true)).join('')}
+${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="tm-d-note">${esc(X.source)}: <a href="${esc(o.partner.source_url)}" rel="noopener">${esc(host(o.partner.source_url))}</a></p>`, true) : ''}
 <div class="tm-d-links"><a href="${esc(o.url)}" rel="noopener">${X.their}: ${esc(host(o.url))} ↗</a>${o.url !== o.source_url ? `<a href="${esc(o.source_url)}" rel="noopener">${X.source}: ${esc(host(o.source_url))} ↗</a>` : ''}</div>
 <p class="tm-d-note">${esc(X.from(day(o.read_on)))}</p>`;
     show();
@@ -298,12 +298,12 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
       }
       if (cs) why.push(e.type === 'org' ? X.whyKind(I.kinds[e.o.kind].label) : X.whyRole(e.p.roles.filter(r => pq.concepts.some(c => c.roles?.includes(r))).map(r => I.roles[r]).join(', ')));
       let s = topic + cs;
-      // Someone looking for a service, or a business whose first app needs help: favour the region's software and service providers.
-      if (pq.concepts.some(c => c.id === 'app' || c.id === 'talent') && PROVIDER.test(e.text) && (e.type === 'person' || ['company', 'support'].includes(e.o.kind))) { s += 3; why.push(X.whyBuilds); }
       if (pq.orgOnly && e.type === 'org') s += 1;
       const hasWhat = s > 0;
       // Asked for something specific that this entry never mentions: keep it, lower down.
       if (pq.terms.some(t => !t.generic) && !specific) s *= 0.4;
+      // Someone looking for a service, or a business whose first app needs help: favour the region's software and service providers.
+      if ((specific || !pq.terms.some(t => !t.generic)) && pq.concepts.some(c => c.id === 'app' || c.id === 'talent') && PROVIDER.test(e.text) && (e.type === 'person' || ['company', 'support'].includes(e.o.kind))) { s += 3; why.push(X.whyBuilds); }
       const towns = e.type === 'org' ? e.o.towns : [e.p.town];
       if (pq.town) {
         if (towns.includes(pq.town)) { s *= 1.6; why.push(X.whyTown(town(pq.town))); }
