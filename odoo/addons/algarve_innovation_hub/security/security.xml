@@ -12,6 +12,15 @@
         <field name="privilege_id" ref="privilege_innovation_hub"/>
     </record>
 
+    <!-- The plan broker's dedicated user (scripts/odoo/apply-plan.mjs): creates and updates hub records
+         from signed, approved plans. No delete, no access to users or rights. -->
+    <record id="group_aih_broker" model="res.groups">
+        <field name="name">Plan broker (create and update hub records, no delete)</field>
+        <field name="sequence">15</field>
+        <field name="privilege_id" ref="privilege_innovation_hub"/>
+        <field name="implied_ids" eval="[(4, ref('group_aih_reader'))]"/>
+    </record>
+
     <!-- Algarve Evolution staff who keep the hub's data. -->
     <record id="group_aih_manager" model="res.groups">
         <field name="name">Manager</field>

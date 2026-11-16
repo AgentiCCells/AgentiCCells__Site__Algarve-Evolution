@@ -2,7 +2,7 @@
 # Licence: LGPL-3 (see LICENSE in this folder). Written by odoo@AgentiCCells.dinis.
 {
     'name': 'AE Innovation Hub',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'summary': 'Programmes, Challenge Connect, Vibathons and the Talent Ecosystem, with public and private feeds',
     'description': """
 AE Innovation Hub (prototype)
@@ -20,6 +20,10 @@ its four activities:
 * Talent Ecosystem: communities (Algarve Digital Innovators), informal groups,
   professionals, consultants, mentors, investors, partners and stakeholders,
   with consent and published flags.
+
+Writes from the hub go through a plan: a person approves and signs it on the
+hub's Plan page, and scripts/odoo/apply-plan.mjs applies it with a dedicated
+user in the "Plan broker" group (create and update hub records, no delete).
 
 Every record carries a feed id, a published flag, a simulated flag and, for
 real public data, a source URL. scripts/odoo/export-feeds.mjs reads these over the

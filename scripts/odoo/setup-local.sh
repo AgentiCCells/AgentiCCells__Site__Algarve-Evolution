@@ -135,7 +135,8 @@ elif [ $UPDATE = 1 ]; then
   odoo -c "$CONF" -d "$DB" -u algarve_innovation_hub --stop-after-init
 fi
 
-# 7. Accounts: admin password from the secrets folder, the read-only feed user and its API key
+# 7. Accounts: admin password from the secrets folder, the read-only feed user, the plan broker user (hub
+#    records only, no delete; scripts/odoo/apply-plan.mjs) and their API keys
 log "accounts"
 AIH_SECRETS="$SECRETS" odoo shell -c "$CONF" -d "$DB" --no-http --logfile="$ODOO_HOME/shell.log" < "$REPO/scripts/odoo/accounts.py"
 

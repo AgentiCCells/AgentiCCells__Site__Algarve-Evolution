@@ -1,0 +1,4 @@
+{
+  "about": "Public keys of the people whose signed plans the plan broker (scripts/odoo/apply-plan.mjs) accepts. A person who may approve changes to the experimentation Odoo adds an entry in a reviewed commit: the entry the Plan page (/plan/) shows under \"The entry for reviewers.json\". Name only people who have agreed to be named. Empty by default.",
+  "reviewers": []
+}

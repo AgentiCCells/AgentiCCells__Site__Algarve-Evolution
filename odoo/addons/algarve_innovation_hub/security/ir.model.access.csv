@@ -32,3 +32,17 @@ access_aih_project_score_manager,aih.project.score manager,model_aih_project_sco
 access_aih_community_reader,aih.community reader,model_aih_community,group_aih_reader,1,0,0,0
 access_aih_community_manager,aih.community manager,model_aih_community,group_aih_manager,1,1,1,1
 access_event_event_aih_reader,event.event hub reader,event.model_event_event,group_aih_reader,1,0,0,0
+access_aih_programme_broker,aih.programme broker,model_aih_programme,group_aih_broker,1,1,1,0
+access_aih_programme_company_broker,aih.programme.company broker,model_aih_programme_company,group_aih_broker,1,1,1,0
+access_aih_session_broker,aih.session broker,model_aih_session,group_aih_broker,1,1,1,0
+access_aih_kpi_broker,aih.kpi broker,model_aih_kpi,group_aih_broker,1,1,1,0
+access_aih_reflection_broker,aih.reflection broker,model_aih_reflection,group_aih_broker,1,1,1,0
+access_aih_challenge_broker,aih.challenge broker,model_aih_challenge,group_aih_broker,1,1,1,0
+access_aih_application_broker,aih.application broker,model_aih_application,group_aih_broker,1,1,1,0
+access_aih_vibathon_broker,aih.vibathon broker,model_aih_vibathon,group_aih_broker,1,1,1,0
+access_aih_vibathon_jury_broker,aih.vibathon.jury broker,model_aih_vibathon_jury,group_aih_broker,1,1,1,0
+access_aih_vibathon_participant_broker,aih.vibathon.participant broker,model_aih_vibathon_participant,group_aih_broker,1,1,1,0
+access_aih_project_broker,aih.project broker,model_aih_project,group_aih_broker,1,1,1,0
+access_aih_project_score_broker,aih.project.score broker,model_aih_project_score,group_aih_broker,1,1,1,0
+access_aih_community_broker,aih.community broker,model_aih_community,group_aih_broker,1,1,1,0
+access_res_partner_aih_broker,res.partner hub broker,base.model_res_partner,group_aih_broker,1,1,1,0

@@ -19,7 +19,7 @@ The script is idempotent; each step checks what is already there:
 4. Secrets: generates the database password, the Odoo master password and the admin password into `/root/.agents/odoo/` (mode 600) and writes `odoo.conf` there. Nothing is printed.
 5. Database: role `odoo` and database `algarve_innovation_hub`.
 6. Modules: `contacts`, `event`, `website_event`, `crm`, `project`, `survey`, then our addon `odoo/addons/algarve_innovation_hub` (it depends on `mail`, `contacts` and `event`; `project` holds the tasks the Odoo page's "Ideas and needs" would create).
-7. Accounts (`scripts/odoo/accounts.py`): sets the admin password from its file; creates the read-only user `feed-exporter` (Internal User + Innovation Hub / Feed reader) and an API key for it, kept only in `/root/.agents/odoo/feed-api-key`.
+7. Accounts (`scripts/odoo/accounts.py`): sets the admin password from its file; creates the read-only user `feed-exporter` (Internal User + Innovation Hub / Feed reader) and an API key for it, kept only in `/root/.agents/odoo/feed-api-key`; and the user `plan-broker` (Internal User + Innovation Hub / Plan broker: create and update hub records and hub contacts, no delete, no users or rights) with its key in `/root/.agents/odoo/plan-broker-api-key`. Only the plan broker (`scripts/odoo/apply-plan.mjs`, see `scripts/odoo/applied/README.md`) uses it.
 8. Seed (`scripts/odoo/seed.py`), when the hub is empty or with `--seed`. It updates records in place, never duplicates.
 9. Starts Odoo in the background (`/opt/odoo19/odoo.pid`, log `/opt/odoo19/odoo.log`).
 
@@ -33,6 +33,7 @@ Other options: `--update` upgrades the addon after you edit it; `--seed` re-runs
 | `/root/.agents/odoo/odoo.conf` | Odoo configuration (holds the database and master passwords; mode 600) |
 | `/root/.agents/odoo/admin-password` | the `admin` user's password |
 | `/root/.agents/odoo/feed-api-key` | API key of the read-only `feed-exporter` user |
+| `/root/.agents/odoo/plan-broker-api-key` | API key of the `plan-broker` user (hub records only, no delete) |
 | `/root/.agents/odoo/private-feed-key` | access key of the encrypted private feed (created by the exporter) |
 
 Never print, copy or commit these.
