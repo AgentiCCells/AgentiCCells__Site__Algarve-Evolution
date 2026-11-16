@@ -2,7 +2,7 @@
  "about": "Organisations in the Algarve that a founder, a company or a student can turn to, compiled from PrompTugal.news public research. Organisations only: no private person is listed. Each entry keeps its source and the date it was read. Text CC BY 4.0 (PrompTugal.news); compiled by sites-dev@AgentiCCells.dinis with scripts/pages/_talent-map-data.mjs.",
  "from": {
   "repo": "https://github.com/PrompTugal/PrompTugal__News__Website",
-  "commit": "9acfe243",
+  "commit": "89590467",
   "files": [
    "data/by-place/faro.json",
    "data/by-place/albufeira.json",
@@ -37,20 +37,20 @@
   "funding"
  ],
  "counts": {
-  "total": 208,
+  "total": 211,
   "by_kind": {
    "support": 27,
+   "company": 48,
    "education": 30,
    "public": 40,
-   "company": 45,
    "community": 15,
    "incubation": 28,
    "funding": 23
   },
   "by_town": {
    "alcoutim": 22,
-   "loule": 24,
-   "algarve": 21,
+   "loule": 25,
+   "algarve": 23,
    "faro": 32,
    "olhao": 8,
    "silves": 6,
@@ -68,8 +68,8 @@
   },
   "by_presence": {
    "alcoutim": 22,
-   "loule": 25,
-   "algarve": 35,
+   "loule": 26,
+   "algarve": 37,
    "faro": 32,
    "sao-bras-de-alportel": 11,
    "vila-real-de-santo-antonio": 7,
@@ -118,6 +118,22 @@
    "ai": "Partner in the PRR Digital Commercial Neighbourhood of Quarteira, which brings shops online and adds digital displays and Wi-Fi: the digital base for retail AI. No AI claimed in the source.",
    "from": "PrompTugal.news research",
    "pt": "Associação do comércio e serviços do Algarve, parceira do consórcio do bairro comercial digital de Quarteira."
+  },
+  {
+   "id": "adj3-sistemas",
+   "name": "ADJ3 Sistemas",
+   "kind": "company",
+   "town": "algarve",
+   "towns": [
+    "algarve"
+   ],
+   "what": "Faro web and app developer that builds sites and portals for universities and municipalities on Drupal and React, and a member of Algarve Evolution. Its site lists AI services integrated with Drupal: chatbots that answer from a site's own content, smart search, and assistants for content editors.",
+   "url": "http://adj3.pt",
+   "source_url": "http://adj3.pt",
+   "read_on": "2026-11-16",
+   "ai": "It sells AI chatbots, search and editing assistants for public-interest websites.",
+   "from": "PrompTugal.news research",
+   "pt": "Empresa de Faro que desenvolve sites e aplicações, constrói sites e portais para universidades e municípios em Drupal e React, e é membro da Algarve Evolution. O seu site lista serviços de IA integrados com o Drupal: chatbots que respondem a partir do conteúdo do próprio site, pesquisa inteligente e assistentes para editores de conteúdo."
   },
   {
    "id": "aea-associacao-de-empresarios-do-algarve",
@@ -1633,6 +1649,22 @@
    "pt": "Parceira da UAlg na criação de um cluster de IA no Algarve e patrocinadora da conferência EPIA 2025."
   },
   {
+   "id": "epaper-by-mind-vendor-whose-client-logos-include-loule",
+   "name": "ePaper by Mind (vendor whose client logos include Loulé)",
+   "kind": "company",
+   "town": "loule",
+   "towns": [
+    "loule"
+   ],
+   "what": "Mind's digital urban-planning platform. Its page shows a 'Loulé' logo among 27 municipal client logos and names AI features: document checks at online reception, an AI error check before a request is filed, and an AI agent announced on 13 October 2026. The page says nothing about what Loulé uses, and the council has not named the AI tools it contracted for planning, so we do not link the two. Found by detective.places@ and read by us on 16 November 2026.",
+   "url": "https://epaper.mind.pt/",
+   "source_url": "https://epaper.mind.pt/",
+   "read_on": "2026-11-16",
+   "ai": "A planning platform with AI features lists Loulé's council among its clients, and the council says it uses AI tools for planning: the link is a lead, not a claim.",
+   "from": "PrompTugal.news research",
+   "pt": "A plataforma digital de urbanismo da Mind. A sua página mostra um logótipo de 'Loulé' entre 27 logótipos de clientes municipais e indica funções de IA: verificação de documentos no atendimento online, uma verificação de erros com IA antes de submeter um pedido e um agente de IA anunciado a 13 de outubro de 2026. A página nada diz sobre o que Loulé usa, e a câmara não indicou as ferramentas de IA que contratou para o urbanismo, por isso não ligamos as duas. Encontrada pelo detective.places@ e lida por nós a 16 de novembro de 2026."
+  },
+  {
    "id": "escola-de-hotelaria-e-turismo-de-portimao",
    "name": "Escola de Hotelaria e Turismo de Portimão",
    "kind": "education",
@@ -2783,6 +2815,22 @@
    "ai": "It builds the hulls and structures of robots and drones, the platforms on which autonomy and AI run. The articles mention no AI.",
    "from": "PrompTugal.news research",
    "pt": "Estaleiro no Guadiana, em Vila Real de Santo António. Em 2021 lançou o navio de investigação «Mar Profundo», de 19 metros, para testar robôs marinhos e veículos subaquáticos."
+  },
+  {
+   "id": "neomarca",
+   "name": "Neomarca",
+   "kind": "company",
+   "town": "algarve",
+   "towns": [
+    "algarve"
+   ],
+   "what": "SME consultancy operating since 1995 with its head office in Faro and a team in Porto, and a member of Algarve Evolution. Its digital transformation work includes a service called digitalisation and adoption of artificial intelligence, alongside funding advice for programmes such as PRR and Portugal 2030.",
+   "url": "http://neomarca.pt",
+   "source_url": "http://neomarca.pt",
+   "read_on": "2026-11-16",
+   "ai": "It consults small firms on adopting AI tools and on the funding that pays for it.",
+   "from": "PrompTugal.news research",
+   "pt": "Consultora de PME em atividade desde 1995, com sede em Faro e uma equipa no Porto, e membro da Algarve Evolution. O seu trabalho de transformação digital inclui um serviço de digitalização e adoção de inteligência artificial, a par de aconselhamento sobre financiamento de programas como o PRR e o Portugal 2030."
   },
   {
    "id": "nera",
