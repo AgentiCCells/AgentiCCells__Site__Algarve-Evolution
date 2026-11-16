@@ -1,7 +1,7 @@
 {
   "schema": "hub.json (draft)",
-  "name": "Algarve Evolution site (in preparation)",
-  "what_it_does": "Placeholder; not briefed yet.",
+  "name": "AE Innovation Hub (prototype for Algarve Evolution)",
+  "what_it_does": "A prototype of the AE Innovation Hub on Odoo: INC/ACC, Challenge Connect, Vibathon, Talent Ecosystem; V1 parked at /v1/.",
   "owner": "AgentiCCells",
   "team": "sites@AgentiCCells.dinis, instructed by Dinis Cruz",
   "licence": {
@@ -16,5 +16,7 @@
     "browse": "https://dev.vault.sgraph.ai/#sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f%3Ajg76g6nx",
     "clone": "sgit clone sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f:jg76g6nx"
   },
-  "version_from": "/version.json"
+  "version_from": "/version.json",
+  "listed": false,
+  "listing_note": "Not to be listed or linked anywhere: Dinis Cruz, 16 November 2026, relaying António Guerreiro's request. Search engines are asked not to index it (robots.txt and a robots meta tag on every page)."
 }

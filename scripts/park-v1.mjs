@@ -25,6 +25,8 @@ for (const f of walk(from)) {
   if (!/\.(html|css|js|json|md|txt|svg|xml)$/.test(f)) { copyFileSync(f, out); continue; }
   let s = readFileSync(f, 'utf8'); const before = s;
   s = s.replace(inString, '$1/v1/$2').replace(homeAttr, '$1/v1/').replace(homeJson, '$1/v1/');
+  // Not to be indexed or linked (Dinis Cruz, 16 November 2026, relaying António Guerreiro's request).
+  if (f.endsWith('.html') && !s.includes('name="robots"')) s = s.replace(/(<head[^>]*>)/, '$1\n<meta name="robots" content="noindex, nofollow">');
   if (s !== before) n++;
   writeFileSync(out, s);
 }
