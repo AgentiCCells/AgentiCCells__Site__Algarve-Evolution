@@ -284,3 +284,4 @@
 .fx-pf td code { white-space: nowrap; font-size: 11.5px; }
 .fx-pf td:last-child { overflow-wrap: normal; }
 .req-board { align-items: start; }
+.imp-cand-n em { white-space: nowrap; }

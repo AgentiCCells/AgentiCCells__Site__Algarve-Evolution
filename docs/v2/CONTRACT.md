@@ -8,7 +8,7 @@ Every record carries: `id` (stable string), `odoo` ({ model, id }), `simulated` 
 
 ```
 {
-  "meta": { "feed": "public|private", "exported": ISO, "odoo": { "url", "version", "db" }, "counts": {...} },
+  "meta": { "feed": "public|private", "exported": ISO, "odoo": { "url", "version", "db" }, "counts": {...}, "withheld"?: { talent, mentors, suppliers } },
   "hub": { "name": "AE Innovation Hub", "activities": [ { "id": "inc-acc|challenge-connect|vibathon|talent", "name", "summary" } ] },
   "programmes": [ { id, kind: "incubation"|"acceleration", name, cohort, start, end, months: 6, status: "planned"|"running"|"finished", summary, company_ids[], mentor_ids[] } ],
   "companies":  [ { id, name, sector, town, stage, programme_id, summary, website? } ],

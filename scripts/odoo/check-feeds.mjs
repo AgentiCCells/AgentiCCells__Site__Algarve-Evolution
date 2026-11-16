@@ -79,6 +79,10 @@ function checkFeed(feed, which) {
   if (!feed.meta || feed.meta.feed !== which) fail(`${which}: meta.feed must be "${which}"`);
   if (!feed.meta?.exported || Number.isNaN(Date.parse(feed.meta.exported))) fail(`${which}: meta.exported is not an ISO time`);
   for (const k of ['url', 'version', 'db']) if (!T.str(feed.meta?.odoo?.[k])) fail(`${which}: meta.odoo.${k} missing`);
+  if (which === 'public') {
+    const w = feed.meta?.withheld;
+    if (!w || Object.keys(w).sort().join() !== 'mentors,suppliers,talent' || !Object.values(w).every(T.int)) fail('public: meta.withheld must be { talent, mentors, suppliers } counts');
+  } else if (feed.meta?.withheld !== undefined) fail('private: meta.withheld belongs to the public feed only');
   if (feed.hub?.name !== 'AE Innovation Hub') fail(`${which}: hub.name must be "AE Innovation Hub" (António Guerreiro's whiteboard, 16 November 2026)`);
   const acts = feed.hub?.activities || [];
   if (acts.map((a) => a.id).sort().join() !== [...ACTIVITIES].sort().join()) fail(`${which}: hub.activities must be the four activities`);

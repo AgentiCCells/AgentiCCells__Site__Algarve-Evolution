@@ -371,10 +371,16 @@ const countsOf = (f) => Object.fromEntries(ENTITIES.map((e) => [e, f[e].length])
 const version = await serverVersion();
 const priv = await buildPrivate();
 const pubBody = buildPublic(priv);
+// How many people are left out of the public feed for lack of consent (counts only: no ids, no names).
+const withheld = {
+  talent: priv.talent.filter((r) => r.published && PEOPLE_TALENT.has(r.kind) && !r.consent).length,
+  mentors: priv.mentors.filter((r) => r.published && !r.consent).length,
+  suppliers: priv.suppliers.filter((r) => r.published && r.kind === 'individual' && !r.consent).length,
+};
 delete priv._partners;
 const exported = new Date().toISOString();
 const meta = (feed, body) => ({ feed, exported, odoo: { url: URL_, version, db: DB }, counts: countsOf(body) });
-const publicFeed = { meta: meta('public', pubBody), ...pubBody };
+const publicFeed = { meta: { ...meta('public', pubBody), withheld }, ...pubBody };
 const privateFeed = { meta: meta('private', priv), ...priv };
 
 mkdirSync(OUT, { recursive: true });
