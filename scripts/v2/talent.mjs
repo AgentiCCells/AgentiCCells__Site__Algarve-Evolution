@@ -66,7 +66,7 @@ export function render({ layout, feed, data, h }) {
 
 <section id="directory" class="hub-sec">
   <div class="hub-wrap">
-    <header class="hub-head"><p class="kicker">Directory</p><h2 class="hub-h2">The eight kinds of the ecosystem</h2><p class="hub-lede">Filter by kind, competence and place, or search. Real organisations and communities link to their source; simulated people say so.</p><p class="te-chips">${h.odoo('res.partner', feed.talent.length)} ${h.odoo('aih.community', model.coms.length)}</p></header>
+    <header class="hub-head"><p class="kicker">Directory</p><h2 class="hub-h2">The eight kinds of the ecosystem</h2><p class="hub-lede">Filter by kind, competence and place, or search. Real organisations and communities link to their source; simulated people say so.</p><p class="te-chips" id="te-dir-chips">${h.odoo('res.partner', feed.talent.length)} ${h.odoo('aih.community', model.coms.length)}</p></header>
     <div class="te-consent" data-for="visitor">
       <div class="te-consent-n"><p><b data-te-listed>${model.listed}</b> people listed with consent</p><p class="te-consent-h"><b data-te-hidden>${model.hidden == null ? 'not yet in the feed' : model.hidden}</b> withheld for lack of consent</p></div>
       <div class="te-dots" id="te-dots" role="img" aria-label="${model.listed} people listed with consent">${'<i class="d-on"></i>'.repeat(model.listed)}${model.hidden == null ? '<i class="d-q">?</i>' : '<i class="d-off"></i>'.repeat(model.hidden)}</div>

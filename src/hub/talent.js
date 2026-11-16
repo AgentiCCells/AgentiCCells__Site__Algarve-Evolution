@@ -407,6 +407,7 @@ if (typeof document !== 'undefined' && document.getElementById('te-root')) {
   // ---- directory
   function renderDirectory() {
     $('#te-kinds').innerHTML = kindFilters(model, f);
+    $('#te-dir-chips').innerHTML = chip('res.partner', model.all.filter(e => e.odoo?.model === 'res.partner' && (model.priv || !e.notPublic)).length) + ' ' + chip('aih.community', model.coms.length);
     const d = directory(model, f, limit);
     $('#te-cards').innerHTML = d.html;
     $('#te-count').textContent = `${d.total} of ${model.entries.length} ${model.priv ? 'records in Odoo (private feed)' : 'records in the public feed'}`;

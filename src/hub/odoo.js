@@ -398,7 +398,7 @@
       $('[data-lane-list]', lane).innerHTML = items.map(r => `<li class="req-card${r.done ? ' is-done' : ''}" data-id="${esc(r.id)}">
         <p class="req-meta"><span class="tag tag-navy">${esc(kindName[r.kind] || r.kind)}</span>${r.simulated ? '<span class="sim-badge" title="Invented for the prototype">Simulated</span>' : '<span class="tag tag-ok">Added in this browser</span>'}${r.done ? '<span class="tag">Done</span>' : ''}</p>
         <h4>${esc(r.title)}</h4>
-        <p class="req-who">${r.who ? `For ${esc(r.who.charAt(0).toLowerCase() === r.who.charAt(0) || /^[A-Z][a-z]+ [a-z]/.test(r.who) ? r.who.charAt(0).toLowerCase() + r.who.slice(1) : r.who)}` : 'For: not given'}${r.due ? ` · due ${esc(fmtDate(r.due))}` : ''}</p>
+        <p class="req-who">${r.who ? `For: ${esc(r.who)}` : 'For: not given'}${r.due ? ` · due ${esc(fmtDate(r.due))}` : ''}</p>
         ${r.details ? `<p class="req-det">${esc(r.details)}</p>` : ''}${r.how ? `<p class="req-how"><b>How:</b> ${esc(r.how)}</p>` : ''}
         ${staff ? `<div class="req-ctl"><label>Triage <select data-act="lane">${C.lanes.map(x => `<option value="${x.id}"${x.id === r.lane ? ' selected' : ''}>${esc(x.short)}</option>`).join('')}</select></label><button type="button" class="btn btn-sm" data-act="done">${r.done ? 'Reopen' : 'Mark done'}</button>${r.simulated ? '' : '<button type="button" class="btn btn-sm" data-act="del">Remove</button>'}</div>` : ''}
         <details class="odoo-call req-call"><summary><span class="odoo-call-verb">POST</span> <code>project.task/create</code> <span class="odoo-call-flag">not sent: prototype</span></summary><pre><code>${esc(taskCall(r))}</code></pre></details>
