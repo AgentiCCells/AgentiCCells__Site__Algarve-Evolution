@@ -1,0 +1,25 @@
+{
+  "about": "Events run or co-run by Algarve Evolution, newest first, each with its sources. Past events only; no future date is claimed. Text CC BY 4.0.",
+  "events": [
+    {"id": "vibathon-algarve-2026", "start": "2026-10-31", "place": {"en": "UAlg TEC Campus, Faro", "pt": "UAlg TEC Campus, Faro"},
+     "name": {"en": "Vibathon Algarve 2026", "pt": "Vibathon Algarve 2026"},
+     "summary": {"en": "A free day of building apps with AI, with Lovable, mentors, a jury and prizes. No coding needed. It sold out and opened a waiting list.", "pt": "Um dia gratuito para construir aplicações com IA, com a Lovable, mentores, júri e prémios. Não era preciso saber programar. Esgotou e abriu lista de espera."},
+     "sources": ["https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html", "https://promptugal.news/articles/faro-ai-gathers-around-the-university.html"]},
+    {"id": "algarve-startups-at-web-summit-2025", "start": "2025-11-10", "end": "2025-11-13", "place": {"en": "Web Summit, Lisbon", "pt": "Web Summit, Lisboa"},
+     "name": {"en": "Algarve startups at Web Summit Lisbon 2025", "pt": "Startups algarvias na Web Summit Lisboa 2025"},
+     "summary": {"en": "A competition that took 24 Algarve startups to Web Summit. Led by the University of the Algarve; Algarve Evolution was a partner and held one of five permanent jury seats.", "pt": "Um concurso que levou 24 startups do Algarve à Web Summit. Liderado pela Universidade do Algarve; a Algarve Evolution foi parceira e ocupou um dos cinco lugares permanentes do júri."},
+     "sources": ["https://promptugal.news/events/algarve-startups-at-web-summit-2025/index.html"]},
+    {"id": "algarve-tech-hub-summit-2025", "start": "2025-11-06", "end": "2025-11-07", "place": {"en": "Lagos", "pt": "Lagos"},
+     "name": {"en": "Algarve Tech Hub Summit 2025", "pt": "Algarve Tech Hub Summit 2025"},
+     "summary": {"en": "Two days in Lagos, co-organised with the University of the Algarve and Algarve STP. A local paper reported about 450 people on the first day and 570 on the second. It returns in 2027; dates and venue not announced.", "pt": "Dois dias em Lagos, coorganizados com a Universidade do Algarve e o Algarve STP. Um jornal local noticiou cerca de 450 pessoas no primeiro dia e 570 no segundo. Regressa em 2027; datas e local por anunciar."},
+     "sources": ["https://promptugal.news/events/algarve-tech-hub-summit-2025/index.html", "https://promptugal.news/articles/lagos-ai-community-not-a-cluster.html"]},
+    {"id": "algarve-digital-innovators-launch-2025", "start": "2025-09-08", "approximate": true, "place": {"en": "Fábrica do Empreendedor, Lagos", "pt": "Fábrica do Empreendedor, Lagos"},
+     "name": {"en": "Algarve Digital Innovators: the launch", "pt": "Algarve Digital Innovators: o lançamento"},
+     "summary": {"en": "The launch of a network of innovation communities across the Algarve's 16 municipalities, with a roadshow from September to November 2025. The date is approximate.", "pt": "O lançamento de uma rede de comunidades de inovação nos 16 municípios do Algarve, com um roadshow de setembro a novembro de 2025. A data é aproximada."},
+     "sources": ["https://promptugal.news/events/algarve-digital-innovators-launch-2025/index.html"]},
+    {"id": "impact-algarve-2024", "start": "2024-06-01", "place": {"en": "UAlg TEC Campus, Faro", "pt": "UAlg TEC Campus, Faro"},
+     "name": {"en": "Impact Algarve 2024", "pt": "Impact Algarve 2024"},
+     "summary": {"en": "A conference organised with the non-profit Get Real on the future of the region.", "pt": "Uma conferência organizada com a associação Get Real sobre o futuro da região."},
+     "sources": ["https://promptugal.news/events/impact-algarve-2024/index.html"]}
+  ]
+}

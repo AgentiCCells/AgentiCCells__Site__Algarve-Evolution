@@ -1,0 +1,96 @@
+{
+ "about": "Algarve Evolution's figures as its sources report them. They are the organisation's own; nobody here has audited them. Where two sources differ, both are shown. Text CC BY 4.0.",
+ "figures": [
+  {
+   "id": "founded",
+   "value": "2018",
+   "label": {
+    "en": "began as a small group of local entrepreneurs",
+    "pt": "começou como um pequeno grupo de empresários locais"
+   },
+   "sources": [
+    "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+    "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html"
+   ]
+  },
+  {
+   "id": "members",
+   "value": {
+    "en": "106 to 118",
+    "pt": "106 a 118"
+   },
+   "label": {
+    "en": "active members, professionals and companies",
+    "pt": "membros ativos, profissionais e empresas"
+   },
+   "note": {
+    "en": "106 on its own site on 31 October 2026; 118 as reported on 1 November 2026.",
+    "pt": "106 no seu próprio site a 31 de outubro de 2026; 118 segundo uma notícia de 1 de novembro de 2026."
+   },
+   "sources": [
+    "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+    "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html"
+   ]
+  },
+  {
+   "id": "jobs",
+   "value": {
+    "en": "about 1,000",
+    "pt": "cerca de 1.000"
+   },
+   "label": {
+    "en": "direct jobs in members' companies, with about €100 million turnover a year",
+    "pt": "empregos diretos nas empresas dos membros, com cerca de 100 milhões de euros de faturação anual"
+   },
+   "note": {
+    "en": "Members' figures, not jobs the association created.",
+    "pt": "Números dos membros, não empregos criados pela associação."
+   },
+   "sources": [
+    "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+    "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html"
+   ]
+  },
+  {
+   "id": "events",
+   "value": "142+",
+   "label": {
+    "en": "events in 2024 and 2025, with 5,597 participants",
+    "pt": "eventos em 2024 e 2025, com 5.597 participantes"
+   },
+   "sources": [
+    "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html"
+   ]
+  },
+  {
+   "id": "communities",
+   "value": "24",
+   "label": {
+    "en": "digital communities mapped by Algarve Digital Innovators, with 5,839 members between them",
+    "pt": "comunidades digitais mapeadas pela Algarve Digital Innovators, com 5.839 membros no total"
+   },
+   "sources": [
+    "https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html",
+    "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html"
+   ]
+  },
+  {
+   "id": "targets-2032",
+   "value": {
+    "en": "500 · 150 · 50,000",
+    "pt": "500 · 150 · 50.000"
+   },
+   "label": {
+    "en": "targets for 2032: companies supported, startups created, people reached",
+    "pt": "metas para 2032: empresas apoiadas, startups criadas, pessoas alcançadas"
+   },
+   "note": {
+    "en": "Plans, not results.",
+    "pt": "Planos, não resultados."
+   },
+   "sources": [
+    "https://promptugal.news/articles/lisbon-awards-and-the-algarve-plan.html"
+   ]
+  }
+ ]
+}
