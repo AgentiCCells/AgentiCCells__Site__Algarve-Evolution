@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><title>Azulejo tile, plain with corners</title>
+<rect width="120" height="120" fill="#fffdf8"/>
+<g fill="#1f4e9c"><path d="M0 0H22A22 22 0 0 1 0 22Z"/><path d="M120 0V22A22 22 0 0 1 98 0Z"/><path d="M0 120V98A22 22 0 0 1 22 120Z"/><path d="M120 120H98A22 22 0 0 1 120 98Z"/></g>
+<g fill="none" stroke="#1f4e9c" stroke-width="2"><path d="M0 32A32 32 0 0 0 32 0"/><path d="M88 0A32 32 0 0 0 120 32"/><path d="M0 88A32 32 0 0 1 32 120"/><path d="M88 120A32 32 0 0 1 120 88"/></g>
+<g fill="#f4b52a"><circle cx="0" cy="0" r="7"/><circle cx="120" cy="0" r="7"/><circle cx="0" cy="120" r="7"/><circle cx="120" cy="120" r="7"/></g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><title>Azulejo tile, flower</title>
+<rect width="120" height="120" fill="#fffdf8"/>
+<g fill="none" stroke="#1f4e9c" stroke-width="2.5"><circle cx="0" cy="0" r="33"/><circle cx="120" cy="0" r="33"/><circle cx="0" cy="120" r="33"/><circle cx="120" cy="120" r="33"/></g>
+<g fill="#1f4e9c"><circle cx="0" cy="0" r="21"/><circle cx="120" cy="0" r="21"/><circle cx="0" cy="120" r="21"/><circle cx="120" cy="120" r="21"/>
+<ellipse cx="60" cy="0" rx="6.5" ry="12"/><ellipse cx="60" cy="120" rx="6.5" ry="12"/><ellipse cx="0" cy="60" rx="12" ry="6.5"/><ellipse cx="120" cy="60" rx="12" ry="6.5"/>
+<g id="p"><path d="M60 60C46 47 47 31 60 17C73 31 74 47 60 60Z"/></g>
+<use href="#p" transform="rotate(90 60 60)"/><use href="#p" transform="rotate(180 60 60)"/><use href="#p" transform="rotate(270 60 60)"/>
+<g id="t"><circle cx="60" cy="13" r="0"/><circle cx="60" cy="9" r="0"/><circle cx="60" cy="14" r="2.6" transform="rotate(45 60 60)"/></g>
+<use href="#t" transform="rotate(90 60 60)"/><use href="#t" transform="rotate(180 60 60)"/><use href="#t" transform="rotate(270 60 60)"/></g>
+<g fill="#c75b39"><g id="d"><path d="M60 60C53 51 53 41 60 30C67 41 67 51 60 60Z" transform="rotate(45 60 60)"/></g>
+<use href="#d" transform="rotate(90 60 60)"/><use href="#d" transform="rotate(180 60 60)"/><use href="#d" transform="rotate(270 60 60)"/></g>
+<g fill="none" stroke="#fffdf8" stroke-width="2"><g id="v"><path d="M60 52V26"/></g><use href="#v" transform="rotate(90 60 60)"/><use href="#v" transform="rotate(180 60 60)"/><use href="#v" transform="rotate(270 60 60)"/></g>
+<g fill="#fffdf8"><circle cx="0" cy="0" r="13"/><circle cx="120" cy="0" r="13"/><circle cx="0" cy="120" r="13"/><circle cx="120" cy="120" r="13"/><circle cx="60" cy="60" r="10"/></g>
+<g fill="#f4b52a"><circle cx="0" cy="0" r="6.5"/><circle cx="120" cy="0" r="6.5"/><circle cx="0" cy="120" r="6.5"/><circle cx="120" cy="120" r="6.5"/><circle cx="60" cy="60" r="5.5"/></g>
+</svg>

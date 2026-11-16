@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><title>Azulejo tile, sun</title>
+<rect width="120" height="120" fill="#fffdf8"/>
+<g fill="#f4b52a"><circle cx="0" cy="0" r="34"/><circle cx="120" cy="0" r="34"/><circle cx="0" cy="120" r="34"/><circle cx="120" cy="120" r="34"/></g>
+<path d="M60 4L116 60L60 116L4 60Z" fill="none" stroke="#1f4e9c" stroke-width="4" stroke-linejoin="round"/>
+<g fill="#c75b39" transform="translate(60 60)"><rect x="-21" y="-21" width="42" height="42"/><rect x="-21" y="-21" width="42" height="42" transform="rotate(45)"/></g>
+<circle cx="60" cy="60" r="14" fill="#fffdf8"/><circle cx="60" cy="60" r="8" fill="#f4b52a"/>
+<g fill="#1f4e9c"><circle cx="60" cy="0" r="7"/><circle cx="60" cy="120" r="7"/><circle cx="0" cy="60" r="7"/><circle cx="120" cy="60" r="7"/></g>
+</svg>

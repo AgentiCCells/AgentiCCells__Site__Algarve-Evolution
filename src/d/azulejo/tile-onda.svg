@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 40"><title>Azulejo tile, waves</title>
+<rect width="80" height="40" fill="#1f4e9c"/>
+<g fill="none" stroke="#fffdf8" stroke-width="3" stroke-linecap="round"><path d="M-10 12Q0 2 10 12T30 12T50 12T70 12T90 12"/><path d="M-20 32Q-10 22 0 32T20 32T40 32T60 32T80 32T100 32"/></g>
+<g fill="#9fc0ec"><circle cx="20" cy="21" r="1.6"/><circle cx="60" cy="21" r="1.6"/></g>
+</svg>

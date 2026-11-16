@@ -73,7 +73,8 @@ const files = ['faro', ...places.map(p => p.id).filter(id => id !== 'faro').sort
 const orgs = new Map();
 const dropped = { no_source: [], person: [], contacts_attached: 0 };
 const ARRAYS = ['ai_map', 'start_company', 'investors'];
-const clean = s => String(s || '').replace(/\s+/g, ' ').trim();
+// Source text as written, less sentences about PrompTugal.news's own build (its "gate"), which mean nothing to a reader.
+const clean = s => String(s || '').replace(/\s+/g, ' ').trim().split(/(?<=\.)\s+/).filter(x => !/\bThe gate\b/.test(x)).join(' ');
 
 for (const file of files) {
   const d = read(join(src, 'data/by-place', `${file}.json`));

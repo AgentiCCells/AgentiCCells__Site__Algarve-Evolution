@@ -1,0 +1,93 @@
+{
+ "about": "Every person and need here is invented, for a prototype. From the public vault cig07f79 (Algarve Talent Map prototype, SGit Newsroom, 31 October 2026, CC BY 4.0), with Portuguese text, municipality ids and search tags added by sites-dev@AgentiCCells.dinis. Nobody real is listed.",
+ "needs": [
+  {
+   "id": "n1",
+   "simulated": true,
+   "town": "faro",
+   "role": "talent",
+   "who": {
+    "en": "A founder in Faro (simulated)",
+    "pt": "Um fundador em Faro (simulado)"
+   },
+   "what": {
+    "en": "A part-time product designer for a booking app, three months",
+    "pt": "Um designer de produto a tempo parcial para uma aplicação de reservas, três meses"
+   },
+   "pay": {
+    "en": "€40/h, about 10h a week",
+    "pt": "40 €/h, cerca de 10 h por semana"
+   },
+   "tags": {
+    "en": "Design, Tourism tech",
+    "pt": "Design, Tecnologia para o turismo"
+   }
+  },
+  {
+   "id": "n2",
+   "simulated": true,
+   "town": "portimao",
+   "role": "talent",
+   "who": {
+    "en": "An SME in Portimão (simulated)",
+    "pt": "Uma PME em Portimão (simulada)"
+   },
+   "what": {
+    "en": "Someone to set up an AI email assistant for reservations",
+    "pt": "Alguém que configure um assistente de email com IA para reservas"
+   },
+   "pay": {
+    "en": "Fixed price, €800–1,200",
+    "pt": "Preço fixo, 800–1.200 €"
+   },
+   "tags": {
+    "en": "AI, Hospitality",
+    "pt": "IA, Hotelaria"
+   }
+  },
+  {
+   "id": "n3",
+   "simulated": true,
+   "town": "faro",
+   "role": "mentor",
+   "who": {
+    "en": "A UAlg student team (simulated)",
+    "pt": "Uma equipa de estudantes da UAlg (simulada)"
+   },
+   "what": {
+    "en": "A mentor for a sea-economy hardware prototype",
+    "pt": "Um mentor para um protótipo de hardware da economia do mar"
+   },
+   "pay": {
+    "en": "Mentoring, unpaid",
+    "pt": "Mentoria, não paga"
+   },
+   "tags": {
+    "en": "Hardware, Sea economy",
+    "pt": "Hardware, Economia do mar"
+   }
+  },
+  {
+   "id": "n4",
+   "simulated": true,
+   "town": "loule",
+   "role": "investor",
+   "who": {
+    "en": "A startup in Loulé (simulated)",
+    "pt": "Uma startup em Loulé (simulada)"
+   },
+   "what": {
+    "en": "Pre-seed investment, €150k, after a pilot with two hotels",
+    "pt": "Investimento pre-seed, 150 mil €, depois de um piloto com dois hotéis"
+   },
+   "pay": {
+    "en": "Equity",
+    "pt": "Capital"
+   },
+   "tags": {
+    "en": "Investor, Tourism tech",
+    "pt": "Investidor, Tecnologia para o turismo"
+   }
+  }
+ ]
+}
