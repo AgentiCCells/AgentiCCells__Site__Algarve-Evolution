@@ -51,7 +51,7 @@ function feedFrom(ctx) {
     return null;
   };
   const odooEvents = (r?.events || d.odoo.events.map(e => ({ ...e, source: e.url }))).map(e => ({
-    ...e, kind: e.kind === 'conference' ? 'summit' : (KIND[e.kind] ? e.kind : guessKind(e.name)), town: e.town !== undefined ? (munis.find(m => m.id === e.town || fold(m.name) === fold(e.town))?.id || null) : (muniOf(e.place) || muniOf(e.name)), kindGuessed: !e.kind,
+    ...e, name: (e.names_person && e.name_safe) ? e.name_safe : e.name, kind: e.kind === 'conference' ? 'summit' : (KIND[e.kind] ? e.kind : guessKind(e.name)), town: e.town !== undefined ? (munis.find(m => m.id === e.town || fold(m.name) === fold(e.town))?.id || null) : (muniOf(e.place) || muniOf(e.name)), kindGuessed: !e.kind,
   }));
   const fig = id => (r?.organisation?.figures || []).find(f => f.id === id) || d.figures.figures.find(f => f.id === id);
   const quote = d.people.quotes[0];
