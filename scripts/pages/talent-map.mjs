@@ -394,6 +394,8 @@ ${groups}
 <dialog class="tm-dialog" id="tm-dialog" aria-labelledby="tm-d-title"><div class="tm-d-in" id="tm-d-in"></div></dialog>
 <script type="application/json" id="tm-i18n">${JSON.stringify(i18n).replace(/</g, '\\u003c')}</script>
 <script src="/talent-map/app.js" defer></script>
+<style>#tm-meter{display:none!important}</style>
+<script src="/assets/credit.js" data-lang="${lang}" data-app="talent-map" data-auto-cents="1" defer></script>
 ${chrome.foot}
 </body>
 </html>`;

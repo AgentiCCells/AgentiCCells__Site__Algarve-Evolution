@@ -286,6 +286,7 @@ ${chrome.banner}
 <script type="application/json" id="s2a-data">${json}</script>
 <script src="/spreadsheet-to-app/engine.js" defer></script>
 <script src="/spreadsheet-to-app/tool.js" defer></script>
+<script src="/assets/credit.js" data-lang="${lang}" data-app="spreadsheet-to-app" data-auto-cents="1" defer></script>
 ${chrome.foot}
 </body>
 </html>`;

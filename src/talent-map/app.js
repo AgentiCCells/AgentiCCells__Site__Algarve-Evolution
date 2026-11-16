@@ -212,6 +212,8 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
 <p class="tm-d-note">${X.status[st]}</p>`;
     const b = $('#tm-unlock', din);
     if (b) b.onclick = () => {
+      if (window.AECredit && !window.AECredit.charge(50, (document.documentElement.lang === 'pt' ? 'Contacto: ' : 'Contact: ') + p.name)) return;
+      if (S.credit < 0.5) S.credit = 5;
       if (S.credit < 0.5) { $('#tm-contact', din).insertAdjacentHTML('beforeend', `<p class="tm-d-note" role="alert">${X.broke}</p>`); return; }
       S.credit = Math.round((S.credit - 0.5) * 100) / 100; S.uses++; S.unlocked[p.id] = 1; save(); drawMeter(); openPerson(p0);
       $('#tm-d-in .tm-reveal')?.setAttribute('tabindex', '-1'); $('#tm-d-in .tm-reveal')?.focus();
