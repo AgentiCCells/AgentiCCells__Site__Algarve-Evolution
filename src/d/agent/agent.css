@@ -56,6 +56,9 @@ p{margin:0 0 .8em}
 .side-foot{margin-top:auto;border-top:1px solid var(--line);padding:14px 6px 0;font-size:12.5px;color:var(--mute);line-height:1.5}
 .side-ctl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
 .side-ctl a{font-size:13.5px;font-weight:500}
+.side-langs{display:flex;gap:4px}
+.side-langs a{font:600 12px/1 var(--mono);letter-spacing:.06em;text-decoration:none;padding:7px 8px;border-radius:8px;border:1px solid var(--line2);color:var(--ink)}
+.side-langs a:hover{border-color:var(--accent);color:var(--accent)}
 .theme,.iconbtn{display:inline-flex;align-items:center;gap:6px;height:36px;min-width:36px;justify-content:center;padding:0 9px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;color:var(--ink)}
 .theme svg,.iconbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .theme:hover,.iconbtn:hover{border-color:var(--accent)}
@@ -245,12 +248,34 @@ html:not(.js) .dock{display:none}
 .pal ul{list-style:none;margin:0;padding:6px;max-height:min(420px,56vh);overflow:auto}
 .pal li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer}
 .pal li strong{font-weight:500;font-size:15px}
-.pal li span{font-size:12.5px;color:var(--mute);text-align:right}
+.pal li>span{font-size:12.5px;color:var(--mute);text-align:right}
+.pal li .ext{color:var(--accent);font-weight:600}
 .pal li[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 14%,var(--panel))}
 .pal li.empty{color:var(--mute);cursor:default}
 .pal-f{display:flex;gap:14px;justify-content:flex-end;padding:10px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--mute);margin:0}
 
 .foot{width:100%;max-width:820px;margin:0 auto;padding:24px clamp(16px,3vw,32px) 40px;font-size:12.5px;color:var(--mute);border-top:1px solid var(--line)}
+
+/* the two working ideas: header pills, sidebar links and greeting cards (real links to the apps) */
+.top{flex-wrap:wrap}
+.top-apps{display:flex;gap:8px;margin-left:auto;min-width:0}
+.tapp{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;height:36px;padding:0 13px 0 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line2));background:color-mix(in srgb,var(--accent) 9%,var(--panel));color:var(--ink);text-decoration:none;font-weight:600;font-size:14px;transition:border-color .15s,background .15s,transform .15s}
+.tapp:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--panel));color:var(--ink);transform:translateY(-1px)}
+.tapp svg,.side-apps svg,.sg-app>svg{width:17px;height:17px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.tapp svg circle,.side-apps svg circle,.sg-app>svg circle{fill:var(--coral);stroke:none}
+.side-apps ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.side-apps a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);text-decoration:none;font-weight:500;font-size:14.5px;line-height:1.25}
+.side-apps a:hover{border-color:var(--accent)}
+.side-apps .ext{margin-left:auto;color:var(--accent)}
+.sg-app{position:relative;border-color:color-mix(in srgb,var(--accent) 40%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,var(--panel)),var(--panel) 70%)}
+.sg-app>svg{width:20px;height:20px;margin-bottom:6px}
+.sg-app .ext{display:inline;color:var(--accent);font-size:inherit;margin:0}
+@media (max-width:939px){
+  .top-apps{order:3;flex:1 0 100%;margin:2px 0 0;overflow-x:auto;scrollbar-width:none}
+  .top-apps::-webkit-scrollbar{display:none}
+  .tapp{height:34px;font-size:13.5px}
+}
+@media (max-width:560px){.sg-app span:not(.ext){display:block}.sg-app{grid-column:span 1}}
 
 @media (max-width:560px){
   .log{padding-top:20px}
@@ -258,9 +283,10 @@ html:not(.js) .dock{display:none}
   .av .orb{width:28px;height:28px}
   .bubble{max-width:92%}
   .sugg{grid-template-columns:1fr 1fr}
-  .sg span{display:none}
+  .sg:not(.sg-app) span{display:none}
+  .sg-app>span{font-size:12px}
   .bars-in{height:140px}
-  .pal li span{display:none}
+  .pal li>span{display:none}
   .pal[open]{padding-top:6vh}
 }
 @media (prefers-reduced-motion:reduce){

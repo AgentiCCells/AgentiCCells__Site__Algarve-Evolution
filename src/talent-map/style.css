@@ -61,18 +61,13 @@ body.tm { margin: 0; background: var(--bg); color: var(--ink); font: 16.5px/1.6 
 .tm-brand { display: flex; align-items: center; gap: .5rem; text-decoration: none; color: var(--ink) !important; font: 700 1.05rem/1 var(--serif); white-space: nowrap; }
 .tm-mark { width: 28px; height: 28px; flex: none; }
 .tm-crumb { color: var(--line2); }
-.tm-crumb-t { font-weight: 600; font-size: .95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.tm-crumb-t { font: 700 1rem/1.2 var(--serif); color: var(--ink) !important; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.tm-crumb-t:hover { color: var(--ochre-ink) !important; }
 .tm-nav { display: none; gap: 1.2rem; margin-left: auto; font-size: .9rem; }
 .tm-nav a { color: var(--ink2); text-decoration: none; }
 .tm-nav a:hover { color: var(--ochre-ink); }
 @media (min-width: 66rem) { .tm-nav { display: flex; } }
-.tm-meter { margin-left: auto; display: flex; align-items: center; gap: .5rem; font: 600 .82rem/1.2 var(--sans); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: .3rem .35rem .3rem .75rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.tm-nav + .tm-meter { margin-left: 1rem; }
-.tm-meter b { color: var(--sea2); font-size: .95rem; }
-.tm-meter .tm-meter-n { color: var(--ink3); font-weight: 500; }
-.tm-meter button { font: inherit; border: 0; border-radius: 999px; padding: .3rem .65rem; background: var(--sea); color: var(--bg); cursor: pointer; }
-.tm-meter .tm-sim { margin: 0; }
-@media (max-width: 30rem) { .tm-crumb, .tm-crumb-t { display: none; } .tm-meter .tm-meter-n, .tm-meter .tm-sim, .tm-meter .tm-meter-l { display: none; } .tm-brand { font-size: .98rem; } }
+@media (max-width: 30rem) { .tm-brand span, .tm-crumb { display: none; } .tm-crumb-t { font-size: 1.02rem; } }
 
 /* Shared bits */
 .tm-btn { font: 600 .95rem/1.2 var(--sans); border-radius: 12px; padding: .7rem 1.1rem; cursor: pointer; border: 1.5px solid var(--sea); transition: transform .12s, background .12s; }
@@ -372,7 +367,12 @@ html.no-js .tm-list-people { margin-top: 32px; }
 @media (max-width: 23rem) { .tm-brand span { display: none; } }
 html.no-js .tm-explore-grid { grid-template-columns: minmax(0, 1fr); max-width: 60rem; }
 .tm-nav a { white-space: nowrap; }
-@media (max-width: 96rem) { .tm-meter .tm-meter-n { display: none; } }
-@media (min-width: 66rem) and (max-width: 80rem) { .tm-crumb, .tm-crumb-t { display: none; } }
+@media (min-width: 66rem) and (max-width: 84rem) { .tm-brand span, .tm-crumb { display: none; } }
 /* Contrast (sites-design@, 2026-11-16): `.tm a` was colouring the skip link and the prototype banner's links. */
 .tm a.tm-skip { color: var(--bg); }
+
+/* Pay per use, after the value: the line under the hero legend, and room at the bottom for the shared wallet pill. */
+.tm-payline { display: flex; gap: .6rem; align-items: flex-start; margin: 1rem 0 0; padding: .6rem .8rem; max-width: 40rem; border: 1px solid rgba(255, 213, 138, .45); border-radius: 12px; background: rgba(255, 213, 138, .1); color: var(--hero-ink); font-size: .9rem; line-height: 1.45; }
+.tm-coin { flex: none; width: 20px; height: 20px; margin-top: .1rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe7a8, #f0b429 60%, #b7791f); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .2); }
+.tm-broke { color: #8a1c0b; background: #fff1ee; border: 1px solid #f3c2b8; border-radius: 10px; padding: .5rem .7rem; }
+body.tm { padding-bottom: 76px; }

@@ -175,6 +175,10 @@
   const LOCALE = { en: 'en-GB', pt: 'pt-PT', es: 'es-ES', fr: 'fr-FR' };
   const pickLang = l => (LANGS.includes(l) ? l : 'en');
   let lang = 'en';
+  // Pay per use (the prototype's simulated credit): the host page may set a hook that is asked before each action and
+  // returns false to stop it. The exported single-file app sets none, so nothing there is ever charged.
+  let payHook = null;
+  const pay = (kind, info) => { try { return !payHook || payHook(kind, info) !== false; } catch { return true; } };
   const W = () => L[lang];
   const loc = () => LOCALE[lang];
   const C = () => (lang === 'fr' ? ' : ' : ': '); // "label: value", French style in French
@@ -248,7 +252,7 @@
     return bullets >= 3 && bullets / lines.length >= 0.4 && countOutside(lines[0] || '', sniff(text)) === 0;
   };
   function parseChecklist(text, name) {
-    const N = lang === 'pt' ? ['Fase', 'Passo', 'Essencial'] : ['Phase', 'Step', 'Essential'];
+    const N = DATAW[lang];
     let title = '', intro = [], phase = '', rows = [], done = {}, seenList = false;
     for (const raw of text.split(/\r?\n/)) {
       const l = raw.trim(); if (!l) continue;
@@ -259,7 +263,7 @@
         seenList = true;
         const t = m[2]; const key = /(\*\*|__)(.+?)\1/.test(t);
         const step = t.replace(/(\*\*|__)/g, '').replace(/[*_`]/g, '').trim();
-        const id = uid(); rows.push({ _id: id, c0: phase || (lang === 'pt' ? 'Lista' : 'List'), c1: step, c2: key ? 'yes' : 'no' });
+        const id = uid(); rows.push({ _id: id, c0: phase || DATAW[lang][3], c1: step, c2: key ? 'yes' : 'no' });
         if (m[1] && m[1].toLowerCase() === 'x') done[id] = 1;
         continue;
       }
@@ -284,7 +288,7 @@
       const head = grid[0]; const width = Math.max(...grid.map(r => r.length));
       const seen = {}; const cols = [];
       for (let i = 0; i < width; i++) {
-        let n = (head[i] || '').trim() || (lang === 'pt' ? `Coluna ${i + 1}` : `Column ${i + 1}`);
+        let n = (head[i] || '').trim() || `${DATAW[lang][4]} ${i + 1}`;
         if (seen[n]) n = `${n} (${++seen[n]})`; else seen[n] = 1;
         cols.push({ key: 'c' + i, name: n });
       }
@@ -298,12 +302,12 @@
   }
 
   /* ---------- values and types ---------- */
-  const BOOL_T = ['yes', 'y', 'true', 'sim', 's', 'verdadeiro', 'x', '✓', '✔', 'ok'];
-  const BOOL_F = ['no', 'n', 'false', 'nao', 'falso', '-'];
+  const BOOL_T = ['yes', 'y', 'true', 'sim', 's', 'verdadeiro', 'si', 'verdadero', 'oui', 'o', 'vrai', 'x', '✓', '✔', 'ok'];
+  const BOOL_F = ['no', 'n', 'false', 'nao', 'falso', 'non', 'faux', '-'];
   const boolOf = v => { const s = norm(v).trim(); if (BOOL_T.includes(s)) return true; if (BOOL_F.includes(s) || s === '') return s === '' ? null : false; return undefined; };
   function numOf(v, delim) {
     let s = String(v ?? '').trim(); if (!s) return null;
-    s = s.replace(/[€$£%\s\u00a0]|EUR|eur/g, '');
+    s = s.replace(/[€$£%\s\u00a0\u202f]|EUR|eur/g, '');
     if (!/^[-+]?[\d.,]+$/.test(s) || !/\d/.test(s)) return null;
     const lc = s.lastIndexOf(','), ld = s.lastIndexOf('.');
     if (lc > -1 && ld > -1) s = lc > ld ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
@@ -318,13 +322,16 @@
     return null;
   }
   const timeOf = v => { const m = String(v ?? '').trim().match(/^(\d{1,2})[:h](\d{2})$/); return m && +m[1] < 24 ? `${pad(m[1])}:${m[2]}` : null; };
+  // Column-name patterns in English, Portuguese, Spanish and French. Each is tried on the name as written and without
+  // accents (has()), so "échéance" also matches "echeance".
   const RX = {
-    money: /(price|pre[cç]o|amount|total|cost|custo|valor|montante|paid|pago|fee|quota|eur\b|_eur|euro|€|usd|gbp|revenue|receita|salary|sal[aá]rio|balance|saldo|budget|or[cç]amento)/i,
-    id: /^(id|n[ºo°.]?|num(ber)?|n[uú]mero|invoice|fatura|factura|ref(erence)?|refer[eê]ncia|code|c[oó]digo|sku|nif|nipc|postcode|zip|year|ano)$/i,
-    phone: /(phone|tel\b|tel[eé]f|mobile|telem|cell|whatsapp|contacto)/i,
-    notes: /(note|nota|comment|coment|descri|obs|remark|detail|detalhe|address|morada)/i,
-    pct: /(pct|percent|%|taxa)/i,
+    money: /(price|pre[cç]o|precio|prix|amount|importe|montant|monto|total|cost|custo|coste|cout|tarif|valor|montante|paid|pago|pagad|paye|fee|quota|cuota|cotis|eur\b|_eur|euro|€|usd|gbp|revenue|receita|ingres|recette|salary|sal[aá]rio|salari|salaire|balance|saldo|solde|budget|or[cç]amento|presupuesto)/i,
+    id: /^(id|n[ºo°.]?|num(ber)?|n[uú]mero|numero|invoice|fatura|factura|facture|ref(erence)?|refer[eê]ncia|referencia|code|c[oó]digo|codigo|sku|nif|nipc|cif|siret|postcode|zip|code postal|codigo postal|year|ano|annee)$/i,
+    phone: /(phone|tel\b|tel[eé]f|telephone|mobile|movil|portable|telem|cell|whatsapp|contacto)/i,
+    notes: /(note|nota|comment|coment|descri|obs|remark|remarque|detail|detalhe|detalle|address|morada|adresse|direccion)/i,
+    pct: /(pct|percent|porcentaje|pourcentage|%|taxa|tasa|taux)/i,
   };
+  const has = (rx, name) => rx.test(name) || rx.test(norm(name));
   function infer(m) {
     const n = m.rows.length;
     for (const c of m.cols) {
@@ -345,28 +352,28 @@
     if (vals.every(v => dateOf(v))) return { type: 'date', fmt: /^\d{4}-/.test(vals[0]) ? 'iso' : 'dmy' + (vals[0].match(/[/.-]/) || ['/'])[0] };
     if (vals.every(v => timeOf(v))) return { type: 'time' };
     const phoneish = vals.every(v => /^\+?[\d\s().-]{7,}$/.test(v) && (v.match(/\d/g) || []).length >= 7);
-    if (phoneish && (RX.phone.test(name) || vals.every(v => v.startsWith('+')) || vals.every(v => /\d\s\d/.test(v)))) return { type: 'phone' };
+    if (phoneish && (has(RX.phone, name) || vals.every(v => v.startsWith('+')) || vals.every(v => /\d\s\d/.test(v)))) return { type: 'phone' };
     const nums = vals.map(v => numOf(v, delim));
-    if (nums.every(x => x !== null) && !vals.some(v => /^0\d/.test(v)) && !RX.id.test(name)) {
+    if (nums.every(x => x !== null) && !vals.some(v => /^0\d/.test(v)) && !has(RX.id, name)) {
       const sym = vals.join('').match(/[€$£]/);
-      if (RX.money.test(name) || sym) return { type: 'money', cur: sym ? ({ '$': 'USD', '£': 'GBP' }[sym[0]] || 'EUR') : 'EUR' };
-      return { type: 'number', unit: RX.pct.test(name) || vals.some(v => v.includes('%')) ? '%' : '' };
+      if (has(RX.money, name) || sym) return { type: 'money', cur: sym ? ({ '$': 'USD', '£': 'GBP' }[sym[0]] || 'EUR') : 'EUR' };
+      return { type: 'number', unit: has(RX.pct, name) || vals.some(v => v.includes('%')) ? '%' : '' };
     }
     const distinct = new Set(vals.map(norm)).size;
     const avg = vals.reduce((a, v) => a + v.length, 0) / vals.length;
     const withEmpty = distinct + (vals.length < n ? 1 : 0);
-    if (!RX.notes.test(name) && avg <= 28 && distinct <= Math.max(2, Math.min(20, Math.ceil(n * 0.75))) && (withEmpty < n || n <= 3)) return { type: 'category' };
+    if (!has(RX.notes, name) && avg <= 28 && distinct <= Math.max(2, Math.min(20, Math.ceil(n * 0.75))) && (withEmpty < n || n <= 3)) return { type: 'category' };
     return { type: 'text' };
   }
   function pickTitle(cols, rows) {
-    const pref = /^(name|nome|item|artigo|produto|product|student|aluno|member|membro|client|cliente|title|t[ií]tulo|step|passo|task|tarefa|invoice|fatura)/i;
+    const pref = /^(name|nome|nombre|nom|item|artigo|articulo|article|produto|producto|produit|product|student|aluno|alumno|estudiante|eleve|etudiant|member|membro|miembro|membre|socio|adherent|client|cliente|title|t[ií]tulo|titulo|titre|step|passo|paso|etape|task|tarefa|tarea|tache|invoice|fatura|factura|facture)/i;
     const cand = cols.filter(c => c.type === 'text' || c.type === 'category');
     const uniq = c => new Set(rows.map(r => norm(r[c.key]))).size / Math.max(1, rows.length);
-    return cand.find(c => c.type === 'text' && pref.test(c.name) && uniq(c) > 0.6) || cand.find(c => c.type === 'text' && uniq(c) > 0.7 && !RX.notes.test(c.name)) || cand.find(c => pref.test(c.name)) || cand[0] || cols[0];
+    return cand.find(c => c.type === 'text' && has(pref, c.name) && uniq(c) > 0.6) || cand.find(c => c.type === 'text' && uniq(c) > 0.7 && !has(RX.notes, c.name)) || cand.find(c => has(pref, c.name)) || cand[0] || cols[0];
   }
   const nice = name => {
     let s = String(name).replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
-    s = s.replace(/\b(eur|euro)$/i, '(€)').replace(/\bpct$/i, '(%)').replace(/\b(vat|iva|id|nif|url|sku)\b/gi, x => x.toUpperCase());
+    s = s.replace(/\b(eur|euro)$/i, '(€)').replace(/\bpct$/i, '(%)').replace(/\b(vat|iva|tva|id|nif|url|sku)\b/gi, x => x.toUpperCase());
     return s.charAt(0).toUpperCase() + s.slice(1);
   };
 
@@ -423,23 +430,36 @@
   }
 
   /* ---------- views ("the view I use most") ---------- */
-  const byName = (cols, rx, types) => cols.find(c => (!types || types.includes(c.type)) && rx.test(c.name));
-  const SCHED_NOT = /(due|venc|join|ades|last|[uú]ltim|creat|criad|order|encomend|paid|pago|issued|emit|birth|nasc|updated)/i;
+  const byName = (cols, rx, types) => cols.find(c => (!types || types.includes(c.type)) && has(rx, c.name));
+  const SCHED_NOT = /(due|venc|echeance|plazo|limite|join|ades|adhes|alta|inscri|last|[uú]ltim|dernier|derniere|creat|criad|cread|cree|order|encomend|pedido|commande|paid|pago|pagad|paye|issued|emit|emis|envoy|birth|nasc|nacim|naissance|updated)/i;
+  // The patterns behind "the view I use most", in English, Portuguese, Spanish and French (tried with and without accents).
+  const P = {
+    ess: /(essential|important|key|crit|essencial|esencial|essentiel|importante|obrigat|obligatoire|obligatorio|must|clave|\bcle\b)/i,
+    stock: /(stock|qty|quant|cantidad|on.?hand|exist|invent)/i,
+    min: /(min|reorder|\bpar\b|threshold|limiar|umbral|seuil)/i,
+    due: /(due|venc|prazo|plazo|deadline|limite|echeance)/i,
+    paidB: /(paid|pago|pag|paye|quota|cuota|cotis|regle|fee|dues|subscri)/i,
+    when: /^(date|data|fecha|day|dia|jour|when|quando|cuando|quand|start|in[ií]cio|inicio|debut|lesson|aula|clase|cours|lecon|session|sess|seance|booking|reserva|event|evento|evenement)/i,
+    status: /(status|statut|estado|etat|state)/i,
+    closed: /(done|closed|complete|finished|paid|cancel|feito|fechad|conclu|pago|cancelad|resolved|resolvid|hecho|cerrad|completad|terminad|termine|fait|ferme|clos|resolu|resuelt|pagad|paye|annul|anulad)/i,
+    unpaid: /(unpaid|not paid|por pagar|nao pag|no pagad|sin pagar|impaye|non paye|a payer|pendiente|pendente|en attente|pending)/i,
+  };
+  const isClosed = v => P.closed.test(norm(v)) && !P.unpaid.test(norm(v));
   function detect(A) {
     const c = A.cols(), out = [];
-    const ess = byName(c, /(essential|important|key|crit|essencial|importante|obrigat|must)/i, ['bool']);
+    const ess = byName(c, P.ess, ['bool']);
     if (A.st.meta.kind === 'checklist' || ess) out.push('checklist');
-    if (byName(c, /(stock|qty|quant|on.?hand|exist|invent)/i, ['number', 'money']) && byName(c, /(min|reorder|\bpar\b|threshold|limiar)/i, ['number', 'money'])) out.push('stock');
-    if (byName(c, /(due|venc|prazo|deadline|limite)/i, ['date']) && c.some(x => x.type === 'money')) out.push('invoices');
-    if (byName(c, /(paid|pago|pag|quota|fee|dues|subscri)/i, ['bool'])) out.push('members');
-    if (c.some(x => x.type === 'date' && !SCHED_NOT.test(x.name) && (/^(date|data|day|dia|when|quando|start|in[ií]cio|lesson|aula|session|sess|booking|reserva|event|evento)/i.test(x.name) || c.some(y => y.type === 'time')))) out.push('schedule');
+    if (byName(c, P.stock, ['number', 'money']) && byName(c, P.min, ['number', 'money'])) out.push('stock');
+    if (byName(c, P.due, ['date']) && c.some(x => x.type === 'money')) out.push('invoices');
+    if (byName(c, P.paidB, ['bool'])) out.push('members');
+    if (c.some(x => x.type === 'date' && !has(SCHED_NOT, x.name) && (has(P.when, x.name) || c.some(y => y.type === 'time')))) out.push('schedule');
     out.push('generic');
     return out;
   }
   const rowTitle = (A, r) => r[A.titleCol().key] || W().empty;
   function metaOf(A, r, skip, max = 4) {
     return A.cols().filter(c => !c.title && !skip.includes(c) && r[c.key] !== '' && c.type !== 'phone' && !(c.type === 'text' && String(r[c.key]).length > 60))
-      .slice(0, max).map(c => c.type === 'bool' ? (boolOf(r[c.key]) ? nice(c.name) : '') : (c.type === 'text' || c.type === 'category' ? fmtText(r[c.key], c) : `${nice(c.name)}: ${fmtText(r[c.key], c)}`)).filter(Boolean);
+      .slice(0, max).map(c => c.type === 'bool' ? (boolOf(r[c.key]) ? nice(c.name) : '') : (c.type === 'text' || c.type === 'category' ? fmtText(r[c.key], c) : `${nice(c.name)}${C()}${fmtText(r[c.key], c)}`)).filter(Boolean);
   }
   function buckets(pairs) { // pairs: [iso, value]
     const ds = pairs.map(p => p[0]).sort(); if (!ds.length) return null;
@@ -468,16 +488,16 @@
   }
   const VIEWS = {
     stock(A, c, rows, w) {
-      const s = byName(c, /(stock|qty|quant|on.?hand|exist|invent)/i, ['number', 'money']), mn = byName(c, /(min|reorder|\bpar\b|threshold|limiar)/i, ['number', 'money']);
-      const price = byName(c, /(price|pre[cç]o|cost|custo|unit.?price)/i, ['money']) || c.find(x => x.type === 'money' && x !== s && x !== mn);
-      const sup = byName(c, /(supplier|fornecedor|vendor|provider)/i, ['text', 'category']);
+      const s = byName(c, P.stock, ['number', 'money']), mn = byName(c, P.min, ['number', 'money']);
+      const price = byName(c, /(price|pre[cç]o|precio|prix|cost|custo|coste|cout|tarif|unit.?price)/i, ['money']) || c.find(x => x.type === 'money' && x !== s && x !== mn);
+      const sup = byName(c, /(supplier|fornecedor|proveedor|fournisseur|vendor|provider)/i, ['text', 'category']);
       const ph = c.find(x => x.type === 'phone');
-      const day = byName(c, /(order.?day|dia|day|weekday)/i, ['text', 'category']);
-      const unit = byName(c, /^(unit|unidade|un)$/i, ['text', 'category']);
-      const cat = byName(c, /(categor|type|tipo|section|sec[cç]|family|fam[ií]lia|group|grupo)/i, ['category']) || c.find(x => x.type === 'category' && ![sup, day, unit].includes(x));
+      const day = byName(c, /(order.?day|dia|day|weekday|jour)/i, ['text', 'category']);
+      const unit = byName(c, /^(unit|unidade|unidad|unite|un)$/i, ['text', 'category']);
+      const cat = byName(c, /(categor|type|tipo|section|sec[cç]|family|fam[ií]lia|famil|group|grupo|rayon)/i, ['category']) || c.find(x => x.type === 'category' && ![sup, day, unit].includes(x));
       const today = A.st.ref || todayISO(); const wd = weekday(today);
-      const DAYS = [['sunday', 'domingo'], ['monday', 'segunda'], ['tuesday', 'terca'], ['wednesday', 'quarta'], ['thursday', 'quinta'], ['friday', 'sexta'], ['saturday', 'sabado']];
-      const orderToday = r => { if (!day) return false; const d = norm(r[day.key]); return /^(daily|every ?day|diari|todos os dias)/.test(d) || DAYS[wd].some(x => d.startsWith(x.slice(0, 3)) && x.startsWith(d.slice(0, 3))); };
+      const DAYS = [['sunday', 'domingo', 'dimanche'], ['monday', 'segunda', 'lunes', 'lundi'], ['tuesday', 'terca', 'martes', 'mardi'], ['wednesday', 'quarta', 'miercoles', 'mercredi'], ['thursday', 'quinta', 'jueves', 'jeudi'], ['friday', 'sexta', 'viernes', 'vendredi'], ['saturday', 'sabado', 'samedi']];
+      const orderToday = r => { if (!day) return false; const d = norm(r[day.key]); return /^(daily|every ?day|diari|todos os dias|todos los dias|quotidien|tous les jours|chaque jour)/.test(d) || DAYS[wd].some(x => d.startsWith(x.slice(0, 3)) && x.startsWith(d.slice(0, 3))); };
       const n = r => numOf(r[s.key]) ?? 0, m = r => numOf(r[mn.key]) ?? 0;
       const below = rows.filter(r => n(r) < m(r)).sort((a, b) => ((n(a) > 0) - (n(b) > 0)) || n(a) / (m(a) || 1) - n(b) / (m(b) || 1));
       const need = r => m(r) - n(r), cost = r => price ? need(r) * (numOf(r[price.key]) ?? 0) : 0;
@@ -502,16 +522,16 @@
       return { action: w.ordered, tiles, groups, charts, keyCols: [s, mn, sup, day].filter(Boolean) };
     },
     invoices(A, c, rows, w) {
-      const due = byName(c, /(due|venc|prazo|deadline|limite)/i, ['date']);
-      const amt = byName(c, /(amount|total|valor|montante|value)/i, ['money']) || c.find(x => x.type === 'money');
-      const pd = byName(c, /(paid|pago|pagamento|payment|settled|liquid)/i, ['date']);
-      const pb = byName(c, /(paid|pago)/i, ['bool']);
-      const stc = byName(c, /(status|estado|state)/i, ['category', 'text']);
-      const cli = byName(c, /(client|cliente|customer|comprador|buyer)/i, ['text', 'category']);
-      const vat = byName(c, /(vat|iva|tax)/i, ['number']);
-      const issued = byName(c, /(issued|emit|date|data|sent|enviad)/i, ['date']);
+      const due = byName(c, P.due, ['date']);
+      const amt = byName(c, /(amount|importe|montant|monto|total|valor|montante|value)/i, ['money']) || c.find(x => x.type === 'money');
+      const pd = byName(c, /(paid|pago|pagad|pagamento|payment|paiement|paye|regle|cobr|settled|liquid)/i, ['date']);
+      const pb = byName(c, /(paid|pago|pagad|paye|regle|cobrad)/i, ['bool']);
+      const stc = byName(c, P.status, ['category', 'text']);
+      const cli = byName(c, /(client|cliente|customer|comprador|buyer|acheteur)/i, ['text', 'category']);
+      const vat = byName(c, /(vat|iva|tva|tax)/i, ['number']);
+      const issued = byName(c.filter(x => x !== due && x !== pd), /(issued|emit|emis|factur|date|data|fecha|sent|enviad|envoy)/i, ['date']);
       const ref = A.st.ref || todayISO();
-      const paid = r => pd ? !!dateOf(r[pd.key]) : pb ? boolOf(r[pb.key]) === true : stc ? /(paid|pago|settled|liquidad)/i.test(r[stc.key]) : false;
+      const paid = r => pd ? !!dateOf(r[pd.key]) : pb ? boolOf(r[pb.key]) === true : stc ? isClosed(r[stc.key]) : false;
       const a = r => numOf(r[amt.key]) ?? 0, withV = r => vat ? a(r) * (1 + (numOf(r[vat.key]) ?? 0) / 100) : a(r);
       const unpaid = rows.filter(r => !paid(r)), dd = r => dateOf(r[due.key]);
       const over = unpaid.filter(r => dd(r) && dd(r) < ref).sort((x, y) => dd(x).localeCompare(dd(y)));
@@ -525,7 +545,7 @@
       };
       const sum = (rs, fn = a) => moneyFmt(rs.reduce((x, r) => x + fn(r), 0), amt.cur);
       const groups = [{ title: w.overdue, todo: true, items: over.map(item) }, { title: w.notDue, todo: true, items: notDue.map(item) }];
-      const pr = rows.filter(paid); if (pr.length) groups.push({ title: w.paid, todo: false, closed: true, items: pr.map(r => ({ id: r._id, title: title(r), meta: pd ? [`${w.paid}: ${fmtText(r[pd.key], pd)}`] : [], amount: moneyFmt(a(r), amt.cur) })) });
+      const pr = rows.filter(paid); if (pr.length) groups.push({ title: w.paid, todo: false, closed: true, items: pr.map(r => ({ id: r._id, title: title(r), meta: pd ? [`${w.paid}${C()}${fmtText(r[pd.key], pd)}`] : [], amount: moneyFmt(a(r), amt.cur) })) });
       const tiles = [tile(w.unpaid, sum(unpaid), w.nInv(unpaid.length) + (vat ? ' · ' + w.withVat(sum(unpaid, withV)) : '')), tile(w.overdue, sum(over), w.nInv(over.length)), tile(w.paid, sum(pr), w.nInv(pr.length))];
       const charts = [];
       if (cli) charts.push({ title: `${w.chUnpaidBy} ${nice(cli.name).toLowerCase()}`, money: amt.cur, data: tally(unpaid, cli, a) });
@@ -534,13 +554,13 @@
       return { action: w.chased, tiles, groups, charts, refControl: true, keyCols: [cli, due, amt, pd || pb].filter(Boolean) };
     },
     schedule(A, c, rows, w) {
-      const dc = c.find(x => x.type === 'date' && !SCHED_NOT.test(x.name) && /^(date|data|day|dia|when|quando|start|in[ií]cio|lesson|aula|session|sess|booking|reserva|event|evento)/i.test(x.name)) || c.find(x => x.type === 'date' && !SCHED_NOT.test(x.name));
+      const dc = c.find(x => x.type === 'date' && !has(SCHED_NOT, x.name) && has(P.when, x.name)) || c.find(x => x.type === 'date' && !has(SCHED_NOT, x.name));
       const tc = c.find(x => x.type === 'time');
-      const stc = byName(c, /(status|estado|state)/i, ['category', 'text']);
+      const stc = byName(c, P.status, ['category', 'text']);
       const money = c.find(x => x.type === 'money');
-      const ppl = byName(c, /(group|size|people|pax|pessoas|participants|participantes|alunos|guests|h[oó]spedes)/i, ['number']);
-      const who = byName(c, /(instructor|teacher|staff|professor|monitor|coach|treinador|guia|guide|host)/i, ['category', 'text']) || c.find(x => x.type === 'category' && x !== stc && !x.title);
-      const cancelled = r => stc && /(cancel|anulad)/i.test(r[stc.key]);
+      const ppl = byName(c, /(group|grupo|size|tamano|taille|people|pax|pessoas|personas|personnes|participants|participantes|alunos|alumnos|eleves|guests|h[oó]spedes|huespedes|invitados|invites)/i, ['number']);
+      const who = byName(c, /(instructor|teacher|staff|professor|profesor|professeur|monitor|moniteur|coach|treinador|entrenador|entraineur|formateur|animateur|guia|guide|host)/i, ['category', 'text']) || c.find(x => x.type === 'category' && x !== stc && !x.title);
+      const cancelled = r => stc && /(cancel|anulad|annul)/i.test(norm(r[stc.key]));
       const d = r => dateOf(r[dc.key]);
       const act = rows.filter(r => d(r) && !cancelled(r));
       let ref = A.st.ref || todayISO(), note = '';
@@ -555,7 +575,7 @@
       const item = r => {
         const s = stc ? norm(r[stc.key]) : '';
         return { id: r._id, title: (tc && r[tc.key] ? r[tc.key] + ' · ' : '') + rowTitle(A, r), meta: metaOf(A, r, skip.concat(stc ? [stc] : []), 5), amount: money && r[money.key] ? fmtText(r[money.key], money) : '',
-          badge: stc && /(unpaid|deposit|pending|por pagar|sinal|pendente)/.test(s) ? { t: r[stc.key], tone: 'warn' } : null };
+          badge: stc && /(unpaid|deposit|pending|por pagar|sinal|pendente|pendiente|senal|deposito|impaye|acompte|en attente|non paye|a payer)/.test(s) ? { t: r[stc.key], tone: 'warn' } : null };
       };
       const groups = [];
       const days = [...new Set(week.map(d))].sort();
@@ -574,22 +594,22 @@
       return { action: w.done, tiles, groups, charts, note, ref, refControl: true, keyCols: [dc, tc, who, stc, money].filter(Boolean) };
     },
     members(A, c, rows, w) {
-      const pb = byName(c, /(paid|pago|pag|quota|fee|dues|subscri)/i, ['bool']);
-      const typ = byName(c, /(member|tipo|type|categor|plan|plano|tier|n[ií]vel|level)/i, ['category']) || c.find(x => x.type === 'category' && !x.title);
-      const jn = byName(c, /(join|ades|since|desde|start|in[ií]cio)/i, ['date']);
+      const pb = byName(c, P.paidB, ['bool']);
+      const typ = byName(c, /(member|membres|tipo|type|categor|plan|plano|tier|n[ií]vel|nivel|niveau|level|cuota|cotisation|adhesion)/i, ['category']) || c.find(x => x.type === 'category' && !x.title);
+      const jn = byName(c, /(join|ades|adhes|alta|inscri|since|desde|depuis|start|in[ií]cio|inicio|debut)/i, ['date']);
       const unpaid = rows.filter(r => boolOf(r[pb.key]) !== true), paidR = rows.filter(r => boolOf(r[pb.key]) === true);
       const skip = [pb, jn].filter(Boolean);
       const item = r => ({ id: r._id, title: rowTitle(A, r), meta: (jn && dateOf(r[jn.key]) ? [w.joined(dateFmt(dateOf(r[jn.key])))] : []).concat(metaOf(A, r, skip, 4)) });
       const groups = [{ title: w.notPaid, todo: true, items: unpaid.map(item) }, { title: w.paidLabel, todo: false, closed: true, items: paidR.map(item) }];
       const tiles = [tile(w.notPaid, String(unpaid.length), w.ofRows(rows.length)), tile(w.paidLabel, w.paidN(paidR.length, rows.length))];
       const charts = [];
-      if (typ) charts.push({ title: `${/(member|membro|s[oó]cio|associad)/i.test(A.titleCol().name) ? w.chMembersBy : w.countBy} ${nice(typ.name).toLowerCase()}`, data: tally(rows, typ) });
-      if (jn) { const bk = buckets(rows.filter(r => dateOf(r[jn.key])).map(r => [dateOf(r[jn.key]), 1])); if (bk) charts.push({ title: `${w.byPeriod(w[bk.unit])}: ${nice(jn.name).toLowerCase()}`, vertical: true, data: bk.data }); }
+      if (typ) charts.push({ title: `${has(/(member|membro|miembro|membre|s[oó]cio|socio|associad|asociad|adherent)/i, A.titleCol().name) ? w.chMembersBy : w.countBy} ${nice(typ.name).toLowerCase()}`, data: tally(rows, typ) });
+      if (jn) { const bk = buckets(rows.filter(r => dateOf(r[jn.key])).map(r => [dateOf(r[jn.key]), 1])); if (bk) charts.push({ title: `${w.byPeriod(w[bk.unit])}${C()}${nice(jn.name).toLowerCase()}`, vertical: true, data: bk.data }); }
       return { action: w.reminded, tiles, groups, charts, keyCols: [pb, typ, jn].filter(Boolean) };
     },
     checklist(A, c, rows, w) {
-      const ess = byName(c, /(essential|important|key|crit|essencial|importante|obrigat|must)/i, ['bool']);
-      const ph = byName(c, /(phase|fase|section|sec[cç]|stage|etapa|when|quando|part|parte)/i, ['category', 'text']) || c.find(x => x.type === 'category' && !x.title);
+      const ess = byName(c, P.ess, ['bool']);
+      const ph = byName(c, /(phase|fase|section|sec[cç]|stage|etapa|etape|when|quando|cuando|quand|part|parte|partie)/i, ['category', 'text']) || c.find(x => x.type === 'category' && !x.title);
       const phases = ph ? [...new Set(rows.map(r => r[ph.key] || w.empty))] : [''];
       if (!phases.includes(A.ui.phase)) A.ui.phase = phases[0];
       const inPh = rows.filter(r => !ph || (r[ph.key] || w.empty) === A.ui.phase);
@@ -604,22 +624,21 @@
       return { action: w.done, tiles, groups, charts, phases: ph ? phases : null, keyCols: [ph, ess].filter(Boolean) };
     },
     generic(A, c, rows, w) {
-      const stc = byName(c, /(status|estado|state|stage|etapa)/i, ['category']);
+      const stc = byName(c, /(status|statut|estado|etat|state|stage|etapa|etape)/i, ['category']);
       const dc = c.find(x => x.type === 'date'), bc = c.find(x => x.type === 'bool'), cat = c.find(x => x.type === 'category' && !x.title);
       const money = c.find(x => x.type === 'money') || c.find(x => x.type === 'number');
       const ref = A.st.ref || todayISO();
       const item = r => ({ id: r._id, title: rowTitle(A, r), meta: metaOf(A, r, money ? [money] : [], 4), amount: money && r[money.key] ? fmtText(r[money.key], money) : '' });
       let groups;
-      const CLOSED = /(done|closed|complete|finished|paid|cancel|feito|fechad|conclu|pago|cancelad|resolved|resolvid)/i;
-      if (stc) {
-        const vals = [...new Set(rows.map(r => r[stc.key] || w.empty))].sort((a, b) => CLOSED.test(a) - CLOSED.test(b));
-        groups = vals.map(v => ({ title: v, todo: !CLOSED.test(v), closed: CLOSED.test(v), items: rows.filter(r => (r[stc.key] || w.empty) === v).map(item) }));
+            if (stc) {
+        const vals = [...new Set(rows.map(r => r[stc.key] || w.empty))].sort((a, b) => isClosed(a) - isClosed(b));
+        groups = vals.map(v => ({ title: v, todo: !isClosed(v), closed: isClosed(v), items: rows.filter(r => (r[stc.key] || w.empty) === v).map(item) }));
       } else if (dc) {
         const d = r => dateOf(r[dc.key]);
         groups = [{ title: w.upcoming, todo: true, items: rows.filter(r => d(r) && d(r) >= ref).sort((a, b) => d(a).localeCompare(d(b))).map(item) },
           { title: w.past, todo: false, closed: true, items: rows.filter(r => !d(r) || d(r) < ref).sort((a, b) => cmp(d(b), d(a))).map(item) }];
       } else if (bc) {
-        groups = [{ title: `${nice(bc.name)}: ${w.no}`, todo: true, items: rows.filter(r => boolOf(r[bc.key]) !== true).map(item) }, { title: `${nice(bc.name)}: ${w.yes}`, todo: false, closed: true, items: rows.filter(r => boolOf(r[bc.key]) === true).map(item) }];
+        groups = [{ title: `${nice(bc.name)}${C()}${w.no}`, todo: true, items: rows.filter(r => boolOf(r[bc.key]) !== true).map(item) }, { title: `${nice(bc.name)}${C()}${w.yes}`, todo: false, closed: true, items: rows.filter(r => boolOf(r[bc.key]) === true).map(item) }];
       } else groups = [{ title: w.allRows, todo: true, items: rows.map(item) }];
       const tiles = [tile(w.rows, String(rows.length))];
       if (money) tiles.push(tile(w.total, money.type === 'money' ? moneyFmt(rows.reduce((x, r) => x + (numOf(r[money.key]) ?? 0), 0), money.cur) : numFmt(rows.reduce((x, r) => x + (numOf(r[money.key]) ?? 0), 0)), nice(money.name)));
@@ -673,7 +692,7 @@
     const cols = A.cols(), tc = A.titleCol(); let key = [];
     try { key = view(A, A.st.viewKind || detect(A)[0]).keyCols || []; } catch { key = []; }
     const keyKeys = key.map(c => c.key);
-    const isLong = c => c.type === 'text' && (RX.notes.test(c.name) || A.st.rows.some(r => String(r[c.key]).length > 60));
+    const isLong = c => c.type === 'text' && (has(RX.notes, c.name) || A.st.rows.some(r => String(r[c.key]).length > 60));
     return [tc].concat(cols.filter(c => keyKeys.includes(c.key) && c !== tc), cols.filter(c => !keyKeys.includes(c.key) && c !== tc && !isLong(c)), cols.filter(c => c !== tc && !keyKeys.includes(c.key) && isLong(c)));
   }
   function filtered(A) {
@@ -717,11 +736,16 @@
       body.innerHTML = shown.map(r => `<tr data-id="${r._id}">${cols.map((c, i) => `<td class="t-${c.type}${c.title ? ' is-title' : ''}${i > 6 ? ' is-minor' : ''}" data-label="${esc(nice(c.name))}">${c.title ? `<strong>${esc(r[c.key]) || fmtHTML('', c)}</strong>` : fmtHTML(r[c.key], c)}</td>`).join('')}${editable ? `<td class="s2a-act"><button type="button" class="s2a-icon" data-edit aria-label="${esc(w.edit)}: ${esc(rowTitle(A, r))}">${ICON.edit}<span>${w.edit}</span></button><button type="button" class="s2a-icon s2a-danger" data-del aria-label="${esc(w.del)}: ${esc(rowTitle(A, r))}">${ICON.bin}<span>${w.del}</span></button></td>` : ''}</tr>`).join('');
     };
     const msg = t => { const m = el.querySelector('[data-msg]'); if (m) { m.textContent = A.storeOk ? t : w.storeFail; clearTimeout(m._t); m._t = setTimeout(() => { m.textContent = ''; }, 4000); } };
-    el.querySelector('[data-q]').addEventListener('input', e => { A.ui.q = e.target.value; A.ui.limit = 50; draw(); });
+    el.querySelector('[data-q]').addEventListener('input', e => {
+      A.ui.q = e.target.value; A.ui.limit = 50; draw();
+      clearTimeout(el._qt); const q = A.ui.q.trim();
+      if (q && q !== el._qpaid) el._qt = setTimeout(() => { if (A.ui.q.trim() !== q) return; if (pay('search', q)) el._qpaid = q; else { A.ui.q = ''; e.target.value = ''; draw(); } }, 900);
+    });
     el.onchange = e => {
-      if (e.target.dataset.f !== undefined) { A.ui.f[e.target.dataset.f] = e.target.value; A.ui.limit = 50; draw(); }
-      if (e.target.hasAttribute('data-sort')) { const [k, d] = e.target.value.split(':'); A.ui.sort = k ? { key: k, dir: +d } : null; draw(); }
+      if (e.target.dataset.f !== undefined) { if (!pay('filter')) { e.target.value = A.ui.f[e.target.dataset.f] || ''; return; } A.ui.f[e.target.dataset.f] = e.target.value; A.ui.limit = 50; draw(); }
+      if (e.target.hasAttribute('data-sort')) { if (!pay('sort')) { e.target.value = A.ui.sort ? `${A.ui.sort.key}:${A.ui.sort.dir}` : ''; return; } const [k, d] = e.target.value.split(':'); A.ui.sort = k ? { key: k, dir: +d } : null; draw(); }
       if (e.target.hasAttribute('data-import') && e.target.files[0]) {
+        if (!pay('import')) { e.target.value = ''; return; }
         const file = e.target.files[0]; file.text().then(text => {
           let m2; try { m2 = parse(text, file.name); } catch { msg(w.importFail); return; }
           const names = A.cols().map(c => norm(c.name)).join('|');
@@ -732,15 +756,15 @@
     };
     el.onclick = e => {
       const b = e.target.closest('button'); if (!b || !el.contains(b)) return;
-      if (b.dataset.sortk) { const k = b.dataset.sortk; A.ui.sort = A.ui.sort && A.ui.sort.key === k ? (A.ui.sort.dir === 1 ? { key: k, dir: -1 } : null) : { key: k, dir: 1 }; const s = el.querySelector('[data-sort]'); s.value = A.ui.sort ? `${A.ui.sort.key}:${A.ui.sort.dir}` : ''; draw(); }
+      if (b.dataset.sortk) { if (!pay('sort')) return; const k = b.dataset.sortk; A.ui.sort = A.ui.sort && A.ui.sort.key === k ? (A.ui.sort.dir === 1 ? { key: k, dir: -1 } : null) : { key: k, dir: 1 }; const s = el.querySelector('[data-sort]'); s.value = A.ui.sort ? `${A.ui.sort.key}:${A.ui.sort.dir}` : ''; draw(); }
       else if (b.hasAttribute('data-clear')) { A.ui.q = ''; A.ui.f = {}; list(el, A, { editable }); }
       else if (b.hasAttribute('data-more')) { A.ui.limit += 50; draw(); }
       else if (b.hasAttribute('data-add')) form(A, null, () => { list(el, A, { editable }); msg(w.added); });
       else if (b.hasAttribute('data-edit')) form(A, b.closest('tr').dataset.id, () => { list(el, A, { editable }); msg(w.changed); });
       else if (b.hasAttribute('data-del')) {
         if (!b.classList.contains('is-sure')) { b.classList.add('is-sure'); b.querySelector('span').textContent = w.sure; setTimeout(() => { if (b.isConnected) { b.classList.remove('is-sure'); b.querySelector('span').textContent = w.del; } }, 3000); return; }
-        const id = b.closest('tr').dataset.id; A.st.rows = A.st.rows.filter(r => r._id !== id); delete A.st.done[id]; A.changed(); draw(); msg(w.deleted);
-      } else if (b.hasAttribute('data-export')) download(slug(A.st.meta.name) + '.csv', toCSV(A), 'text/csv;charset=utf-8');
+        if (!pay('del')) return; const id = b.closest('tr').dataset.id; A.st.rows = A.st.rows.filter(r => r._id !== id); delete A.st.done[id]; A.changed(); draw(); msg(w.deleted);
+      } else if (b.hasAttribute('data-export')) { if (pay('export')) download(slug(A.st.meta.name) + '.csv', toCSV(A), 'text/csv;charset=utf-8'); }
       else if (b.hasAttribute('data-reset')) {
         if (!b.classList.contains('is-sure')) { b.classList.add('is-sure'); b.lastChild.textContent = w.resetSure; setTimeout(() => { if (b.isConnected) { b.classList.remove('is-sure'); b.lastChild.textContent = A.opts.standalone ? w.resetPub : w.reset; } }, 3500); return; }
         A.reset(); A.save(); if (A.opts.onChange) A.opts.onChange(A, 'reset'); list(el, A, { editable });
@@ -765,7 +789,7 @@
         case 'bool': { const voc = c.vocab || ['yes', 'no']; const b = boolOf(v); return `<div class="s2a-field">${lab}<select id="${idf}" name="${c.key}"><option value=""></option><option value="${esc(voc[0])}"${b === true ? ' selected' : ''}>${w.yes}</option><option value="${esc(voc[1])}"${b === false ? ' selected' : ''}>${w.no}</option></select></div>`; }
         case 'phone': return `<div class="s2a-field">${lab}<input id="${idf}" name="${c.key}" type="tel" value="${esc(v)}" autocomplete="off"></div>`;
         case 'category': return `<div class="s2a-field">${lab}<input id="${idf}" name="${c.key}" list="dl-${c.key}" value="${esc(v)}" autocomplete="off"><datalist id="dl-${c.key}">${[...new Set(A.st.rows.map(r => r[c.key]).filter(Boolean))].map(x => `<option value="${esc(x)}">`).join('')}</datalist></div>`;
-        default: return RX.notes.test(c.name) || String(v).length > 50 ? `<div class="s2a-field is-wide">${lab}<textarea id="${idf}" name="${c.key}" rows="2">${esc(v)}</textarea></div>` : `<div class="s2a-field${c.title ? ' is-wide' : ''}">${lab}<input id="${idf}" name="${c.key}" type="text" value="${esc(v)}" autocomplete="off"></div>`;
+        default: return has(RX.notes, c.name) || String(v).length > 50 ? `<div class="s2a-field is-wide">${lab}<textarea id="${idf}" name="${c.key}" rows="2">${esc(v)}</textarea></div>` : `<div class="s2a-field${c.title ? ' is-wide' : ''}">${lab}<input id="${idf}" name="${c.key}" type="text" value="${esc(v)}" autocomplete="off"></div>`;
       }
     };
     dlg.innerHTML = `<form method="dialog" class="s2a-form"><h3>${id ? w.editTitle : w.addTitle}</h3><div class="s2a-fields">${[A.titleCol()].concat(A.cols().filter(c => !c.title)).map(field).join('')}</div><p class="s2a-msg" role="alert" data-err></p><div class="s2a-formbar"><button type="button" class="s2a-btn" data-cancel>${w.cancel}</button><button type="submit" class="s2a-btn s2a-primary">${w.save}</button></div></form>`;
@@ -782,6 +806,7 @@
         out[c.key] = v;
       }
       if (!Object.values(out).some(Boolean)) { dlg.querySelector('[data-err]').textContent = w.required; return; }
+      if (!pay(row ? 'edit' : 'add')) { close(); return; }
       if (row) Object.assign(row, out); else A.st.rows.unshift(Object.assign({ _id: uid() }, out));
       A.changed(); close(); done();
     });
@@ -815,13 +840,13 @@
     drawCharts(el, v.charts);
     el.onchange = e => {
       const t = e.target;
-      if (t.dataset.done) { if (t.checked) A.st.done[t.dataset.done] = 1; else delete A.st.done[t.dataset.done]; A.changed(); viewUI(el, A, { pick }); const n = el.querySelector(`#d-${CSS.escape(t.dataset.done)}`); if (n) n.focus(); }
-      else if (t.hasAttribute('data-kind')) { A.st.viewKind = t.value; A.changed(); viewUI(el, A, { pick }); el.querySelector('[data-kind]')?.focus(); }
-      else if (t.hasAttribute('data-ref') && t.value) { A.st.ref = t.value; A.changed(); viewUI(el, A, { pick }); el.querySelector('[data-ref]')?.focus(); }
+      if (t.dataset.done) { if (t.checked && !pay('done')) { t.checked = false; return; } if (t.checked) A.st.done[t.dataset.done] = 1; else delete A.st.done[t.dataset.done]; A.changed(); viewUI(el, A, { pick }); const n = el.querySelector(`#d-${CSS.escape(t.dataset.done)}`); if (n) n.focus(); }
+      else if (t.hasAttribute('data-kind')) { if (!pay('view')) { t.value = A.st.viewKind; return; } A.st.viewKind = t.value; A.changed(); viewUI(el, A, { pick }); el.querySelector('[data-kind]')?.focus(); }
+      else if (t.hasAttribute('data-ref') && t.value) { if (!pay('date')) { t.value = A.st.ref || v.ref || todayISO(); return; } A.st.ref = t.value; A.changed(); viewUI(el, A, { pick }); el.querySelector('[data-ref]')?.focus(); }
     };
     el.onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
-      if (b.dataset.phase !== undefined) { A.ui.phase = b.dataset.phase; viewUI(el, A, { pick }); el.querySelector(`[data-phase="${CSS.escape(b.dataset.phase)}"]`)?.focus(); }
+      if (b.dataset.phase !== undefined) { if (b.dataset.phase === A.ui.phase || !pay('phase')) return; A.ui.phase = b.dataset.phase; viewUI(el, A, { pick }); el.querySelector(`[data-phase="${CSS.escape(b.dataset.phase)}"]`)?.focus(); }
       if (b.hasAttribute('data-today')) { A.st.ref = null; A.changed(); viewUI(el, A, { pick }); }
     };
   }
@@ -850,10 +875,11 @@
       <h3 class="s2a-vt s2a-hh">${w.hist}</h3>
       ${A.st.hist.length ? `<ol class="s2a-hist">${A.st.hist.map((h, i) => `<li><div class="s2a-hrow"><time datetime="${esc(h.at)}">${esc(when(h.at))}</time><button type="button" class="s2a-icon s2a-danger" data-hdel="${i}" aria-label="${esc(w.histDel)}">${ICON.bin}</button></div>
         <p class="s2a-hv"><strong>${esc(h.view)}</strong> · ${esc(w.histItem(h.done.length, h.skipped.length))}</p>${h.note ? `<p class="s2a-hn">${esc(h.note)}</p>` : ''}
-        ${h.done.length || h.skipped.length ? `<details><summary>${w.runDone} / ${w.runSkipped}</summary>${h.done.length ? `<p><b>${w.runDone}:</b> ${h.done.map(esc).join('; ')}</p>` : ''}${h.skipped.length ? `<p><b>${w.runSkipped}:</b> ${h.skipped.map(esc).join('; ')}</p>` : ''}</details>` : ''}</li>`).join('')}</ol>` : `<p class="s2a-empty">${w.histEmpty}</p>`}`;
+        ${h.done.length || h.skipped.length ? `<details><summary>${w.runDone} / ${w.runSkipped}</summary>${h.done.length ? `<p><b>${w.runDone}${C().trimEnd()}</b> ${h.done.map(esc).join('; ')}</p>` : ''}${h.skipped.length ? `<p><b>${w.runSkipped}${C().trimEnd()}</b> ${h.skipped.map(esc).join('; ')}</p>` : ''}</details>` : ''}</li>`).join('')}</ol>` : `<p class="s2a-empty">${w.histEmpty}</p>`}`;
     el.onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
       if (b.hasAttribute('data-saverun')) {
+        if (!pay('run')) return;
         A.st.hist.unshift({ at: new Date().toISOString(), view: vname, done: done.map(i => i.title), skipped: skipped.map(i => i.title), note: el.querySelector('[data-note]').value.trim() });
         v.items.forEach(i => { delete A.st.done[i.id]; }); A.changed(); historyUI(el, A);
         const m = el.querySelector('[data-msg]'); m.textContent = A.storeOk ? w.runSaved : w.storeFail; el.querySelector('[data-saverun]').focus();
@@ -866,15 +892,30 @@
   function aboutDefaults(A) {
     const m = A.st.meta, kinds = detect(A), v = view(A, A.st.viewKind && kinds.includes(A.st.viewKind) ? A.st.viewKind : kinds[0]);
     const n = A.st.rows.length, k = A.cols().length, d = dateFmt(todayISO());
-    return lang === 'pt' ? {
-      what: `Transforma ${m.source ? `o ficheiro ${m.source}` : 'uma folha de cálculo'} (${n} linhas, ${k} colunas) numa aplicação: "${v.title}" como primeiro ecrã, com os itens mais importantes primeiro e cada um marcado quando está feito; uma lista onde pode pesquisar, filtrar e ordenar; um formulário para adicionar, editar e apagar linhas; exportar e importar CSV; e um histórico datado de cada ronda.`,
-      where: `Os dados que vê foram colocados neste ficheiro a ${d}. As alterações ficam guardadas só neste navegador, neste aparelho (armazenamento local). Nada é enviado para lado nenhum: não há servidor, login nem base de dados. Para guardar uma cópia, exporte um CSV.`,
-      not: 'Ainda não partilha os dados entre dois aparelhos ou pessoas, não tem login, cópias de segurança nem lembretes, e não deixa várias pessoas editar ao mesmo tempo. Essas são as próximas instruções.',
-    } : {
-      what: `It turns ${m.source ? `the file ${m.source}` : 'a spreadsheet'} (${n} rows, ${k} columns) into an app: "${v.title}" as the first screen, the most important items first, each one marked when it is done; a list you can search, filter and sort; a form to add, edit and delete rows; CSV export and import; and a dated history of every run.`,
-      where: `The data you see was put into this file on ${d}. Changes are kept in this browser only, on this device (local storage). Nothing is sent anywhere: there is no server, no login and no database. To keep a copy, export a CSV.`,
-      not: 'It does not yet share the data between two devices or people, has no login, backups or reminders, and does not let several people edit at once. Those are the next prompts.',
-    };
+    const src = { en: m.source ? `the file ${m.source}` : 'a spreadsheet', pt: m.source ? `o ficheiro ${m.source}` : 'uma folha de cálculo', es: m.source ? `el archivo ${m.source}` : 'una hoja de cálculo', fr: m.source ? `le fichier ${m.source}` : 'un tableur' }[lang];
+    const T = {
+      en: {
+        what: `It turns ${src} (${n} rows, ${k} columns) into an app: "${v.title}" as the first screen, the most important items first, each one marked when it is done; a list you can search, filter and sort; a form to add, edit and delete rows; CSV export and import; and a dated history of every run.`,
+        where: `The data you see was put into this file on ${d}. Changes are kept in this browser only, on this device (local storage). Nothing is sent anywhere: there is no server, no login and no database. To keep a copy, export a CSV.`,
+        not: 'It does not yet share the data between two devices or people, has no login, backups or reminders, and does not let several people edit at once. Those are the next prompts.',
+      },
+      pt: {
+        what: `Transforma ${src} (${n} linhas, ${k} colunas) numa aplicação: "${v.title}" como primeiro ecrã, com os itens mais importantes primeiro e cada um marcado quando está feito; uma lista onde pode pesquisar, filtrar e ordenar; um formulário para adicionar, editar e apagar linhas; exportar e importar CSV; e um histórico datado de cada ronda.`,
+        where: `Os dados que vê foram colocados neste ficheiro a ${d}. As alterações ficam guardadas só neste navegador, neste aparelho (armazenamento local). Nada é enviado para lado nenhum: não há servidor, login nem base de dados. Para guardar uma cópia, exporte um CSV.`,
+        not: 'Ainda não partilha os dados entre dois aparelhos ou pessoas, não tem login, cópias de segurança nem lembretes, e não deixa várias pessoas editar ao mesmo tempo. Essas são as próximas instruções.',
+      },
+      es: {
+        what: `Convierte ${src} (${n} filas, ${k} columnas) en una aplicación: "${v.title}" como primera pantalla, con los elementos más importantes primero y cada uno marcado cuando está hecho; una lista en la que buscar, filtrar y ordenar; un formulario para añadir, editar y borrar filas; exportar e importar CSV; y un historial con fecha de cada ronda.`,
+        where: `Los datos que ve se pusieron en este archivo el ${d}. Los cambios se guardan solo en este navegador, en este dispositivo (almacenamiento local). No se envía nada a ningún sitio: no hay servidor, ni inicio de sesión, ni base de datos. Para guardar una copia, exporte un CSV.`,
+        not: 'Todavía no comparte los datos entre dos dispositivos o personas, no tiene inicio de sesión, copias de seguridad ni recordatorios, y no deja que varias personas editen a la vez. Esas son las próximas instrucciones.',
+      },
+      fr: {
+        what: `Elle transforme ${src} (${n} lignes, ${k} colonnes) en application : « ${v.title} » comme premier écran, les éléments les plus importants d'abord, chacun marqué une fois fait ; une liste où chercher, filtrer et trier ; un formulaire pour ajouter, modifier et supprimer des lignes ; l'export et l'import en CSV ; et un historique daté de chaque tournée.`,
+        where: `Les données affichées ont été placées dans ce fichier le ${d}. Les modifications sont gardées uniquement dans ce navigateur, sur cet appareil (stockage local). Rien n'est envoyé nulle part : pas de serveur, pas de connexion, pas de base de données. Pour garder une copie, exportez un CSV.`,
+        not: 'Elle ne partage pas encore les données entre deux appareils ou deux personnes, n\'a ni connexion, ni sauvegardes, ni rappels, et ne permet pas à plusieurs personnes de modifier en même temps. Ce sont les prochaines instructions.',
+      },
+    }[lang];
+    return lang === 'fr' ? nbWalk(T) : T;
   }
   function aboutUI(el, about) {
     const w = W();
@@ -883,7 +924,7 @@
 
   /* ---------- the exported, standalone app ---------- */
   function standalone(el, P) {
-    lang = P.lang === 'pt' ? 'pt' : 'en';
+    lang = pickLang(P.lang);
     const A = makeApp(P.model, { key: 's2a-app:' + P.model.id + ':' + P.built, standalone: true });
     if (!A.restored) { A.st.viewKind = P.viewKind || null; A.st.ref = P.ref || null; A.st.hist = []; A.save(); }
     A.opts.onChange = (a, why) => { if (why === 'reset') { A.st.viewKind = P.viewKind || null; A.st.ref = P.ref || null; A.save(); } };
@@ -906,5 +947,5 @@
     show('view');
   }
 
-  root.S2A = { L, setLang: l => { lang = l === 'pt' ? 'pt' : 'en'; }, getLang: () => lang, parse, infer, makeApp, detect, view, list, viewUI, historyUI, aboutUI, aboutDefaults, standalone, chartSVG, esc, nice, slug, store, download, todayISO, dateFmt, toCSV };
+  root.S2A = { L, setLang: l => { lang = pickLang(l); }, setPay: fn => { payHook = fn; }, LANGS, getLang: () => lang, parse, infer, makeApp, detect, view, list, viewUI, historyUI, aboutUI, aboutDefaults, standalone, chartSVG, esc, nice, slug, store, download, todayISO, dateFmt, toCSV };
 })(typeof window !== 'undefined' ? window : globalThis);

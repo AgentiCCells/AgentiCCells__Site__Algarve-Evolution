@@ -8,23 +8,34 @@
   const svg = $('.atl-svg'), stage = $('.atl-stage'), panel = $('.atl-panel'), body = $('.atl-panel-body');
   const MW = 1593, MH = 740, BOX = [70, 140, 1420, 640];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const phone = () => innerWidth <= 760;
-  const pt = root.dataset.lang === 'pt';
+  // The same breakpoint as the CSS (max-width:760px), read the same way, so the camera and the layout never disagree.
+  const phoneMQ = matchMedia('(max-width:760px)');
+  const phone = () => phoneMQ.matches;
   const welcomeHTML = body.innerHTML;
 
-  // Layout: the banner's height and the title card's height feed the CSS.
+  // Layout: the height of everything above the map (banner, working ideas bar, our menu) and the title card's
+  // height feed the CSS. Measured again whenever they change size (wrapping, the serif font arriving).
   const head = $('.atl-head');
   function measure() {
-    const b = document.querySelector('.ae-proto');
-    document.documentElement.style.setProperty('--bh', (b ? b.offsetHeight : 0) + 'px');
+    document.documentElement.style.setProperty('--bh', Math.max(0, Math.round(root.getBoundingClientRect().top + scrollY)) + 'px');
     root.style.setProperty('--headh', head.offsetHeight + 'px');
   }
   measure();
 
   // ---------- camera ----------
+  // cam.z is pixels per map unit. Markers and labels are counter-scaled by 1/cam.z (apply), so cam.z must always be
+  // a positive, finite number: a negative zoom turns that counter-scale into a 180 degree turn and every name on
+  // the map reads upside down. That is what happened when the camera was set up while the map had no real size
+  // yet (a page loaded in the background, a preview or in-app browser that sizes the view late): the free area
+  // came out negative, so did the zoom and the zoom limits, and nothing corrected it until the window was resized.
+  // Now the camera waits for a real size, the fit can never go below a small positive zoom, and clamp() resets
+  // anything that is not a positive finite number.
   const cam = { x: MW / 2, y: MH / 2, z: 1 };
-  let zFit = 0.3;
+  const ZMIN = 0.02, MIN_SIZE = 120;
+  let zFit = 0.3, ready = false, touched = false;
   const size = () => [stage.clientWidth, stage.clientHeight];
+  const sized = () => { const [w, h] = size(); return w >= MIN_SIZE && h >= MIN_SIZE; };
+  const ok = n => typeof n === 'number' && isFinite(n);
   function insets() {
     const r = root.getBoundingClientRect(), tools = $('.atl-tools').getBoundingClientRect(), sc = $('.atl-scrub').getBoundingClientRect();
     const top = tools.bottom - r.top + 8, bottom = r.bottom - sc.top + 8;
@@ -35,7 +46,9 @@
   function fitView() {
     const [w, h] = size(), i = insets();
     const bw = BOX[2] - BOX[0], bh = BOX[3] - BOX[1];
-    const z = Math.min((w - i.l - i.r) / bw, (h - i.t - i.b) / bh);
+    // The free area between the overlays, never less than a third of the map's box on either axis.
+    const fw = Math.max(w - i.l - i.r, w / 3), fh = Math.max(h - i.t - i.b, h / 3);
+    const z = Math.max(ZMIN, Math.min(fw / bw, fh / bh));
     const cx = (BOX[0] + BOX[2]) / 2 - ((i.l - i.r) / 2) / z, cy = (BOX[1] + BOX[3]) / 2 - ((i.t - i.b) / 2) / z;
     return { x: cx, y: cy, z };
   }
@@ -47,12 +60,15 @@
     return { x: 610, y: (BOX[1] + BOX[3]) / 2 + 40 - ((i.t - i.b) / 2) / z, z };
   }
   function clamp() {
+    if (!(zFit > 0) || !ok(zFit)) zFit = 0.3;
+    if (!(cam.z > 0) || !ok(cam.z) || !ok(cam.x) || !ok(cam.y)) Object.assign(cam, homeView());
     cam.z = Math.max(zFit * 0.85, Math.min(zFit * 10, cam.z));
     cam.x = Math.max(0, Math.min(MW, cam.x)); cam.y = Math.max(40, Math.min(MH, cam.y));
   }
   const scales = $$('.mk-s'), bar = $('.atl-scale .bar'), barTxt = $('.atl-scale .txt');
   const kmPerUnit = 0.1112, approx = barTxt.textContent.split('·')[1] || '';
   function apply() {
+    if (!ready) return;
     clamp();
     const [w, h] = size();
     svg.setAttribute('viewBox', `${(cam.x - w / 2 / cam.z).toFixed(2)} ${(cam.y - h / 2 / cam.z).toFixed(2)} ${(w / cam.z).toFixed(2)} ${(h / cam.z).toFixed(2)}`);
@@ -64,7 +80,8 @@
   }
   let anim = 0;
   function flyTo(to, ms = 650) {
-    cancelAnimationFrame(anim);
+    cancelAnimationFrame(anim); touched = true;
+    if (!(to.z > 0) || !ok(to.z)) to = { ...to, z: cam.z };
     if (reduce || ms === 0) { Object.assign(cam, to); apply(); return; }
     const from = { ...cam }, t0 = performance.now();
     const step = now => { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3);
@@ -75,13 +92,25 @@
   function toMap(cx, cy) { const r = svg.getBoundingClientRect(); return [cam.x + (cx - r.left - r.width / 2) / cam.z, cam.y + (cy - r.top - r.height / 2) / cam.z]; }
   function zoomAt(cx, cy, f) {
     const [mx, my] = toMap(cx, cy), r = svg.getBoundingClientRect();
-    cam.z *= f; clamp();
+    touched = true; cam.z *= f; clamp();
     cam.x = mx - (cx - r.left - r.width / 2) / cam.z; cam.y = my - (cy - r.top - r.height / 2) / cam.z; apply();
   }
   function zoomCentre(f) { const r = svg.getBoundingClientRect(); const to = { ...cam, z: Math.max(zFit * 0.85, Math.min(zFit * 10, cam.z * f)) }; flyTo(to, 300); }
 
-  Object.assign(cam, homeView()); apply();
-  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { measure(); const f = fitView(); zFit = f.z; apply(); }, 120); });
+  // Set the camera once the map has a real size, and again whenever its size changes: before the visitor has moved
+  // the map, back to the home view; after, keep their view and only refresh the zoom limits.
+  function layout() {
+    measure();
+    if (!sized()) return;
+    if (!ready || !touched) { ready = true; cancelAnimationFrame(anim); Object.assign(cam, homeView()); }
+    else zFit = fitView().z;
+    apply();
+  }
+  layout();
+  let rt; const relayout = () => { clearTimeout(rt); rt = setTimeout(layout, ready ? 120 : 0); };
+  addEventListener('resize', relayout);
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(relayout); ro.observe(stage); ro.observe(head); }
+  addEventListener('pageshow', relayout);
 
   // drag and pinch
   const pts = new Map(); let g0 = null, moved = false, captured = false;
@@ -99,7 +128,7 @@
     if (s.d && !g0.d) g0 = s; // a second finger arrived
     if (!moved && Math.hypot(s.mid[0] - g0.mid[0], s.mid[1] - g0.mid[1]) < 5 && !(s.d && Math.abs(s.d - g0.d) > 5)) return;
     if (!captured) { try { svg.setPointerCapture(e.pointerId); } catch {} captured = true; svg.classList.add('dragging'); }
-    moved = true;
+    moved = true; touched = true;
     if (s.d && g0.d) { cam.z = g0.cam.z * s.d / g0.d; clamp(); }
     const r = svg.getBoundingClientRect();
     cam.x = g0.map[0] - (s.mid[0] - r.left - r.width / 2) / cam.z; cam.y = g0.map[1] - (s.mid[1] - r.top - r.height / 2) / cam.z; apply();
@@ -107,7 +136,7 @@
   const end = e => { pts.delete(e.pointerId); if (pts.size) g0 = snapshot(); else { captured = false; svg.classList.remove('dragging'); } };
   svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
   svg.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
-  const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = pt ? 'Ctrl + roda do rato para aproximar' : 'Ctrl + scroll to zoom'; root.appendChild(hint);
+  const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = root.dataset.ctrlHint || 'Ctrl + scroll'; root.appendChild(hint);
   let ht;
   svg.addEventListener('wheel', e => {
     if (!(e.ctrlKey || e.metaKey)) { hint.classList.add('show'); clearTimeout(ht); ht = setTimeout(() => hint.classList.remove('show'), 1100); return; }

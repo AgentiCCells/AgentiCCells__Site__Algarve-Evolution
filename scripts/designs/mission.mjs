@@ -3,11 +3,13 @@
 // a radar map, a terminal log of the timeline, a programme status board, a transmission card and the two working ideas.
 // Every panel is rendered at build time; /d/mission/mission.js adds the motion. Code Apache-2.0, text CC BY 4.0.
 // sites-dev@AgentiCCells.dinis, 16 November 2026.
-import { ecoIn, outline, pathOf, isoOf } from './atlas.mjs';
+import { ecoIn, outline, pathOf, isoOf, whenEn } from './atlas.mjs';
+import { APPS, langPath } from '../site-data.mjs';
 
 export const meta = {
   slug: 'mission', order: 5, group: 'bold',
-  name: { en: 'Mission Control', pt: 'Centro de Comando' }, tagline: { en: 'The ecosystem as a live dashboard', pt: 'O ecossistema como um painel ao vivo' },
+  name: { en: 'Mission Control', pt: 'Centro de Comando', es: 'Centro de Control', fr: 'Centre de contrôle' },
+  tagline: { en: 'The ecosystem as a live dashboard', pt: 'O ecossistema como um painel ao vivo', es: 'El ecosistema como un panel en directo', fr: 'L\'écosystème en tableau de bord, en direct' },
 };
 
 const L = {
@@ -31,6 +33,8 @@ const L = {
     p9: 'Mission log: events', p10: 'Open channels', p11: 'Allied stations', p12: 'Sources', p12s: 'Every fact on this dashboard links to one of these.',
     fonts: 'Typefaces: Chakra Petch and JetBrains Mono (SIL OFL 1.1).', version: 'Version', motion: 'Motion',
     motionOn: 'Motion on', motionOff: 'Motion off', growth: 'Growth',
+    members: 'active members', muni: 'One of the 16 municipalities of the Algarve, all in the Algarve Digital Innovators network.', whatEach: 'What each programme does', approx: 'approx.',
+    nav: 'Dashboard menu', nTele: 'Telemetry', nTargets: 'Targets', nNet: 'Network', nRadar: 'Radar', nLog: 'Log', nBoard: 'Board', nMods: 'Modules',
   },
   pt: {
     sys: 'Centro de Comando', sector: 'Setor', base: 'Base', status: 'Estado', proto: 'Protótipo', local: 'Hora de Faro',
@@ -52,21 +56,69 @@ const L = {
     p9: 'Diário de missão: eventos', p10: 'Canais abertos', p11: 'Estações aliadas', p12: 'Fontes', p12s: 'Cada facto deste painel tem ligação para uma destas fontes.',
     fonts: 'Tipos de letra: Chakra Petch e JetBrains Mono (SIL OFL 1.1).', version: 'Versão', motion: 'Movimento',
     motionOn: 'Movimento ligado', motionOff: 'Movimento desligado', growth: 'Crescimento',
+    members: 'membros ativos', muni: 'Um dos 16 municípios do Algarve, todos na rede Algarve Digital Innovators.', whatEach: 'O que cada programa faz', approx: 'aprox.',
+    nav: 'Menu do painel', nTele: 'Telemetria', nTargets: 'Metas', nNet: 'Rede', nRadar: 'Radar', nLog: 'Registo', nBoard: 'Quadro', nMods: 'Módulos',
+  },
+  es: {
+    sys: 'Centro de Control', sector: 'Sector', base: 'Base', status: 'Estado', proto: 'Prototipo', local: 'Hora de Faro',
+    skip: 'Saltar al panel', heroK: 'Transmisión de Algarve Evolution', mission: 'Misión',
+    phase: 'Fase', phaseV: 'De construir una comunidad a hacer que el ecosistema funcione (2026)', next: 'Próximo hito', nextV: 'La Algarve Tech Hub Summit vuelve en 2027',
+    tminus: 'T menos', days: 'días hasta 2032', calc: 'Días desde hoy hasta el 1 de enero de 2032: cálculo nuestro.',
+    p1: 'Telemetría', p1s: 'Nuestras propias cifras, tal como se publicaron. No auditadas; cuando las fuentes difieren, mostramos ambas.',
+    signal: 'Señal de miembros', signalNote: 'Las fuentes cuentan a los miembros de formas distintas (empresas; empresas y particulares; miembros), así que las barras no forman una serie comparable.',
+    p2: 'Metas para 2032', target: 'Meta', notResult: 'Metas, no resultados',
+    p3: 'Red del ecosistema', p3s: 'Nuestra red como datos: arrastre un nodo, pase el cursor por encima o selecciónelo para leerlo. Las líneas son las relaciones que describen las fuentes.',
+    inspector: 'Inspector de nodos', links: 'Vínculos', kind: 'Tipo', nodeIndex: 'Todos los nodos, en lista',
+    kinds: { centre: 'Centro', programme: 'Programa', partner: 'Socio', municipality: 'Municipio', summit: 'Cumbre', event: 'Evento' },
+    dashed: 'Aún no encontrado', listed: 'En nuestro calendario, organizado por otros',
+    p4: 'Radar: el Algarve', p4s: 'Los 16 municipios y los lugares de nuestra historia. Posiciones aproximadas.', contacts: 'Contactos', readout: 'Lectura', select: 'Elija un punto para leerlo.',
+    p5: 'Registro de la cronología', p5s: 'A partir de los datos del ecosistema, del más antiguo al más reciente.', replay: 'Repetir',
+    p6: 'Tablero de estado de los programas', pillar: 'Pilar', programme: 'Programa', stat: 'Estado', src: 'Fuente',
+    p7: 'Transmisión entrante', channel: 'Canal', from: 'De',
+    p8: 'Módulos', modNote: 'Dos ideas que nos han propuesto, construidas como prototipos que funcionan. Nada en ellas está acordado todavía.', launch: 'Abrir módulo', modStatus: 'Propuesta, prototipo que funciona',
+    p9: 'Diario de misión: eventos', p10: 'Canales abiertos', p11: 'Estaciones aliadas', p12: 'Fuentes', p12s: 'Cada dato de este panel enlaza con una de estas fuentes.',
+    fonts: 'Tipografías: Chakra Petch y JetBrains Mono (SIL OFL 1.1).', version: 'Versión', motion: 'Movimiento',
+    motionOn: 'Movimiento activado', motionOff: 'Movimiento desactivado', growth: 'Crecimiento',
+    members: 'miembros activos', muni: 'Uno de los 16 municipios del Algarve, todos en la red Algarve Digital Innovators.', whatEach: 'Qué hace cada programa', approx: 'aprox.',
+    nav: 'Menú del panel', nTele: 'Telemetría', nTargets: 'Metas', nNet: 'Red', nRadar: 'Radar', nLog: 'Registro', nBoard: 'Tablero', nMods: 'Módulos',
+  },
+  fr: {
+    sys: 'Centre de contrôle', sector: 'Secteur', base: 'Base', status: 'Statut', proto: 'Prototype', local: 'Heure de Faro',
+    skip: 'Aller au tableau de bord', heroK: 'Transmission d\'Algarve Evolution', mission: 'Mission',
+    phase: 'Phase', phaseV: 'De la construction d\'une communauté au bon fonctionnement de l\'écosystème (2026)', next: 'Prochaine étape', nextV: 'L\'Algarve Tech Hub Summit revient en 2027',
+    tminus: 'T moins', days: 'jours avant 2032', calc: 'Jours entre aujourd\'hui et le 1er janvier 2032, selon notre calcul.',
+    p1: 'Télémétrie', p1s: 'Nos propres chiffres, tels que publiés. Non audités. Quand les sources diffèrent, nous montrons les deux.',
+    signal: 'Signal des membres', signalNote: 'Les sources comptent les membres de façons différentes (entreprises, entreprises et particuliers, membres), donc les barres ne forment pas une série comparable.',
+    p2: 'Objectifs 2032', target: 'Objectif', notResult: 'Des objectifs, pas des résultats',
+    p3: 'Réseau de l\'écosystème', p3s: 'Notre réseau sous forme de données. Faites glisser un nœud, survolez-le ou sélectionnez-le pour le lire. Les lignes sont les relations décrites par les sources.',
+    inspector: 'Inspecteur de nœuds', links: 'Liens', kind: 'Type', nodeIndex: 'Tous les nœuds, en liste',
+    kinds: { centre: 'Centre', programme: 'Programme', partner: 'Partenaire', municipality: 'Commune', summit: 'Sommet', event: 'Événement' },
+    dashed: 'Pas encore trouvé', listed: 'Dans notre agenda, organisé par d\'autres',
+    p4: 'Radar\u00a0: l\'Algarve', p4s: 'Les 16 communes et les lieux de notre histoire. Positions approximatives.', contacts: 'Contacts', readout: 'Lecture', select: 'Choisissez un point pour le lire.',
+    p5: 'Journal de la chronologie', p5s: 'À partir des données de l\'écosystème, du plus ancien au plus récent.', replay: 'Rejouer',
+    p6: 'Tableau d\'état des programmes', pillar: 'Pilier', programme: 'Programme', stat: 'État', src: 'Source',
+    p7: 'Transmission entrante', channel: 'Canal', from: 'De',
+    p8: 'Modules', modNote: 'Deux idées qui nous ont été proposées, réalisées sous forme de prototypes qui fonctionnent. Rien n\'y est encore convenu.', launch: 'Lancer le module', modStatus: 'Proposition, prototype qui fonctionne',
+    p9: 'Journal de mission\u00a0: événements', p10: 'Canaux ouverts', p11: 'Stations alliées', p12: 'Sources', p12s: 'Chaque fait de ce tableau de bord renvoie à l\'une de ces sources.',
+    fonts: 'Polices\u00a0: Chakra Petch et JetBrains Mono (SIL OFL 1.1).', version: 'Version', motion: 'Animation',
+    motionOn: 'Animation activée', motionOff: 'Animation désactivée', growth: 'Croissance',
+    members: 'membres actifs', muni: 'L\'une des 16 communes de l\'Algarve, toutes dans le réseau Algarve Digital Innovators.', whatEach: 'Ce que fait chaque programme', approx: 'env.',
+    nav: 'Menu du tableau de bord', nTele: 'Télémétrie', nTargets: 'Objectifs', nNet: 'Réseau', nRadar: 'Radar', nLog: 'Journal', nBoard: 'Tableau', nMods: 'Modules',
   },
 };
 
 // Status lines for the board, each a short restatement of the programme's own summary (same sources).
 const STATUS = {
-  'ualg-entrepreneurship': ['ok', { en: 'Running · Penha, Gambelas, Portimão', pt: 'Em curso · Penha, Gambelas, Portimão' }],
-  'the-company': ['ok', { en: 'Running · secondary schools', pt: 'Em curso · ensino secundário' }],
-  buildathons: ['ok', { en: 'Latest: Vibathon Algarve 2026', pt: 'Último: Vibathon Algarve 2026' }],
-  founder2founder: ['go', { en: 'Launched Oct 2026 · 8 of 41', pt: 'Lançado out 2026 · 8 de 41' }],
-  incubator: ['go', { en: 'Recognised Jan 2026 · early stage planned 2027', pt: 'Reconhecida jan 2026 · fase inicial prevista 2027' }],
-  'inova-algarve-3': ['wait', { en: 'Pilot · 20 tourism businesses', pt: 'Piloto · 20 empresas de turismo' }],
-  'startup-showcase': ['ok', { en: 'Annual', pt: 'Anual' }],
-  'algarve-digital-innovators': ['ok', { en: '24 communities · plan to 2030', pt: '24 comunidades · plano até 2030' }],
-  'algarve-tech-hub-summit': ['wait', { en: 'Returns 2027', pt: 'Regressa em 2027' }],
-  'ccdr-digital-platform': ['ok', { en: 'Leading', pt: 'Liderança' }],
+  'ualg-entrepreneurship': ['ok', { en: 'Running · Penha, Gambelas, Portimão', pt: 'Em curso · Penha, Gambelas, Portimão', es: 'En marcha · Penha, Gambelas, Portimão', fr: 'En cours · Penha, Gambelas, Portimão' }],
+  'the-company': ['ok', { en: 'Running · secondary schools', pt: 'Em curso · ensino secundário', es: 'En marcha · educación secundaria', fr: 'En cours · enseignement secondaire' }],
+  buildathons: ['ok', { en: 'Latest: Vibathon Algarve 2026', pt: 'Último: Vibathon Algarve 2026', es: 'Último: Vibathon Algarve 2026', fr: 'Dernier\u00a0: Vibathon Algarve 2026' }],
+  founder2founder: ['go', { en: 'Launched Oct 2026 · 8 of 41', pt: 'Lançado out 2026 · 8 de 41', es: 'Lanzado oct 2026 · 8 de 41', fr: 'Lancé oct. 2026 · 8 sur 41' }],
+  incubator: ['go', { en: 'Recognised Jan 2026 · early stage planned 2027', pt: 'Reconhecida jan 2026 · fase inicial prevista 2027', es: 'Reconocida ene 2026 · fase inicial prevista 2027', fr: 'Reconnu janv. 2026 · phase de démarrage prévue en 2027' }],
+  'inova-algarve-3': ['wait', { en: 'Pilot · 20 tourism businesses', pt: 'Piloto · 20 empresas de turismo', es: 'Piloto · 20 empresas turísticas', fr: 'Pilote · 20 entreprises du tourisme' }],
+  'startup-showcase': ['ok', { en: 'Annual', pt: 'Anual', es: 'Anual', fr: 'Annuel' }],
+  'algarve-digital-innovators': ['ok', { en: '24 communities · plan to 2030', pt: '24 comunidades · plano até 2030', es: '24 comunidades · plan hasta 2030', fr: '24 communautés · plan jusqu\'en 2030' }],
+  'algarve-tech-hub-summit': ['wait', { en: 'Returns 2027', pt: 'Regressa em 2027', es: 'Vuelve en 2027', fr: 'Revient en 2027' }],
+  'ccdr-digital-platform': ['ok', { en: 'Leading', pt: 'Liderança', es: 'Liderazgo', fr: 'Pilotage' }],
 };
 // The 2027 return is stated in the summit's event record, which cites the same page as the programme.
 const STATUS_SRC = { 'algarve-tech-hub-summit': 'https://promptugal.news/events/algarve-tech-hub-summit-2025/index.html', buildathons: 'https://newsroom.sgit.ai/articles/vibathon-algarve-2026.html' };
@@ -75,7 +127,7 @@ const SHORT = {
   en: { ae: 'Algarve Evolution', adi: 'ADI', f2f: 'Founder2Founder', inova: 'INOVA 3.0', aths: 'Tech Hub Summit', venture: 'Venture Lab', grow: 'Grow Meetup', ualg: 'UAlg', stp: 'Algarve STP',
     ja: 'Junior Achievement', startupPt: 'Startup Portugal', munis: '16 municipalities', lagos: 'CM Lagos', gdg: 'GDG Lagos', ws25: 'Web Summit 2025', ws26: 'Web Summit 2026',
     devfestEv: 'DevFest Lagos 2026', tmctEv: "TMCT'26", wealthEv: 'Private Wealth', wrapEv: 'Wrap Party 2025', afterEv: 'Tech Afterwork' },
-  pt: { munis: '16 municípios', education: 'Educação', incubator: 'Incubadora', wealthEv: 'Private Wealth' },
+  pt: { munis: '16 municípios' }, es: { munis: '16 municipios' }, fr: { munis: '16 communes' },
 };
 
 // ---- build-time force layout (the browser continues it with the same forces, in mission.js) ----
@@ -104,10 +156,11 @@ function layout(nodes, links, W, H) {
   return by;
 }
 
-export function render({ lang, data, h, chrome, other }) {
-  const { esc, t, cite, num } = h; const v = data.voice; const W = L[lang]; const pt = lang === 'pt';
+export function render({ lang, data, h, chrome }) {
+  const { esc, t, cite, num } = h; const v = data.voice; const W = L[lang] || L.en;
+  const col = lang === 'fr' ? '\u00a0: ' : ': ';
   const E = ecoIn(data, lang); const O = outline(data);
-  const short = id => SHORT[lang][id] ?? SHORT.en[id] ?? E.nodes.find(n => n.id === id).label;
+  const short = id => (SHORT[lang] || {})[id] ?? SHORT.en[id] ?? E.nodes.find(n => n.id === id).label;
   const panel = (id, code, title, inner, { cls = '', sub = '', live = '' } = {}) => `<section class="pn ${cls}" id="${id}" aria-labelledby="h-${id}">
   <header class="pn-h"><span class="pn-code" aria-hidden="true">${code}</span><h2 id="h-${id}">${title}</h2>${live ? `<span class="pn-live" aria-hidden="true">${live}</span>` : ''}</header>
   ${sub ? `<p class="pn-sub">${sub}</p>` : ''}${inner}</section>`;
@@ -120,12 +173,12 @@ export function render({ lang, data, h, chrome, other }) {
   const bars = [
     { y: '2019', v: 29, max: 29, label: stat('2019.7').stat, src: stat('2019.7').src },
     { y: '2024', v: 70, max: 70, label: stat('2024.53').stat, src: stat('2024.53').src },
-    { y: '2026', v: 106, max: 118, label: `${t(members.value)} ${pt ? 'membros ativos' : 'active members'}`, src: members.sources },
+    { y: '2026', v: 106, max: 118, label: `${t(members.value)} ${W.members}`, src: members.sources },
   ];
   const sig = `<figure class="signal"><figcaption>${esc(W.signal)}</figcaption><div class="bars">${bars.map(b => `<div class="bar"><div class="bar-col"><span class="bar-max" style="height:${(b.max / 118 * 100).toFixed(1)}%"></span><span class="bar-fill" style="height:${(b.v / 118 * 100).toFixed(1)}%"></span></div><b>${b.y}</b><span>${esc(b.label)}</span>${cite(b.src)}</div>`).join('')}</div><p class="fine">${esc(W.signalNote)}</p></figure>`;
 
   // Targets
-  const rings = v.goals.map((g, i) => { const val = pt && g.value_pt ? g.value_pt : g.value; const C = 2 * Math.PI * 52;
+  const rings = v.goals.map((g, i) => { const val = g.value; const C = 2 * Math.PI * 52;
     return `<li class="ring r-${i}"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="60" class="rg-tick"/><circle cx="66" cy="66" r="52" class="rg-bg"/><circle cx="66" cy="66" r="52" class="rg-fg" style="stroke-dasharray:${C.toFixed(1)};stroke-dashoffset:0" transform="rotate(-90 66 66)"/></svg>
       <div class="rg-in"><span class="rg-t">${esc(W.target)}</span><strong data-count>${esc(val)}</strong></div><span class="rg-l">${esc(t(g.label))}</span></li>`; }).join('');
   const now = new Date(); const days = Math.ceil((Date.UTC(2032, 0, 1) - Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())) / 864e5);
@@ -182,7 +235,7 @@ export function render({ lang, data, h, chrome, other }) {
   const blips = E.places.map((p, i) => { const [x, y] = rp(p.ll); const [dx, dy, an] = PL[p.name] || [8, -6, 'start'];
     return `<a href="#ct-${i}" class="blip${p.hq ? ' hq' : ''}" data-ct="ct-${i}" aria-label="${esc(p.name)}" style="--d:${(i * 0.37).toFixed(2)}s"><g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="14" class="hit"/><circle r="${p.hq ? 13 : 9}" class="bp-p"/><circle r="${p.hq ? 6 : 4.5}" class="bp"/><text x="${dx}" y="${dy}" text-anchor="${an}" class="bp-l">${esc(p.name.toUpperCase())}</text></g></a>`; }).join('');
   const contacts = E.places.map((p, i) => `<li id="ct-${i}" class="ct"><p class="ct-k">${p.hq ? 'HQ · ' : ''}${p.ll[1].toFixed(3)}N ${Math.abs(p.ll[0]).toFixed(3)}W</p><h3>${esc(p.name)}</h3><p>${esc(p.note)}</p>${cite(p.src)}</li>`).join('')
-    + data.places.municipalities.filter(m => !ecoNames.has(m.name)).map(m => `<li id="ct-m-${m.id}" class="ct ct-m"><p class="ct-k">${m.ll[1].toFixed(3)}N ${Math.abs(m.ll[0]).toFixed(3)}W</p><h3>${esc(m.name)}</h3><p>${pt ? 'Um dos 16 municípios do Algarve, todos na rede Algarve Digital Innovators.' : 'One of the 16 municipalities of the Algarve, all in the Algarve Digital Innovators network.'}</p>${cite(['adi', data.places.municipalities_source])}</li>`).join('');
+    + data.places.municipalities.filter(m => !ecoNames.has(m.name)).map(m => `<li id="ct-m-${m.id}" class="ct ct-m"><p class="ct-k">${m.ll[1].toFixed(3)}N ${Math.abs(m.ll[0]).toFixed(3)}W</p><h3>${esc(m.name)}</h3><p>${esc(W.muni)}</p>${cite(['adi', data.places.municipalities_source])}</li>`).join('');
   const radar = `<div class="radar-wrap"><div class="radar"><svg viewBox="0 0 ${RS} ${RS}" role="group" aria-label="${esc(W.p4)}">
     <defs><clipPath id="rclip"><circle cx="300" cy="300" r="292"/></clipPath><radialGradient id="rbg"><stop offset="0" stop-color="#062a2e"/><stop offset="1" stop-color="#020b0f"/></radialGradient></defs>
     <circle cx="300" cy="300" r="292" fill="url(#rbg)"/>
@@ -195,25 +248,25 @@ export function render({ lang, data, h, chrome, other }) {
     <details class="idx"><summary>${esc(W.contacts)} (${E.places.length + 16 - [...ecoNames].filter(n => data.places.municipalities.some(m => m.name === n)).length})</summary><ul class="ct-list">${contacts}</ul></details>`;
 
   // Terminal
-  const term = `<div class="term" tabindex="0" aria-label="${esc(W.p5)}"><ol>${E.timeline.map(e => `<li class="tl-line${e.future ? ' fut' : ''}"><span class="ts">${esc(isoOf(data.ecosystem.timeline.find(x => x.t === e.t).when))}</span> <span class="gt" aria-hidden="true">&gt;</span> <strong>${esc(e.title.toUpperCase())}</strong><span class="tx">${esc(e.text)}${e.stat ? ` [${esc(e.stat)}]` : ''}</span>${cite(e.src, 'src tsrc')}</li>`).join('')}</ol><p class="prompt" aria-hidden="true">&gt; <span class="cursor">_</span></p></div>
+  const term = `<div class="term" tabindex="0" aria-label="${esc(W.p5)}"><ol>${E.timeline.map(e => `<li class="tl-line${e.future ? ' fut' : ''}"><span class="ts">${esc(isoOf(whenEn(e.t)))}</span> <span class="gt" aria-hidden="true">&gt;</span> <strong>${esc(e.title.toUpperCase())}</strong><span class="tx">${esc(e.text)}${e.stat ? ` [${esc(e.stat)}]` : ''}</span>${cite(e.src, 'src tsrc')}</li>`).join('')}</ol><p class="prompt" aria-hidden="true">&gt; <span class="cursor">_</span></p></div>
     <button type="button" class="btn-replay">${esc(W.replay)}</button>`;
 
   // Status board
   const board = `<p class="pn-sub">${esc(t(v.pillars_intro))}</p><div class="board" role="table" aria-label="${esc(W.p6)}"><div class="br br-h" role="row"><span role="columnheader">${esc(W.pillar)}</span><span role="columnheader">${esc(W.programme)}</span><span role="columnheader">${esc(W.stat)}</span><span role="columnheader">${esc(W.src)}</span></div>
     ${data.programmes.pillars.flatMap((p, pi) => p.programmes.map(g => { const [cls, txt] = STATUS[g.id] || ['ok', { en: '', pt: '' }];
       return `<div class="br" role="row" title="${esc(t(g.summary))}"><span role="cell" class="b-p">${String(pi + 1).padStart(2, '0')} ${esc(t(p.name))}</span><span role="cell" class="b-n">${esc(t(g.name))}</span><span role="cell" class="b-s"><span class="led ${cls}" aria-hidden="true"></span><span class="flap">${esc(t(txt))}</span></span><span role="cell" class="b-src">${cite([...new Set([...g.sources, ...(STATUS_SRC[g.id] ? [STATUS_SRC[g.id]] : [])])], 'src')}</span></div>`; })).join('')}</div>
-    <details class="idx"><summary>${pt ? 'O que cada programa faz' : 'What each programme does'}</summary><ul class="pg-list">${data.programmes.pillars.flatMap(p => p.programmes.map(g => `<li><strong>${esc(t(g.name))}</strong> ${esc(t(g.summary))}</li>`)).join('')}</ul></details>`;
+    <details class="idx"><summary>${esc(W.whatEach)}</summary><ul class="pg-list">${data.programmes.pillars.flatMap(p => p.programmes.map(g => `<li><strong>${esc(t(g.name))}</strong> ${esc(t(g.summary))}</li>`)).join('')}</ul></details>`;
 
   // Transmission
   const q = data.people.quotes[0]; const person = data.people.people.find(p => p.id === q.by);
   const wave = Array.from({ length: 48 }, (_, i) => `<i style="--h:${(30 + 60 * Math.abs(Math.sin(i * 0.7) * Math.cos(i * 0.23))).toFixed(0)}%;--i:${i}"></i>`).join('');
-  const trans = `<div class="tx-meta"><span>${esc(W.channel)} 01</span><span>${q.date}</span><span>${esc(W.from)}: ${esc(t(person.role)).toUpperCase()}</span></div><div class="wave" aria-hidden="true">${wave}</div>
-    <blockquote><p>${esc(t(q.text))}</p></blockquote><p class="tx-by"><strong>${esc(person.name)}</strong>, ${esc(t(person.role))} · <time datetime="${q.date}">${esc(h.date(q.date))}</time></p>${pt && q.translation_note?.pt ? `<p class="fine">${esc(q.translation_note.pt)}</p>` : ''}${cite(q.sources)}
+  const trans = `<div class="tx-meta"><span>${esc(W.channel)} 01</span><span>${q.date}</span><span>${esc(W.from)}${col}${esc(t(person.role)).toUpperCase()}</span></div><div class="wave" aria-hidden="true">${wave}</div>
+    <blockquote><p>${esc(t(q.text))}</p></blockquote><p class="tx-by"><strong>${esc(person.name)}</strong>, ${esc(t(person.role))} · <time datetime="${q.date}">${esc(h.date(q.date))}</time></p>${q.translation_note?.[lang] ? `<p class="fine">${esc(q.translation_note[lang])}</p>` : ''}${cite(q.sources)}
     <p class="fine">${esc(t(person.summary))}</p>${cite(person.sources)}`;
 
-  const mods = `<p class="pn-sub">${esc(W.modNote)}</p><div class="mods">${v.apps.map((a, i) => `<a class="mod" href="${pt ? '/pt' : ''}${a.href}"><span class="mod-k">MOD-0${i + 1} · ${esc(W.modStatus)}</span><strong>${esc(t(a.name))}</strong><span class="mod-s">${esc(t(a.summary))}</span><span class="mod-go">${esc(W.launch)} <span aria-hidden="true">→</span></span></a>`).join('')}</div>${cite(data.proposals.proposals.filter(p => v.apps.some(a => a.id === p.id)).flatMap(p => p.sources))}`;
+  const mods = `<p class="pn-sub">${esc(W.modNote)}</p><div class="mods">${v.apps.map((a, i) => `<a class="mod" href="${esc(langPath(a.href, lang))}"><span class="mod-k">MOD-0${i + 1} · ${esc(W.modStatus)}</span><strong>${esc(t(a.name))}</strong><span class="mod-s">${esc(t(a.summary))}</span><span class="mod-go">${esc(W.launch)} <span aria-hidden="true">→</span></span></a>`).join('')}</div>${cite(data.proposals.proposals.filter(p => v.apps.some(a => a.id === p.id)).flatMap(p => p.sources))}`;
 
-  const evs = `<ol class="mlog">${data.events.events.map(e => `<li><p class="ml-k"><time datetime="${e.start}">${e.start}${e.end ? ` / ${e.end.slice(5)}` : ''}</time>${e.approximate ? ` (${pt ? 'aprox.' : 'approx.'})` : ''} · ${esc(t(e.place))}</p><h3>${esc(t(e.name))}</h3><p>${esc(t(e.summary))}</p>${cite(e.sources)}</li>`).join('')}</ol>`;
+  const evs = `<ol class="mlog">${data.events.events.map(e => `<li><p class="ml-k"><time datetime="${e.start}">${e.start}${e.end ? ` / ${e.end.slice(5)}` : ''}</time>${e.approximate ? ` (${esc(W.approx)})` : ''} · ${esc(t(e.place))}</p><h3>${esc(t(e.name))}</h3><p>${esc(t(e.summary))}</p>${cite(e.sources)}</li>`).join('')}</ol>`;
   const join = `<ol class="chan">${v.join.map((j, i) => `<li><span class="ch-k">CH-${'ABC'[i]}</span><p>${esc(t(j))}</p></li>`).join('')}</ol>${cite(v.join_sources)}`;
   const allies = `<p class="pn-sub">${esc(t(v.network_intro))}</p>${cite(['adi', 'psn'])}<ul class="allies">${E.nodes.filter(n => n.kind === 'partner').map(n => `<li><strong>${esc(n.label)}</strong><span>${esc(n.note)}</span>${cite(n.src)}</li>`).join('')}</ul>`;
 
@@ -227,16 +280,19 @@ ${chrome.head}
 <link rel="preload" href="/d/mission/fonts/chakra-petch-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/d/mission/fonts/jetbrains-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/d/mission/mission.css">
-<link rel="alternate" hreflang="${pt ? 'en' : 'pt'}" href="${other}">
 </head>
 <body class="mc">
 ${chrome.banner}
 <a class="skip" href="#dash">${esc(W.skip)}</a>
 <div class="hud" role="banner">
   <p class="hud-id"><span class="hud-logo" aria-hidden="true"></span>AE <span class="sl">//</span> ${esc(W.sys)}</p>
-  <p class="hud-mid"><span>${esc(W.sector)}: ALGARVE</span><span>${esc(W.base)}: FARO 37.02N 7.93W</span></p>
-  <p class="hud-r"><span class="clock" aria-hidden="true"><span data-clock>--:--:--</span> ${esc(W.local)}</span><span class="badge"><span class="led amber" aria-hidden="true"></span>${esc(W.status)}: ${esc(W.proto)}</span>
+  <p class="hud-mid"><span>${esc(W.sector)}${col}ALGARVE</span><span>${esc(W.base)}${col}FARO 37.02N 7.93W</span></p>
+  <p class="hud-r"><span class="clock" aria-hidden="true"><span data-clock>--:--:--</span> ${esc(W.local)}</span><span class="badge"><span class="led amber" aria-hidden="true"></span>${esc(W.status)}${col}${esc(W.proto)}</span>
   <button type="button" class="motion" aria-pressed="true" data-on="${esc(W.motionOn)}" data-off="${esc(W.motionOff)}">${esc(W.motionOn)}</button></p>
+  <nav class="hud-nav" aria-label="${esc(W.nav)}">
+    <div class="hn-sec">${[['tele', 'P-01', W.nTele], ['targets', 'P-02', W.nTargets], ['network', 'P-03', W.nNet], ['radar', 'P-04', W.nRadar], ['log', 'P-05', W.nLog], ['board', 'P-06', W.nBoard]].map(([id, code, l]) => `<a href="#${id}"><span class="hn-c" aria-hidden="true">${code}</span>${esc(l)}</a>`).join('')}</div>
+    <div class="hn-mods" role="group" aria-label="${esc(W.p8)}">${APPS.map((a, i) => `<a class="hn-mod" href="${esc(langPath(a.path, lang))}"><span class="hn-c" aria-hidden="true">MOD-0${i + 1}</span>${esc(a.name[lang] || a.name.en)} <span aria-hidden="true">→</span></a>`).join('')}</div>
+  </nav>
 </div>
 <main id="dash" class="dash">
   <section class="hero" aria-labelledby="h-hero">

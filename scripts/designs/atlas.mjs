@@ -1,28 +1,51 @@
 // The Atlas (bold): map-first. A full-viewport SVG map of the Algarve drawn from places.json, the 16 municipalities,
 // the ecosystem's places as rich markers, a timeline scrubber (ecosystem.json timeline), layers, and the story below.
 // Everything is rendered at build time (works without JavaScript); /d/atlas/atlas.js adds pan, zoom, layers and play.
-// Also exports the shared helpers the Mission Control design uses (projection, outline, Portuguese ecosystem text).
+// Also exports the shared helpers the Mission Control design uses (projection, outline, ecosystem text, menu).
 // sites-dev@AgentiCCells.dinis, 16 November 2026. Code Apache-2.0, text CC BY 4.0.
 import { readFileSync } from 'node:fs';
+import { APPS, langPath } from '../site-data.mjs';
 
 export const meta = {
   slug: 'atlas', order: 6, group: 'bold',
-  name: { en: 'The Atlas', pt: 'O Atlas' }, tagline: { en: 'The Algarve, mapped', pt: 'O Algarve, no mapa' },
+  name: { en: 'The Atlas', pt: 'O Atlas', es: 'El Atlas', fr: 'L\'Atlas' },
+  tagline: { en: 'The Algarve, mapped', pt: 'O Algarve, no mapa', es: 'El Algarve, en el mapa', fr: 'L\'Algarve, en carte' },
 };
 
 // ---------- shared helpers (also used by mission.mjs) ----------
-const ecoPt = JSON.parse(readFileSync(new URL('../../src/d/atlas/eco-pt.json', import.meta.url), 'utf8'));
+// The English timeline, for machine dates (isoOf parses English "when"; the page's data may be in another language).
+const ecoEn = JSON.parse(readFileSync(new URL('../../src/data/ecosystem.json', import.meta.url), 'utf8'));
+export const whenEn = t => (ecoEn.timeline.find(e => e.t === t) || {}).when || '';
 
-// The ecosystem data in a language: the English originals, or our Portuguese translation (src/d/atlas/eco-pt.json).
+// The relationship words on the ecosystem's links ([from, to, word] in ecosystem.json, which has no
+// translated fields for them): our translation, adding nothing. Unknown words stay in English.
+const LINK_WORDS = {
+  runs: { pt: 'gere', es: 'gestiona', fr: 'gère' }, leads: { pt: 'lidera', es: 'lidera', fr: 'pilote' },
+  'co-organises': { pt: 'coorganiza', es: 'coorganiza', fr: 'coorganise' },
+  'one of six partners': { pt: 'um de seis parceiros', es: 'uno de seis socios', fr: 'l\'un des six partenaires' },
+  organises: { pt: 'organiza', es: 'organiza', fr: 'organise' }, 'created with': { pt: 'criada com', es: 'creada con', fr: 'créé avec' },
+  across: { pt: 'em', es: 'en', fr: 'dans' }, with: { pt: 'com', es: 'con', fr: 'avec' }, by: { pt: 'por', es: 'por', fr: 'par' },
+  partner: { pt: 'parceiro', es: 'socio', fr: 'partenaire' }, 'recognised by': { pt: 'reconhecida por', es: 'reconocida por', fr: 'reconnu par' },
+  'project partner': { pt: 'parceira do projeto', es: 'socia del proyecto', fr: 'partenaire du projet' },
+  'lead promoter': { pt: 'promotora principal', es: 'promotora principal', fr: 'promoteur principal' },
+  'ran the competition': { pt: 'organizou o concurso', es: 'organizó el concurso', fr: 'a organisé le concours' },
+  'none found yet': { pt: 'nada encontrado ainda', es: 'nada encontrado aún', fr: 'rien trouvé pour l\'instant' },
+  'partner of': { pt: 'parceira de', es: 'socia de', fr: 'partenaire de' }, 'organised by': { pt: 'organizado por', es: 'organizado por', fr: 'organisé par' },
+  lists: { pt: 'lista', es: 'incluye', fr: 'répertorie' }, 'presented with': { pt: 'apresentado com', es: 'presentado con', fr: 'présenté avec' },
+  organiser: { pt: 'organizadora', es: 'organizadora', fr: 'organisateur' },
+};
+
+// The ecosystem data in a language. ctx.data is already localised (title_pt, title_es... replace title), so this
+// adds the timeline keys and the link words. Where a translation has not landed yet, the English shows.
 export function ecoIn(data, lang) {
-  const E = data.ecosystem; const pt = lang === 'pt';
-  const timeline = E.timeline.map(e => { const p = pt ? ecoPt.timeline[String(e.t)] || {} : {};
-    return { ...e, key: String(e.t), when: p.when ?? e.when, title: p.title ?? e.title, text: p.text ?? e.text, stat: p.stat ?? e.stat }; });
-  const nodes = E.nodes.map(n => { const p = pt ? ecoPt.nodes[n.id] || {} : {}; return { ...n, label: p.label ?? n.label, note: p.note ?? n.note }; });
-  const links = E.links.map(([a, b, l]) => [a, b, pt ? ecoPt.links[l] ?? l : l]);
-  const places = E.places.map(p => { const q = pt ? ecoPt.places[p.name] || {} : {}; return { ...p, note: q.note ?? p.note }; });
-  return { timeline, nodes, links, places, sources: E.sources };
+  const E = data.ecosystem;
+  const timeline = E.timeline.map(e => ({ ...e, key: String(e.t) }));
+  const links = E.links.map(([a, b, l]) => [a, b, (LINK_WORDS[l] || {})[lang] ?? l]);
+  return { timeline, nodes: E.nodes, links, places: E.places, sources: E.sources };
 }
+
+// The two working ideas (APPS in site-data.mjs) as menu links, in the page's language.
+export const appLinks = (lang, esc, cls = '') => APPS.map(a => `<a class="${cls}" href="${esc(langPath(a.path, lang))}" data-app="${a.id}">${esc(a.name[lang] || a.name.en)}</a>`);
 
 // Equirectangular projection, scaled by cos(37.2°), 1000 units per degree of latitude. Drawing only.
 const LON0 = -9.1, LAT0 = 37.62, COS = Math.cos(37.2 * Math.PI / 180), K = 1000;
@@ -90,6 +113,9 @@ const L = {
     sourcesTitle: 'Sources', sourcesIntro: 'Every fact on this page links to one of these.', version: 'Version', madeBy: 'Map drawn from Natural Earth (public domain) via the outline in our data. Relief is drawn for effect, not survey data.',
     back: 'Back to the map', lat: 'N', lon: 'W',
     lgHq: 'Our base, Faro', lgPlace: 'A place in our story', lgMuni: 'Municipality (16)', lgEv: 'An event on the timeline', lgProg: 'Programmes, with how many', lgNet: 'The ADI network', lgBorder: 'Border with Spain',
+    detail: 'Detail', municipality: 'Municipality', place: 'Place', about: 'about', from: '', to: 'to', lisbonName: 'Lisbon', typeface: 'Typeface: Cormorant Garamond (SIL OFL 1.1).',
+    ctrlHint: 'Ctrl + scroll to zoom', nav: 'Menu', nMap: 'Map', nFig: 'Figures', nPillars: 'Programmes', nChron: 'Chronicle', nPlaces: 'Places', nIdeas: 'Working ideas',
+    campus2: 'The Penha and Gambelas campuses.', campusP: 'The Portimão campus.', ed22F: 'First edition, 2022, with Loulé.', ed22L: 'First edition, 2022, with Faro.', ed24: 'The 2024 edition.', ed25: 'The 2025 edition.',
   },
   pt: {
     kicker: 'Algarve Evolution · O Atlas', skip: 'Saltar o mapa, ler a história', mapLabel: 'Mapa do Algarve, com os locais e a cronologia da Algarve Evolution',
@@ -108,6 +134,51 @@ const L = {
     sourcesTitle: 'Fontes', sourcesIntro: 'Cada facto desta página tem ligação para uma destas fontes.', version: 'Versão', madeBy: 'Mapa desenhado a partir do Natural Earth (domínio público), pelo contorno dos nossos dados. O relevo é ilustrativo, não um levantamento.',
     back: 'Voltar ao mapa', lat: 'N', lon: 'O',
     lgHq: 'A nossa sede, Faro', lgPlace: 'Um local da nossa história', lgMuni: 'Município (16)', lgEv: 'Um evento da cronologia', lgProg: 'Programas, e quantos', lgNet: 'A rede ADI', lgBorder: 'Fronteira com Espanha',
+    detail: 'Detalhe', municipality: 'Município', place: 'Localidade', about: 'cerca de', from: '', to: 'a', lisbonName: 'Lisboa', typeface: 'Tipo de letra: Cormorant Garamond (SIL OFL 1.1).',
+    ctrlHint: 'Ctrl + roda do rato para aproximar', nav: 'Menu', nMap: 'Mapa', nFig: 'Números', nPillars: 'Programas', nChron: 'Crónica', nPlaces: 'Locais', nIdeas: 'Ideias a funcionar',
+    campus2: 'Campi da Penha e de Gambelas.', campusP: 'Campus de Portimão.', ed22F: 'Primeira edição, 2022, com Loulé.', ed22L: 'Primeira edição, 2022, com Faro.', ed24: 'Edição de 2024.', ed25: 'Edição de 2025.',
+  },
+  es: {
+    kicker: 'Algarve Evolution · El Atlas', skip: 'Saltar el mapa, leer la historia', mapLabel: 'Mapa del Algarve, con los lugares y la cronología de Algarve Evolution',
+    layers: 'Capas', lEvents: 'Eventos', lProg: 'Programas', lNet: 'Red ADI', zoomIn: 'Acercar', zoomOut: 'Alejar', reset: 'Ver toda la región',
+    approx: 'Posiciones aproximadas', km: '10 km', play: 'Reproducir la cronología', pause: 'Pausa', prev: 'Evento anterior', next: 'Evento siguiente', year: 'Año',
+    close: 'Cerrar', welcomeTitle: 'Donde sucede nuestro trabajo', welcome: 'Cada marcador es un lugar donde ha tenido lugar nuestro trabajo, con la fuente que lo recoge. Elija un lugar, cambie de capa o reproduzca la cronología desde 2018.',
+    hint: 'Arrastre para mover; pellizque o use la rueda para acercar.', hq: 'Nuestra sede', muni: 'Uno de los 16 municipios del Algarve, todos parte de la red Algarve Digital Innovators.',
+    eventsHere: 'Aquí, en la cronología', progsHere: 'Programas aquí', noPlace: 'sin lugar indicado', future: 'Previsto',
+    sea: 'Océano Atlántico', spain: 'España', region: 'Algarve', lisbon: 'Web Summit, Lisboa', toLisbon: 'a Lisboa',
+    netTitle: 'Algarve Digital Innovators', netNote: 'Las líneas unen municipios vecinos para mostrar la red; no son rutas ni fronteras.',
+    figuresTitle: 'La leyenda, en cifras', figuresIntro: 'Nuestras propias cifras, tal como las recogen nuestras fuentes. Nadie las ha auditado; cuando dos fuentes difieren, mostramos ambas.',
+    storyTitle: 'De un pequeño grupo a un ecosistema', chronicle: 'La crónica', chronicleIntro: 'Nuestra cronología, a partir de los datos del ecosistema que hay detrás del mapa.',
+    gazetteer: 'Índice de lugares', gazetteerIntro: 'Los lugares del mapa y lo que sucedió en ellos.', municipalities: 'Los 16 municipios',
+    pillarsTitle: 'Tres pilares', partnersTitle: 'Con quién trabajamos', eventsTitle: 'Eventos que organizamos o coorganizamos', goalsNote: 'Metas, no resultados.',
+    quoteBy: 'Director ejecutivo', ideasNote: 'Propuestas que nos han hecho, construidas como prototipos que funcionan. Nada en ellas está acordado todavía.', open: 'Abrir',
+    sourcesTitle: 'Fuentes', sourcesIntro: 'Cada dato de esta página enlaza con una de estas fuentes.', version: 'Versión', madeBy: 'Mapa dibujado a partir de Natural Earth (dominio público), mediante el contorno de nuestros datos. El relieve es ilustrativo, no un levantamiento topográfico.',
+    back: 'Volver al mapa', lat: 'N', lon: 'O',
+    lgHq: 'Nuestra sede, Faro', lgPlace: 'Un lugar de nuestra historia', lgMuni: 'Municipio (16)', lgEv: 'Un evento de la cronología', lgProg: 'Programas, y cuántos', lgNet: 'La red ADI', lgBorder: 'Frontera con España',
+    detail: 'Detalle', municipality: 'Municipio', place: 'Localidad', about: 'hacia el', from: 'del ', to: 'al', lisbonName: 'Lisboa', typeface: 'Tipografía: Cormorant Garamond (SIL OFL 1.1).',
+    ctrlHint: 'Ctrl + rueda del ratón para acercar', nav: 'Menú', nMap: 'Mapa', nFig: 'Cifras', nPillars: 'Programas', nChron: 'Crónica', nPlaces: 'Lugares', nIdeas: 'Ideas en marcha',
+    campus2: 'Los campus de Penha y Gambelas.', campusP: 'El campus de Portimão.', ed22F: 'Primera edición, 2022, con Loulé.', ed22L: 'Primera edición, 2022, con Faro.', ed24: 'La edición de 2024.', ed25: 'La edición de 2025.',
+  },
+  fr: {
+    kicker: 'Algarve Evolution · L\'Atlas', skip: 'Passer la carte, lire l\'histoire', mapLabel: 'Carte de l\'Algarve, avec les lieux et la chronologie d\'Algarve Evolution',
+    layers: 'Calques', lEvents: 'Événements', lProg: 'Programmes', lNet: 'Réseau ADI', zoomIn: 'Zoom avant', zoomOut: 'Zoom arrière', reset: 'Voir toute la région',
+    approx: 'Positions approximatives', km: '10 km', play: 'Lire la chronologie', pause: 'Pause', prev: 'Événement précédent', next: 'Événement suivant', year: 'Année',
+    close: 'Fermer', welcomeTitle: 'Là où notre travail se fait', welcome: 'Chaque repère est un lieu où notre travail a eu lieu, avec la source qui le rapporte. Choisissez un lieu, changez de calque ou lancez la chronologie depuis 2018.',
+    hint: 'Faites glisser pour déplacer, pincez ou utilisez la molette pour zoomer.', hq: 'Notre siège', muni: 'L\'une des 16 communes de l\'Algarve, toutes membres du réseau Algarve Digital Innovators.',
+    eventsHere: 'Ici, dans la chronologie', progsHere: 'Programmes ici', noPlace: 'lieu non précisé', future: 'Prévu',
+    sea: 'Océan Atlantique', spain: 'Espagne', region: 'Algarve', lisbon: 'Web Summit, Lisbonne', toLisbon: 'vers Lisbonne',
+    netTitle: 'Algarve Digital Innovators', netNote: 'Les lignes relient des communes voisines pour montrer le réseau. Ce ne sont ni des itinéraires ni des frontières.',
+    figuresTitle: 'La légende, en chiffres', figuresIntro: 'Nos propres chiffres, tels que nos sources les rapportent. Personne ne les a audités. Quand deux sources diffèrent, nous montrons les deux.',
+    storyTitle: 'D\'un petit groupe à un écosystème', chronicle: 'La chronique', chronicleIntro: 'Notre chronologie, à partir des données de l\'écosystème derrière la carte.',
+    gazetteer: 'Index des lieux', gazetteerIntro: 'Les lieux de la carte et ce qui s\'y est passé.', municipalities: 'Les 16 communes',
+    pillarsTitle: 'Trois piliers', partnersTitle: 'Avec qui nous travaillons', eventsTitle: 'Les événements que nous avons organisés ou coorganisés', goalsNote: 'Des objectifs, pas des résultats.',
+    quoteBy: 'Directeur exécutif', ideasNote: 'Des propositions qui nous ont été faites, réalisées sous forme de prototypes qui fonctionnent. Rien n\'y est encore convenu.', open: 'Ouvrir',
+    sourcesTitle: 'Sources', sourcesIntro: 'Chaque fait de cette page renvoie à l\'une de ces sources.', version: 'Version', madeBy: 'Carte tracée à partir de Natural Earth (domaine public), d\'après le contour de nos données. Le relief est illustratif, ce n\'est pas un relevé.',
+    back: 'Retour à la carte', lat: 'N', lon: 'O',
+    lgHq: 'Notre siège, Faro', lgPlace: 'Un lieu de notre histoire', lgMuni: 'Commune (16)', lgEv: 'Un événement de la chronologie', lgProg: 'Programmes, avec leur nombre', lgNet: 'Le réseau ADI', lgBorder: 'Frontière avec l\'Espagne',
+    detail: 'Détail', municipality: 'Commune', place: 'Localité', about: 'vers le', from: 'du ', to: 'au', lisbonName: 'Lisbonne', typeface: 'Police de caractères\u00a0: Cormorant Garamond (SIL OFL 1.1).',
+    ctrlHint: 'Ctrl + molette pour zoomer', nav: 'Menu', nMap: 'Carte', nFig: 'Chiffres', nPillars: 'Programmes', nChron: 'Chronique', nPlaces: 'Lieux', nIdeas: 'Idées en action',
+    campus2: 'Les campus de Penha et de Gambelas.', campusP: 'Le campus de Portimão.', ed22F: 'Première édition, 2022, avec Loulé.', ed22L: 'Première édition, 2022, avec Faro.', ed24: 'L\'édition 2024.', ed25: 'L\'édition 2025.',
   },
 };
 
@@ -123,8 +194,8 @@ const PRI2 = new Set(['olhao', 'sao-bras-de-alportel', 'lagoa', 'silves', 'castr
 
 const slugOf = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-export function render({ lang, data, h, chrome, other }) {
-  const { esc, t, cite, num } = h; const v = data.voice; const W = L[lang]; const pt = lang === 'pt';
+export function render({ lang, data, h, chrome }) {
+  const { esc, t, cite } = h; const v = data.voice; const W = L[lang] || L.en;
   const E = ecoIn(data, lang); const O = outline(data);
   const munis = data.places.municipalities;
   const muniByName = new Map(munis.map(m => [m.name, m]));
@@ -140,16 +211,16 @@ export function render({ lang, data, h, chrome, other }) {
   const progName = id => t(progs[id].name);
   const PROG_PINS = [
     { at: 'Faro', items: [
-      { name: progName('ualg-entrepreneurship'), note: pt ? 'Campi da Penha e de Gambelas.' : 'The Penha and Gambelas campuses.', src: progs['ualg-entrepreneurship'].sources },
+      { name: progName('ualg-entrepreneurship'), note: W.campus2, src: progs['ualg-entrepreneurship'].sources },
       { name: progName('buildathons'), note: `${t(data.events.events[0].name)}, ${t(data.events.events[0].place)}.`, src: data.events.events[0].sources },
       { name: node('grow').label, note: node('grow').note, src: ['meetup'] },
-      { name: node('aths').label, note: pt ? 'Primeira edição, 2022, com Loulé.' : 'First edition, 2022, with Loulé.', src: ['econews22'] } ] },
-    { at: 'Portimão', items: [{ name: progName('ualg-entrepreneurship'), note: pt ? 'Campus de Portimão.' : 'The Portimão campus.', src: progs['ualg-entrepreneurship'].sources }] },
+      { name: node('aths').label, note: W.ed22F, src: ['econews22'] } ] },
+    { at: 'Portimão', items: [{ name: progName('ualg-entrepreneurship'), note: W.campusP, src: progs['ualg-entrepreneurship'].sources }] },
     { at: 'Lagos', items: [
       { name: progName('algarve-digital-innovators'), note: E.timeline.find(e => e.key === '2025.68').text, src: ['adi'] },
-      { name: node('aths').label, note: pt ? 'Edição de 2025.' : 'The 2025 edition.', src: data.events.events[2].sources } ] },
-    { at: 'Albufeira', items: [{ name: node('aths').label, note: pt ? 'Edição de 2024.' : 'The 2024 edition.', src: ['aths24'] }] },
-    { at: 'Loulé', items: [{ name: node('aths').label, note: pt ? 'Primeira edição, 2022, com Faro.' : 'First edition, 2022, with Faro.', src: ['econews22'] }] },
+      { name: node('aths').label, note: W.ed25, src: data.events.events[2].sources } ] },
+    { at: 'Albufeira', items: [{ name: node('aths').label, note: W.ed24, src: ['aths24'] }] },
+    { at: 'Loulé', items: [{ name: node('aths').label, note: W.ed22L, src: ['econews22'] }] },
     { at: 'Salir', items: [{ name: node('grow').label, note: placeByName.get('Salir').note, src: ['meetup'] }] },
     { at: 'Monchique', items: [{ name: node('grow').label, note: placeByName.get('Monchique').note, src: ['meetup'] }] },
   ];
@@ -242,13 +313,13 @@ export function render({ lang, data, h, chrome, other }) {
 
   // ---- cards (story below the map; the panel shows a copy of the chosen one) ----
   const evCard = e => `<article class="card ev-card${e.future ? ' is-future' : ''}" id="${evId(e)}" data-t="${e.t}">
-  <p class="card-k"><time>${esc(e.when)}</time>${e.future ? ` · <span class="tag">${esc(W.future)}</span>` : ''}${(EVENT_PLACES[e.key] || []).length ? ` · ${esc(EVENT_PLACES[e.key].map(n => n === 'Lisboa' ? (pt ? 'Lisboa' : 'Lisbon') : n).join(', '))}` : ` · <span class="np">${esc(W.noPlace)}</span>`}</p>
+  <p class="card-k"><time>${esc(e.when)}</time>${e.future ? ` · <span class="tag">${esc(W.future)}</span>` : ''}${(EVENT_PLACES[e.key] || []).length ? ` · ${esc(EVENT_PLACES[e.key].map(n => n === 'Lisboa' ? W.lisbonName : n).join(', '))}` : ` · <span class="np">${esc(W.noPlace)}</span>`}</p>
   <h3>${esc(e.title)}</h3><p>${esc(e.text)}</p>${e.stat ? `<p class="stat">${esc(e.stat)}</p>` : ''}${cite(e.src)}</article>`;
   const placeCard = p => { const evs = evAt(p.name); return `<article class="card place-card" id="${placeId(p.name)}">
-  <p class="card-k">${p.hq ? esc(W.hq) : (munis.some(m => m.name === p.name) ? (pt ? 'Município' : 'Municipality') : (pt ? 'Localidade' : 'Place'))} · ${p.ll[1].toFixed(2)}° ${W.lat}, ${Math.abs(p.ll[0]).toFixed(2)}° ${W.lon}</p>
+  <p class="card-k">${p.hq ? esc(W.hq) : esc(munis.some(m => m.name === p.name) ? W.municipality : W.place)} · ${p.ll[1].toFixed(2)}° ${W.lat}, ${Math.abs(p.ll[0]).toFixed(2)}° ${W.lon}</p>
   <h3>${esc(p.name)}</h3><p>${esc(p.note)}</p>${cite(p.src)}
   ${evs.length ? `<p class="card-sub">${esc(W.eventsHere)}</p><ul class="mini">${evs.map(e => `<li><a href="#${evId(e)}" data-card="${evId(e)}"><time>${esc(e.when)}</time> ${esc(e.title)}</a></li>`).join('')}</ul>` : ''}</article>`; };
-  const muniCard = m => { const evs = evAt(m.name); return `<template id="tpl-muni-${m.id}"><article class="card muni-card"><p class="card-k">${pt ? 'Município' : 'Municipality'} · ${m.ll[1].toFixed(2)}° ${W.lat}, ${Math.abs(m.ll[0]).toFixed(2)}° ${W.lon}</p><h3>${esc(m.name)}</h3><p>${esc(W.muni)}</p>${cite(['adi', data.places.municipalities_source])}
+  const muniCard = m => { const evs = evAt(m.name); return `<template id="tpl-muni-${m.id}"><article class="card muni-card"><p class="card-k">${esc(W.municipality)} · ${m.ll[1].toFixed(2)}° ${W.lat}, ${Math.abs(m.ll[0]).toFixed(2)}° ${W.lon}</p><h3>${esc(m.name)}</h3><p>${esc(W.muni)}</p>${cite(['adi', data.places.municipalities_source])}
   ${evs.length ? `<p class="card-sub">${esc(W.eventsHere)}</p><ul class="mini">${evs.map(e => `<li><a href="#${evId(e)}" data-card="${evId(e)}"><time>${esc(e.when)}</time> ${esc(e.title)}</a></li>`).join('')}</ul>` : ''}</article></template>`; };
   const progCards = PROG_PINS.map(pp => `<template id="tpl-prog-${slugOf(pp.at)}"><article class="card prog-card" id="prog-${slugOf(pp.at)}"><p class="card-k">${esc(W.progsHere)}</p><h3>${esc(pp.at)}</h3>
   <ul class="plist">${pp.items.map(i => `<li><strong>${esc(i.name)}</strong> <span>${esc(i.note)}</span>${cite(i.src)}</li>`).join('')}</ul></article></template>`).join('');
@@ -277,12 +348,16 @@ export function render({ lang, data, h, chrome, other }) {
 ${chrome.head}
 <link rel="preload" href="/d/atlas/fonts/cormorant-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/d/atlas/atlas.css">
-<link rel="alternate" hreflang="${pt ? 'en' : 'pt'}" href="${other}">
 </head>
 <body class="atl">
 ${chrome.banner}
 <a class="skip" href="#story">${esc(W.skip)}</a>
-<section class="atl-map show-events" id="map" aria-labelledby="atl-title" data-t0="${T0}" data-t1="${T1}" data-lang="${lang}">
+<nav class="atl-nav" aria-label="${esc(W.nav)}">
+  <a class="atl-brand" href="#map"><svg viewBox="-12 -12 24 24" aria-hidden="true"><path d="M0,-11L2.6,-2.6L11,0L2.6,2.6L0,11L-2.6,2.6L-11,0L-2.6,-2.6Z"/></svg>Algarve Evolution <span>${esc(t(meta.name))}</span></a>
+  <div class="atl-nav-sec">${[['figures', W.nFig], ['pillars', W.nPillars], ['chronicle', W.nChron], ['gazetteer', W.nPlaces]].map(([id, l]) => `<a href="#${id}">${esc(l)}</a>`).join('')}</div>
+  <div class="atl-nav-ideas" role="group" aria-label="${esc(W.nIdeas)}"><span class="atl-nav-k" aria-hidden="true">${esc(W.nIdeas)}</span>${appLinks(lang, esc, 'atl-app').join('')}</div>
+</nav>
+<section class="atl-map show-events" id="map" aria-labelledby="atl-title" data-t0="${T0}" data-t1="${T1}" data-lang="${lang}" data-ctrl-hint="${esc(W.ctrlHint)}">
   <div class="atl-stage">${svg}</div>
   <header class="atl-head">
     <p class="kicker">${esc(W.kicker)}</p>
@@ -306,7 +381,7 @@ ${chrome.banner}
     <path d="M44,0L6,-6L0,0Z" fill="#a8431c"/><path d="M44,0L6,6L0,0Z" fill="#1c2a2f"/><path d="M-44,0L-6,6L0,0Z" fill="#a8431c"/><path d="M-44,0L-6,-6L0,0Z" fill="#1c2a2f"/>
     <text y="-46" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-weight="700" font-size="14" fill="#1c2a2f">N</text></svg>
   <div class="atl-scale" aria-hidden="true"><span class="bar"></span><span class="txt">${esc(W.km)} · ${esc(W.approx)}</span></div>
-  <aside class="atl-panel" aria-label="${pt ? 'Detalhe' : 'Detail'}" tabindex="-1">
+  <aside class="atl-panel" aria-label="${esc(W.detail)}" tabindex="-1">
     <button type="button" class="atl-close" aria-label="${esc(W.close)}">×</button>
     <div class="atl-grab" aria-hidden="true"></div>
     <div class="atl-panel-body" aria-live="polite">${welcome}</div>
@@ -337,9 +412,9 @@ ${chrome.banner}
 
   <section class="st st-goals" id="goals" aria-labelledby="h-goals"><div class="st-in">
     <h2 id="h-goals">${esc(t(v.goals_title))}</h2>
-    <ol class="goals">${v.goals.map(g => `<li><strong>${esc(pt && g.value_pt ? g.value_pt : g.value)}</strong><span>${esc(t(g.label))}</span></li>`).join('')}</ol>
+    <ol class="goals">${v.goals.map(g => `<li><strong>${esc(g.value)}</strong><span>${esc(t(g.label))}</span></li>`).join('')}</ol>
     <p class="note">${esc(t(v.goals_note))}</p>${cite(v.goals_sources)}
-    <figure class="quote"><blockquote><p>${esc(t(q.text))}</p></blockquote><figcaption><strong>${esc(person.name)}</strong>, ${esc(t(person.role))} · <time datetime="${q.date}">${esc(h.date(q.date))}</time>${pt && q.translation_note?.pt ? ` · <span class="tnote">${esc(q.translation_note.pt)}</span>` : ''}${cite(q.sources)}</figcaption></figure>
+    <figure class="quote"><blockquote><p>${esc(t(q.text))}</p></blockquote><figcaption><strong>${esc(person.name)}</strong>, ${esc(t(person.role))} · <time datetime="${q.date}">${esc(h.date(q.date))}</time>${q.translation_note?.[lang] ? ` · <span class="tnote">${esc(q.translation_note[lang])}</span>` : ''}${cite(q.sources)}</figcaption></figure>
   </div></section>
 
   ${S('pillars', esc(W.pillarsTitle), `<p class="intro">${esc(t(v.pillars_intro))}</p><div class="pillars">${data.programmes.pillars.map((p, i) => `<section class="pillar" aria-labelledby="pl-${p.id}"><p class="pillar-n">${['I', 'II', 'III'][i]}</p><h3 id="pl-${p.id}">${esc(t(p.name))}</h3><ul>${p.programmes.map(g => `<li id="prog-${g.id}"><h4>${esc(t(g.name))}</h4><p>${esc(t(g.summary))}</p>${cite(g.sources)}</li>`).join('')}</ul></section>`).join('')}</div>`)}
@@ -351,11 +426,11 @@ ${chrome.banner}
 
   ${S('partners', esc(W.partnersTitle), `<p class="intro">${esc(t(v.network_intro))}</p>${cite(['adi', 'psn'])}<ul class="partners">${uniqPartners.map(n => `<li><strong>${esc(n.label)}</strong><span>${esc(n.note)}</span>${cite(n.src)}</li>`).join('')}</ul>`)}
 
-  ${S('events', esc(W.eventsTitle), `<ol class="evlist">${data.events.events.map(e => `<li id="event-${e.id}"><p class="card-k"><time datetime="${e.start}">${e.approximate ? (pt ? 'cerca de ' : 'about ') : ''}${esc(h.date(e.start))}${e.end ? ` ${pt ? 'a' : 'to'} ${esc(h.date(e.end))}` : ''}</time> · ${esc(t(e.place))}</p><h3>${esc(t(e.name))}</h3><p>${esc(t(e.summary))}</p>${cite(e.sources)}</li>`).join('')}</ol>`)}
+  ${S('events', esc(W.eventsTitle), `<ol class="evlist">${data.events.events.map(e => `<li id="event-${e.id}"><p class="card-k"><time datetime="${e.start}">${e.approximate ? `${esc(W.about)} ` : ''}${e.end ? esc(W.from) : ''}${esc(h.date(e.start))}${e.end ? ` ${esc(W.to)} ${esc(h.date(e.end))}` : ''}</time> · ${esc(t(e.place))}</p><h3>${esc(t(e.name))}</h3><p>${esc(t(e.summary))}</p>${cite(e.sources)}</li>`).join('')}</ol>`)}
 
   ${S('join', esc(t(v.join_title)), `<ol class="join">${v.join.map(j => `<li>${esc(t(j))}</li>`).join('')}</ol>${cite(v.join_sources)}`, 'st-join')}
 
-  ${S('ideas', esc(t(v.try_title)), `<p class="intro">${esc(t(v.try_intro))}</p><div class="ideas">${v.apps.map(a => { const pr = data.proposals.proposals.find(p => p.id === a.id); return `<a class="idea" href="${pt ? '/pt' : ''}${a.href}"><span class="tag">${esc(h.words.proposal)}</span><strong>${esc(t(a.name))}</strong><span>${esc(t(a.summary))}</span><span class="go">${esc(W.open)} →</span></a>`; }).join('')}</div>${cite(data.proposals.proposals.filter(p => v.apps.some(a => a.id === p.id)).flatMap(p => p.sources))}`, 'st-ideas')}
+  ${S('ideas', esc(t(v.try_title)), `<p class="intro">${esc(t(v.try_intro))}</p><div class="ideas">${v.apps.map(a => { return `<a class="idea" href="${esc(langPath(a.href, lang))}"><span class="tag">${esc(h.words.proposal)}</span><strong>${esc(t(a.name))}</strong><span>${esc(t(a.summary))}</span><span class="go">${esc(W.open)} →</span></a>`; }).join('')}</div>${cite(data.proposals.proposals.filter(p => v.apps.some(a => a.id === p.id)).flatMap(p => p.sources))}`, 'st-ideas')}
 
   <section class="st st-sources" id="sources" aria-labelledby="h-sources"><div class="st-in">
     <h2 id="h-sources">${esc(W.sourcesTitle)}</h2><p class="intro">${esc(W.sourcesIntro)}</p>
@@ -365,7 +440,7 @@ ${chrome.banner}
 </main>
 <footer class="foot"><div class="st-in">
   <p>${esc(t(v.banner))}</p><p>${esc(t(v.footer_disclosure))}</p>${cite('https://newsroom.sgit.ai/articles/joining-algarve-evolution.html')}
-  <p class="muted">${esc(W.madeBy)} ${pt ? 'Fontes tipográficas: Cormorant Garamond (SIL OFL 1.1).' : 'Typeface: Cormorant Garamond (SIL OFL 1.1).'} ${esc(W.version)} ${esc(chrome.version)}</p>
+  <p class="muted">${esc(W.madeBy)} ${esc(W.typeface)} ${esc(W.version)} ${esc(chrome.version)}</p>
 </div></footer>
 <script src="/d/atlas/atlas.js" defer></script>
 ${chrome.foot}

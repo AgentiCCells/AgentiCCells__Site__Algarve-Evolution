@@ -64,7 +64,7 @@ figcaption .cap{position:static;text-align:left;max-width:none;text-shadow:none;
 .fx-app svg{width:17px;height:17px;flex:none;fill:none;stroke:var(--cyan);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .fx-app svg circle{fill:var(--amber);stroke:none}
 .fx-app:nth-child(1) svg circle{fill:var(--amber)}
-@media (max-width:1099px){.fx-chap{display:none}}
+@media (max-width:1099px){.fx-nav .fx-chap{display:none}}
 @media (max-width:620px){
   .fx-top-in{gap:8px;padding:8px 12px;min-height:52px}
   .fx-word{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

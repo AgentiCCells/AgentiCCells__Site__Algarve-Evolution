@@ -342,16 +342,16 @@ export function render(ctx) {
   const roleLabel = r => ROLE[r][lang] || ROLE[r].en;
   const orderTowns = ['algarve', ...munis.map(m => m.id).sort((a, b) => fold(townName(a)).localeCompare(fold(townName(b))))];
   const euro = n => lang === 'en' ? `€${n.toFixed(2)}` : `${n.toFixed(2).replace('.', ',')} €`;
-  const own = o => (lang !== 'en' && o[lang]) || ''; // the organisation's description in this language, if we have it
+  const inLang = o => (lang !== 'en' && o[lang]) || ''; // the organisation's description in this language, if we have it
 
   const orgCard = o => {
-    const text = own(o) || o.what;
-    const search = fold([o.name, o.what, own(o), o.ai, kindLabel(o.kind), o.towns.map(townName).join(' ')].join(' '));
+    const text = inLang(o) || o.what;
+    const search = fold([o.name, o.what, inLang(o), o.ai, kindLabel(o.kind), o.towns.map(townName).join(' ')].join(' '));
     return `<li class="tm-card tm-org" id="org-${esc(o.id)}" data-id="${esc(o.id)}" data-kind="${o.kind}" data-towns="${o.towns.join(' ')}" data-s="${esc(search)}">
 <div class="tm-card-top"><span class="tm-kind k-${o.kind}">${esc(kindLabel(o.kind))}</span>${o.us ? `<span class="tm-flag tm-us">${w.us}</span>` : o.partner ? `<span class="tm-flag">${w.partner}</span>` : ''}</div>
 <h4><a class="tm-open" href="#org-${esc(o.id)}" data-open="org:${esc(o.id)}">${esc(o.name)}</a></h4>
 <p class="tm-place">${esc(o.towns.map(townName).join(' · '))}${o.amount ? ` · <strong>${esc(o.amount)}</strong>` : ''}</p>
-<p class="tm-what"${own(o) || lang === 'en' ? '' : ' lang="en"'}>${esc(text)}</p>
+<p class="tm-what"${inLang(o) || lang === 'en' ? '' : ' lang="en"'}>${esc(text)}</p>
 <p class="tm-src">${w.source}: <a href="${esc(o.source_url)}" rel="noopener">${esc(host(o.source_url))}</a>, ${w.read} ${esc(date(o.read_on))}</p>
 </li>`;
   };
@@ -361,7 +361,7 @@ export function render(ctx) {
     return `<section class="tm-group" id="town-${tw}" data-town="${tw}" aria-labelledby="tg-${tw}">
 <h3 id="tg-${tw}"><span>${esc(townName(tw))}</span> <span class="tm-group-n">${(presence[tw] || 0)}</span></h3>
 <ul class="tm-cards">${own.map(orgCard).join('\n')}</ul>
-${also.length ? `<p class="tm-also"><span>${w.alsoHere}:</span> ${also.map(o => `<a href="#org-${esc(o.id)}" class="tm-also-a" data-id="${esc(o.id)}" data-open="org:${esc(o.id)}" data-kind="${o.kind}" data-s="${esc(fold([o.name, o.what, own(o), kindLabel(o.kind)].join(' ')))}">${esc(o.name)}</a>`).join('')}</p>` : ''}
+${also.length ? `<p class="tm-also"><span>${w.alsoHere}:</span> ${also.map(o => `<a href="#org-${esc(o.id)}" class="tm-also-a" data-id="${esc(o.id)}" data-open="org:${esc(o.id)}" data-kind="${o.kind}" data-s="${esc(fold([o.name, o.what, inLang(o), kindLabel(o.kind)].join(' ')))}">${esc(o.name)}</a>`).join('')}</p>` : ''}
 </section>`;
   }).join('\n');
 
@@ -413,11 +413,11 @@ ${chrome.banner}
    <p class="tm-eyebrow"><span class="tm-pill tm-pill-proto">${w.proto}</span><span class="tm-pill tm-pill-line">${w.notAgreed}</span></p>
    <h1 id="tm-h1">${w.h1}</h1>
    <p class="tm-h1sub">${w.h1sub}</p>
+   <p class="tm-payline"><span class="tm-coin" aria-hidden="true"></span><span>${w.payLine}</span></p>
    <p class="tm-lede">${w.lede}</p>
    <p class="tm-lede tm-lede2">${w.lede2}</p>
    ${cite(PROPOSAL, 'src tm-hero-src')}
    <ul class="tm-legend"><li><span class="tm-dot tm-dot-real"></span><strong>${w.realTag}</strong> ${w.realTxt}</li><li><span class="tm-dot tm-dot-sim"></span><strong>${w.simTag}</strong> ${w.simTxt}</li></ul>
-   <p class="tm-payline"><span class="tm-coin" aria-hidden="true"></span><span>${w.payLine}</span></p>
   </div>
   <form class="tm-ask" id="tm-ask" role="search" action="#ask">
    <label for="tm-q" class="tm-ask-l">${w.askLabel}</label>

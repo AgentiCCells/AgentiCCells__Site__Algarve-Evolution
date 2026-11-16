@@ -3,65 +3,77 @@
 // Text from the SGit Newsroom article of 31 October 2026 and its public pack (vault ph10xfc1), CC BY 4.0.
 // Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0, text CC BY 4.0.
 import { readFileSync } from 'node:fs';
+import { APPS } from '../site-data.mjs';
 
 export const name = 'spreadsheet-to-app';
-export const paths = { en: '/spreadsheet-to-app/', pt: '/pt/spreadsheet-to-app/' };
+export const paths = { en: '/spreadsheet-to-app/' }; // other languages: /pt/, /es/, /fr/ + this path
 
 const ARTICLE = 'https://newsroom.sgit.ai/articles/spreadsheet-to-app-sessions.html';
 const EX = new URL('../../src/spreadsheet-to-app/examples/', import.meta.url);
 
 const EXAMPLES = [
   { id: 'holiday', file: '01-holiday-home-changeover.md', type: 'DOC',
-    name: { en: 'Closing the house', pt: 'Fechar a casa' },
-    blurb: { en: 'A holiday home checklist kept for years as a Word document, the important steps in bold.', pt: 'Uma lista de uma casa de férias guardada durante anos como documento Word, com os passos importantes a negrito.' },
-    view: { en: 'Essentials first, by phase', pt: 'O essencial primeiro, por fase' } },
+    name: { en: 'Closing the house', pt: 'Fechar a casa', es: 'Cerrar la casa', fr: 'Fermer la maison' },
+    blurb: { en: 'A holiday home checklist kept for years as a Word document, the important steps in bold.', pt: 'Uma lista de uma casa de férias guardada durante anos como documento Word, com os passos importantes a negrito.',
+      es: 'La lista de una casa de vacaciones guardada durante años como documento de Word, con los pasos importantes en negrita.', fr: 'La liste d\'une maison de vacances tenue pendant des années dans un document Word, les étapes importantes en gras.' },
+    view: { en: 'Essentials first, by phase', pt: 'O essencial primeiro, por fase', es: 'Lo esencial primero, por fase', fr: 'L\'essentiel d\'abord, par phase' } },
   { id: 'stock', file: '02-restaurant-stock.csv', type: 'CSV',
-    name: { en: 'Restaurant stock', pt: 'Stock de um restaurante' },
-    blurb: { en: 'Items, minimums, suppliers and order days.', pt: 'Artigos, mínimos, fornecedores e dias de encomenda.' },
-    view: { en: 'What to order', pt: 'O que encomendar' } },
+    name: { en: 'Restaurant stock', pt: 'Stock de um restaurante', es: 'Existencias de un restaurante', fr: 'Stock d\'un restaurant' },
+    blurb: { en: 'Items, minimums, suppliers and order days.', pt: 'Artigos, mínimos, fornecedores e dias de encomenda.', es: 'Artículos, mínimos, proveedores y días de pedido.', fr: 'Articles, minimums, fournisseurs et jours de commande.' },
+    view: { en: 'What to order', pt: 'O que encomendar', es: 'Qué pedir', fr: 'Ce qu\'il faut commander' } },
   { id: 'surf', file: '03-surf-school-bookings.csv', type: 'CSV',
-    name: { en: 'Surf school bookings', pt: 'Reservas de uma escola de surf' },
-    blurb: { en: 'Lessons, students, instructors, beaches and payments.', pt: 'Aulas, alunos, instrutores, praias e pagamentos.' },
-    view: { en: "This week's lessons", pt: 'As aulas desta semana' } },
+    name: { en: 'Surf school bookings', pt: 'Reservas de uma escola de surf', es: 'Reservas de una escuela de surf', fr: 'Réservations d\'une école de surf' },
+    blurb: { en: 'Lessons, students, instructors, beaches and payments.', pt: 'Aulas, alunos, instrutores, praias e pagamentos.', es: 'Clases, alumnos, monitores, playas y pagos.', fr: 'Cours, élèves, moniteurs, plages et paiements.' },
+    view: { en: "This week's lessons", pt: 'As aulas desta semana', es: 'Las clases de esta semana', fr: 'Les cours de cette semaine' } },
   { id: 'invoices', file: '04-freelancer-invoices.csv', type: 'CSV',
-    name: { en: 'Freelancer invoices', pt: 'Faturas de um freelancer' },
-    blurb: { en: 'Clients, due dates, amounts and what has been paid.', pt: 'Clientes, datas de vencimento, montantes e o que já foi pago.' },
-    view: { en: 'Unpaid invoices', pt: 'Faturas por pagar' } },
+    name: { en: 'Freelancer invoices', pt: 'Faturas de um freelancer', es: 'Facturas de un autónomo', fr: 'Factures d\'un indépendant' },
+    blurb: { en: 'Clients, due dates, amounts and what has been paid.', pt: 'Clientes, datas de vencimento, montantes e o que já foi pago.', es: 'Clientes, fechas de vencimiento, importes y lo que ya se ha pagado.', fr: 'Clients, échéances, montants et ce qui a déjà été payé.' },
+    view: { en: 'Unpaid invoices', pt: 'Faturas por pagar', es: 'Facturas pendientes de pago', fr: 'Factures impayées' } },
   { id: 'members', file: '05-association-members-events.csv', type: 'CSV',
-    name: { en: 'Association members', pt: 'Membros de uma associação' },
-    blurb: { en: 'Members, membership type, who has paid, and the events they came to.', pt: 'Membros, tipo de quota, quem pagou e os eventos a que vieram.' },
-    view: { en: 'Members who have not paid', pt: 'Membros que não pagaram' } },
+    name: { en: 'Association members', pt: 'Membros de uma associação', es: 'Socios de una asociación', fr: 'Membres d\'une association' },
+    blurb: { en: 'Members, membership type, who has paid, and the events they came to.', pt: 'Membros, tipo de quota, quem pagou e os eventos a que vieram.', es: 'Socios, tipo de cuota, quién ha pagado y los eventos a los que vinieron.', fr: 'Membres, type d\'adhésion, qui a payé et les événements auxquels ils sont venus.' },
+    view: { en: 'Members who have not paid', pt: 'Membros que não pagaram', es: 'Socios que no han pagado', fr: 'Membres qui n\'ont pas payé' } },
 ];
 
 const PROMPTS = [
-  { title: { en: 'A list I can search', pt: 'Uma lista onde posso pesquisar' },
+  { title: { en: 'A list I can search', pt: 'Uma lista onde posso pesquisar', es: 'Una lista en la que pueda buscar', fr: 'Une liste où je peux chercher' },
     text: { en: 'Here is my spreadsheet, with dummy data. Build a single-page web app that shows it as a list I can search and filter. Keep the data in the browser: no database, no login, no server. Show the columns that matter most first.',
-      pt: 'Aqui está a minha folha de cálculo, com dados fictícios. Constrói uma aplicação web de uma só página que a mostre como uma lista onde posso pesquisar e filtrar. Guarda os dados no navegador: sem base de dados, sem login, sem servidor. Mostra primeiro as colunas mais importantes.' } },
-  { title: { en: 'Add and change rows', pt: 'Acrescentar e alterar linhas' },
+      pt: 'Aqui está a minha folha de cálculo, com dados fictícios. Constrói uma aplicação web de uma só página que a mostre como uma lista onde posso pesquisar e filtrar. Guarda os dados no navegador: sem base de dados, sem login, sem servidor. Mostra primeiro as colunas mais importantes.',
+      es: 'Aquí tienes mi hoja de cálculo, con datos ficticios. Construye una aplicación web de una sola página que la muestre como una lista en la que pueda buscar y filtrar. Guarda los datos en el navegador: sin base de datos, sin inicio de sesión, sin servidor. Muestra primero las columnas que más importan.',
+      fr: 'Voici mon tableur, avec des données fictives. Construis une application web d\'une seule page qui l\'affiche sous forme de liste où je peux chercher et filtrer. Garde les données dans le navigateur : pas de base de données, pas de connexion, pas de serveur. Affiche d\'abord les colonnes les plus importantes.' } },
+  { title: { en: 'Add and change rows', pt: 'Acrescentar e alterar linhas', es: 'Añadir y cambiar filas', fr: 'Ajouter et modifier des lignes' },
     text: { en: "Add a form to add a row and to edit or delete one. Save everything in the browser's local storage, and add buttons to export the data as CSV and to import it again.",
-      pt: 'Acrescenta um formulário para adicionar uma linha e para editar ou apagar uma. Guarda tudo no armazenamento local do navegador e acrescenta botões para exportar os dados em CSV e para os voltar a importar.' } },
-  { title: { en: 'The view I use most', pt: 'A vista que mais uso' },
+      pt: 'Acrescenta um formulário para adicionar uma linha e para editar ou apagar uma. Guarda tudo no armazenamento local do navegador e acrescenta botões para exportar os dados em CSV e para os voltar a importar.',
+      es: 'Añade un formulario para añadir una fila y para editar o borrar una. Guarda todo en el almacenamiento local del navegador y añade botones para exportar los datos en CSV y para volver a importarlos.',
+      fr: 'Ajoute un formulaire pour ajouter une ligne et pour en modifier ou en supprimer une. Enregistre tout dans le stockage local du navigateur, et ajoute des boutons pour exporter les données en CSV et pour les réimporter.' } },
+  { title: { en: 'The view I use most', pt: 'A vista que mais uso', es: 'La vista que más uso', fr: 'La vue que j\'utilise le plus' },
     text: { en: "The view I use most is: [today's tasks / what to order / unpaid invoices / this week's lessons / members who have not paid]. Make it the first screen, with the most important items first, and let me mark each one done.",
-      pt: 'A vista que mais uso é: [as tarefas de hoje / o que encomendar / as faturas por pagar / as aulas desta semana / os membros que não pagaram]. Faz dela o primeiro ecrã, com os itens mais importantes primeiro, e deixa-me marcar cada um como feito.' } },
-  { title: { en: 'Remember every run', pt: 'Lembrar cada ronda' },
+      pt: 'A vista que mais uso é: [as tarefas de hoje / o que encomendar / as faturas por pagar / as aulas desta semana / os membros que não pagaram]. Faz dela o primeiro ecrã, com os itens mais importantes primeiro, e deixa-me marcar cada um como feito.',
+      es: 'La vista que más uso es: [las tareas de hoy / qué pedir / las facturas pendientes de pago / las clases de esta semana / los socios que no han pagado]. Haz que sea la primera pantalla, con los elementos más importantes primero, y déjame marcar cada uno como hecho.',
+      fr: 'La vue que j\'utilise le plus est : [les tâches du jour / ce qu\'il faut commander / les factures impayées / les cours de cette semaine / les membres qui n\'ont pas payé]. Fais-en le premier écran, avec les éléments les plus importants en premier, et laisse-moi marquer chacun comme fait.' } },
+  { title: { en: 'Remember every run', pt: 'Lembrar cada ronda', es: 'Recordar cada ronda', fr: 'Garder chaque tournée' },
     text: { en: 'Every time I finish a run (a day, an order, a session), keep a small dated record of what I did, what I skipped and a note. Show the history as a list, newest first.',
-      pt: 'Sempre que termino uma ronda (um dia, uma encomenda, uma sessão), guarda um pequeno registo datado do que fiz, do que saltei e uma nota. Mostra o histórico como uma lista, do mais recente para o mais antigo.' } },
-  { title: { en: 'Publish it and say what it is', pt: 'Publicar e dizer o que é' },
+      pt: 'Sempre que termino uma ronda (um dia, uma encomenda, uma sessão), guarda um pequeno registo datado do que fiz, do que saltei e uma nota. Mostra o histórico como uma lista, do mais recente para o mais antigo.',
+      es: 'Cada vez que termine una ronda (un día, un pedido, una sesión), guarda un pequeño registro con fecha de lo que hice, lo que me salté y una nota. Muestra el historial como una lista, de lo más reciente a lo más antiguo.',
+      fr: 'Chaque fois que je termine une tournée (une journée, une commande, une séance), garde un petit relevé daté de ce que j\'ai fait, de ce que j\'ai sauté, et une note. Affiche l\'historique sous forme de liste, du plus récent au plus ancien.' } },
+  { title: { en: 'Publish it and say what it is', pt: 'Publicar e dizer o que é', es: 'Publicarla y decir qué es', fr: 'La publier et dire ce que c\'est' },
     text: { en: 'Publish it so someone else can open it. Write a short "about" section: what the app does, where the data is kept, and what it does not do yet.',
-      pt: 'Publica-a para que outra pessoa a possa abrir. Escreve uma pequena secção "sobre": o que a aplicação faz, onde ficam guardados os dados e o que ainda não faz.' } },
+      pt: 'Publica-a para que outra pessoa a possa abrir. Escreve uma pequena secção "sobre": o que a aplicação faz, onde ficam guardados os dados e o que ainda não faz.',
+      es: 'Publícala para que otra persona pueda abrirla. Escribe una breve sección "acerca de": qué hace la aplicación, dónde se guardan los datos y qué no hace todavía.',
+      fr: 'Publie-la pour que quelqu\'un d\'autre puisse l\'ouvrir. Écris une courte rubrique « à propos » : ce que fait l\'application, où sont gardées les données et ce qu\'elle ne fait pas encore.' } },
 ];
 
 const DAY = [
-  ['09:00', { en: 'Welcome; why spreadsheets become apps now (15 min)', pt: 'Boas-vindas; porque é que as folhas de cálculo se tornam aplicações agora (15 min)' }],
-  ['09:15', { en: 'Demo: one example spreadsheet to a published app, live, with the five prompts (30 min)', pt: 'Demonstração: uma folha de exemplo até uma aplicação publicada, ao vivo, com as cinco instruções (30 min)' }],
-  ['09:45', { en: 'Build, part 1: prompts 1 and 2, with mentors at the tables', pt: 'Construção, parte 1: instruções 1 e 2, com mentores nas mesas' }, 'build'],
-  ['11:30', { en: 'Show one thing that worked and one that broke (two minutes per table)', pt: 'Mostrar uma coisa que funcionou e uma que falhou (dois minutos por mesa)' }],
-  ['12:00', { en: 'Lunch', pt: 'Almoço' }, 'break'],
-  ['13:00', { en: 'Build, part 2: prompts 3, 4 and 5; publish', pt: 'Construção, parte 2: instruções 3, 4 e 5; publicar' }, 'build'],
-  ['15:30', { en: 'Share: give your app to someone at another table and watch them use it', pt: 'Partilhar: dê a sua aplicação a alguém de outra mesa e veja como a usa' }, 'key'],
-  ['16:00', { en: 'The handover: what it takes for five or fifty people to use it (backups, changes, security)', pt: 'A passagem: o que é preciso para cinco ou cinquenta pessoas a usarem (cópias de segurança, alterações, segurança)' }],
-  ['16:45', { en: "Show and tell; the jury's picks", pt: 'Mostrar e contar; as escolhas do júri' }],
-  ['17:30', { en: 'Next steps: who will release which apps properly, and how', pt: 'Próximos passos: quem vai lançar que aplicações a sério, e como' }],
+  ['09:00', { en: 'Welcome; why spreadsheets become apps now (15 min)', pt: 'Boas-vindas; porque é que as folhas de cálculo se tornam aplicações agora (15 min)', es: 'Bienvenida; por qué las hojas de cálculo se convierten ahora en aplicaciones (15 min)', fr: 'Accueil ; pourquoi les tableurs deviennent des applications maintenant (15 min)' }],
+  ['09:15', { en: 'Demo: one example spreadsheet to a published app, live, with the five prompts (30 min)', pt: 'Demonstração: uma folha de exemplo até uma aplicação publicada, ao vivo, com as cinco instruções (30 min)', es: 'Demostración: de una hoja de ejemplo a una aplicación publicada, en directo, con las cinco instrucciones (30 min)', fr: 'Démonstration : d\'un tableur d\'exemple à une application publiée, en direct, avec les cinq instructions (30 min)' }],
+  ['09:45', { en: 'Build, part 1: prompts 1 and 2, with mentors at the tables', pt: 'Construção, parte 1: instruções 1 e 2, com mentores nas mesas', es: 'Construcción, parte 1: instrucciones 1 y 2, con mentores en las mesas', fr: 'Construction, partie 1 : instructions 1 et 2, avec des mentors aux tables' }, 'build'],
+  ['11:30', { en: 'Show one thing that worked and one that broke (two minutes per table)', pt: 'Mostrar uma coisa que funcionou e uma que falhou (dois minutos por mesa)', es: 'Mostrar una cosa que funcionó y una que falló (dos minutos por mesa)', fr: 'Montrer une chose qui a marché et une qui a cassé (deux minutes par table)' }],
+  ['12:00', { en: 'Lunch', pt: 'Almoço', es: 'Comida', fr: 'Déjeuner' }, 'break'],
+  ['13:00', { en: 'Build, part 2: prompts 3, 4 and 5; publish', pt: 'Construção, parte 2: instruções 3, 4 e 5; publicar', es: 'Construcción, parte 2: instrucciones 3, 4 y 5; publicar', fr: 'Construction, partie 2 : instructions 3, 4 et 5 ; publier' }, 'build'],
+  ['15:30', { en: 'Share: give your app to someone at another table and watch them use it', pt: 'Partilhar: dê a sua aplicação a alguém de outra mesa e veja como a usa', es: 'Compartir: dé su aplicación a alguien de otra mesa y vea cómo la usa', fr: 'Partager : donnez votre application à quelqu\'un d\'une autre table et regardez comment cette personne l\'utilise' }, 'key'],
+  ['16:00', { en: 'The handover: what it takes for five or fifty people to use it (backups, changes, security)', pt: 'A passagem: o que é preciso para cinco ou cinquenta pessoas a usarem (cópias de segurança, alterações, segurança)', es: 'El traspaso: lo que hace falta para que cinco o cincuenta personas la usen (copias de seguridad, cambios, seguridad)', fr: 'La passation : ce qu\'il faut pour que cinq ou cinquante personnes l\'utilisent (sauvegardes, modifications, sécurité)' }],
+  ['16:45', { en: "Show and tell; the jury's picks", pt: 'Mostrar e contar; as escolhas do júri', es: 'Mostrar y contar; las elecciones del jurado', fr: 'Présentations ; les choix du jury' }],
+  ['17:30', { en: 'Next steps: who will release which apps properly, and how', pt: 'Próximos passos: quem vai lançar que aplicações a sério, e como', es: 'Próximos pasos: quién lanzará qué aplicaciones como es debido, y cómo', fr: 'Prochaines étapes : qui publiera quelles applications pour de bon, et comment' }],
 ];
 
 const T = {
@@ -107,7 +119,8 @@ const T = {
     claimsTitle: 'What this does not claim',
     claims: ['It is a proposal, with a mock event. No session has been run yet, and nothing in it is agreed.', 'Every example, person and figure in the pack is invented.', "The converted app was built for the proposal, to show what the five prompts produce; a participant's will look different. So will the apps made by the tool on this page.", 'The models change. The prompts are written for any model that can build and publish a small web app.', "The proposal's author stated an interest: The Cyber Boardroom is joining Algarve Evolution and offers villager services."],
     footProposal: 'Proposed to us by the SGit Newsroom on 31 October 2026. Text and examples CC BY 4.0; the tool\'s code Apache-2.0.',
-    back: 'Back to the home page',
+    back: 'Back to the home page', onPage: 'On this page', version: 'Version', exNote: '',
+    payNote: 'Pay per use, simulated: every action in the tool costs a few cents of credit (watch the counter at the bottom left). Nothing is charged; the credit lives only in this browser.', payTitle: 'Simulated credit, per use',
   },
   pt: {
     title: 'Da folha de cálculo à aplicação: traga uma folha de cálculo do seu trabalho, saia com uma aplicação',
@@ -151,9 +164,113 @@ const T = {
     claimsTitle: 'O que isto não afirma',
     claims: ['É uma proposta, com um evento simulado. Ainda não se realizou nenhuma sessão e nada nela está acordado.', 'Todos os exemplos, pessoas e números do pacote são inventados.', 'A aplicação convertida foi feita para a proposta, para mostrar o que as cinco instruções produzem; a de cada participante será diferente. Tal como as aplicações feitas pela ferramenta desta página.', 'Os modelos mudam. As instruções foram escritas para qualquer modelo que consiga construir e publicar uma pequena aplicação web.', 'O autor da proposta declarou um interesse: a The Cyber Boardroom vai aderir à Algarve Evolution e oferece serviços de aldeia (villager services).'],
     footProposal: 'Proposto pelo SGit Newsroom a 31 de outubro de 2026. Textos e exemplos CC BY 4.0; o código da ferramenta Apache-2.0.',
-    back: 'Voltar à página inicial',
+    back: 'Voltar à página inicial', onPage: 'Nesta página', version: 'Versão',
+    exNote: 'Os exemplos estão em inglês, tal como o pacote os publica; a aplicação à volta deles segue a sua língua.',
+    payNote: 'Pagar por utilização, simulado: cada ação na ferramenta custa alguns cêntimos de crédito (veja o contador em baixo, à esquerda). Nada é cobrado; o crédito fica só neste navegador.', payTitle: 'Crédito simulado, por utilização',
+  },
+  es: {
+    title: 'De la hoja de cálculo a la app: traiga una hoja de cálculo de su trabajo y llévese una aplicación',
+    desc: 'Un programa de sesiones propuesto: traiga una hoja de cálculo de su trabajo, con datos ficticios, y llévese una aplicación. Pruébelo ya con uno de cinco ejemplos o con su propio archivo; nada sale de su navegador.',
+    home: 'Inicio', navTry: 'Probar', navPrompts: 'Las cinco instrucciones', navDay: 'El día', navPublish: 'Publicar',
+    tag: 'Propuesta: todavía no se ha celebrado ninguna sesión',
+    h1: 'De la hoja de cálculo a la app', sub: 'Traiga una hoja de cálculo de su trabajo y llévese una aplicación.',
+    lede: 'Un programa de sesiones que nos propuso el SGit Newsroom el 31 de octubre de 2026. Una premisa: convirtamos su hoja de cálculo en una aplicación. Atraería a las personas que más queremos alcanzar: quienes trabajan en empresas locales y ya llevan parte de su trabajo en hojas de cálculo, sienten curiosidad por la IA y quieren entenderla haciendo algo útil.',
+    ctaTry: 'Pruébelo ya, en su navegador', ctaPrompts: 'Leer las cinco instrucciones',
+    reqTitle: 'Los dos únicos requisitos',
+    req: ['Una cuenta en un modelo que pueda construir una aplicación: Lovable, Claude, ChatGPT, Mistral u otro.', 'Una hoja de cálculo o un documento de su trabajo, con datos ficticios: con la misma forma que el real, lo bastante parecido para ser útil y seguro para publicar.'],
+    reqAfter: 'Nada más. Los datos ficticios dejan fuera todo lo confidencial, así que no hay nada que proteger, y permiten publicar y compartir la aplicación el mismo día, que es donde se aprende.',
+    reqLaptop: 'Traiga un portátil y un cargador. Los planes gratuitos pueden servir; los créditos del evento ayudan.',
+    tryKicker: 'Probar', tryTitle: 'Sin página en blanco',
+    tryLede: 'La mayoría de los talleres se atascan en el mismo momento: alguien pregunta qué problema quiere resolver y la sala se queda en silencio. Aquí, la gente llega con el problema ya escrito, en una hoja de cálculo que usa cada semana. Para quien llegue sin ninguna, hay cinco ejemplos preparados, inventados y publicables. Elija uno, o traiga el suyo, y vea cómo las cinco instrucciones lo convierten en una aplicación.',
+    tryHonest: 'Esta página construye la aplicación con reglas sencillas en su navegador, no con un modelo de IA, para que vea en segundos el tipo de aplicación que producen las cinco instrucciones. El día de la sesión, cada persona construye la suya con el modelo que elija.',
+    pickTitle: 'Elija un ejemplo', pickView: 'Primera pantalla', raw: 'Abrir el archivo original',
+    noscript: 'La herramienta necesita JavaScript. Los ejemplos de arriba se abren como archivos originales y el programa de abajo se lee sin él.',
+    privacy: 'Nada sale de su navegador. Los archivos se leen en esta página y se guardan solo en este navegador.',
+    promptsKicker: 'El método', promptsTitle: 'Cinco instrucciones, en orden',
+    promptsLede: 'Use cualquier modelo que pueda construir y publicar una pequeña aplicación web: Lovable, Claude, ChatGPT, Mistral u otro. Pegue su hoja de cálculo (solo datos ficticios) o uno de los ejemplos con la primera instrucción y después envíe las demás de una en una, usando la aplicación entre cada una.',
+    promptN: n => `Instrucción ${n}`, copy: 'Copiar', copied: 'Copiado',
+    after: 'Después de las cinco: úsela de verdad y vuelva con lo que falló o lo que echó en falta. Esa es la siguiente instrucción.',
+    dayKicker: 'Un evento simulado', dayTitle: 'El día',
+    dayLede: 'Una sesión de un día, con el formato del Vibathon Algarve 2026. Mentores en las mesas, un momento en que cada aplicación pasa a alguien de otra mesa y una sesión sobre lo que hace falta para que cinco o cincuenta personas la usen.',
+    pubKicker: 'Dónde viven las aplicaciones', pubTitle: 'Tres formas de publicar',
+    pubLede: 'Un programa puede usar las tres.',
+    ways: [
+      ['A', 'La herramienta de cada persona', 'Lovable, un artifact de Claude o un canvas de ChatGPT pueden publicar una pequeña aplicación con un enlace.'],
+      ['B', 'Una organización de GitHub para el programa', 'Tendríamos una organización de GitHub con un repositorio plantilla; cada participante recibe un repositorio hecho a partir de ella, publicado con GitHub Pages. Todos parten de la misma base y cada aplicación tiene un historial.'],
+      ['C', 'Un pequeño equipo que las traslada', 'Los participantes publican desde su propia herramienta, comparten el enlace y un equipo de proveedores de la región traslada la aplicación a la organización por ellos durante la tarde. Es la primera muestra de los servicios de aldea (villager services), el mismo día.'],
+    ],
+    afterTitle: 'Después del día',
+    afterList: ['Cada aplicación tiene una página, con el permiso de quien la hizo.', 'Un seguimiento en el plazo de una semana: lo que necesita la aplicación para que la usen otros y quién en la región puede hacerlo.'],
+    market: 'Muchas de estas aplicaciones fallarán más adelante, cuando más personas las necesiten y quien las construyó tenga su propio trabajo. Ahí entran los proveedores de la región, y ese es el mercado que crean estas sesiones.',
+    packKicker: 'El paquete', packTitle: 'Un ejemplo resuelto, y todo a la vista',
+    packText: 'El primer ejemplo, la lista de la casa de vacaciones, se convirtió en una aplicación con las cinco instrucciones para la propuesta. Muestra las tres fases, primero los pasos esenciales, una forma de añadir un paso, una nota y un historial de cada ronda, y un "acerca de" honesto que dice que los datos se quedan en el navegador y que todavía no se pueden compartir entre dos teléfonos.',
+    packLink: 'Abrir el ejemplo resuelto del paquete', packLinkNote: '(en inglés)',
+    packVault: 'Los ejemplos, las cinco instrucciones, el plan del evento simulado y la aplicación convertida están publicados juntos en una bóveda sgit pública, de solo lectura (ph10xfc1), para que nuestro equipo pueda abrirla, copiarla y usarla en la primera sesión. Todo en ella es inventado y tiene licencia de reutilización (CC BY 4.0).',
+    packFiles: 'Los archivos, tal como se sirven aquí:',
+    claimsTitle: 'Lo que esto no afirma',
+    claims: ['Es una propuesta, con un evento simulado. Todavía no se ha celebrado ninguna sesión y nada en ella está acordado.', 'Todos los ejemplos, personas y cifras del paquete son inventados.', 'La aplicación convertida se hizo para la propuesta, para mostrar lo que producen las cinco instrucciones; la de cada participante será distinta. También lo serán las aplicaciones que hace la herramienta de esta página.', 'Los modelos cambian. Las instrucciones están escritas para cualquier modelo que pueda construir y publicar una pequeña aplicación web.', 'El autor de la propuesta declaró un interés: The Cyber Boardroom se une a Algarve Evolution y ofrece servicios de aldea (villager services).'],
+    footProposal: 'Propuesto por el SGit Newsroom el 31 de octubre de 2026. Textos y ejemplos CC BY 4.0; el código de la herramienta, Apache-2.0.',
+    back: 'Volver a la página de inicio', onPage: 'En esta página', version: 'Versión',
+    exNote: 'Los ejemplos están en inglés, tal como los publica el paquete; la aplicación que los rodea sigue su idioma.',
+    payNote: 'Pago por uso, simulado: cada acción en la herramienta cuesta unos céntimos de crédito (mire el contador abajo a la izquierda). No se cobra nada; el crédito vive solo en este navegador.', payTitle: 'Crédito simulado, por uso',
+  },
+  fr: {
+    title: 'Du tableur à l\'app : apportez un tableur de votre travail, repartez avec une application',
+    desc: 'Un programme de sessions proposé : apportez un tableur de votre travail, avec des données fictives, et repartez avec une application. Essayez dès maintenant avec l\'un des cinq exemples ou votre propre fichier ; rien ne quitte votre navigateur.',
+    home: 'Accueil', navTry: 'Essayer', navPrompts: 'Les cinq instructions', navDay: 'La journée', navPublish: 'Publier',
+    tag: 'Proposition : aucune session n\'a encore eu lieu',
+    h1: 'Du tableur à l\'app', sub: 'Apportez un tableur de votre travail, repartez avec une application.',
+    lede: 'Un programme de sessions que nous a proposé le SGit Newsroom le 31 octobre 2026. Un principe : transformons votre tableur en application. Il attirerait les personnes que nous voulons le plus toucher : celles qui travaillent dans des entreprises locales, gèrent déjà une partie de leur travail dans des tableurs, sont curieuses de l\'IA et veulent la comprendre en faisant quelque chose d\'utile.',
+    ctaTry: 'Essayez maintenant, dans votre navigateur', ctaPrompts: 'Lire les cinq instructions',
+    reqTitle: 'Les deux seules conditions',
+    req: ['Un compte sur un modèle capable de construire une application : Lovable, Claude, ChatGPT, Mistral ou un autre.', 'Un tableur ou un document de votre travail, avec des données fictives : la même forme que le vrai, assez proche pour être utile, et sans risque à publier.'],
+    reqAfter: 'C\'est tout. Les données fictives laissent de côté tout ce qui est confidentiel, donc rien n\'a besoin d\'être protégé, et l\'application peut être publiée et partagée le jour même : c\'est là qu\'on apprend.',
+    reqLaptop: 'Apportez un ordinateur portable et un chargeur. Les offres gratuites peuvent suffire ; les crédits de l\'événement aident.',
+    tryKicker: 'Essayer', tryTitle: 'Pas de page blanche',
+    tryLede: 'La plupart des ateliers calent au même moment : quelqu\'un demande quel problème vous voulez résoudre, et la salle se tait. Ici, les gens arrivent avec le problème déjà écrit, dans un tableur qu\'ils utilisent chaque semaine. Pour qui arrive sans, il y a cinq exemples prêts à l\'emploi, inventés et publiables. Choisissez-en un, ou apportez le vôtre, et regardez les cinq instructions le transformer en application.',
+    tryHonest: 'Cette page construit l\'application avec des règles simples dans votre navigateur, pas avec un modèle d\'IA, pour que vous voyiez en quelques secondes le type d\'application que produisent les cinq instructions. Le jour venu, chacun construit la sienne avec le modèle de son choix.',
+    pickTitle: 'Choisissez un exemple', pickView: 'Premier écran', raw: 'Ouvrir le fichier brut',
+    noscript: 'L\'outil a besoin de JavaScript. Les exemples ci-dessus s\'ouvrent comme fichiers bruts, et le programme ci-dessous se lit sans lui.',
+    privacy: 'Rien ne quitte votre navigateur. Les fichiers sont lus sur cette page et gardés uniquement dans ce navigateur.',
+    promptsKicker: 'La méthode', promptsTitle: 'Cinq instructions, dans l\'ordre',
+    promptsLede: 'Utilisez n\'importe quel modèle capable de construire et de publier une petite application web : Lovable, Claude, ChatGPT, Mistral ou un autre. Collez votre tableur (données fictives uniquement) ou l\'un des exemples avec la première instruction, puis envoyez les autres une à une, en utilisant l\'application entre chacune.',
+    promptN: n => `Instruction ${n}`, copy: 'Copier', copied: 'Copié',
+    after: 'Après les cinq : utilisez-la pour de vrai, puis revenez avec ce qui a cassé ou ce qui vous a manqué. C\'est l\'instruction suivante.',
+    dayKicker: 'Un événement fictif (simulé)', dayTitle: 'La journée',
+    dayLede: 'Une session d\'une journée, au format du Vibathon Algarve 2026. Des mentors aux tables, un moment où chaque application est confiée à quelqu\'un d\'une autre table, et une session sur ce qu\'il faut pour que cinq ou cinquante personnes l\'utilisent.',
+    pubKicker: 'Où vivent les applications', pubTitle: 'Trois façons de publier',
+    pubLede: 'Un programme peut utiliser les trois.',
+    ways: [
+      ['A', 'L\'outil de chacun', 'Lovable, un artifact Claude ou un canvas ChatGPT peuvent tous publier une petite application avec un lien.'],
+      ['B', 'Une organisation GitHub pour le programme', 'Nous aurions une organisation GitHub avec un dépôt modèle ; chaque participant reçoit un dépôt créé à partir de celui-ci, publié avec GitHub Pages. Tout le monde part de la même base, et chaque application a un historique.'],
+      ['C', 'Une petite équipe qui les déplace', 'Les participants publient depuis leur propre outil, partagent le lien, et une équipe de prestataires de la région déplace l\'application dans l\'organisation pour eux pendant l\'après-midi. C\'est le premier avant-goût des services de village (villager services), le jour même.'],
+    ],
+    afterTitle: 'Après la journée',
+    afterList: ['Chaque application a une page, avec l\'accord de son auteur.', 'Un suivi dans la semaine : ce dont l\'application a besoin pour être utilisée par d\'autres, et qui dans la région peut le faire.'],
+    market: 'Beaucoup de ces applications casseront plus tard, quand davantage de personnes en auront besoin et que leur auteur aura un autre travail. C\'est là qu\'interviennent les prestataires de la région, et c\'est le marché que ces sessions créent.',
+    packKicker: 'Le dossier', packTitle: 'Un exemple complet, et tout en accès libre',
+    packText: 'Le premier exemple, la liste de la maison de vacances, a été converti en application avec les cinq instructions pour la proposition. Il montre les trois phases, les étapes essentielles d\'abord, un moyen d\'ajouter une étape, une note et un historique pour chaque tournée, et une rubrique « à propos » honnête qui dit que les données restent dans le navigateur et que le partage entre deux téléphones n\'existe pas encore.',
+    packLink: 'Ouvrir l\'exemple complet du dossier', packLinkNote: '(en anglais)',
+    packVault: 'Les exemples, les cinq instructions, le plan de l\'événement fictif et l\'application convertie sont publiés ensemble dans un coffre sgit public en lecture seule (ph10xfc1), pour que notre équipe puisse l\'ouvrir, le copier et l\'utiliser pour la première session. Tout y est inventé et sous licence de réutilisation (CC BY 4.0).',
+    packFiles: 'Les fichiers, tels qu\'ils sont servis ici :',
+    claimsTitle: 'Ce que ceci n\'affirme pas',
+    claims: ['C\'est une proposition, avec un événement fictif. Aucune session n\'a encore eu lieu, et rien n\'y est convenu.', 'Chaque exemple, personne et chiffre du dossier est inventé.', 'L\'application convertie a été construite pour la proposition, pour montrer ce que produisent les cinq instructions ; celle d\'un participant sera différente. Tout comme les applications créées par l\'outil de cette page.', 'Les modèles changent. Les instructions sont écrites pour n\'importe quel modèle capable de construire et de publier une petite application web.', 'L\'auteur de la proposition a déclaré un intérêt : The Cyber Boardroom rejoint Algarve Evolution et propose des services de village (villager services).'],
+    footProposal: 'Proposé par le SGit Newsroom le 31 octobre 2026. Textes et exemples CC BY 4.0 ; le code de l\'outil Apache-2.0.',
+    back: 'Retour à la page d\'accueil', onPage: 'Sur cette page', version: 'Version',
+    exNote: 'Les exemples sont en anglais, tels que le dossier les fournit ; l\'application autour suit votre langue.',
+    payNote: 'Paiement à l\'usage, simulé : chaque action dans l\'outil coûte quelques centimes de crédit (regardez le compteur en bas à gauche). Rien n\'est débité ; le crédit reste dans ce navigateur.', payTitle: 'Crédit simulé, à l\'usage',
   },
 };
+
+// French puts a no-break space before : ; ? ! and inside « ». Applied once, to every French string on this page.
+const frNb = s => s.replace(/ ([:;?!»])/g, '\u00a0$1').replace(/« /g, '«\u00a0');
+const nbAll = v => (typeof v === 'string' ? frNb(v) : Array.isArray(v) ? v.map(nbAll) : v && typeof v === 'object' && !(v instanceof Function) ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, nbAll(x)])) : v);
+T.fr = nbAll(T.fr);
+const fixFr = o => { if (Array.isArray(o)) o.forEach(fixFr); else if (o && typeof o === 'object') for (const k of Object.keys(o)) { if (k === 'fr' && typeof o[k] === 'string') o[k] = frNb(o[k]); else fixFr(o[k]); } };
+fixFr(EXAMPLES); fixFr(PROMPTS); fixFr(DAY);
+const LOCALE = { en: 'en-GB', pt: 'pt-PT', es: 'es-ES', fr: 'fr-FR' };
+// What each action in the tool costs (simulated cents); tool.js holds the same prices and charges them.
+const PRICE = { load: 5, download: 25 };
 
 const HERO_ART = `<svg class="s2p-art" viewBox="0 0 520 380" aria-hidden="true" focusable="false">
   <g class="a-sheet" transform="rotate(-6 150 190)">
@@ -175,10 +292,13 @@ const HERO_ART = `<svg class="s2p-art" viewBox="0 0 520 380" aria-hidden="true" 
 </svg>`;
 
 export function render(ctx) {
-  const { lang, h, chrome, other, home } = ctx; const { esc, t, cite } = h; const L = T[lang];
-  const self = paths[lang];
+  const { lang, h, chrome, home, alt } = ctx; const { esc, t, cite } = h; const L = T[lang];
+  const self = ctx.self;
+  const appName = APPS.find(a => a.id === name).name[lang];
+  const eur = c => new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR' }).format(c / 100);
+  const colon = lang === 'fr' ? '\u00a0:' : ':';
   const examples = EXAMPLES.map(e => ({ id: e.id, file: e.file, type: e.type, name: t(e.name), blurb: t(e.blurb), view: t(e.view), text: readFileSync(new URL(e.file, EX), 'utf8') }));
-  const json = JSON.stringify({ lang, examples, prompts: PROMPTS.map(p => ({ title: t(p.title), text: t(p.text) })) }).replace(/</g, '\\u003c');
+  const json = JSON.stringify({ lang, eur: { download: eur(PRICE.download) }, examples, prompts: PROMPTS.map(p => ({ title: t(p.title), text: t(p.text) })) }).replace(/</g, '\\u003c');
   const src = cite(ARTICLE);
   return `<!doctype html>
 <html lang="${lang}">
@@ -189,15 +309,14 @@ export function render(ctx) {
 ${chrome.head}
 <link rel="stylesheet" href="/spreadsheet-to-app/page.css">
 <link rel="stylesheet" href="/spreadsheet-to-app/app.css">
-<link rel="alternate" hreflang="${lang === 'en' ? 'pt' : 'en'}" href="${other}">
 </head>
 <body class="s2p">
 ${chrome.banner}
 <a class="s2p-skip" href="#try">${esc(L.navTry)}</a>
 <header class="s2p-top"><div class="s2p-wrap s2p-topin">
-  <a class="s2p-brand" href="${home}"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" class="b-sun"/><path d="M3 20c4-3 8-3 13 0s9 3 13 0v6a15 15 0 0 1-26 0z" class="b-sea"/></svg><span>Algarve Evolution</span></a>
-  <nav class="s2p-nav" aria-label="${lang === 'pt' ? 'Nesta página' : 'On this page'}"><a href="#try">${esc(L.navTry)}</a><a href="#prompts">${esc(L.navPrompts)}</a><a href="#day">${esc(L.navDay)}</a><a href="#publish">${esc(L.navPublish)}</a></nav>
-  <a class="s2p-home" href="${home}">${esc(L.home)}</a>
+  <p class="s2p-title"><a class="s2p-brand" href="${home}" title="${esc(L.back)}"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" class="b-sun"/><path d="M3 20c4-3 8-3 13 0s9 3 13 0v6a15 15 0 0 1-26 0z" class="b-sea"/></svg><span class="s2p-brandn">Algarve Evolution</span></a><span class="s2p-slash" aria-hidden="true">/</span><span class="s2p-appn">${esc(appName)}</span></p>
+  <nav class="s2p-nav" aria-label="${esc(L.onPage)}"><a href="#try">${esc(L.navTry)}</a><a href="#prompts">${esc(L.navPrompts)}</a><a href="#day">${esc(L.navDay)}</a><a href="#publish">${esc(L.navPublish)}</a></nav>
+  <a class="s2p-home" href="#try">${esc(L.navTry)}</a>
 </div></header>
 
 <main id="main">
@@ -225,9 +344,11 @@ ${chrome.banner}
   </div>
   <div id="s2a-tool" class="s2p-tool">
     <h3 class="s2p-pickh">${esc(L.pickTitle)}</h3>
-    <ul class="s2p-picks" role="list">${examples.map((e, i) => `<li><a class="s2p-pick" href="/spreadsheet-to-app/examples/${e.file}" data-example="${e.id}" title="${esc(L.raw)}"><span class="s2p-pickn">0${i + 1}<em>${e.type}</em></span><strong>${esc(e.name)}</strong><span class="s2p-pickb">${esc(e.blurb)}</span><span class="s2p-pickv"><span>${esc(L.pickView)}:</span> ${esc(e.view)}</span></a></li>`).join('')}
+    <ul class="s2p-picks" role="list">${examples.map((e, i) => `<li><a class="s2p-pick" href="/spreadsheet-to-app/examples/${e.file}" data-example="${e.id}" title="${esc(L.raw)}"><span class="s2p-pickn">0${i + 1}<span class="s2p-pickr"><span class="s2p-price" title="${esc(L.payTitle)}">${esc(eur(PRICE.load))}</span><em>${e.type}</em></span></span><strong>${esc(e.name)}</strong><span class="s2p-pickb">${esc(e.blurb)}</span><span class="s2p-pickv"><span>${esc(L.pickView)}${colon}</span> ${esc(e.view)}</span></a></li>`).join('')}
       <li class="s2p-ownli" data-own hidden></li></ul>
+    ${L.exNote ? `<p class="s2p-exnote">${esc(L.exNote)}</p>` : ''}
     <noscript><p class="s2p-noscript">${esc(L.noscript)}</p></noscript>
+    <p class="s2p-paynote"><span class="s2p-coin" aria-hidden="true"></span>${esc(L.payNote)}</p>
     <p class="s2p-privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${esc(L.privacy)}</p>
     <div id="s2a-window" class="s2p-window" hidden></div>
   </div>
@@ -277,15 +398,16 @@ ${chrome.banner}
 </main>
 
 <footer class="s2p-foot"><div class="s2p-wrap">
-  <p><a href="${home}">${esc(L.back)}</a> · <a href="${other}" hreflang="${lang === 'en' ? 'pt' : 'en'}">${lang === 'en' ? 'Português' : 'English'}</a></p>
+  <p><a href="${home}">${esc(L.back)}</a> · ${h.langs.filter(l => l !== lang).map(l => `<a href="${esc(alt[l])}" hreflang="${l}" lang="${l}">${esc(h.langNames[l])}</a>`).join(' · ')}</p>
   <p>${esc(t(ctx.data.voice.banner))}</p>
   <p>${esc(L.footProposal)}</p>
   ${src}
-  <p class="s2p-small">${lang === 'pt' ? 'Versão' : 'Version'} ${esc(chrome.version)} · ${esc(self)}</p>
+  <p class="s2p-small">${esc(L.version)} ${esc(chrome.version)} · ${esc(self)}</p>
 </div></footer>
 <script type="application/json" id="s2a-data">${json}</script>
 <script src="/spreadsheet-to-app/engine.js" defer></script>
 <script src="/spreadsheet-to-app/tool.js" defer></script>
+<script src="/assets/credit.js" data-lang="${lang}" data-app="spreadsheet-to-app" data-title="${esc(appName)}" defer></script>
 ${chrome.foot}
 </body>
 </html>`;

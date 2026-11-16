@@ -1,6 +1,6 @@
 // "Ask the Agent": turns the build-time FAQ into a conversation. Code Apache-2.0.
-// No language model and no network: typed questions are matched to the written answers by keywords (en and pt),
-// here in the browser. Every answer and its sources were rendered at build time from src/data.
+// No language model and no network: typed questions are matched to the written answers by keywords (en, pt, es
+// and fr, all four on every page), here in the browser. Every answer and its sources were rendered at build time from src/data.
 (() => {
   const D = JSON.parse(document.getElementById('agent-data').textContent);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -14,16 +14,15 @@
   $$('[data-composer],[data-palette],[data-new],[data-theme-toggle]').forEach(el => { el.hidden = false; });
   if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) $$('kbd').forEach(k => { if (k.textContent === 'Ctrl') k.textContent = '⌘'; });
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9€ ]+/g, ' ').replace(/\s+/g, ' ').trim();
-  const T = D.lang === 'pt'
-    ? { copy: 'Copiar ligação', again: 'Perguntar de novo' }
-    : { copy: 'Copy link', again: 'Ask again' };
+  // Same as norm() in scripts/designs/agent.mjs: lower case, accents off, punctuation to spaces.
+  const norm = s => String(s).toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').replace(/ß/g, 'ss').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9€ ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const apps = D.apps || [], appById = Object.fromEntries(apps.map(a => [a.id, a]));
 
   // ---------- matching: deterministic keyword scores ----------
-  const GENERIC = new Set(['about', 'who', 'what', 'how', 'why', 'new', 'start', 'real', 'true', 'work', 'do', 'run', 'show me', 'sobre', 'quem', 'porque', 'novo', 'trabalho', 'ai', 'ia', 'data', 'dados', 'try', 'algarve']);
-  const score = text => {
+  const GENERIC = new Set(D.generic || []);
+  const score = (text, pool = D.answers) => {
     const n = norm(text), toks = n.split(' ').filter(Boolean), padded = ` ${n} `;
-    return D.answers.map(a => {
+    return pool.map(a => {
       let s = 0; const hit = [];
       for (const kw of a.kw) {
         const w = GENERIC.has(kw) ? 0.5 : 1;
@@ -73,7 +72,7 @@
     const u = userMsg(typed || a.q);
     const b = botMsg(); const body = $('.body', b);
     scrollTo(u);
-    const note = typed && norm(typed) !== norm(a.q) ? `<p class="matchnote">${esc(D.ui.matched)} “${esc(typed)}”: <b>${esc(a.q)}</b></p>` : '';
+    const note = typed && norm(typed) !== norm(a.q) ? `<p class="matchnote">${esc(D.ui.matched)} ${D.ui.quote[0]}${esc(typed)}${D.ui.quote[1]}${D.ui.colon} <b>${esc(a.q)}</b></p>` : '';
     setTimeout(() => {
       body.innerHTML = note + bodies[id];
       body.classList.add('pend');
@@ -82,7 +81,7 @@
         reveal(body);
         const alt = ranked ? ranked.filter(r => r.id !== id && r.s > 0 && r.s >= ranked[0].s * 0.7).slice(0, 2).map(r => r.id) : [];
         body.insertAdjacentHTML('beforeend', (alt.length ? followUps(alt, D.ui.also) : '') + followUps(a.follow, D.ui.more) +
-          `<div class="tools"><button type="button" class="tool" data-copy="${id}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>${T.copy}</button></div>`);
+          `<div class="tools"><button type="button" class="tool" data-copy="${id}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>${esc(D.ui.copy)}</button></div>`);
         live.textContent = `${a.q} ${lead ? lead.textContent : ''}`;
         busy = false;
       };
@@ -119,7 +118,7 @@
     const c = e.target.closest('[data-copy]');
     if (c) {
       const url = `${location.origin}${location.pathname}#a-${c.dataset.copy}`;
-      const ok = () => { c.lastChild.textContent = D.ui.copied; setTimeout(() => { c.lastChild.textContent = T.copy; }, 1800); };
+      const ok = () => { c.lastChild.textContent = D.ui.copied; setTimeout(() => { c.lastChild.textContent = D.ui.copy; }, 1800); };
       if (navigator.clipboard) navigator.clipboard.writeText(url).then(ok, () => {}); return;
     }
     if (e.target.closest('[data-new]')) { thread.innerHTML = ''; setCurrent(null); try { history.replaceState(null, '', location.pathname); } catch (er) { /* ignore */ } $('.main').scrollTo(0, 0); window.scrollTo(0, 0); ta.focus(); }
@@ -138,21 +137,21 @@
   let items = [], sel = 0;
   const draw = () => {
     const q = pin.value.trim();
-    if (!q) items = D.answers.map(a => a.id);
+    if (!q) items = [...D.answers.map(a => a.id), ...apps.map(a => a.id)];
     else {
-      const nq = norm(q), r = score(q);
-      const sub = D.answers.filter(a => norm(a.q).includes(nq) || norm(a.d).includes(nq)).map(a => a.id);
-      items = [...new Set([...sub, ...r.filter(x => x.s > 0).map(x => x.id)])];
+      const nq = norm(q), r = score(q), ra = score(q, apps);
+      const sub = [...D.answers, ...apps].filter(a => norm(a.q).includes(nq) || norm(a.d).includes(nq)).map(a => a.id);
+      items = [...new Set([...sub, ...ra.filter(x => x.s >= 1.5).map(x => x.id), ...r.filter(x => x.s > 0).map(x => x.id)])];
     }
     sel = Math.min(sel, Math.max(0, items.length - 1));
     list.innerHTML = items.length
-      ? items.map((id, i) => `<li role="option" id="po-${id}" data-id="${id}" aria-selected="${i === sel}"><strong>${esc(byId[id].q)}</strong><span>${esc(byId[id].d)}</span></li>`).join('')
+      ? items.map((id, i) => { const a = byId[id] || appById[id]; return `<li role="option" id="po-${id}" data-id="${id}" aria-selected="${i === sel}"${a.href ? ' class="app"' : ''}><strong>${esc(a.q)}${a.href ? ' <span class="ext" aria-hidden="true">→</span>' : ''}</strong><span>${esc(a.d)}</span></li>`; }).join('')
       : `<li class="empty" role="option" aria-disabled="true">${esc(D.ui.noresults)}</li>`;
     pin.setAttribute('aria-activedescendant', items.length ? `po-${items[sel]}` : '');
     $('[aria-selected="true"]', list)?.scrollIntoView({ block: 'nearest' });
   };
   const openPal = () => { if (pal.open) return; pin.value = ''; sel = 0; draw(); pal.showModal(); pin.focus(); };
-  const choose = () => { const id = items[sel]; const typed = pin.value.trim(); pal.close(); if (id) answer(id); else if (typed) askText(typed); };
+  const choose = () => { const id = items[sel]; const typed = pin.value.trim(); pal.close(); if (appById[id]) location.href = appById[id].href; else if (id) answer(id); else if (typed) askText(typed); };
   $$('[data-palette]').forEach(b => b.addEventListener('click', openPal));
   pin.addEventListener('input', () => { sel = 0; draw(); });
   pin.addEventListener('keydown', e => {

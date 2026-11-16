@@ -19,7 +19,7 @@
   const tick = () => { if (clock) clock.textContent = fmt.format(new Date()); };
   tick(); setInterval(tick, 1000);
   const tm = $('[data-tminus]');
-  if (tm) { const n = new Date(); const d = Math.ceil((Date.UTC(2032, 0, 1) - Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())) / 864e5); tm.textContent = d.toLocaleString(html.lang === 'pt' ? 'pt-PT' : 'en-GB'); }
+  if (tm) { const n = new Date(); const d = Math.ceil((Date.UTC(2032, 0, 1) - Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())) / 864e5); tm.textContent = d.toLocaleString({ pt: 'pt-PT', es: 'es-ES', fr: 'fr-FR' }[html.lang] || 'en-GB'); }
 
   // ---------- counters, rings, bars, flaps: run when a panel comes into view ----------
   const NUM = /\d{1,3}(?:[.,]\d{3})+|\d+/g;

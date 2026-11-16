@@ -133,10 +133,12 @@ ${ch.banner}
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="13" r="7" fill="#f2a65a"/><path d="M2 21c4-2 8 2 14 0s10-2 14 0v9H2z" fill="#1f7a8c"/><path d="M2 25c4-2 8 2 14 0s10-2 14 0" stroke="#bfe3e8" stroke-width="1.5" fill="none"/></svg>
       Algarve Evolution
     </a>
-    <nav class="nav" aria-label="${W.sections}">
-${W.nav.map(([id, label]) => `      <a href="#${id}">${label}</a>`).join('\n')}
-    </nav>
-    <nav class="nav-apps" aria-label="${W.apps}">${appLinks}</nav>
+    <div class="menu">
+      <nav class="nav-apps" aria-label="${W.apps}">${appLinks}</nav>
+      <nav class="nav" aria-label="${W.sections}">
+${W.nav.map(([id, label]) => `        <a href="#${id}">${label}</a>`).join('\n')}
+      </nav>
+    </div>
   </div>
 </header>
 

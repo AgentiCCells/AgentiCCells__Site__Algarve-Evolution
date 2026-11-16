@@ -71,16 +71,34 @@ h4 { font-size: 1rem; margin: 0 0 .25rem; line-height: 1.35; }
 .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--ink); font-family: var(--serif); font-weight: 700; font-size: 1.15rem; padding: .7rem 0; }
 .brand:hover { color: var(--ink); }
 .mark { width: 30px; height: 30px; flex: none; }
-.lang { margin-left: auto; order: 2; font-size: .82rem; font-weight: 700; border: 1px solid var(--line); border-radius: 999px; padding: .25rem .8rem; text-decoration: none; color: var(--ink); }
-.nav { order: 3; flex: 1 0 100%; display: flex; gap: 1.1rem; overflow-x: auto; scrollbar-width: none; font-size: .9rem; margin: 0 -16px; padding: 0 16px .65rem; }
-.nav::-webkit-scrollbar { display: none; }
+/* The menu: the two working prototypes, then the sections. On phones one row that scrolls sideways, prototypes first;
+   from 36rem the prototypes sit beside the brand and the sections below; from 78rem everything is one line. */
+.menu { order: 3; flex: 1 0 100%; display: flex; align-items: center; gap: 1.1rem; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px .65rem; }
+.menu::-webkit-scrollbar { display: none; }
+.nav { display: flex; flex: none; gap: 1.1rem; font-size: .9rem; }
 .nav a { color: var(--ink-2); text-decoration: none; white-space: nowrap; padding: .15rem 0; }
 .nav a:hover { color: var(--ochre); }
-@media (min-width: 60rem) {
-  .top { position: sticky; top: 0; }
-  .nav { order: 1; flex: 0 1 auto; margin: 0 0 0 auto; padding: 0; overflow: visible; }
-  .lang { margin-left: 0; }
+.nav-apps { flex: none; display: flex; gap: .4rem; }
+.nav-app { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.25rem; padding: .25rem .8rem .25rem .3rem; border-radius: 999px; background: var(--sea); color: #fff; font-size: .84rem; font-weight: 700; line-height: 1.2; white-space: nowrap; text-decoration: none; }
+.nav-app:hover { color: #fff; background: var(--sea-2); }
+.nav-app + .nav-app { background: var(--ochre-ink); }
+.nav-app + .nav-app:hover { background: #7f3a13; }
+.nav-app-n { flex: none; display: inline-grid; place-items: center; width: 1.65rem; height: 1.65rem; border-radius: 50%; background: rgba(255,255,255,.18); font-size: .75rem; }
+@media (min-width: 36rem) {
+  .menu { display: contents; }
+  .nav-apps { order: 2; margin-left: auto; }
+  .nav { order: 3; flex: 1 0 100%; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px .65rem; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-app { min-height: 2.5rem; padding-right: .9rem; }
 }
+@media (min-width: 48rem) { .nav { margin: 0 -2rem; padding: 0 2rem .65rem; } }
+@media (min-width: 60rem) { .top { position: sticky; top: 0; } }
+@media (min-width: 78rem) {
+  .nav { order: 1; flex: 0 1 auto; margin: 0 0 0 auto; padding: 0; overflow: visible; }
+  .nav-apps { order: 2; margin-left: .25rem; }
+}
+@media (prefers-color-scheme: dark) { .nav-app { background: #1f7a8c; } .nav-app:hover { background: #186373; } .nav-app + .nav-app { background: #a8501f; } .nav-app + .nav-app:hover { background: #8a4119; } }
+.foot-langs span[aria-current] { font-weight: 700; }
 
 /* Hero: copy on the sky, then the coast */
 .hero { background: linear-gradient(#fbf3e6 0%, #faecd6 45%, #f6d6ae 82%, #f3c896 100%); color: #1d2327; overflow: hidden; }

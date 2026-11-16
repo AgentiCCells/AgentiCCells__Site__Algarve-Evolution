@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Algarve Evolution: construir a economia do Algarve para além do turismo</title>
 <meta name="description" content="Os objetivos, a história, os parceiros, o trabalho e os eventos da Algarve Evolution, cada um com a sua fonte. Um protótipo de site feito pela equipa PrompTugal para a Algarve Evolution; ainda não aprovado pela Algarve Evolution.">
-<link rel="alternate" hreflang="en" href="/">
-<link rel="stylesheet" href="/assets/chrome.css">
+<link rel="stylesheet" href="/assets/chrome.css"><link rel="alternate" hreflang="en" href="/"><link rel="alternate" hreflang="es" href="/es/"><link rel="alternate" hreflang="fr" href="/fr/">
 <link rel="stylesheet" href="/style.css">
 <meta name="theme-color" content="#0b3954">
 </head>
 <body>
 <!-- Static template of the default design "coast". The banner and the script before </body> match scripts/site-data.mjs chrome(). -->
-<div class="ae-proto" role="note" data-design="coast"><span>Um protótipo de site feito pela equipa PrompTugal para a Algarve Evolution; ainda não aprovado pela Algarve Evolution.</span> <a href="https://www.algarveevolution.pt/" rel="noopener">O site oficial é algarveevolution.pt</a> <button type="button" class="ae-proto-pick" data-ae-picker>Escolha um design</button> <a class="ae-proto-lang" href="/" hreflang="en">EN</a></div>
+<div class="ae-proto" role="note" data-design="coast"><span>Um protótipo de site feito pela equipa PrompTugal para a Algarve Evolution; ainda não aprovado pela Algarve Evolution.</span> <a href="https://www.algarveevolution.pt/" rel="noopener">O site oficial é algarveevolution.pt</a> <button type="button" class="ae-proto-pick" data-ae-picker>Escolha um design</button> <span class="ae-proto-langs" role="group" aria-label="Língua"><a class="ae-proto-lang" href="/" hreflang="en" lang="en" title="English">EN</a><span class="ae-proto-lang" aria-current="true" lang="pt">PT</span><a class="ae-proto-lang" href="/es/" hreflang="es" lang="es" title="Español">ES</a><a class="ae-proto-lang" href="/fr/" hreflang="fr" lang="fr" title="Français">FR</a></span></div><nav class="ae-ideas" aria-label="Ideias a funcionar"><span class="ae-ideas-label">Ideias a funcionar</span><a class="ae-ideas-site" href="/pt/">O site</a><a class="ae-ideas-app" href="/pt/talent-map/">Mapa de talento</a><a class="ae-ideas-app" href="/pt/spreadsheet-to-app/">Da folha à aplicação</a></nav>
 <a class="skip" href="#main">Saltar para o conteúdo</a>
 
 <header class="top">
@@ -21,16 +20,18 @@
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="13" r="7" fill="#f2a65a"/><path d="M2 21c4-2 8 2 14 0s10-2 14 0v9H2z" fill="#1f7a8c"/><path d="M2 25c4-2 8 2 14 0s10-2 14 0" stroke="#bfe3e8" stroke-width="1.5" fill="none"/></svg>
       Algarve Evolution
     </a>
-    <a class="lang" href="/" hreflang="en" lang="en">EN</a>
-    <nav class="nav" aria-label="Secções">
-      <a href="#goals">Objetivos</a>
-      <a href="#story">História</a>
-      <a href="#partners">Parceiros</a>
-      <a href="#work">Trabalho</a>
-      <a href="#events">Eventos</a>
-      <a href="#try">Experimente</a>
-      <a href="#join">Aderir</a>
-    </nav>
+    <div class="menu">
+      <nav class="nav-apps" aria-label="Protótipos a funcionar"><a class="nav-app" href="/pt/talent-map/"><span class="nav-app-n" aria-hidden="true">1</span>Mapa de talento</a><a class="nav-app" href="/pt/spreadsheet-to-app/"><span class="nav-app-n" aria-hidden="true">2</span>Da folha à aplicação</a></nav>
+      <nav class="nav" aria-label="Secções">
+        <a href="#goals">Objetivos</a>
+        <a href="#story">História</a>
+        <a href="#partners">Parceiros</a>
+        <a href="#work">Trabalho</a>
+        <a href="#events">Eventos</a>
+        <a href="#try">Experimente</a>
+        <a href="#join">Aderir</a>
+      </nav>
+    </div>
   </div>
 </header>
 
@@ -128,7 +129,7 @@
           <h3>Os 16 municípios</h3>
           <p class="munis-list"><span>Albufeira</span> <span>Alcoutim</span> <span>Aljezur</span> <span>Castro Marim</span> <span>Faro</span> <span>Lagoa</span> <span>Lagos</span> <span>Loulé</span> <span>Monchique</span> <span>Olhão</span> <span>Portimão</span> <span>São Brás de Alportel</span> <span>Silves</span> <span>Tavira</span> <span>Vila do Bispo</span> <span>Vila Real de Santo António</span></p>
           <p class="munis-note">As comunidades da Algarve Digital Innovators cobrem os 16 municípios do Algarve, os membros da AMAL.</p>
-          <p class="src">Fontes: <a href="https://postal.pt/algarve/lagos-lanca-rede-algarve-digital-innovators-para-impulsionar-inovacao-e-startups/" title="Lagos launches the Algarve Digital Innovators network" rel="noopener">Postal do Algarve</a>, <a href="https://www.amal.pt" title="https://www.amal.pt" rel="noopener">amal.pt</a></p>
+          <p class="src">Fontes: <a href="https://postal.pt/algarve/lagos-lanca-rede-algarve-digital-innovators-para-impulsionar-inovacao-e-startups/" title="Lagos launches the Algarve Digital Innovators network" rel="noopener">Postal do Algarve</a>, <a href="https://www.amal.pt" title="AMAL, the Algarve intermunicipal community: its 16 member municipalities" rel="noopener">AMAL</a></p>
         </figcaption>
       </figure>
     </div>
@@ -194,7 +195,7 @@
     </div>
     <aside class="panel" aria-label="Cada facto, em dados">
       <h3>Cada facto, em dados</h3>
-      <p>Os números, programas, eventos e propostas desta página estão publicados em ficheiros, cada item com as suas fontes, em inglês e em português.</p>
+      <p>Os números, programas, eventos e propostas desta página estão publicados em ficheiros, cada item com as suas fontes e as suas traduções.</p>
       <ul class="chips">
         <li><a href="/data/figures.json">figures</a></li>
         <li><a href="/data/programmes.json">programmes</a></li>
@@ -225,7 +226,7 @@
 <section id="sources" class="band alt sources-band" aria-labelledby="h-sources">
   <div class="wrap">
     <details>
-      <summary><h2 id="h-sources">Fontes <span>cada facto desta página vem de uma destas (35)</span></h2></summary>
+      <summary><h2 id="h-sources">Fontes <span>cada facto desta página vem de uma destas (36)</span></h2></summary>
 <!-- data:sources -->
     </details>
   </div>
@@ -238,7 +239,8 @@
     <p class="prep">Um protótipo de site feito pela equipa PrompTugal para a Algarve Evolution; ainda não aprovado pela Algarve Evolution.</p>
     <p>Este protótipo foi feito pela equipa PrompTugal (PrompTugal.news e AgentiCCells, dirigidos por Dinis Cruz) a partir de fontes públicas, para mostrar à Algarve Evolution o que o seu site pode ser. As duas ideias a funcionar foram propostas no SGit Newsroom, cuja editora, a The Cyber Boardroom, disse a 31 de outubro de 2026 que vai aderir como membro Start.</p>
     <p>O nosso site oficial é <a href="https://www.algarveevolution.pt/">algarveevolution.pt</a>.</p>
-    <p>Versão __VERSION__ · <a href="https://dev.vault.sgraph.ai/#sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f%3Ajg76g6nx">vault jg76g6nx</a> · Código Apache-2.0, textos e desenhos CC BY 4.0 · <a href="/" hreflang="en" lang="en">English</a></p>
+    <p>Versão __VERSION__ · <a href="https://dev.vault.sgraph.ai/#sgit_public_read_7ac35a2d04c8f0310df448016f55b0fa5d1f3f813c03c118bb6e1cb6b4eb451f%3Ajg76g6nx">vault jg76g6nx</a> · Código Apache-2.0, textos e desenhos CC BY 4.0</p>
+    <p class="foot-langs">Esta página em: <a href="/" hreflang="en" lang="en">English</a> · <span aria-current="true">Português</span> · <a href="/es/" hreflang="es" lang="es">Español</a> · <a href="/fr/" hreflang="fr" lang="fr">Français</a></p>
   </div>
 </footer>
 <script src="/assets/chrome.js" data-lang="pt" data-slug="coast" data-version="__VERSION__" defer></script>

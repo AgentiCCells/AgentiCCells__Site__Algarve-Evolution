@@ -5,7 +5,7 @@
   'use strict';
   const S = window.S2A; if (!S) return;
   const D = JSON.parse(document.getElementById('s2a-data').textContent);
-  const lang = D.lang === 'pt' ? 'pt' : 'en'; S.setLang(lang);
+  const lang = S.LANGS.includes(D.lang) ? D.lang : 'en'; S.setLang(lang);
   const esc = S.esc;
   const W = {
     en: {
@@ -44,7 +44,59 @@
       wA: ['A sua ferramenta', 'Carregue o ficheiro numa ferramenta que publique uma página com um link.'], wB: ['Um repositório GitHub', 'Chame-lhe index.html, ponha-o num repositório feito a partir do modelo do programa e ative o GitHub Pages.'], wC: ['Uma equipa que a muda', 'Partilhe o ficheiro; uma equipa de fornecedores da região muda-o para a organização por si.'],
       more: 'Mais sobre as três formas', resetAbout: 'Escrever de novo a partir dos dados', fail: 'Não foi possível construir a aplicação aqui. Recarregue a página e tente de novo.',
     },
+    es: {
+      own: 'Su propio archivo', ownB: 'Suelte aquí un CSV o una lista en Markdown, o elija uno.', choose: 'Elegir archivo', paste: 'Pegar texto', pasteL: 'Pegue un CSV o una lista en Markdown', make: 'Crear la aplicación',
+      errEmpty: 'Ese archivo está vacío.', errRead: 'No hemos podido leerlo. ¿Es un CSV o una lista en Markdown?', errXlsx: 'Es un archivo de Excel. En Excel o en Sheets, guárdelo o descárguelo como CSV y traiga el CSV.',
+      kept: 'Guardado en este navegador', restored: 'Sus cambios de la última vez han vuelto.', rc: (r, c) => `${r} filas · ${c} columnas`, steps: 'Las cinco instrucciones',
+      prompt: n => `Instrucción ${n}`, copy: 'Copiar', copied: 'Copiado', prev: 'Anterior', next: t => `Siguiente: ${t}`, again: 'Elegir otro', step: (n, t) => `Paso ${n} de 5: ${t}`,
+      intro: [
+        'Busque, filtre y ordene. Haga clic en el título de una columna para ordenar por ella. Las columnas que más importan aparecen primero.',
+        'Añada, edite o borre filas con un formulario hecho a partir de sus columnas. Todo se guarda en este navegador; exporte un CSV cuando quiera.',
+        'La primera pantalla de la aplicación, elegida a partir de sus columnas: primero los elementos más importantes. Marque cada uno a medida que avanza.',
+        'Cuando termine, guarde la ronda: lo que hizo, lo que se saltó y una nota. El historial guarda todas las rondas, de la más reciente a la más antigua.',
+        'Descargue la aplicación en un solo archivo HTML, con sus datos dentro y un "acerca de" honesto. Ábrala en cualquier sitio; publíquela de una de tres formas.',
+      ],
+      und: 'Lo que entendió la aplicación', undHelp: 'El tipo de cada columna se ha deducido de su nombre y sus valores. Cambie una deducción y la aplicación la sigue.', undSum: (n, s) => `${n} columnas: ${s}`,
+      appName: 'Nombre de la aplicación', aboutL: 'La sección "acerca de"', dl: 'Descargar la aplicación', dlNote: kb => `Un archivo HTML, de unos ${kb} KB, con sus datos dentro. Funciona sin conexión y no hace peticiones a internet.`,
+      preview: 'El archivo que va a descargar, funcionando', previewNote: 'Una vista previa en directo. Los cambios que haga en ella se quedan en la vista previa.', ways: 'Después publíquela, de una de tres formas',
+      wA: ['Su propia herramienta', 'Suba el archivo a una herramienta que publique una página con un enlace.'], wB: ['Un repositorio de GitHub', 'Llámelo index.html, póngalo en un repositorio hecho a partir de la plantilla del programa y active GitHub Pages.'], wC: ['Un equipo que la traslada', 'Comparta el archivo; un equipo de proveedores de la región lo traslada a la organización por usted.'],
+      more: 'Más sobre las tres formas', resetAbout: 'Escribirla de nuevo a partir de los datos', fail: 'No se pudo construir la aplicación aquí. Recargue la página e inténtelo de nuevo.',
+    },
+    fr: {
+      own: 'Votre propre fichier', ownB: 'Déposez ici un CSV ou une liste en Markdown, ou choisissez-en un.', choose: 'Choisir un fichier', paste: 'Coller du texte', pasteL: 'Collez un CSV ou une liste en Markdown', make: 'Créer l\'application',
+      errEmpty: 'Ce fichier est vide.', errRead: 'Nous n\'avons pas pu le lire. Est-ce un CSV ou une liste en Markdown ?', errXlsx: 'C\'est un fichier Excel. Dans Excel ou Sheets, enregistrez-le ou téléchargez-le au format CSV, puis apportez le CSV.',
+      kept: 'Gardé dans ce navigateur', restored: 'Vos modifications de la dernière fois sont de retour.', rc: (r, c) => `${r} lignes · ${c} colonnes`, steps: 'Les cinq instructions',
+      prompt: n => `Instruction ${n}`, copy: 'Copier', copied: 'Copié', prev: 'Précédent', next: t => `Suivant : ${t}`, again: 'En choisir un autre', step: (n, t) => `Étape ${n} sur 5 : ${t}`,
+      intro: [
+        'Cherchez, filtrez et triez. Cliquez sur l\'en-tête d\'une colonne pour trier. Les colonnes les plus importantes viennent en premier.',
+        'Ajoutez, modifiez ou supprimez des lignes avec un formulaire fait à partir de vos colonnes. Tout est enregistré dans ce navigateur ; exportez un CSV quand vous voulez.',
+        'Le premier écran de l\'application, choisi à partir de vos colonnes : les éléments les plus importants d\'abord. Marquez chacun au fur et à mesure.',
+        'Quand vous avez fini, enregistrez la tournée : ce que vous avez fait, ce que vous avez sauté, et une note. L\'historique garde chaque tournée, de la plus récente à la plus ancienne.',
+        'Téléchargez l\'application en un seul fichier HTML, avec vos données à l\'intérieur et une rubrique « à propos » honnête. Ouvrez-la n\'importe où ; publiez-la de l\'une des trois façons.',
+      ],
+      und: 'Ce que l\'application a compris', undHelp: 'Le type de chaque colonne a été deviné à partir de son nom et de ses valeurs. Changez une supposition et l\'application suit.', undSum: (n, s) => `${n} colonnes : ${s}`,
+      appName: 'Nom de l\'application', aboutL: 'La rubrique « à propos »', dl: 'Télécharger l\'application', dlNote: kb => `Un seul fichier HTML, d'environ ${kb} Ko, avec vos données à l'intérieur. Il fonctionne hors ligne et ne fait aucune requête vers internet.`,
+      preview: 'Le fichier que vous allez télécharger, en marche', previewNote: 'Un aperçu en direct. Les modifications faites ici restent dans l\'aperçu.', ways: 'Puis publiez-la, de l\'une des trois façons',
+      wA: ['Votre propre outil', 'Déposez le fichier dans un outil qui publie une page avec un lien.'], wB: ['Un dépôt GitHub', 'Nommez-le index.html, placez-le dans un dépôt créé à partir du modèle du programme et activez GitHub Pages.'], wC: ['Une équipe qui la déplace', 'Partagez le fichier ; une équipe de prestataires de la région le déplace dans l\'organisation pour vous.'],
+      more: 'En savoir plus sur les trois façons', resetAbout: 'La réécrire à partir des données', fail: 'Impossible de construire l\'application ici. Rechargez la page et réessayez.',
+    },
   }[lang];
+  // Pay per use: what each action costs in simulated cents (the shared wallet, /assets/credit.js), and its label.
+  const PRICE = { load: 5, step: 1, search: 1, filter: 1, sort: 1, add: 1, edit: 1, del: 1, type: 1, done: 1, view: 1, date: 1, phase: 1, run: 2, export: 2, import: 2, download: 25, copy: 1 };
+  const PAY = {
+    en: { load: n => `Loaded ${n}`, step: n => `Opened step ${n}`, search: q => `Searched "${q}"`, filter: 'Filtered the list', sort: 'Sorted the list', add: 'Added a row', edit: 'Edited a row', del: 'Deleted a row', type: 'Changed a column type', done: 'Marked an item done', view: 'Changed the view', date: 'Changed the date', phase: 'Changed the phase', run: 'Saved a run to the history', export: 'Exported a CSV', import: 'Imported a CSV', download: 'Downloaded the single-file app', copy: n => `Copied prompt ${n}` },
+    pt: { load: n => `Carregou ${n}`, step: n => `Abriu o passo ${n}`, search: q => `Pesquisou "${q}"`, filter: 'Filtrou a lista', sort: 'Ordenou a lista', add: 'Adicionou uma linha', edit: 'Editou uma linha', del: 'Apagou uma linha', type: 'Mudou o tipo de uma coluna', done: 'Marcou um item como feito', view: 'Mudou de vista', date: 'Mudou a data', phase: 'Mudou de fase', run: 'Guardou uma ronda no histórico', export: 'Exportou um CSV', import: 'Importou um CSV', download: 'Descarregou a aplicação num só ficheiro', copy: n => `Copiou a instrução ${n}` },
+    es: { load: n => `Cargó ${n}`, step: n => `Abrió el paso ${n}`, search: q => `Buscó "${q}"`, filter: 'Filtró la lista', sort: 'Ordenó la lista', add: 'Añadió una fila', edit: 'Editó una fila', del: 'Borró una fila', type: 'Cambió el tipo de una columna', done: 'Marcó un elemento como hecho', view: 'Cambió de vista', date: 'Cambió la fecha', phase: 'Cambió de fase', run: 'Guardó una ronda en el historial', export: 'Exportó un CSV', import: 'Importó un CSV', download: 'Descargó la aplicación en un solo archivo', copy: n => `Copió la instrucción ${n}` },
+    fr: { load: n => `A chargé ${n}`, step: n => `A ouvert l'étape ${n}`, search: q => `A cherché « ${q} »`, filter: 'A filtré la liste', sort: 'A trié la liste', add: 'A ajouté une ligne', edit: 'A modifié une ligne', del: 'A supprimé une ligne', type: 'A changé le type d\'une colonne', done: 'A marqué un élément comme fait', view: 'A changé de vue', date: 'A changé la date', phase: 'A changé de phase', run: 'A enregistré une tournée', export: 'A exporté un CSV', import: 'A importé un CSV', download: 'A téléchargé l\'application en un fichier', copy: n => `A copié l'instruction ${n}` },
+  }[lang];
+  const pay = (kind, info) => {
+    const C = window.AECredit; if (!C) return true;
+    const l = PAY[kind]; let label = typeof l === 'function' ? l(String(info ?? '').slice(0, 28)) : l || kind;
+    if (lang === 'fr') label = label.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»');
+    return C.charge(PRICE[kind] ?? 1, label) !== false;
+  };
+  S.setPay(pay);
+  if (lang === 'fr') { const nb = v => typeof v === 'string' ? v.replace(/ ([:;?!»])/g, '\u00a0$1').replace(/« /g, '«\u00a0') : typeof v === 'function' ? (...a) => nb(v(...a)) : Array.isArray(v) ? v.map(nb) : v; for (const k of Object.keys(W)) W[k] = nb(W[k]); }
   const ICON_COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>';
   const ICON_LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   const LAST = 's2a:v1:last:' + lang;
@@ -58,7 +110,7 @@
     }
     if (ok && btn) { const s = btn.querySelector('span'); const old = s.textContent; s.textContent = btn.dataset.done || W.copied; btn.classList.add('is-copied'); setTimeout(() => { s.textContent = old; btn.classList.remove('is-copied'); }, 1600); }
   }
-  document.querySelectorAll('[data-copy]').forEach(b => { b.hidden = false; b.addEventListener('click', () => copyText(document.getElementById(b.dataset.copy).textContent, b)); });
+  document.querySelectorAll('[data-copy]').forEach(b => { b.hidden = false; b.addEventListener('click', () => { if (pay('copy', b.dataset.copy.replace(/\D/g, ''))) copyText(document.getElementById(b.dataset.copy).textContent, b); }); });
 
   /* ---------- the picker ---------- */
   const tool = document.getElementById('s2a-tool'), win = document.getElementById('s2a-window');
@@ -78,6 +130,7 @@
     let m;
     try { m = S.parse(text, name); } catch (e) { err(e.message === 'empty' ? W.errEmpty : W.errRead); return; }
     if (!m.rows.length) { err(W.errEmpty); return; }
+    if (user && !pay('load', fromExample ? fromExample.name : (name === 'pasted.csv' || name === 'pasted.md' ? W.paste.toLowerCase() : name))) return;
     if (fromExample) { m.id = 'ex-' + fromExample.id + '-' + lang; m.name = fromExample.name; }
     open(S.makeApp(m), fromExample ? fromExample.id : null, user);
   }
@@ -121,9 +174,9 @@
     win.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => go(+b.dataset.step)));
     win.querySelector('[data-prev]').addEventListener('click', () => go(step - 1));
     win.querySelector('[data-next]').addEventListener('click', () => go(step + 1));
-    win.querySelector('[data-pcopy]').addEventListener('click', e => copyText(D.prompts[step].text, e.currentTarget));
+    win.querySelector('[data-pcopy]').addEventListener('click', e => { if (pay('copy', step + 1)) copyText(D.prompts[step].text, e.currentTarget); });
   }
-  function go(n) { if (n < 0 || n > 4) return; step = n; drawStep(); win.querySelector('[data-stepname]').focus({ preventScroll: true }); const r = win.querySelector('.s2p-steps').getBoundingClientRect(); if (r.top < 0) win.querySelector('.s2p-steps').scrollIntoView({ block: 'start' }); }
+  function go(n) { if (n < 0 || n > 4 || n === step) return; if (!pay('step', n + 1)) return; step = n; drawStep(); win.querySelector('[data-stepname]').focus({ preventScroll: true }); const r = win.querySelector('.s2p-steps').getBoundingClientRect(); if (r.top < 0) win.querySelector('.s2p-steps').scrollIntoView({ block: 'start' }); }
   function drawStep() {
     win.querySelectorAll('[data-step]').forEach(b => { const i = +b.dataset.step; if (i === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); b.classList.toggle('is-past', i < step); });
     win.querySelector('.s2p-bk').textContent = W.prompt(step + 1);
@@ -151,7 +204,7 @@
       <p class="s2a-undhelp">${W.undHelp}</p><ul class="s2a-undlist">${A.st.cols.map((c, i) => `<li><label for="ty-${i}"><span class="s2a-undn">${esc(S.nice(c.name))}${c.title ? ' <small>★</small>' : ''}</span><span class="s2a-undx">${esc(A.st.rows.map(r => r[c.key]).find(Boolean) || '')}</span></label><select id="ty-${i}" data-ty="${i}">${Object.entries(L.types).map(([k, v]) => `<option value="${k}"${k === c.type ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></li>`).join('')}</ul></details>`;
     el.addEventListener('change', e => {
       const i = e.target.dataset.ty; if (i === undefined) return;
-      const c = A.st.cols[+i]; c.type = e.target.value; c.fixed = true;
+      const c = A.st.cols[+i]; if (!pay('type')) { e.target.value = c.type; return; } c.type = e.target.value; c.fixed = true;
       if (c.type === 'bool' && !c.vocab) c.vocab = ['yes', 'no']; if (c.type === 'money' && !c.cur) c.cur = 'EUR'; if (c.type === 'date' && !c.fmt) c.fmt = 'iso';
       A.changed(); const open = el.querySelector('details').open; drawStep(); win.querySelector('details.s2a-und').open = open; win.querySelector(`[data-ty="${i}"]`).focus();
     });
@@ -180,7 +233,7 @@
         <fieldset class="s2p-about"><legend>${W.aboutL}</legend>
           ${['what', 'where', 'not'].map(k => `<label class="s2a-field is-wide"><span>${esc(L.about[k])}</span><textarea rows="${k === 'what' ? 5 : 4}" data-about="${k}">${esc(about[k])}</textarea></label>`).join('')}
           <button type="button" class="s2a-link" data-reabout>${W.resetAbout}</button></fieldset>
-        <button type="button" class="s2p-cta s2p-dl" data-dl><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m-5-5 5 5 5-5M5 20h14"/></svg>${W.dl}</button>
+        <button type="button" class="s2p-cta s2p-dl" data-dl><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m-5-5 5 5 5-5M5 20h14"/></svg>${W.dl}${D.eur ? `<span class="s2p-price is-btn">${esc(D.eur.download)}</span>` : ''}</button>
         <p class="s2p-small" data-dlnote></p>
         <div class="s2p-pubways"><h5>${W.ways}</h5><ol>${[W.wA, W.wB, W.wC].map((x, i) => `<li><b>${'ABC'[i]}. ${esc(x[0])}</b> ${esc(x[1])}</li>`).join('')}</ol><a href="#publish">${W.more}</a></div>
       </div>
@@ -198,7 +251,7 @@
       clearTimeout(timer); timer = setTimeout(refresh, 500);
     };
     el.querySelector('[data-reabout]').addEventListener('click', () => { delete A.st.about; A.save(); publish(el); });
-    el.querySelector('[data-dl]').addEventListener('click', async () => { const r = read(); html = await buildHTML(r.name, r.about); S.download(S.slug(r.name) + '.html', html, 'text/html;charset=utf-8'); });
+    el.querySelector('[data-dl]').addEventListener('click', async () => { if (!pay('download')) return; const r = read(); html = await buildHTML(r.name, r.about); S.download(S.slug(r.name) + '.html', html, 'text/html;charset=utf-8'); });
     refresh();
   }
 
