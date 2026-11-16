@@ -66,6 +66,7 @@
 .aec-list small{display:block;color:#777}
 .aec-btns{display:flex;gap:.5rem;flex-wrap:wrap}.aec-btns button{font:600 13px system-ui,sans-serif;border-radius:999px;padding:.4rem .8rem;cursor:pointer;border:1px solid #14213d;background:#fff;color:#14213d}
 .aec-btns button.primary{background:#14213d;color:#fff}.aec-btns button:focus-visible{outline:3px solid #f0b429;outline-offset:2px}
+@media (max-width:600px){.aec-toast{left:0;bottom:calc(100% + 8px);white-space:normal;max-width:calc(100vw - 32px)}}
 @media (prefers-reduced-motion:reduce){.aec-toast{animation:none}.aec-pill.bump .aec-bal{animation:none}}
 @media print{.aec{display:none}}`;
   let root, pill, bal, panel, list, sum, outNote;
@@ -118,6 +119,6 @@
       api.charge(auto, what);
     }, true);
   }
-  const start = () => { render(null); const open = Number(me?.dataset.openCents ?? 1); const title = me?.dataset.title || document.title.split(':')[0]; if (open > 0) setTimeout(() => api.charge(open, `${L.opened}: ${title}`), 600); };
+  const start = () => { render(null); const open = Number(me?.dataset.openCents ?? 1); const title = me?.dataset.title || document.title.split(':')[0]; if (open > 0) setTimeout(() => api.charge(open, `${L.opened}${lang === 'fr' ? '\u00a0' : ''}: ${title}`), 600); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
