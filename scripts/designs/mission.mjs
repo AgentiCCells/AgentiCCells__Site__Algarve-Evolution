@@ -291,7 +291,7 @@ ${chrome.banner}
   <button type="button" class="motion" aria-pressed="true" data-on="${esc(W.motionOn)}" data-off="${esc(W.motionOff)}">${esc(W.motionOn)}</button></p>
   <nav class="hud-nav" aria-label="${esc(W.nav)}">
     <div class="hn-sec">${[['tele', 'P-01', W.nTele], ['targets', 'P-02', W.nTargets], ['network', 'P-03', W.nNet], ['radar', 'P-04', W.nRadar], ['log', 'P-05', W.nLog], ['board', 'P-06', W.nBoard]].map(([id, code, l]) => `<a href="#${id}"><span class="hn-c" aria-hidden="true">${code}</span>${esc(l)}</a>`).join('')}</div>
-    <div class="hn-mods" role="group" aria-label="${esc(W.p8)}">${APPS.map((a, i) => `<a class="hn-mod" href="${esc(langPath(a.path, lang))}"><span class="hn-c" aria-hidden="true">MOD-0${i + 1}</span>${esc(a.name[lang] || a.name.en)} <span aria-hidden="true">→</span></a>`).join('')}</div>
+    <div class="hn-mods" role="group" aria-label="${esc(W.p8)}">${APPS.map((a, i) => `<a class="hn-mod" href="${esc(langPath(a.path, lang))}"><span class="hn-c" aria-hidden="true">MOD-0${i + 1}</span>${esc(a.name[lang] || a.name.en)}<span class="hn-go" aria-hidden="true"> →</span></a>`).join('')}</div>
   </nav>
 </div>
 <main id="dash" class="dash">
