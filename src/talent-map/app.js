@@ -31,7 +31,7 @@
       amount: 'Montante', date: 'Data', town: 'Concelho', sector: 'Setor', rate: 'Preço ou ticket', langs: 'Línguas',
       simNote: 'Inventada para este protótipo. No mapa real, esta entrada só apareceria depois de a pessoa a aprovar.',
       show: 'Mostrar contacto', paid: 'Pago do seu crédito, depois de ver o perfil. Quem está no mapa nunca paga. Simulado: nada é cobrado.',
-      revealed: 'apresentado pelo mapa', revealedNote: 'Pagou 0,50 € de crédito simulado. Nada foi cobrado e nada foi enviado.', broke: 'O seu crédito acabou. Junte 5 € de crédito simulado no extrato, no canto, para continuar.',
+      revealed: 'apresentado pelo mapa', revealedNote: 'Pagou 0,50 € de crédito simulado. Nada foi cobrado e nada foi enviado.', broke: 'O seu crédito acabou. Junte 5 € de crédito simulado para continuar.', topup: 'Adicionar 5 € (simulado)',
       status: { yes: 'Aprovou a sua entrada (simulado)', no: 'Disse que não: não é publicada', wait: 'Ainda não respondeu: não é publicada' },
       answer: 'Resposta neste navegador', okSay: 'Aprovado, só neste navegador. No mapa real, a entrada fica publicada com a data de hoje guardada como consentimento, e o mesmo link permite retirá-la.',
       noSay: 'Entendido. Não será publicada, e os seus dados ficam onde os deu.', changeSay: 'Obrigado. No mapa real as alterações voltam à nossa caixa de correio e enviamos-lhe uma nova pré-visualização para aprovar.',
@@ -53,7 +53,7 @@
       amount: 'Importe', date: 'Fecha', town: 'Municipio', sector: 'Sector', rate: 'Tarifa o ticket', langs: 'Idiomas',
       simNote: 'Inventada para este prototipo. En el mapa real, esta ficha solo aparecería después de que la persona la aprobara.',
       show: 'Mostrar contacto', paid: 'Se paga de su crédito, después de ver el perfil. Quien está en el mapa nunca paga. Simulado: no se cobra nada.',
-      revealed: 'presentado por el mapa', revealedNote: 'Pagó 0,50 € de crédito simulado. No se cobró nada y no se envió nada.', broke: 'Se le ha acabado el crédito. Añada 5 € de crédito simulado en el extracto, en la esquina, para seguir.',
+      revealed: 'presentado por el mapa', revealedNote: 'Pagó 0,50 € de crédito simulado. No se cobró nada y no se envió nada.', broke: 'Se le ha acabado el crédito. Añada 5 € de crédito simulado para seguir.', topup: 'Añadir 5 € (simulado)',
       status: { yes: 'Aprobó su ficha (simulado)', no: 'Dijo que no: no se publica', wait: 'Aún no ha respondido: no se publica' },
       answer: 'Respuesta en este navegador', okSay: 'Aprobado, solo en este navegador. En el mapa real, la ficha se publica con la fecha de hoy guardada como consentimiento, y el mismo enlace permite retirarla.',
       noSay: 'Entendido. No se le publicará, y sus datos se quedan donde los dio.', changeSay: 'Gracias. En el mapa real, sus cambios vuelven a nuestro buzón y le enviamos una vista previa corregida para que la apruebe.',
@@ -75,7 +75,7 @@
       amount: 'Montant', date: 'Date', town: 'Commune', sector: 'Secteur', rate: 'Tarif ou ticket', langs: 'Langues',
       simNote: 'Inventée pour ce prototype. Dans la vraie carte, cette fiche n\'apparaîtrait qu\'après l\'accord de la personne.',
       show: 'Voir le contact', paid: 'Payé sur votre crédit, après avoir vu le profil. Les personnes inscrites ne paient jamais. Simulé : rien n\'est débité.',
-      revealed: 'mis en relation par la carte', revealedNote: 'Vous avez payé 0,50 € de crédit simulé. Rien n\'a été débité et rien n\'a été envoyé.', broke: 'Votre crédit est épuisé. Ajoutez 5 € de crédit simulé dans le relevé, dans le coin, pour continuer.',
+      revealed: 'mis en relation par la carte', revealedNote: 'Vous avez payé 0,50 € de crédit simulé. Rien n\'a été débité et rien n\'a été envoyé.', broke: 'Votre crédit est épuisé. Ajoutez 5 € de crédit simulé pour continuer.', topup: 'Ajouter 5 € (simulé)',
       status: { yes: 'A approuvé sa fiche (simulé)', no: 'A dit non : non publiée', wait: 'N\'a pas encore répondu : non publiée' },
       answer: 'Réponse dans ce navigateur', okSay: 'Approuvé, dans ce navigateur seulement. Dans la vraie carte, la fiche est publiée avec la date du jour conservée comme consentement, et le même lien permet de la retirer.',
       noSay: 'Entendu. Votre fiche ne sera pas publiée, et vos données restent là où vous les avez confiées.', changeSay: 'Merci. Dans la vraie carte, vos modifications reviennent à notre boîte aux lettres et nous vous envoyons un aperçu corrigé à approuver.',
@@ -97,7 +97,7 @@
       amount: 'Amount', date: 'Date', town: 'Town', sector: 'Sector', rate: 'Rate or ticket', langs: 'Languages',
       simNote: 'Invented for this prototype. In the real map, this listing would appear only after the person approved it.',
       show: 'Show contact', paid: 'Paid from your credit, after you have seen the profile. Listed people never pay. Simulated: nothing is charged.',
-      revealed: 'introduced by the map', revealedNote: 'You paid €0.50 of simulated credit. Nothing was charged and nothing was sent.', broke: 'Your credit is used up. Add €5 of simulated credit in the statement, in the corner, to carry on.',
+      revealed: 'introduced by the map', revealedNote: 'You paid €0.50 of simulated credit. Nothing was charged and nothing was sent.', broke: 'Your credit is used up. Add €5 of simulated credit to carry on.', topup: 'Add €5 (simulated)',
       status: { yes: 'Approved their listing (simulated)', no: 'Said no: not listed', wait: 'Has not answered yet: not listed' },
       answer: 'Answer in this browser', okSay: 'Approved, in this browser only. In the real map the listing goes live with today\'s date kept as the consent, and the same link withdraws it.',
       noSay: 'Understood. You will not be listed, and your details stay where you gave them.', changeSay: 'Thank you. In the real map your changes come back to our mailbox, and we send you a corrected preview to approve.',
@@ -281,7 +281,12 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
 <p class="tm-d-note">${X.status[st]}</p>`;
     const b = $('#tm-unlock', din);
     if (b) b.onclick = () => {
-      if (!pay(PRICE.contact, X.ch.contact(p.name))) { if (!$('#tm-broke', din)) $('#tm-contact', din).insertAdjacentHTML('beforeend', `<p class="tm-d-note tm-broke" id="tm-broke" role="alert">${X.broke}</p>`); return; }
+      // Out of credit: the wallet's own top-up sits behind this modal dialog, so offer the (simulated) top-up here too.
+      if (!pay(PRICE.contact, X.ch.contact(p.name))) {
+        if (!$('#tm-broke', din)) $('#tm-contact', din).insertAdjacentHTML('beforeend', `<p class="tm-d-note tm-broke" id="tm-broke" role="alert">${X.broke} <button type="button" class="tm-btn tm-btn-ghost" id="tm-topup">${X.topup}</button></p>`);
+        $('#tm-topup', din)?.addEventListener('click', () => { window.AECredit?.topUp(500); $('#tm-broke', din)?.remove(); b.focus(); });
+        return;
+      }
       S.unlocked[p.id] = 1; save(); openPerson(p0, true);
       $('#tm-d-in .tm-reveal')?.setAttribute('tabindex', '-1'); $('#tm-d-in .tm-reveal')?.focus();
     };
@@ -361,8 +366,14 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
     ...people.map(p => ({ type: 'person', p, name: fold(p.name), text: fold([...['offer', 'sector'].flatMap(k => Object.values(p[k])), p.tags, p.roles.join(' ')].join(' ')) })),
   ];
 
+  // Ways of saying "raise investment" in the four languages, read as one word the vocabulary knows.
+  const RAISE = /\s(?:raise|raising) (?:money|funds|capital|a round)\s|\s(?:angariar|captar|levantar) (?:de )?(?:investimento|financiamento|capital)\s|\sangariacao de (?:investimento|financiamento)\s|\s(?:captar|recaudar|levantar) (?:inversion|inversiones|financiacion|fondos|capital)\s|\s(?:lever|levee) (?:des|de|du) (?:fonds|capital|capitaux)\s/g;
   function parse(q, hint = {}) {
+    // Words are matched folded (no accents) but shown as typed: diseñador, not disenador.
+    const shown = new Map(String(q).split(/[^\p{L}\p{N}€-]+/u).filter(Boolean).map(x => [fold(x), x]));
+    const show = w => w.split(' ').map(x => shown.get(x) || x).join(' ');
     let f = ` ${fold(q).replace(/[^a-z0-9€\s-]/g, ' ').replace(/\s+/g, ' ')} `.replace(PHRASES, ' ').replace(PHRASES, ' ');
+    f = f.replace(RAISE, m => { shown.set('fundraising', show(m.trim())); return ' fundraising '; });
     let tw = hint.town || '';
     for (const [a, id] of TOWNS) { const re = new RegExp(`\\s${a}\\s`); if (re.test(f)) { if (!tw) tw = id; f = f.replace(re, ' '); } }
     const toks = f.split(/[\s-]+/).filter(x => x.length > 1 && !STOP.has(x) && !/^\d+$/.test(x));
@@ -370,7 +381,7 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
     if (hint.role) { const c = CONCEPTS.find(c => c.id === { talent: 'talent', mentor: 'mentor', investor: 'funding' }[hint.role]); if (c && !concepts.includes(c)) concepts.push(c); }
     const seen = new Set();
     const terms = [...new Set(toks)].filter(x => { const k = groupOf(x); if (seen.has(k)) return false; seen.add(k); return true; })
-      .map(x => ({ word: x, key: groupOf(x), generic: CONCEPTS.some(c => c.set.has(x)) && groupOf(x) === x.replace(/s$/, ''), vars: synOf(x).concat(x.endsWith('s') ? synOf(x.slice(0, -1)) : []).map(reFor) }));
+      .map(x => ({ word: show(x), key: groupOf(x), generic: CONCEPTS.some(c => c.set.has(x)) && groupOf(x) === x.replace(/s$/, ''), vars: synOf(x).concat(x.endsWith('s') ? synOf(x.slice(0, -1)) : []).map(reFor) }));
     return { town: tw, concepts, terms, orgOnly: hint.role === 'org' };
   }
   function match(q, hint) {
