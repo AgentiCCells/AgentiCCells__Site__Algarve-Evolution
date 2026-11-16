@@ -23,9 +23,9 @@
    },
    "rate": {
     "en": "€40–60/h",
-    "pt": "40–60 €/h",
-    "es": "40–60 €/h",
-    "fr": "40–60 €/h"
+    "pt": "40–60 €/h",
+    "es": "40–60 €/h",
+    "fr": "40–60 €/h"
    },
    "langs": "PT, EN",
    "approved": true,
@@ -84,9 +84,9 @@
    },
    "rate": {
     "en": "€350/day",
-    "pt": "350 €/dia",
-    "es": "350 €/día",
-    "fr": "350 €/jour"
+    "pt": "350 €/dia",
+    "es": "350 €/día",
+    "fr": "350 €/jour"
    },
    "langs": "PT, EN, ES",
    "approved": true,
@@ -109,14 +109,14 @@
    "offer": {
     "en": "Angel investor, tickets of €10k–50k in tourism and hospitality tech.",
     "pt": "Investidora anjo, tickets de 10 mil a 50 mil euros em tecnologia para turismo e hotelaria.",
-    "es": "Inversora ángel, tickets de 10.000 a 50.000 € en tecnología para el turismo y la hostelería.",
-    "fr": "Investisseuse providentielle, tickets de 10 000 à 50 000 € dans la technologie pour le tourisme et l'hôtellerie."
+    "es": "Inversora ángel, tickets de 10.000 a 50.000 € en tecnología para el turismo y la hostelería.",
+    "fr": "Investisseuse providentielle, tickets de 10 000 à 50 000 € dans la technologie pour le tourisme et l'hôtellerie."
    },
    "rate": {
     "en": "€10k–50k",
     "pt": "10–50 mil €",
-    "es": "10.000–50.000 €",
-    "fr": "10 000–50 000 €"
+    "es": "10.000–50.000 €",
+    "fr": "10 000–50 000 €"
    },
    "langs": "PT, EN, FR",
    "approved": true,
@@ -144,9 +144,9 @@
    },
    "rate": {
     "en": "€45/h",
-    "pt": "45 €/h",
-    "es": "45 €/h",
-    "fr": "45 €/h"
+    "pt": "45 €/h",
+    "es": "45 €/h",
+    "fr": "45 €/h"
    },
    "langs": "EN, FI",
    "approved": true,
@@ -174,9 +174,9 @@
    },
    "rate": {
     "en": "€600/month package",
-    "pt": "Pacote de 600 €/mês",
-    "es": "Paquete de 600 €/mes",
-    "fr": "Forfait de 600 €/mois"
+    "pt": "Pacote de 600 €/mês",
+    "es": "Paquete de 600 €/mes",
+    "fr": "Forfait de 600 €/mois"
    },
    "langs": "PT, EN",
    "approved": false,
@@ -206,8 +206,8 @@
    "rate": {
     "en": "€25k tickets",
     "pt": "Tickets de 25 mil €",
-    "es": "Tickets de 25.000 €",
-    "fr": "Tickets de 25 000 €"
+    "es": "Tickets de 25.000 €",
+    "fr": "Tickets de 25 000 €"
    },
    "langs": "EN",
    "approved": true,
@@ -295,9 +295,9 @@
    },
    "rate": {
     "en": "€300/day",
-    "pt": "300 €/dia",
-    "es": "300 €/día",
-    "fr": "300 €/jour"
+    "pt": "300 €/dia",
+    "es": "300 €/día",
+    "fr": "300 €/jour"
    },
    "langs": "PT, EN",
    "approved": true,
@@ -326,9 +326,9 @@
    },
    "rate": {
     "en": "€60/h",
-    "pt": "60 €/h",
-    "es": "60 €/h",
-    "fr": "60 €/h"
+    "pt": "60 €/h",
+    "es": "60 €/h",
+    "fr": "60 €/h"
    },
    "langs": "EN, PT",
    "approved": true,
@@ -357,8 +357,8 @@
    "rate": {
     "en": "€50k–250k",
     "pt": "50–250 mil €",
-    "es": "50.000–250.000 €",
-    "fr": "50 000–250 000 €"
+    "es": "50.000–250.000 €",
+    "fr": "50 000–250 000 €"
    },
    "langs": "PT, ES, EN",
    "approved": false,
@@ -386,9 +386,9 @@
    },
    "rate": {
     "en": "€400/day",
-    "pt": "400 €/dia",
-    "es": "400 €/día",
-    "fr": "400 €/jour"
+    "pt": "400 €/dia",
+    "es": "400 €/día",
+    "fr": "400 €/jour"
    },
    "langs": "PT, EN",
    "approved": true,

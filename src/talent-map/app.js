@@ -16,6 +16,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const go = el => el && el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
   const pl = (n, one, many) => (n === 1 ? one : many);
+  const C = L === 'fr' ? '\u00a0: ' : ': '; // French puts a space before a colon
   const XS = {
     pt: {
       org: n => `${n} ${pl(n, 'organização', 'organizações')}`, ppl: n => `${n} ${pl(n, 'entrada aprovada, simulada', 'entradas aprovadas, simuladas')}`, in: t => `em ${t}`,
@@ -31,7 +32,7 @@
       amount: 'Montante', date: 'Data', town: 'Concelho', sector: 'Setor', rate: 'Preço ou ticket', langs: 'Línguas',
       simNote: 'Inventada para este protótipo. No mapa real, esta entrada só apareceria depois de a pessoa a aprovar.',
       show: 'Mostrar contacto', paid: 'Pago do seu crédito, depois de ver o perfil. Quem está no mapa nunca paga. Simulado: nada é cobrado.',
-      revealed: 'apresentado pelo mapa', revealedNote: 'Pagou 0,50 € de crédito simulado. Nada foi cobrado e nada foi enviado.', broke: 'O seu crédito acabou. Junte 5 € de crédito simulado para continuar.', topup: 'Adicionar 5 € (simulado)',
+      revealed: 'apresentado pelo mapa', revealedNote: 'Pagou 0,50 € de crédito simulado. Nada foi cobrado e nada foi enviado.', broke: 'O seu crédito acabou. Junte 5 € de crédito simulado para continuar.', topup: 'Adicionar 5 € (simulado)',
       status: { yes: 'Aprovou a sua entrada (simulado)', no: 'Disse que não: não é publicada', wait: 'Ainda não respondeu: não é publicada' },
       answer: 'Resposta neste navegador', okSay: 'Aprovado, só neste navegador. No mapa real, a entrada fica publicada com a data de hoje guardada como consentimento, e o mesmo link permite retirá-la.',
       noSay: 'Entendido. Não será publicada, e os seus dados ficam onde os deu.', changeSay: 'Obrigado. No mapa real as alterações voltam à nossa caixa de correio e enviamos-lhe uma nova pré-visualização para aprovar.',
@@ -53,7 +54,7 @@
       amount: 'Importe', date: 'Fecha', town: 'Municipio', sector: 'Sector', rate: 'Tarifa o ticket', langs: 'Idiomas',
       simNote: 'Inventada para este prototipo. En el mapa real, esta ficha solo aparecería después de que la persona la aprobara.',
       show: 'Mostrar contacto', paid: 'Se paga de su crédito, después de ver el perfil. Quien está en el mapa nunca paga. Simulado: no se cobra nada.',
-      revealed: 'presentado por el mapa', revealedNote: 'Pagó 0,50 € de crédito simulado. No se cobró nada y no se envió nada.', broke: 'Se le ha acabado el crédito. Añada 5 € de crédito simulado para seguir.', topup: 'Añadir 5 € (simulado)',
+      revealed: 'presentado por el mapa', revealedNote: 'Pagó 0,50 € de crédito simulado. No se cobró nada y no se envió nada.', broke: 'Se le ha acabado el crédito. Añada 5 € de crédito simulado para seguir.', topup: 'Añadir 5 € (simulado)',
       status: { yes: 'Aprobó su ficha (simulado)', no: 'Dijo que no: no se publica', wait: 'Aún no ha respondido: no se publica' },
       answer: 'Respuesta en este navegador', okSay: 'Aprobado, solo en este navegador. En el mapa real, la ficha se publica con la fecha de hoy guardada como consentimiento, y el mismo enlace permite retirarla.',
       noSay: 'Entendido. No se le publicará, y sus datos se quedan donde los dio.', changeSay: 'Gracias. En el mapa real, sus cambios vuelven a nuestro buzón y le enviamos una vista previa corregida para que la apruebe.',
@@ -75,7 +76,7 @@
       amount: 'Montant', date: 'Date', town: 'Commune', sector: 'Secteur', rate: 'Tarif ou ticket', langs: 'Langues',
       simNote: 'Inventée pour ce prototype. Dans la vraie carte, cette fiche n\'apparaîtrait qu\'après l\'accord de la personne.',
       show: 'Voir le contact', paid: 'Payé sur votre crédit, après avoir vu le profil. Les personnes inscrites ne paient jamais. Simulé : rien n\'est débité.',
-      revealed: 'mis en relation par la carte', revealedNote: 'Vous avez payé 0,50 € de crédit simulé. Rien n\'a été débité et rien n\'a été envoyé.', broke: 'Votre crédit est épuisé. Ajoutez 5 € de crédit simulé pour continuer.', topup: 'Ajouter 5 € (simulé)',
+      revealed: 'mis en relation par la carte', revealedNote: 'Vous avez payé 0,50 € de crédit simulé. Rien n\'a été débité et rien n\'a été envoyé.', broke: 'Votre crédit est épuisé. Ajoutez 5 € de crédit simulé pour continuer.', topup: 'Ajouter 5 € (simulé)',
       status: { yes: 'A approuvé sa fiche (simulé)', no: 'A dit non : non publiée', wait: 'N\'a pas encore répondu : non publiée' },
       answer: 'Réponse dans ce navigateur', okSay: 'Approuvé, dans ce navigateur seulement. Dans la vraie carte, la fiche est publiée avec la date du jour conservée comme consentement, et le même lien permet de la retirer.',
       noSay: 'Entendu. Votre fiche ne sera pas publiée, et vos données restent là où vous les avez confiées.', changeSay: 'Merci. Dans la vraie carte, vos modifications reviennent à notre boîte aux lettres et nous vous envoyons un aperçu corrigé à approuver.',
@@ -261,10 +262,10 @@
 ${inLang(o) ? `<details><summary>${X.original}</summary><p lang="en">${esc(o.what)}</p></details>` : ''}
 ${o.amount || o.date ? `<div class="tm-d-kv">${o.amount ? `<div><span>${X.amount}</span>${esc(o.amount)}</div>` : ''}${o.date ? `<div><span>${X.date}</span>${esc(day(o.date))}</div>` : ''}</div>` : ''}
 ${o.ai ? box(X.aiNote, `<p lang="en">${esc(o.ai)}</p>`) : ''}
-${(o.also || []).map(a => box(a.town === 'algarve' ? X.alsoRegion : X.also(town(a.town)), `<p lang="en">${esc(a.what)}</p><p class="tm-d-note">${esc(X.source)}: <a href="${esc(a.source_url)}" rel="noopener">${esc(host(a.source_url))}</a>, ${esc(day(a.read_on))}</p>`, true)).join('')}
+${(o.also || []).map(a => box(a.town === 'algarve' ? X.alsoRegion : X.also(town(a.town)), `<p lang="en">${esc(a.what)}</p><p class="tm-d-note">${esc(X.source)}${C}<a href="${esc(a.source_url)}" rel="noopener">${esc(host(a.source_url))}</a>, ${esc(day(a.read_on))}</p>`, true)).join('')}
 ${(o.contacts || []).map(c => box(X.reach, `<p lang="en">${esc(c.channel || c.label)}</p><p class="tm-d-note"><a href="${esc(c.url)}" rel="noopener">${esc(host(c.url))}</a>, ${esc(day(c.read_on))}</p>`, true)).join('')}
-${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="tm-d-note">${esc(X.source)}: <a href="${esc(o.partner.source_url)}" rel="noopener">${esc(host(o.partner.source_url))}</a></p>`, true) : ''}
-<div class="tm-d-links"><a href="${esc(o.url)}" rel="noopener">${X.their}: ${esc(host(o.url))} ↗</a>${o.url !== o.source_url ? `<a href="${esc(o.source_url)}" rel="noopener">${X.source}: ${esc(host(o.source_url))} ↗</a>` : ''}</div>
+${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="tm-d-note">${esc(X.source)}${C}<a href="${esc(o.partner.source_url)}" rel="noopener">${esc(host(o.partner.source_url))}</a></p>`, true) : ''}
+<div class="tm-d-links"><a href="${esc(o.url)}" rel="noopener">${X.their}${C}${esc(host(o.url))} ↗</a>${o.url !== o.source_url ? `<a href="${esc(o.source_url)}" rel="noopener">${X.source}: ${esc(host(o.source_url))} ↗</a>` : ''}</div>
 <p class="tm-d-note">${esc(X.from(day(o.read_on)))}</p>`;
     show();
   }
@@ -440,13 +441,13 @@ ${o.partner ? box(X.partner, `<p lang="en">${esc(o.partner.note)}</p><p class="t
     const top = out.slice(0, limit), max = out[0]?.s || 1;
     const nOrg = out.filter(r => r.e.type === 'org').length, nPpl = out.length - nOrg;
     const read = [
-      ...pq.concepts.map(c => `${X.kindOf}: <b>${esc(X.c[c.id])}</b>`),
-      pq.town ? `${X.where}: <b>${esc(town(pq.town))}</b>` : '',
-      pq.terms.length ? `${X.words}: ${pq.terms.map(t => `<b>${esc(t.word)}</b>`).join(' ')}` : '',
+      ...pq.concepts.map(c => `${X.kindOf}${C}<b>${esc(X.c[c.id])}</b>`),
+      pq.town ? `${X.where}${C}<b>${esc(town(pq.town))}</b>` : '',
+      pq.terms.length ? `${X.words}${C}${pq.terms.map(t => `<b>${esc(t.word)}</b>`).join(' ')}` : '',
     ].filter(Boolean);
     const third = pq.concepts.some(c => c.id === 'app');
     res.innerHTML = `<div class="tm-res-head"><h2 tabindex="-1" id="tm-res-h">${esc(X.best(lastQ))}</h2><p>${out.length ? esc(X.ranked(nOrg, nPpl)) : ''}</p></div>
-${read.length ? `<p class="tm-understood">${X.read}: ${read.join(' · ')}</p>` : ''}
+${read.length ? `<p class="tm-understood">${X.read}${C}${read.join(' · ')}</p>` : ''}
 ${third ? `<div class="tm-third-in" style="margin-bottom:1rem"><p>${esc(X.third)}</p></div>` : ''}
 ${out.length ? `<ol class="tm-res-list">${top.map((r, i) => {
       const { e } = r;
@@ -473,14 +474,14 @@ ${out.length ? `<ol class="tm-res-list">${top.map((r, i) => {
     $$('.tm-need.is-mine', list).forEach(x => x.remove());
     for (const n of [...S.posted].reverse()) {
       const role = n.role === 'org' ? `<span class="tm-role r-org">${esc(W.fRoles.find(r => r[0] === 'org')[1])}</span>` : `<span class="tm-role r-${n.role}">${esc(I.roles[n.role])}</span>`;
-      list.insertAdjacentHTML('afterbegin', `<li class="tm-need is-mine" data-mine="${esc(n.id)}"><div class="tm-card-top"><span class="tm-mine">${X.mine}</span>${role}</div><h4>${esc(n.what)}</h4><p class="tm-place">${esc(n.who)} · ${esc(town(n.town))}</p><p><strong>${esc(W.offer)}:</strong> ${esc(n.pay)}</p>
+      list.insertAdjacentHTML('afterbegin', `<li class="tm-need is-mine" data-mine="${esc(n.id)}"><div class="tm-card-top"><span class="tm-mine">${X.mine}</span>${role}</div><h4>${esc(n.what)}</h4><p class="tm-place">${esc(n.who)} · ${esc(town(n.town))}</p><p><strong>${esc(W.offer)}${C.trimEnd()}</strong> ${esc(n.pay)}</p>
 <div class="tm-need-acts"><button type="button" class="tm-btn tm-btn-main" data-match-mine="${esc(n.id)}">${esc(W.findMatches)}</button><button type="button" class="tm-btn tm-btn-ghost" data-del="${esc(n.id)}">${X.del}</button></div></li>`);
     }
   }
   list.addEventListener('click', e => {
     const m = e.target.closest('[data-match-need]'), mm = e.target.closest('[data-match-mine]'), d = e.target.closest('[data-del]');
-    if (m) { const n = needs.find(x => x.id === m.dataset.matchNeed); $('#tm-q').value = needQuery(n); runAsk(`${T(n.what)} ${T(n.tags)} ${town(n.town)}`, { town: n.town, role: n.role }, { cents: PRICE.need, label: `${X.ch.need}: ${T(n.what)}` }); }
-    if (mm) { const n = S.posted.find(x => x.id === mm.dataset.matchMine); $('#tm-q').value = `${n.what} ${town(n.town)}`; runAsk(n.what, { town: n.town, role: n.role }, { cents: PRICE.need, label: `${X.ch.need}: ${n.what}` }); }
+    if (m) { const n = needs.find(x => x.id === m.dataset.matchNeed); $('#tm-q').value = needQuery(n); runAsk(`${T(n.what)} ${T(n.tags)} ${town(n.town)}`, { town: n.town, role: n.role }, { cents: PRICE.need, label: `${X.ch.need}${C}${T(n.what)}` }); }
+    if (mm) { const n = S.posted.find(x => x.id === mm.dataset.matchMine); $('#tm-q').value = `${n.what} ${town(n.town)}`; runAsk(n.what, { town: n.town, role: n.role }, { cents: PRICE.need, label: `${X.ch.need}${C}${n.what}` }); }
     if (d) { S.posted = S.posted.filter(x => x.id !== d.dataset.del); save(); drawPosted(); }
   });
   $$('[data-match-need]').forEach(b => { b.hidden = false; });
@@ -488,7 +489,7 @@ ${out.length ? `<ol class="tm-res-list">${top.map((r, i) => {
     e.preventDefault();
     const n = { id: `u${Date.now()}`, who: form.who.value.trim(), what: form.what.value.trim(), town: form.town.value, pay: form.pay.value.trim(), role: form.role.value };
     if (!n.who || !n.what || !n.pay) return;
-    if (!pay(PRICE.post, `${X.ch.post}: ${n.what}`)) return;
+    if (!pay(PRICE.post, `${X.ch.post}${C}${n.what}`)) return;
     S.posted.push(n); save(); drawPosted(); form.reset();
     $('#tm-post-done').textContent = X.posted;
     $('#tm-q').value = `${n.what} ${town(n.town)}`; runAsk(n.what, { town: n.town, role: n.role }, { cents: 0 });
@@ -504,7 +505,7 @@ ${out.length ? `<ol class="tm-res-list">${top.map((r, i) => {
 <div class="tm-card tm-person tm-preview"><div class="tm-card-top">${p.roles.map(r => `<span class="tm-role r-${r}">${esc(I.roles[r])}</span>`).join('')}</div><div class="tm-person-h"><span class="tm-avatar" aria-hidden="true">${esc(p.name.split(' ').map(x => x[0]).slice(0, 2).join(''))}</span><div><h4>${esc(p.name)}</h4><p class="tm-place">${esc(town(p.town))} · ${esc(T(p.sector))} · ${esc(T(p.rate))}</p></div></div><p class="tm-what">${esc(T(p.offer))}</p></div>
 ${editing ? `<form class="tm-change" id="tm-change"><label>${X.offer}<textarea name="offer" rows="3" maxlength="200">${esc(T(p.offer))}</textarea></label><label>${esc(X.rate)}<input name="rate" maxlength="60" value="${esc(T(p.rate))}"></label><button class="tm-btn tm-btn-main" type="submit">${X.send}</button></form>` : ''}
 <div class="tm-mail-actions"><button type="button" class="tm-btn tm-btn-main" data-c="yes">${esc(W.approve)}</button><button type="button" class="tm-btn tm-btn-ghost" data-c="change">${esc(W.change)}</button><button type="button" class="tm-btn tm-btn-ghost" data-c="no">${esc(W.noList)}</button></div>
-<p class="tm-d-note">${X.answer}: ${esc(X.status[st])}</p>
+<p class="tm-d-note">${X.answer}${C}${esc(X.status[st])}</p>
 <p class="tm-mail-say${sayNo ? ' is-no' : ''}" aria-live="polite" ${say ? '' : 'hidden'}>${esc(say)}</p>`;
     const ch = $('#tm-change', mail);
     if (ch) { ch.offer.focus(); ch.addEventListener('submit', ev => { ev.preventDefault(); if (!pay(PRICE.consent, X.ch.consent(X.send))) return; S.edits[p.id] = { offer: ch.offer.value.trim(), rate: ch.rate.value.trim() }; save(); drawPeople(); drawMail(X.changeSay); }); }

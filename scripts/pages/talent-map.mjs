@@ -133,7 +133,7 @@ const W = {
     offer: 'Oferta', findMatches: 'Encontrar', postH: 'Publicar uma necessidade',
     postNote: 'Publicar custa 10 cêntimos de crédito simulado. Neste protótipo a sua necessidade fica só neste navegador (localStorage): nada é enviado, mais ninguém a vê e pode apagá-la.',
     fWho: 'Quem é', fWhoPh: 'Uma fundadora em Faro', fWhat: 'De que precisa', fWhatPh: 'Um programador a tempo parcial para um piloto de dois meses com três hotéis',
-    fTown: 'Onde', fPay: 'Quanto vai pagar', fPayPh: '300 €/dia, cerca de 20 dias', fRole: 'Que tipo de ajuda',
+    fTown: 'Onde', fPay: 'Quanto vai pagar', fPayPh: '300 €/dia, cerca de 20 dias', fRole: 'Que tipo de ajuda',
     fRoles: [['talent', 'Serviços e talento'], ['mentor', 'Mentoria'], ['investor', 'Investimento'], ['org', 'Uma organização']],
     fSubmit: 'Publicar, neste navegador',
     consentH: 'Consentimento primeiro',
@@ -151,7 +151,7 @@ const W = {
       ['Um repositório com Pages', 'Sem servidor nem base de dados: os dados aprovados são um ficheiro e o site lê-o.'],
     ],
     payH: 'Pagar por utilização, depois do valor',
-    payTxt: 'Estar no mapa é gratuito. Quem visita paga um pouco por cada coisa que faz, depois de ver o que lhe dá: alguns cêntimos por uma pesquisa, um filtro ou um perfil, e 0,50 € por um contacto. Neste protótipo tudo sai de 5 € de crédito inicial, como no protótipo da proposta: é simulado, nada é cobrado e nada é enviado. O valor de uma apresentação não está decidido.',
+    payTxt: 'Estar no mapa é gratuito. Quem visita paga um pouco por cada coisa que faz, depois de ver o que lhe dá: alguns cêntimos por uma pesquisa, um filtro ou um perfil, e 0,50 € por um contacto. Neste protótipo tudo sai de 5 € de crédito inicial, como no protótipo da proposta: é simulado, nada é cobrado e nada é enviado. O valor de uma apresentação não está decidido.',
     credit: 'Crédito', oneContact: '1 contacto',
     footData: 'Dados', footSources: 'Fontes', footLicence: 'Licença',
     footDataTxt: 'Organizações: pesquisa pública do PrompTugal.news, compilada a', footDataTxt2: 'Pessoas e necessidades: inventadas, do protótipo da proposta (cofre público cig07f79).',
@@ -194,7 +194,7 @@ const W = {
     offer: 'Oferta', findMatches: 'Buscar coincidencias', postH: 'Publicar una necesidad',
     postNote: 'Publicar cuesta 10 céntimos de crédito simulado. En este prototipo su necesidad se guarda solo en este navegador (localStorage): no se envía nada a nadie, nadie más la ve y puede borrarla.',
     fWho: 'Quién es', fWhoPh: 'Una fundadora en Faro', fWhat: 'Qué necesita', fWhatPh: 'Un desarrollador a tiempo parcial para un piloto de dos meses con tres hoteles',
-    fTown: 'Dónde', fPay: 'Qué pagará', fPayPh: '300 €/día, unos 20 días', fRole: 'Qué tipo de ayuda',
+    fTown: 'Dónde', fPay: 'Qué pagará', fPayPh: '300 €/día, unos 20 días', fRole: 'Qué tipo de ayuda',
     fRoles: [['talent', 'Servicios y talento'], ['mentor', 'Un mentor'], ['investor', 'Inversión'], ['org', 'Una organización']],
     fSubmit: 'Publicarla, en este navegador',
     consentH: 'Primero, el consentimiento',
@@ -212,7 +212,7 @@ const W = {
       ['Un repositorio con Pages', 'Sin servidor ni base de datos: los datos aprobados son un archivo y el sitio lo lee.'],
     ],
     payH: 'Pagar por uso, después de ver el valor',
-    payTxt: 'Aparecer en el mapa es gratis. Quien visita paga un poco por cada cosa que hace, después de ver lo que le aporta: unos céntimos por una búsqueda, un filtro o un perfil, y 0,50 € por un contacto. En este prototipo todo sale de 5 € de crédito inicial, como en el prototipo de la propuesta: es simulado, no se cobra nada y no se envía nada. Lo que vale una presentación no está decidido.',
+    payTxt: 'Aparecer en el mapa es gratis. Quien visita paga un poco por cada cosa que hace, después de ver lo que le aporta: unos céntimos por una búsqueda, un filtro o un perfil, y 0,50 € por un contacto. En este prototipo todo sale de 5 € de crédito inicial, como en el prototipo de la propuesta: es simulado, no se cobra nada y no se envía nada. Lo que vale una presentación no está decidido.',
     credit: 'Crédito', oneContact: '1 contacto',
     footData: 'Datos', footSources: 'Fuentes', footLicence: 'Licencia',
     footDataTxt: 'Organizaciones: investigación pública de PrompTugal.news, compilada el', footDataTxt2: 'Personas y necesidades: inventadas, del prototipo de la propuesta (bóveda pública cig07f79).',
@@ -255,7 +255,7 @@ const W = {
     offer: 'Offre', findMatches: 'Trouver des correspondances', postH: 'Publier un besoin',
     postNote: 'Publier coûte 10 centimes de crédit simulé. Dans ce prototype, votre besoin est gardé seulement dans ce navigateur (localStorage) : rien n\'est envoyé, personne d\'autre ne le voit, et vous pouvez le supprimer.',
     fWho: 'Qui vous êtes', fWhoPh: 'Une fondatrice à Faro', fWhat: 'Ce dont vous avez besoin', fWhatPh: 'Un développeur à temps partiel pour un pilote de deux mois avec trois hôtels',
-    fTown: 'Où', fPay: 'Ce que vous paierez', fPayPh: '300 €/jour, environ 20 jours', fRole: 'Quel type d\'aide',
+    fTown: 'Où', fPay: 'Ce que vous paierez', fPayPh: '300 €/jour, environ 20 jours', fRole: 'Quel type d\'aide',
     fRoles: [['talent', 'Services et talents'], ['mentor', 'Un mentor'], ['investor', 'Investissement'], ['org', 'Une organisation']],
     fSubmit: 'Publier, dans ce navigateur',
     consentH: 'D\'abord le consentement',
@@ -273,7 +273,7 @@ const W = {
       ['Un dépôt avec Pages', 'Ni serveur ni base de données : les données approuvées sont un fichier, et le site le lit.'],
     ],
     payH: 'Payer à l\'usage, après avoir vu la valeur',
-    payTxt: 'Figurer sur la carte est gratuit. Le visiteur paie un peu pour chaque chose qu\'il fait, après avoir vu ce qu\'elle lui apporte : quelques centimes pour une recherche, un filtre ou un profil, et 0,50 € pour un contact. Dans ce prototype, tout vient de 5 € de crédit de départ, comme dans le prototype de la proposition : c\'est simulé, rien n\'est débité et rien n\'est envoyé. La valeur d\'une mise en relation n\'est pas décidée.',
+    payTxt: 'Figurer sur la carte est gratuit. Le visiteur paie un peu pour chaque chose qu\'il fait, après avoir vu ce qu\'elle lui apporte : quelques centimes pour une recherche, un filtre ou un profil, et 0,50 € pour un contact. Dans ce prototype, tout vient de 5 € de crédit de départ, comme dans le prototype de la proposition : c\'est simulé, rien n\'est débité et rien n\'est envoyé. La valeur d\'une mise en relation n\'est pas décidée.',
     credit: 'Crédit', oneContact: '1 contact',
     footData: 'Données', footSources: 'Sources', footLicence: 'Licence',
     footDataTxt: 'Organisations : recherches publiques de PrompTugal.news, compilées le', footDataTxt2: 'Personnes et besoins : inventés, issus du prototype de la proposition (coffre public cig07f79).',
@@ -338,6 +338,7 @@ export function render(ctx) {
   const kindCount = {}; for (const o of orgs) kindCount[o.kind] = (kindCount[o.kind] || 0) + 1;
   const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
   const fold = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const C = lang === 'fr' ? '\u00a0:' : ':'; // French puts a space before a colon
   const kindLabel = k => KIND[k][lang] || KIND[k].en;
   const roleLabel = r => ROLE[r][lang] || ROLE[r].en;
   const orderTowns = ['algarve', ...munis.map(m => m.id).sort((a, b) => fold(townName(a)).localeCompare(fold(townName(b))))];
@@ -352,7 +353,7 @@ export function render(ctx) {
 <h4><a class="tm-open" href="#org-${esc(o.id)}" data-open="org:${esc(o.id)}">${esc(o.name)}</a></h4>
 <p class="tm-place">${esc(o.towns.map(townName).join(' · '))}${o.amount ? ` · <strong>${esc(o.amount)}</strong>` : ''}</p>
 <p class="tm-what"${inLang(o) || lang === 'en' ? '' : ' lang="en"'}>${esc(text)}</p>
-<p class="tm-src">${w.source}: <a href="${esc(o.source_url)}" rel="noopener">${esc(host(o.source_url))}</a>, ${w.read} ${esc(date(o.read_on))}</p>
+<p class="tm-src">${w.source}${C} <a href="${esc(o.source_url)}" rel="noopener">${esc(host(o.source_url))}</a>, ${w.read} ${esc(date(o.read_on))}</p>
 </li>`;
   };
   const groups = orderTowns.map(tw => {
@@ -361,7 +362,7 @@ export function render(ctx) {
     return `<section class="tm-group" id="town-${tw}" data-town="${tw}" aria-labelledby="tg-${tw}">
 <h3 id="tg-${tw}"><span>${esc(townName(tw))}</span> <span class="tm-group-n">${(presence[tw] || 0)}</span></h3>
 <ul class="tm-cards">${own.map(orgCard).join('\n')}</ul>
-${also.length ? `<p class="tm-also"><span>${w.alsoHere}:</span> ${also.map(o => `<a href="#org-${esc(o.id)}" class="tm-also-a" data-id="${esc(o.id)}" data-open="org:${esc(o.id)}" data-kind="${o.kind}" data-s="${esc(fold([o.name, o.what, inLang(o), kindLabel(o.kind)].join(' ')))}">${esc(o.name)}</a>`).join('')}</p>` : ''}
+${also.length ? `<p class="tm-also"><span>${w.alsoHere}${C}</span> ${also.map(o => `<a href="#org-${esc(o.id)}" class="tm-also-a" data-id="${esc(o.id)}" data-open="org:${esc(o.id)}" data-kind="${o.kind}" data-s="${esc(fold([o.name, o.what, inLang(o), kindLabel(o.kind)].join(' ')))}">${esc(o.name)}</a>`).join('')}</p>` : ''}
 </section>`;
   }).join('\n');
 
@@ -375,7 +376,7 @@ ${also.length ? `<p class="tm-also"><span>${w.alsoHere}:</span> ${also.map(o => 
 </li>`;
 
   const needCard = n => `<li class="tm-need" data-id="${n.id}" data-town="${n.town}"><div class="tm-card-top"><span class="tm-sim">${w.simBadge}</span><span class="tm-role r-${n.role}">${roleLabel(n.role)}</span></div>
-<h4>${esc(t(n.what))}</h4><p class="tm-place">${esc(t(n.who))}</p><p><strong>${w.offer}:</strong> ${esc(t(n.pay))}</p><p class="tm-tags">${esc(t(n.tags))}</p>
+<h4>${esc(t(n.what))}</h4><p class="tm-place">${esc(t(n.who))}</p><p><strong>${w.offer}${C}</strong> ${esc(t(n.pay))}</p><p class="tm-tags">${esc(t(n.tags))}</p>
 <button type="button" class="tm-btn tm-btn-ghost" data-match-need="${n.id}" hidden>${w.findMatches}</button></li>`;
 
   const kinds = Object.keys(KIND);
@@ -423,7 +424,7 @@ ${chrome.banner}
    <label for="tm-q" class="tm-ask-l">${w.askLabel}</label>
    <div class="tm-ask-row"><input id="tm-q" name="q" type="search" autocomplete="off" placeholder="${esc(w.askPh)}" enterkeyhint="search"><button class="tm-btn tm-btn-main" type="submit">${w.askBtn}</button></div>
    <p class="tm-ask-hint">${w.askHint}</p>
-   <p class="tm-try"><span>${w.tryLabel}:</span> ${w.examples.map(x => `<button type="button" class="tm-chip" data-ask="${esc(x)}">${esc(x)}</button>`).join('')}</p>
+   <p class="tm-try"><span>${w.tryLabel}${C}</span> ${w.examples.map(x => `<button type="button" class="tm-chip" data-ask="${esc(x)}">${esc(x)}</button>`).join('')}</p>
    <noscript><p class="tm-ask-hint"><strong>${w.noscriptAsk}</strong></p></noscript>
   </form>
  </div>

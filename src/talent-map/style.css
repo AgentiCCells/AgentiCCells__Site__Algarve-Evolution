@@ -363,7 +363,7 @@ html.no-js .tm-list-people { margin-top: 32px; }
 @media print { .tm-top, .tm-ask, .tm-filters, .tm-map, .tm-towns, .tm-post, .tm-dialog { display: none !important; } .tm-hero { background: none; color: #000; } }
 @media (max-width: 30rem) { .tm-layer { display: flex; width: 100%; } .tm-layer button { flex: 1 1 auto; padding: .55rem .5rem; font-size: .86rem; white-space: normal; } }
 .tm-hero-in > * { min-width: 0; }
-.tm-pill { white-space: normal; }
+.tm-pill { white-space: normal; line-height: 1.3; }
 @media (max-width: 23rem) { .tm-brand span { display: none; } }
 html.no-js .tm-explore-grid { grid-template-columns: minmax(0, 1fr); max-width: 60rem; }
 .tm-nav a { white-space: nowrap; }
@@ -372,7 +372,7 @@ html.no-js .tm-explore-grid { grid-template-columns: minmax(0, 1fr); max-width: 
 .tm a.tm-skip { color: var(--bg); }
 
 /* Pay per use, after the value: the line under the hero legend, and room at the bottom for the shared wallet pill. */
-.tm-payline { display: flex; gap: .6rem; align-items: flex-start; margin: 1rem 0 1.2rem; padding: .6rem .8rem; max-width: 40rem; border: 1px solid rgba(255, 213, 138, .45); border-radius: 12px; background: rgba(255, 213, 138, .1); color: var(--hero-ink); font-size: .9rem; line-height: 1.45; }
+.tm-payline { display: flex; gap: .6rem; align-items: flex-start; margin: 0 0 1.2rem !important; padding: .6rem .8rem; max-width: 40rem; border: 1px solid rgba(255, 213, 138, .45); border-radius: 12px; background: rgba(255, 213, 138, .1); color: var(--hero-ink); font-size: .9rem; line-height: 1.45; }
 .tm-coin { flex: none; width: 20px; height: 20px; margin-top: .1rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe7a8, #f0b429 60%, #b7791f); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .2); }
 .tm-broke .tm-btn { margin-top: .5rem; }
 .tm-broke { color: #8a1c0b; background: #fff1ee; border: 1px solid #f3c2b8; border-radius: 10px; padding: .5rem .7rem; }
