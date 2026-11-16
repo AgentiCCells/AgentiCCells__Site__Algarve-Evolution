@@ -1,0 +1,58 @@
+{
+  "about": "The site's own words, written in Algarve Evolution's voice for this prototype (Dinis Cruz, 16 November 2026: 'it should be literally in their voice to show their people'). Every claim here is a fact from the data files, with the same sources; the voice is ours until Algarve Evolution approves or rewrites it. Text CC BY 4.0.",
+  "banner": {
+    "en": "A prototype website made by the PrompTugal team for Algarve Evolution; not yet approved by Algarve Evolution.",
+    "pt": "Um protótipo de site feito pela equipa PrompTugal para a Algarve Evolution; ainda não aprovado pela Algarve Evolution."
+  },
+  "banner_link": {"en": "Its official site is algarveevolution.pt", "pt": "O site oficial é algarveevolution.pt"},
+  "tagline": {"en": "Building the Algarve's economy beyond tourism", "pt": "Construir a economia do Algarve para além do turismo"},
+  "hero_lede": {
+    "en": "We are Algarve Evolution, a Faro-based association that connects the region's entrepreneurs, talent, startups, smaller companies and partners. We began in 2018 as a small group of local entrepreneurs. Now we are making the ecosystem work.",
+    "pt": "Somos a Algarve Evolution, uma associação sediada em Faro que liga os empreendedores, o talento, as startups, as PME e os parceiros da região. Começámos em 2018 como um pequeno grupo de empresários locais. Agora estamos a pôr o ecossistema a funcionar."
+  },
+  "mission": {
+    "en": "Our mandate is to diversify the Algarve's economy beyond tourism and help the region's established industries become more competitive.",
+    "pt": "A nossa missão é diversificar a economia do Algarve para além do turismo e ajudar as indústrias já instaladas na região a tornarem-se mais competitivas."
+  },
+  "goals_title": {"en": "Our goals for 2032", "pt": "Os nossos objetivos para 2032"},
+  "goals": [
+    {"value": "500", "label": {"en": "companies supported", "pt": "empresas apoiadas"}},
+    {"value": "150", "label": {"en": "startups created", "pt": "startups criadas"}},
+    {"value": "50,000", "value_pt": "50.000", "label": {"en": "people reached", "pt": "pessoas alcançadas"}}
+  ],
+  "goals_note": {"en": "Targets, not results.", "pt": "Metas, não resultados."},
+  "goals_sources": ["https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/"],
+  "pillars_intro": {
+    "en": "We work on three pillars: education, startups and smaller companies, and the innovation ecosystem that keeps people and companies in the region.",
+    "pt": "Trabalhamos em três pilares: a educação, as startups e PME, e o ecossistema de inovação que mantém as pessoas e as empresas na região."
+  },
+  "story_intro": {
+    "en": "From about 29 technology companies in 2019 to 118 active members in 2026.",
+    "pt": "De cerca de 29 empresas tecnológicas em 2019 a 118 membros ativos em 2026."
+  },
+  "story_sources": ["https://www.barlavento.pt/mais/algarve-evolution-vai-promover-empresas-de-vanguarda-tecnologica", "https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/"],
+  "network_intro": {
+    "en": "We work with the University of the Algarve, Algarve STP, AMAL, NERA, ANJE, Junior Achievement Portugal and Startup Portugal, and with communities in all 16 of the Algarve's municipalities.",
+    "pt": "Trabalhamos com a Universidade do Algarve, o Algarve STP, a AMAL, a NERA, a ANJE, a Junior Achievement Portugal e a Startup Portugal, e com comunidades nos 16 municípios do Algarve."
+  },
+  "join_title": {"en": "Join us", "pt": "Junte-se a nós"},
+  "join": [
+    {"en": "Come to an event. Our calendar is on algarveevolution.pt.", "pt": "Venha a um evento. O nosso calendário está em algarveevolution.pt."},
+    {"en": "Find a community near you: Algarve Digital Innovators has 24 communities across the region.", "pt": "Encontre uma comunidade perto de si: a Algarve Digital Innovators tem 24 comunidades em toda a região."},
+    {"en": "Become a member. Our categories include Start, at €150 a year, for startups from idea stage to active growth.", "pt": "Torne-se membro. As nossas categorias incluem a Start, a 150 € por ano, para startups desde a ideia até ao crescimento."}
+  ],
+  "join_sources": ["https://www.algarveevolution.pt/join-us", "https://newsroom.sgit.ai/articles/joining-algarve-evolution.html"],
+  "try_title": {"en": "Try it: two ideas, working", "pt": "Experimente: duas ideias, a funcionar"},
+  "try_intro": {
+    "en": "Two of the ideas proposed to us, built as working prototypes. Nothing in them is agreed yet.",
+    "pt": "Duas das ideias que nos foram propostas, construídas como protótipos a funcionar. Nada nelas está ainda acordado."
+  },
+  "apps": [
+    {"id": "talent-map", "href": "/talent-map/", "name": {"en": "The Algarve talent map", "pt": "O mapa de talento do Algarve"}, "summary": {"en": "Find the organisations, programmes and people who can help, by town and by need. Consent first: no person is listed until they say yes.", "pt": "Encontre as organizações, os programas e as pessoas que podem ajudar, por concelho e por necessidade. Consentimento primeiro: ninguém é publicado sem dizer que sim."}},
+    {"id": "spreadsheet-to-app", "href": "/spreadsheet-to-app/", "name": {"en": "Spreadsheet to App", "pt": "Da folha de cálculo à aplicação"}, "summary": {"en": "Bring a spreadsheet from your work and leave with an app. Try it now with one of five examples, or your own file: nothing leaves your browser.", "pt": "Traga uma folha de cálculo do seu trabalho e saia com uma aplicação. Experimente já com um de cinco exemplos ou com o seu ficheiro: nada sai do seu navegador."}}
+  ],
+  "footer_disclosure": {
+    "en": "This prototype was made by the PrompTugal team (PrompTugal.news and AgentiCCells, run by Dinis Cruz) from public sources, to show Algarve Evolution what its site could be. The two working ideas were first proposed in the SGit Newsroom, whose publisher, The Cyber Boardroom, said on 31 October 2026 that it is taking the Start membership.",
+    "pt": "Este protótipo foi feito pela equipa PrompTugal (PrompTugal.news e AgentiCCells, dirigidos por Dinis Cruz) a partir de fontes públicas, para mostrar à Algarve Evolution o que o seu site pode ser. As duas ideias a funcionar foram propostas no SGit Newsroom, cuja editora, a The Cyber Boardroom, disse a 31 de outubro de 2026 que vai aderir como membro Start."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "about": "People named on this site, each with a public professional role and its sources. Dinis Cruz confirmed on 16 November 2026 that the executive director may be named and quoted on this prototype, as PrompTugal.news does (its decision of 6 November 2026). Nobody else is named. Text CC BY 4.0.",
+  "people": [
+    {
+      "id": "antonio-guerreiro",
+      "name": "António Guerreiro",
+      "role": {"en": "Executive director", "pt": "Diretor executivo"},
+      "summary": {"en": "Presented the Algarve Digital Innovators network at its launch in Lagos in September 2025, and describes 2026 as the shift from building a community to making the ecosystem work.", "pt": "Apresentou a rede Algarve Digital Innovators no lançamento em Lagos, em setembro de 2025, e descreve 2026 como a passagem de construir uma comunidade para pôr o ecossistema a funcionar."},
+      "sources": [
+        "https://postal.pt/algarve/impact-algarve-juntou-principais-intervenientes-locais-para-debaterem-o-futuro-da-regiao/",
+        "https://portugalstartupnews.com/2026/11/01/algarve-evolution-aims-to-support-500-companies-and-help-create-150-startups-by-2032-in-push-beyond-tourism/",
+        "https://postal.pt/algarve/lagos-lanca-rede-algarve-digital-innovators-para-impulsionar-inovacao-e-startups/"
+      ]
+    }
+  ],
+  "quotes": [
+    {
+      "id": "ambitious-goals",
+      "by": "antonio-guerreiro",
+      "about": "the 2032 goals: 500 companies supported, 150 startups created, 50,000 people reached",
+      "text": {"en": "These are ambitious goals, and we know we can only achieve them by working together with our partners and the wider innovation ecosystem.", "pt": "São objetivos ambiciosos, e sabemos que só os conseguiremos alcançar trabalhando em conjunto com os nossos parceiros e com todo o ecossistema de inovação."},
+      "translation_note": {"pt": "Tradução nossa; o original foi escrito em inglês."},
+      "date": "2026-11-06",
+      "sources": ["https://promptugal.news/portugal/algarve-evolution/"]
+    }
+  ]
+}
