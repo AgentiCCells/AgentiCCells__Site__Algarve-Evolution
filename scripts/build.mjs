@@ -6,7 +6,7 @@ import { cpSync, rmSync, readdirSync, readFileSync, writeFileSync, statSync, mkd
 import { join, dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { makeRenderer } from './render.mjs';
-import { loadData, helpers, chrome, designPath, localise } from './site-data.mjs';
+import { loadData, helpers, chrome, designPath, localise, LANGS, langPath } from './site-data.mjs';
 
 const version = process.env.SITE_VERSION || 'dev';
 const out = process.env.SITE_OUT || '_site';
@@ -16,8 +16,12 @@ const walk = d => readdirSync(d).flatMap(f => { const p = join(d, f); return sta
 const render = makeRenderer('src/data');
 const raw = loadData('src/data');
 const data = raw; // English view; each page gets localise(raw, lang)
-const views = { en: localise(raw, 'en'), pt: localise(raw, 'pt') };
+const views = Object.fromEntries(LANGS.map(l => [l, localise(raw, l)]));
 
+// A design or page that throws is reported; the build fails at the end. BUILD_KEEP_GOING=1 writes the rest anyway,
+// so several people can work on different designs at once (CI never sets it).
+const failures = [];
+const attempt = (what, fn) => { try { fn(); } catch (e) { failures.push(`${what}: ${e.message}`); console.error(`FAILED ${what}: ${e.stack.split('\n').slice(0, 2).join(' ')}`); } };
 const write = (path, html) => { const f = join(out, path, 'index.html'); mkdirSync(dirname(f), { recursive: true }); writeFileSync(f, html); };
 const load = async dir => existsSync(dir)
   ? (await Promise.all(readdirSync(dir).filter(f => f.endsWith('.mjs') && !f.startsWith('_')).sort()
@@ -30,24 +34,26 @@ const manifest = [{ slug: 'coast', order: 1, group: 'classic', name: { en: 'The 
 for (const d of designs) {
   const { meta } = d;
   manifest.push({ slug: meta.slug, order: meta.order, group: meta.group, name: meta.name, tagline: meta.tagline });
-  for (const lang of ['en', 'pt']) {
-    const other = designPath(meta.slug, lang === 'en' ? 'pt' : 'en');
-    const ctx = { lang, data: views[lang], h: helpers(views[lang], lang), version, slug: meta.slug, self: designPath(meta.slug, lang), other,
-      home: designPath('coast', lang), chrome: chrome(views[lang], lang, { slug: meta.slug, version, other }) };
-    write(designPath(meta.slug, lang), d.render(ctx));
+  const alt = Object.fromEntries(LANGS.map(l => [l, designPath(meta.slug, l)]));
+  for (const lang of LANGS) {
+    const other = alt[lang === 'en' ? 'pt' : 'en'];
+    const ctx = { lang, langs: LANGS, alt, data: views[lang], h: helpers(views[lang], lang), version, slug: meta.slug, self: alt[lang], other,
+      home: designPath('coast', lang), chrome: chrome(views[lang], lang, { slug: meta.slug, version, alt }) };
+    attempt(`design ${meta.slug} (${lang})`, () => write(alt[lang], d.render(ctx)));
   }
 }
 manifest.sort((a, b) => a.order - b.order);
-for (const m of manifest) { m.paths = { en: designPath(m.slug, 'en'), pt: designPath(m.slug, 'pt') }; m.thumb = existsSync(join('src/assets/designs', `${m.slug}.jpg`)) ? `/assets/designs/${m.slug}.jpg` : null; }
+for (const m of manifest) { m.paths = Object.fromEntries(LANGS.map(l => [l, designPath(m.slug, l)])); m.thumb = existsSync(join('src/assets/designs', `${m.slug}.jpg`)) ? `/assets/designs/${m.slug}.jpg` : null; }
 writeFileSync(join(out, 'designs.json'), JSON.stringify({ default: 'coast', designs: manifest }, null, 1) + '\n');
 
-// App pages: scripts/pages/<name>.mjs exports paths { en, pt } and render(ctx).
+// App pages: scripts/pages/<name>.mjs exports name, paths { en } (other languages are /<lang> + the English path) and render(ctx).
 for (const p of await load('scripts/pages')) {
-  for (const lang of ['en', 'pt']) {
-    const other = p.paths[lang === 'en' ? 'pt' : 'en'];
-    const ctx = { lang, data: views[lang], h: helpers(views[lang], lang), version, slug: p.name || 'app', self: p.paths[lang], other, home: designPath('coast', lang),
-      chrome: chrome(views[lang], lang, { slug: 'app', version, other }) };
-    write(p.paths[lang], p.render(ctx));
+  const alt = Object.fromEntries(LANGS.map(l => [l, p.paths?.[l] && l !== 'en' && l !== 'pt' ? p.paths[l] : langPath(p.paths.en, l)]));
+  for (const lang of LANGS) {
+    const other = alt[lang === 'en' ? 'pt' : 'en'];
+    const ctx = { lang, langs: LANGS, alt, data: views[lang], h: helpers(views[lang], lang), version, slug: p.name || 'app', self: alt[lang], other, home: designPath('coast', lang),
+      chrome: chrome(views[lang], lang, { slug: 'app', version, alt, app: p.name }) };
+    attempt(`page ${p.name} (${lang})`, () => write(alt[lang], p.render(ctx)));
   }
 }
 
@@ -61,3 +67,4 @@ for (const f of walk(out)) {
 writeFileSync(join(out, 'version.json'), JSON.stringify({ version, commit: process.env.GITHUB_SHA || 'local', built: new Date().toISOString() }, null, 2) + '\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}/ (${version}): ${manifest.length} designs`);
+if (failures.length) { console.error(`${failures.length} render failure(s)`); if (process.env.BUILD_KEEP_GOING !== '1') process.exit(1); }

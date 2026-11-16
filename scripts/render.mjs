@@ -11,23 +11,33 @@ const t = (v, lang) => (v && typeof v === 'object' ? v[lang] ?? v.en : v);
 const words = {
   en: { sources: 'Sources', source: 'Source', approx: 'about', proposal: 'Proposal', read: 'read', published: 'published', primary: 'which cites' },
   pt: { sources: 'Fontes', source: 'Fonte', approx: 'cerca de', proposal: 'Proposta', read: 'lido a', published: 'publicado a', primary: 'que cita' },
+  es: { sources: 'Fuentes', source: 'Fuente', approx: 'hacia', proposal: 'Propuesta', read: 'leído el', published: 'publicado el', primary: 'que cita' },
+  fr: { sources: 'Sources', source: 'Source', approx: 'vers', proposal: 'Proposition', read: 'lu le', published: 'publié le', primary: 'qui cite' },
 };
 const months = {
   en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   pt: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+  es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+  fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
 };
+const dayMonth = (d, m, lang) => lang === 'en' ? `${d} ${months.en[m - 1]}` : lang === 'fr' ? `${d === 1 ? '1er' : d} ${months.fr[m - 1]}` : `${d} de ${months[lang][m - 1]}`;
+const ofYear = (lang) => (lang === 'pt' || lang === 'es') ? ' de ' : ' ';
+const until = { en: 'to', pt: 'a', es: 'a', fr: 'au' };
 export function formatDate(iso, lang) {
-  const [y, m, d] = iso.split('-').map(Number);
-  return lang === 'pt' ? `${d} de ${months.pt[m - 1]} de ${y}` : `${d} ${months.en[m - 1]} ${y}`;
+  const [y, m, d] = iso.split('-').map(Number); if (!months[lang]) lang = 'en';
+  return `${dayMonth(d, m, lang)}${ofYear(lang)}${y}`;
 }
 function formatRange(start, end, lang) {
+  if (!months[lang]) lang = 'en';
   if (!end) return formatDate(start, lang);
   const [y1, m1, d1] = start.split('-').map(Number); const [y2, m2] = end.split('-').map(Number);
   if (y1 === y2 && m1 === m2) {
     const d2 = Number(end.split('-')[2]);
-    return lang === 'pt' ? `${d1} a ${d2} de ${months.pt[m1 - 1]} de ${y1}` : `${d1} to ${d2} ${months.en[m1 - 1]} ${y1}`;
+    if (lang === 'en') return `${d1} to ${d2} ${months.en[m1 - 1]} ${y1}`;
+    if (lang === 'fr') return `du ${d1} au ${d2} ${months.fr[m1 - 1]} ${y1}`;
+    return `${d1} a ${d2} de ${months[lang][m1 - 1]} de ${y1}`;
   }
-  return lang === 'pt' ? `${formatDate(start, lang)} a ${formatDate(end, lang)}` : `${formatDate(start, lang)} to ${formatDate(end, lang)}`;
+  return `${formatDate(start, lang)} ${until[lang]} ${formatDate(end, lang)}`;
 }
 
 export function makeRenderer(dataDir) {

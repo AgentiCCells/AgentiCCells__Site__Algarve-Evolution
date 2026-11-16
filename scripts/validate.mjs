@@ -62,11 +62,17 @@ for (const [file, i] of items) if (file === 'proposals' && i.status !== 'proposa
 for (const f of files.filter(f => f.endsWith('.html'))) {
   const s = readFileSync(f, 'utf8');
   if (/<!-- data:[a-z]+ -->/.test(s)) fail(`${f}: data block not rendered`);
-  if (!/not yet approved by Algarve Evolution|ainda não aprovado pela Algarve Evolution/.test(s)) fail(`${f}: no "not yet approved by Algarve Evolution" notice`);
+  if (!/not yet approved by Algarve Evolution|ainda não aprovado pela Algarve Evolution|aún no aprobado por Algarve Evolution|pas encore approuvé par Algarve Evolution/.test(s)) fail(`${f}: no "not yet approved by Algarve Evolution" notice`);
 }
 // No links to a publisher's staging or test host (a source captured from stg.example.com, 2026-11-16).
 for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
   for (const m of readFileSync(f, 'utf8').matchAll(/https?:\/\/((?:stg|staging|test|preview)\.[a-z0-9.-]+)/gi)) fail(`${f}: link to a staging or test host ${m[1]}`);
 }
+// Every design and every app page exists in every language (Dinis Cruz, 16 November 2026: four languages).
+const LANGS = ['en', 'pt', 'es', 'fr'];
+const manifest = (() => { try { return JSON.parse(readFileSync(join(out, 'designs.json'), 'utf8')); } catch { fail('designs.json missing'); return { designs: [] }; } })();
+for (const d of manifest.designs) for (const l of LANGS) { const p = d.paths?.[l]; if (!p || !existsSync(join(out, p, 'index.html'))) fail(`design ${d.slug}: no ${l} page`); }
+for (const a of ['/talent-map/', '/spreadsheet-to-app/']) for (const l of LANGS) { const p = l === 'en' ? a : `/${l}${a}`; if (!existsSync(join(out, p, 'index.html'))) fail(`app ${a}: no ${l} page`); }
+for (const f of files.filter(f => f.endsWith('.html'))) { const m = readFileSync(f, 'utf8').match(/<html lang="([a-z]{2})/); const rel = f.slice(out.length + 1); const want = rel.match(/^(pt|es|fr)\//)?.[1] || 'en'; if (m && m[1] !== want && !rel.startsWith('spreadsheet-to-app/example/')) fail(`${f}: <html lang="${m[1]}"> but the page is under /${want === 'en' ? '' : want + '/'}`); }
 if (problems.length) { console.error(problems.join('\n')); console.error(`FAILED: ${problems.length} problem(s)`); process.exit(1); }
 console.log('OK');
