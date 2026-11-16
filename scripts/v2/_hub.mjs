@@ -44,6 +44,7 @@ export function hubContext({ data, feed, version, path, title }) {
 <title>${esc(title)}${path === '/' ? '' : ' · AE Innovation Hub'}</title>
 <meta name="description" content="${esc(description || 'The AE Innovation Hub by Algarve Evolution: incubation and acceleration, Challenge Connect, Vibathon and the Talent Ecosystem, with Odoo as the source of truth.')}">
 <meta name="theme-color" content="#0a1d3d">
+<link rel="icon" href="/hub/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/hub/base.css">
 <link rel="stylesheet" href="/hub/hub.css">
 ${head}

@@ -269,3 +269,6 @@ a.card:hover, .card-link:hover { color: var(--hub-ink); border-color: var(--navy
 .hub-foot a:hover { color: #fff; }
 .hub-foot strong { color: #fff; }
 .hub-foot a:focus-visible { outline: 3px solid var(--hub-gold); outline-offset: 2px; }
+
+/* The hidden attribute always wins, even over components that set display (cards, buttons). */
+[hidden]{display:none!important}

@@ -11,6 +11,7 @@ export const nav = 'Challenge Connect';
 // The Algarve's municipalities, as the addon lists them for the town part of the score.
 const TOWNS = ['Albufeira', 'Alcoutim', 'Aljezur', 'Castro Marim', 'Faro', 'Lagoa', 'Lagos', 'Loulé', 'Monchique', 'Olhão', 'Portimão', 'Quarteira', 'São Brás de Alportel', 'Silves', 'Tavira', 'Vila do Bispo', 'Vila Real de Santo António'];
 const STATUS = { open: 'Open', matching: 'Matching', matched: 'Matched', closed: 'Closed' };
+const STATUS_TAG = { open: 'tag-accent', matching: 'tag-navy', matched: 'tag-ok', closed: '' };
 const STATUS_NOTE = { open: 'Taking applications', matching: 'Applications scored, decision pending', matched: 'A supplier was chosen', closed: 'Closed' };
 
 // Split a feed score back into its three parts from the addon's own reasons.
@@ -45,8 +46,8 @@ export function render({ layout, feed, h, ix }) {
     return `<svg class="cc-bar" viewBox="0 0 100 10" preserveAspectRatio="none" role="img" aria-label="${esc(label || `Score ${score} of 100: skills ${p.skills}, town ${p.town}, budget ${p.budget}`)}"><rect class="cc-bar-track" x="0" y="0" width="100" height="10"/>${seg(p.skills, 'cc-s-skills')}${seg(p.town, 'cc-s-town')}${seg(p.budget, 'cc-s-budget')}</svg>`;
   };
   const legend = `<p class="cc-legend" aria-hidden="true"><span><i class="cc-k cc-s-skills"></i>Skills (up to 50)</span><span><i class="cc-k cc-s-town"></i>Town (up to 20)</span><span><i class="cc-k cc-s-budget"></i>Budget fit (up to 30)</span></p>`;
-  const tags = list => `<ul class="cc-tags">${list.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`;
-  const pill = st => `<span class="cc-pill cc-pill-${esc(st)}">${esc(STATUS[st] || st)}</span>`;
+  const tags = list => `<ul class="cc-tags">${list.map(s => `<li class="tag">${esc(s)}</li>`).join('')}</ul>`;
+  const pill = st => `<span class="tag ${STATUS_TAG[st] || ''} cc-status">${esc(STATUS[st] || st)}</span>`;
   const deadline = c => {
     const n = daysTo(c.deadline);
     const rel = c.status === 'closed' || c.status === 'matched' ? '' : n < 0 ? ' (passed)' : n === 0 ? ' (today)' : ` (in ${n} day${n === 1 ? '' : 's'})`;
@@ -82,10 +83,10 @@ export function render({ layout, feed, h, ix }) {
   // ---- The board of challenges.
   const card = c => {
     const m = matchOf(c.id); const n = appsOf(c.id).length; const best = m?.ranked?.[0];
-    return `<li class="cc-card cc-card-${esc(c.status)}" data-ch="${esc(c.id)}" data-status="${esc(c.status)}" data-skills="${esc(c.skills.join('|'))}">
+    return `<li class="card cc-card${c.status === 'open' ? ' card-accent' : ''}" data-ch="${esc(c.id)}" data-status="${esc(c.status)}" data-skills="${esc(c.skills.join('|'))}">
   <div class="cc-card-top">${pill(c.status)} ${h.sim(c)}<span class="cc-fit" data-fit hidden></span></div>
   <h3 class="cc-card-title"><a href="#challenge-${esc(c.id)}" data-open="${esc(c.id)}">${esc(c.title)}</a></h3>
-  <p class="cc-card-owner">${esc(ownerName(c))}${ownerTown(c) ? ` · ${esc(ownerTown(c))}` : ''}</p>
+  <p class="card-meta">${esc(ownerName(c))}${ownerTown(c) ? ` · ${esc(ownerTown(c))}` : ''}</p>
   <p class="cc-card-problem">${esc(c.problem)}</p>
   ${tags(c.skills)}
   <dl class="cc-facts">
@@ -94,7 +95,7 @@ export function render({ layout, feed, h, ix }) {
     <div><dt>Applications</dt><dd>${h.num(n)}</dd></div>
     <div><dt>Best score</dt><dd>${best ? `${esc(best.score)} of 100` : 'None yet'}</dd></div>
   </dl>
-  <p class="cc-card-go"><a href="#challenge-${esc(c.id)}" data-open="${esc(c.id)}" aria-label="Requirements, applications and matching result: ${esc(c.title)}">Requirements and matching result</a></p>
+  <p class="card-foot cc-card-go"><a href="#challenge-${esc(c.id)}" data-open="${esc(c.id)}" aria-label="Requirements, applications and matching result: ${esc(c.title)}">Requirements and matching result</a></p>
 </li>`;
   };
 
@@ -122,13 +123,13 @@ export function render({ layout, feed, h, ix }) {
       </dl>
       <div class="cc-apply" data-only="supplier" hidden>
         ${takes ? `<h4 class="cc-h4">Apply as a supplier</h4>
-        <form class="cc-form" data-apply="${esc(c.id)}">
+        <form class="hub-form cc-form" data-apply="${esc(c.id)}">
           <p class="cc-as">Applying as <strong data-me-name>the supplier you picked above</strong>. <a href="#as-supplier">Change</a></p>
-          <label>Your proposal<textarea name="proposal" rows="3" required maxlength="600" placeholder="How you would solve it, in a few lines"></textarea></label>
-          <div class="cc-form-row"><label>Price (EUR)<input name="price" type="number" min="0" step="100" required inputmode="numeric" value="${Math.round((c.budget_eur_min + c.budget_eur_max) / 2 / 100) * 100}"></label>
-          <label>Days to deliver<input name="days" type="number" min="1" max="365" required inputmode="numeric" value="20"></label></div>
+          <label class="field"><span>Your proposal</span><textarea name="proposal" rows="3" required maxlength="600" placeholder="How you would solve it, in a few lines"></textarea></label>
+          <div class="cc-form-row"><label class="field"><span>Price (EUR)</span><input name="price" type="number" min="0" step="100" required inputmode="numeric" value="${Math.round((c.budget_eur_min + c.budget_eur_max) / 2 / 100) * 100}"></label>
+          <label class="field"><span>Days to deliver</span><input name="days" type="number" min="1" max="365" required inputmode="numeric" value="20"></label></div>
           <p class="cc-preview" data-preview aria-live="polite"></p>
-          <button class="cc-btn cc-btn-primary" type="submit">Apply (kept in this browser only)</button>
+          <button class="btn btn-accent" type="submit">Apply (kept in this browser only)</button>
         </form>
         <div data-call></div>` : `<p class="cc-note">This challenge is ${esc(STATUS[c.status].toLowerCase())}: it no longer takes applications.</p>`}
       </div>
@@ -149,8 +150,8 @@ export function render({ layout, feed, h, ix }) {
 </article>`;
   };
 
-  const supCard = s => `<li class="cc-sup" data-sup="${esc(s.id)}" data-kind="${esc(s.kind)}" data-caps="${esc(s.capabilities.join('|'))}">
-  <p class="cc-sup-kind">${s.kind === 'company' ? 'Company' : 'Individual professional'} ${h.sim(s)}</p>
+  const supCard = s => `<li class="card cc-sup" data-sup="${esc(s.id)}" data-kind="${esc(s.kind)}" data-caps="${esc(s.capabilities.join('|'))}">
+  <p class="cc-sup-kind">${s.kind === 'company' ? 'Company' : 'Individual'} ${h.sim(s)}</p>
   <h3 class="cc-sup-name">${esc(s.name)}</h3>
   <p class="cc-sup-town">${esc(s.town || 'Town not given')}${s.rate ? ` · ${esc(s.rate)}` : ''}</p>
   ${tags(s.capabilities)}
@@ -162,24 +163,24 @@ export function render({ layout, feed, h, ix }) {
   const cfg = { towns: TOWNS, skills, today, db: feed.meta?.odoo?.db || 'algarve_innovation_hub' };
 
   const body = `<div class="cc">
-<section class="cc-hero">
+<section class="hub-sec hub-sec-navy cc-hero">
   <div class="hub-wrap cc-hero-grid">
     <div class="cc-hero-copy">
       <p class="kicker kicker-light">Activity 2 of 4 · AE Innovation Hub</p>
       <h1>Challenge Connect</h1>
       <p class="cc-lede">A company presents a challenge. Other companies and individual professionals answer it as suppliers. Odoo scores every answer and ranks them, and the company chooses, or Algarve Evolution triages and suggests the best or a top 3.</p>
-      <p class="cc-hero-links"><a class="cc-btn cc-btn-light" href="#board">See the open challenges</a> <a class="cc-btn cc-btn-ghost" href="#post">Post a challenge</a></p>
+      <p class="cc-hero-links"><a class="btn" href="#board">See the open challenges</a> <a class="btn btn-on-navy" href="#post">Post a challenge</a></p>
     </div>
-    <ul class="cc-stats" aria-label="Challenge Connect in Odoo today">
-      <li><span class="cc-stat-n">${h.num(openish)}</span><span class="cc-stat-l">challenges taking applications or being matched</span>${h.odoo('aih.challenge', chs.length)}</li>
-      <li><span class="cc-stat-n">${h.num(apps.length)}</span><span class="cc-stat-l">applications scored</span>${h.odoo('aih.application', apps.length)}</li>
-      <li><span class="cc-stat-n">${h.num(sups.length)}</span><span class="cc-stat-l">suppliers who agreed to be listed</span>${h.odoo('res.partner', sups.length)}</li>
-      <li><span class="cc-stat-n">${h.num(decided)}</span><span class="cc-stat-l">decisions made: company or Algarve Evolution</span>${h.odoo('aih.challenge', feed.matches.length)}</li>
+    <ul class="stats stats-on-navy cc-stats" aria-label="Challenge Connect in Odoo today">
+      <li class="stat"><span class="stat-n">${h.num(openish)}</span><span class="stat-l">challenges taking applications or being matched</span><span class="stat-note">${h.odoo('aih.challenge', chs.length)}</span></li>
+      <li class="stat"><span class="stat-n">${h.num(apps.length)}</span><span class="stat-l">applications scored</span><span class="stat-note">${h.odoo('aih.application', apps.length)}</span></li>
+      <li class="stat"><span class="stat-n">${h.num(sups.length)}</span><span class="stat-l">suppliers who agreed to be listed</span><span class="stat-note">${h.odoo('res.partner', sups.length)}</span></li>
+      <li class="stat"><span class="stat-n">${h.num(decided)}</span><span class="stat-l">decisions made: company or Algarve Evolution</span><span class="stat-note">${h.odoo('aih.challenge', feed.matches.length)}</span></li>
     </ul>
   </div>
 </section>
 
-<section class="cc-quote-band">
+<section class="hub-sec hub-sec-tight cc-quote-band">
   <div class="hub-wrap cc-quote-grid">
     <blockquote class="cc-quote"><p>Companies on the problem side, suppliers on the solution side. From detailed information, we give the company that presented the challenge a matching result with the suppliers' data. The company can choose, or we can do the triage and suggest the best qualified, or a top 3.</p>
     <footer>António Guerreiro, executive director, Algarve Evolution, 16 November 2026. Our translation from Portuguese.</footer></blockquote>
@@ -197,76 +198,76 @@ export function render({ layout, feed, h, ix }) {
   <li><a href="#board">Open challenges</a></li><li><a href="#challenge">Matching result</a></li><li><a href="#post">Post a challenge</a></li><li><a href="#suppliers">Suppliers</a></li><li data-only="staff" hidden><a href="#triage">Triage</a></li><li><a href="#how">How it reads Odoo</a></li>
 </ul></div></nav>
 
-<section class="cc-persona" aria-label="What you can do here">
+<section class="hub-sec-tight cc-persona" aria-label="What you can do here">
   <div class="hub-wrap">
-    <div class="cc-pp" data-only="visitor founder mentor participant">
-      <p class="cc-pp-kick">Trying it as a visitor</p>
+    <div class="persona-panel cc-pp" data-only="visitor founder mentor participant">
+      <p class="persona-panel-head">Trying it as a visitor</p>
       <p>You see what Algarve Evolution publishes in Odoo: the challenges, the suppliers who agreed to be listed, and each matching result. Switch to <strong>Challenge owner</strong>, <strong>Supplier</strong> or <strong>Algarve Evolution team</strong> in the bar above to act.</p>
     </div>
-    <div class="cc-pp" data-only="challenger" hidden>
-      <p class="cc-pp-kick">Trying it as a challenge owner</p>
+    <div class="persona-panel cc-pp" data-only="challenger" hidden>
+      <p class="persona-panel-head">Trying it as a challenge owner</p>
       <p><a href="#post">Post a challenge</a> and Odoo's suppliers are ranked at once. For a challenge already in Odoo, see your top 3 and choose one, or ask Algarve Evolution to triage.</p>
       <div class="cc-mine" data-owner-list aria-live="polite"></div>
     </div>
-    <div class="cc-pp" data-only="supplier" hidden id="as-supplier">
-      <p class="cc-pp-kick">Trying it as a supplier</p>
+    <div class="persona-panel cc-pp" data-only="supplier" hidden id="as-supplier">
+      <p class="persona-panel-head">Trying it as a supplier</p>
       <label class="cc-me">You are <select data-me>${sups.map((s, i) => opt(s.id, `${s.name} · ${s.kind === 'company' ? 'company' : 'individual'} · ${s.town}`, i === 0)).join('')}</select></label>
       <p class="cc-me-caps" data-me-caps></p>
       <p>Challenges that fit your capabilities, best first. Open one to apply.</p>
       <ol class="cc-fitlist" data-fitlist aria-live="polite"></ol>
     </div>
-    <div class="cc-pp" data-only="staff" hidden>
-      <p class="cc-pp-kick">Trying it as the Algarve Evolution team</p>
+    <div class="persona-panel persona-panel-private cc-pp" data-only="staff" hidden>
+      <p class="persona-panel-head">Trying it as the Algarve Evolution team</p>
       <p data-staff-state>Open the private feed (the access key dialog) to see every application with the suppliers' contact details, including those who have not agreed to be listed. Then go to <a href="#triage">Triage</a> to suggest a top 3 and record the decision.</p>
-      <p><button class="cc-btn" type="button" data-unlock>Open the private feed</button></p>
+      <p><button class="btn btn-primary" type="button" data-unlock>Open the private feed</button></p>
     </div>
   </div>
 </section>
 
-<section id="board" class="cc-sec">
+<section id="board" class="hub-sec cc-sec">
   <div class="hub-wrap">
-    <div class="cc-sec-head"><div><p class="kicker">The board</p><h2>Challenges</h2></div>${h.odoo('aih.challenge', chs.length)}</div>
+    <div class="hub-head-row"><div class="hub-head"><p class="kicker">The board</p><h2 class="hub-h2">Challenges</h2></div>${h.odoo('aih.challenge', chs.length)}</div>
     <div class="cc-filters" role="group" aria-label="Filter the challenges">
       <div class="cc-chips" data-status-filter>${['all', 'open', 'matching', 'matched', 'closed'].map((s, i) => `<button type="button" class="cc-chip" data-status="${s}" aria-pressed="${i === 0}">${s === 'all' ? 'All' : STATUS[s]} <span>${s === 'all' ? chs.length : chs.filter(c => c.status === s).length}</span></button>`).join('')}</div>
       <label class="cc-skillfilter">Skill <select data-skill-filter>${opt('', 'Any skill', true)}${skills.map(s => opt(s, s)).join('')}</select></label>
     </div>
-    <ul class="cc-local-board" data-local-board aria-live="polite"></ul>
-    <ul class="cc-board" data-board>${chs.map(card).join('')}</ul>
+    <ul class="cards cc-board cc-local-board" data-local-board aria-live="polite"></ul>
+    <ul class="cards cc-board" data-board>${chs.map(card).join('')}</ul>
     <p class="cc-empty" data-board-empty hidden>No challenge matches these filters.</p>
   </div>
 </section>
 
-<section id="challenge" class="cc-sec cc-sec-mist">
+<section id="challenge" class="hub-sec hub-sec-mist cc-sec">
   <div class="hub-wrap">
-    <div class="cc-sec-head"><div><p class="kicker">One challenge</p><h2>Applications and the matching result</h2></div>
+    <div class="hub-head-row"><div class="hub-head"><p class="kicker">One challenge</p><h2 class="hub-h2">Applications and the matching result</h2></div>
       <label class="cc-pick" data-pick hidden>Challenge <select data-pick-select>${chs.map(c => opt(c.id, c.title)).join('')}</select></label></div>
     <div class="cc-details">${chs.map(detail).join('')}</div>
   </div>
 </section>
 
-<section id="post" class="cc-sec" data-for="challenger">
+<section id="post" class="hub-sec cc-sec" data-for="challenger">
   <div class="hub-wrap">
-    <div class="cc-sec-head"><div><p class="kicker">Try the matcher</p><h2>Post a challenge</h2><p class="cc-sec-intro">Describe the problem and the suppliers in Odoo are ranked at once, with the same score Odoo uses. Each supplier is priced at their day rate for the days you expect, so the budget part is an estimate until they apply with a real price.</p></div>${h.odoo('res.partner', sups.length)}</div>
+    <div class="hub-head-row"><div class="hub-head"><p class="kicker">Try the matcher</p><h2 class="hub-h2">Post a challenge</h2><p class="hub-lede">Describe the problem and the suppliers in Odoo are ranked at once, with the same score Odoo uses. Each supplier is priced at their day rate for the days you expect, so the budget part is an estimate until they apply with a real price.</p></div>${h.odoo('res.partner', sups.length)}</div>
     <div class="cc-post-grid">
-      <form class="cc-form cc-post" data-post>
-        <label>Title<input name="title" required maxlength="140" value="Booking data for a small hotel group"></label>
-        <label>Organisation<input name="org" required maxlength="120" value="Your company"></label>
-        <label>The problem<textarea name="problem" rows="3" required maxlength="800">Three small hotels keep bookings in different systems and cannot see occupancy in one place.</textarea></label>
-        <label>Requirements <span class="cc-hint">(one per line)</span><textarea name="requirements" rows="3" maxlength="800">Read-only connection to each system
+      <form class="hub-form cc-form cc-post" data-post>
+        <label class="field"><span>Title</span><input name="title" required maxlength="140" value="Booking data for a small hotel group"></label>
+        <label class="field"><span>Organisation</span><input name="org" required maxlength="120" value="Your company"></label>
+        <label class="field"><span>The problem</span><textarea name="problem" rows="3" required maxlength="800">Three small hotels keep bookings in different systems and cannot see occupancy in one place.</textarea></label>
+        <label class="field"><span>Requirements</span><small class="field-hint">One per line</small><textarea name="requirements" rows="3" maxlength="800">Read-only connection to each system
 One occupancy view for the managers
 Data kept in the EU</textarea></label>
         <fieldset class="cc-skillset"><legend>Skills wanted <span class="cc-hint">(pick one or more)</span></legend>${skills.map(s => `<label class="cc-check"><input type="checkbox" name="skills" value="${esc(s)}"${['Data engineering', 'Web development'].includes(s) ? ' checked' : ''}> ${esc(s)}</label>`).join('')}</fieldset>
         <div class="cc-form-row">
-          <label>Budget from (EUR)<input name="min" type="number" min="0" step="500" required inputmode="numeric" value="5000"></label>
-          <label>Budget to (EUR)<input name="max" type="number" min="0" step="500" required inputmode="numeric" value="12000"></label>
+          <label class="field"><span>Budget from (EUR)</span><input name="min" type="number" min="0" step="500" required inputmode="numeric" value="5000"></label>
+          <label class="field"><span>Budget to (EUR)</span><input name="max" type="number" min="0" step="500" required inputmode="numeric" value="12000"></label>
         </div>
         <div class="cc-form-row">
-          <label>Deadline<input name="deadline" type="date" required value="2027-03-31"></label>
-          <label>Town<select name="town">${TOWNS.map(t => opt(t, t, t === 'Faro')).join('')}${opt('', 'Outside the Algarve or not given')}</select></label>
+          <label class="field"><span>Deadline</span><input name="deadline" type="date" required value="2027-03-31"></label>
+          <label class="field"><span>Town</span><select name="town">${TOWNS.map(t => opt(t, t, t === 'Faro')).join('')}${opt('', 'Outside the Algarve or not given')}</select></label>
         </div>
-        <label>Days of work you expect <span class="cc-hint">(used to estimate each supplier's price)</span><input name="days" type="number" min="1" max="365" required inputmode="numeric" value="20"></label>
+        <label class="field"><span>Days of work you expect</span><small class="field-hint">Used to estimate each supplier's price from their rate</small><input name="days" type="number" min="1" max="365" required inputmode="numeric" value="20"></label>
         <p class="cc-form-msg" data-post-msg role="status"></p>
-        <div class="cc-form-actions"><button class="cc-btn cc-btn-primary" type="submit">Post it (kept in this browser only)</button></div>
+        <div class="cc-form-actions"><button class="btn btn-accent" type="submit">Post it (kept in this browser only)</button></div>
       </form>
       <div class="cc-post-out">
         <div class="cc-result-head"><h3 class="cc-h3">Suppliers ranked for this challenge</h3><span class="cc-live">Updates as you type</span></div>
@@ -278,30 +279,30 @@ Data kept in the EU</textarea></label>
   </div>
 </section>
 
-<section id="suppliers" class="cc-sec cc-sec-mist">
+<section id="suppliers" class="hub-sec hub-sec-mist cc-sec">
   <div class="hub-wrap">
-    <div class="cc-sec-head"><div><p class="kicker">The solution side</p><h2>Suppliers</h2><p class="cc-sec-intro">Companies and individual professionals who offer their capabilities. Individuals are listed only when they have agreed to be.</p></div>${h.odoo('res.partner', sups.length)}</div>
+    <div class="hub-head-row"><div class="hub-head"><p class="kicker">The solution side</p><h2 class="hub-h2">Suppliers</h2><p class="hub-lede">Companies and individual professionals who offer their capabilities. Individuals are listed only when they have agreed to be.</p></div>${h.odoo('res.partner', sups.length)}</div>
     <div class="cc-filters" role="group" aria-label="Filter the suppliers">
       <div class="cc-chips" data-kind-filter>${[['all', 'All', sups.length], ['company', 'Companies', sups.filter(s => s.kind === 'company').length], ['individual', 'Individuals', sups.filter(s => s.kind === 'individual').length]].map(([k, l, n], i) => `<button type="button" class="cc-chip" data-kind="${k}" aria-pressed="${i === 0}">${l} <span data-kind-n="${k}">${n}</span></button>`).join('')}</div>
       <label class="cc-skillfilter">Capability <select data-cap-filter>${opt('', 'Any capability', true)}${skills.map(s => opt(s, s)).join('')}</select></label>
     </div>
-    <ul class="cc-sups" data-sups>${sups.map(supCard).join('')}</ul>
+    <ul class="cards cc-sups" data-sups>${sups.map(supCard).join('')}</ul>
     <p class="cc-empty" data-sups-empty hidden>No supplier matches these filters.</p>
   </div>
 </section>
 
-<section id="triage" class="cc-sec" data-only="staff" hidden>
+<section id="triage" class="hub-sec cc-sec" data-only="staff" hidden>
   <div class="hub-wrap">
-    <div class="cc-sec-head"><div><p class="kicker">Algarve Evolution team</p><h2>Triage</h2><p class="cc-sec-intro">Every application, with the suppliers' contact details from the private feed. Tick the top 3 you suggest (Odoo's ranking is ticked to start), record who decides and who was chosen, and see the Odoo call.</p></div>${h.odoo('aih.application', apps.length)}</div>
+    <div class="hub-head-row"><div class="hub-head"><p class="kicker">Algarve Evolution team</p><h2 class="hub-h2">Triage</h2><p class="hub-lede">Every application, with the suppliers' contact details from the private feed. Tick the top 3 you suggest (Odoo's ranking is ticked to start), record who decides and who was chosen, and see the Odoo call.</p></div>${h.odoo('aih.application', apps.length)}</div>
     <div data-triage aria-live="polite"><p class="cc-note">The triage view needs the private feed. Choose "Open the private feed" above and enter the access key.</p></div>
   </div>
 </section>
 
-<section id="how" class="cc-sec cc-sec-mist">
+<section id="how" class="hub-sec hub-sec-mist cc-sec">
   <div class="hub-wrap cc-how">
-    <div><p class="kicker">Odoo is the source of truth</p><h2>How this page reads Odoo</h2>
-      <p class="cc-sec-intro">Every challenge, application, supplier and score above is read from the feed exported from Odoo. Actions on this page do not write to Odoo: they are kept in this browser only, and each one shows the Odoo call that would make it real.</p>
-      <p class="cc-sec-intro"><a href="/odoo/">How the hub uses Odoo</a> · <a href="/feeds/public.json">the public feed</a></p></div>
+    <div><p class="kicker">Odoo is the source of truth</p><h2 class="hub-h2">How this page reads Odoo</h2>
+      <p class="hub-lede">Every challenge, application, supplier and score above is read from the feed exported from Odoo. Actions on this page do not write to Odoo: they are kept in this browser only, and each one shows the Odoo call that would make it real.</p>
+      <p class="hub-lede"><a href="/odoo/">How the hub uses Odoo</a> · <a href="/feeds/public.json">the public feed</a></p></div>
     <dl class="cc-models">
       <div><dt>${h.odoo('aih.challenge', chs.length)}</dt><dd>The challenge: problem, requirements, skills, budget, deadline, status, who decides and the chosen application.</dd></div>
       <div><dt>${h.odoo('aih.application', apps.length)}</dt><dd>An application: supplier, proposal, price, days, and the score, rank and reasons Odoo computes.</dd></div>

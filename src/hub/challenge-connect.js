@@ -16,6 +16,8 @@
   const r1 = x => Math.round(x * 10) / 10;
   const fmtDate = iso => { if (!iso) return ''; const d = new Date(`${iso}T12:00:00Z`); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }); };
   const STATUS = { open: 'Open', matching: 'Matching', matched: 'Matched', closed: 'Closed' };
+  const STATUS_TAG = { open: 'tag-accent', matching: 'tag-navy', matched: 'tag-ok', closed: '' };
+  const statusTag = st => `<span class="tag ${STATUS_TAG[st] || ''} cc-status">${esc(STATUS[st] || st)}</span>`;
 
   // ------------------------------------------------------------------ the addon's match score, in JavaScript
   const ALGARVE_TOWNS = new Set(['albufeira', 'alcoutim', 'aljezur', 'castro marim', 'faro', 'lagoa', 'lagos', 'loulé', 'loule',
@@ -94,13 +96,16 @@
     return `{\n${ks.map(k => `${n}${JSON.stringify(k)}: ${pretty(v[k], n)}`).join(',\n')}\n${ind}}`;
   };
   function callPanel(what, calls, note = '') {
-    return `<div class="cc-call" role="region" aria-label="Odoo call: ${esc(what)}">
-  <p class="cc-call-head"><span class="cc-call-tag">Odoo call</span><span class="cc-call-ns">not sent: prototype</span></p>
-  <p class="cc-call-what">${esc(what)}</p>
-  ${calls.map((c, i) => `${calls.length > 1 ? `<p class="cc-call-step">${i + 1}. ${esc(c.why)}</p>` : c.why ? `<p class="cc-call-step">${esc(c.why)}</p>` : ''}<pre class="cc-code"><code><b>POST /json/2/${esc(c.model)}/${esc(c.method)}</b>\n${HEAD}\n\n${esc(pretty(c.body))}</code></pre>`).join('')}
-  ${note ? `<p class="cc-call-note">${note}</p>` : ''}
+    return `<div class="cc-calls" role="region" aria-label="Odoo call: ${esc(what)}">
+  <p class="cc-calls-what">${esc(what)}${calls.length > 1 ? ` <span class="cc-calls-n">${calls.length} calls</span>` : ''}</p>
+  ${calls.map((c, i) => `<details class="odoo-call" open>
+    <summary><span class="odoo-call-verb">POST</span> <code>/json/2/${esc(c.model)}/${esc(c.method)}</code> <span class="odoo-call-flag">not sent: prototype</span></summary>
+    ${c.why ? `<p class="cc-call-step">${calls.length > 1 ? `${i + 1}. ` : ''}${esc(c.why)}</p>` : ''}<pre><code>${HEAD}\n\n${esc(pretty(c.body))}</code></pre>
+  </details>`).join('')}
+  ${note ? `<p class="odoo-call-note cc-calls-note">${note}</p>` : ''}
 </div>`;
   }
+
 
   // ------------------------------------------------------------------ ranked rows
   const bar = (p, score) => {
@@ -113,7 +118,7 @@
     const s = e.sup;
     return `<li class="cc-rank${i < 3 ? ' is-top' : ''}${chosen ? ' is-chosen' : ''}${e.local ? ' is-local' : ''}" data-app="${esc(e.id)}">
   <span class="cc-rank-n" aria-label="Rank ${i + 1}">${i + 1}</span>
-  <div class="cc-rank-who"><p class="cc-rank-name">${supName(s)}${i < 3 ? ' <span class="cc-top">Top 3</span>' : ''}${chosen ? ' <span class="cc-chosen">Chosen</span>' : ''}${e.local ? ' <span class="cc-mine-tag">Yours: this browser only</span>' : ''}</p>
+  <div class="cc-rank-who"><p class="cc-rank-name">${supName(s)}${i < 3 ? ' <span class="cc-top">Top 3</span>' : ''}${chosen ? ' <span class="cc-chosen">Chosen</span>' : ''}${e.local ? ' <span class="local-note">Yours: kept in this browser only</span>' : ''}</p>
     <p class="cc-rank-meta">${s ? `${s.kind === 'company' ? 'Company' : 'Individual professional'}${s.town ? ` · ${esc(s.town)}` : ''} · ` : ''}${e.price != null ? money(e.price) : 'no price'}${e.days ? ` · ${num(e.days)} days` : ''}</p>
     ${e.proposal ? `<p class="cc-rank-prop">${esc(e.proposal)}</p>` : ''}${extra}
     ${staff() && s?.contact ? `<p class="cc-rank-contact">Contact (private feed): ${esc(s.contact)}</p>` : ''}</div>
@@ -146,7 +151,7 @@
     const canChoose = persona() === 'challenger' && !d.decision;
     ol.innerHTML = list.length ? list.map((e, i) => rowHTML(e, i, {
       chosen: d.chosen === e.id,
-      act: canChoose ? `<button type="button" class="cc-btn cc-btn-small" data-choose="${esc(chId)}" data-app-id="${esc(e.id)}">Choose this supplier</button>` : '',
+      act: canChoose ? `<button type="button" class="btn btn-sm" data-choose="${esc(chId)}" data-app-id="${esc(e.id)}">Choose this supplier</button>` : '',
     })).join('') : '<li class="cc-note">No applications yet. Odoo ranks them once suppliers apply.</li>';
   }
 
@@ -156,7 +161,7 @@
     const pos = list.findIndex(e => e.id === d.chosen), chosen = list[pos];
     const who = chosen ? (chosen.sup ? esc(chosen.sup.name) : 'a supplier who has not agreed to be named') : '';
     const where = chosen ? `, ranked ${pos + 1} of ${list.length}` : '';
-    const local = d.odoo ? '' : ` <span class="cc-mine-tag">Recorded in this browser only</span> <button type="button" class="cc-linkbtn" data-undo="${esc(chId)}">Undo</button>`;
+    const local = d.odoo ? '' : ` <span class="local-note">Recorded in this browser only</span> <button type="button" class="cc-linkbtn" data-undo="${esc(chId)}">Undo</button>`;
     let html;
     if (!list.length) html = '<p class="cc-decision is-none"><strong>No applications yet.</strong> Odoo ranks them once suppliers apply.</p>';
     else if (d.decision === 'company') html = `<p class="cc-decision is-company"><strong>Decision: the company chose.</strong> ${esc(ownerName(c))} picked ${who || 'a supplier'} from the ranked list${where}.${local}</p>`;
@@ -165,7 +170,7 @@
     box.innerHTML = html;
     const act = $(`[data-owner-act="${chId}"]`);
     if (act) act.innerHTML = list.length && !d.decision && persona() === 'challenger'
-      ? `<p class="cc-owner-q">You are trying it as this challenge's owner. Choose one supplier above, or</p><button type="button" class="cc-btn" data-triage-ask="${esc(chId)}">Ask Algarve Evolution to triage</button>`
+      ? `<p class="cc-owner-q">You are trying it as this challenge's owner. Choose one supplier above, or</p><button type="button" class="btn" data-triage-ask="${esc(chId)}">Ask Algarve Evolution to triage</button>`
       : d.decision && d.odoo && persona() === 'challenger' ? '<p class="cc-note">This decision is already recorded in Odoo.</p>' : '';
   }
 
@@ -215,10 +220,10 @@
     $$('.cc-sup.is-private', ul).forEach(li => li.remove());
     if (staff()) {
       for (const s of priv.suppliers.filter(s => !pub.suppliers.some(p => p.id === s.id))) {
-        ul.insertAdjacentHTML('beforeend', `<li class="cc-sup is-private" data-sup="${esc(s.id)}" data-kind="${esc(s.kind)}" data-caps="${esc(s.capabilities.join('|'))}">
-  <p class="cc-sup-kind">${s.kind === 'company' ? 'Company' : 'Individual professional'}${sim(s)} <span class="cc-private">Staff only: no consent to be listed</span></p>
+        ul.insertAdjacentHTML('beforeend', `<li class="card cc-sup is-private" data-sup="${esc(s.id)}" data-kind="${esc(s.kind)}" data-caps="${esc(s.capabilities.join('|'))}">
+  <p class="cc-sup-kind">${s.kind === 'company' ? 'Company' : 'Individual'}${sim(s)} <span class="cc-private">Staff only: no consent to be listed</span></p>
   <h3 class="cc-sup-name">${esc(s.name)}</h3><p class="cc-sup-town">${esc(s.town || 'Town not given')}${s.rate ? ` · ${esc(s.rate)}` : ''}</p>
-  <ul class="cc-tags">${s.capabilities.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+  <ul class="cc-tags">${s.capabilities.map(x => `<li class="tag">${esc(x)}</li>`).join('')}</ul>
   <p class="cc-sup-apps">${num(priv.applications.filter(a => a.supplier_id === s.id).length)} application(s) in Odoo</p><p class="cc-rank-contact" data-contact hidden></p></li>`);
       }
     }
@@ -256,7 +261,7 @@
     }).sort((a, b) => b.takes - a.takes || b.pre - a.pre);
     $('[data-fitlist]').innerHTML = fits.map(f => `<li class="cc-fit-item${f.takes ? '' : ' is-past'}">
   <a href="#challenge-${esc(f.c.id)}" data-open="${esc(f.c.id)}">${esc(f.c.title)}</a>
-  <span class="cc-fit-meta"><span class="cc-pill cc-pill-${esc(f.c.status)}">${esc(STATUS[f.c.status])}</span> ${f.shared.length} of ${f.c.skills.length} skills${f.shared.length ? ` (${f.shared.map(esc).join(', ')})` : ''} · ${esc(f.townReason.replace(/^Town: /, ''))} · ${f.pre} of 70 before your price${f.applied ? ' · <strong>applied in this browser</strong>' : ''}</span>
+  <span class="cc-fit-meta">${statusTag(f.c.status)} ${f.shared.length} of ${f.c.skills.length} skills${f.shared.length ? ` (${f.shared.map(esc).join(', ')})` : ''} · ${esc(f.townReason.replace(/^Town: /, ''))} · ${f.pre} of 70 before your price${f.applied ? ' · <strong>applied in this browser</strong>' : ''}</span>
 </li>`).join('');
     $$('[data-board] .cc-card').forEach(card => {
       const c = pub.challenges.find(x => x.id === card.dataset.ch); const tag = $('[data-fit]', card);
@@ -377,15 +382,15 @@ ${state.posted.length ? `<p class="cc-mine-h">Posted in this browser</p><ul clas
     const ul = $('[data-local-board]'); if (!ul || !pub) return;
     ul.innerHTML = state.posted.map(p => {
       const top = postRank(p).slice(0, 3);
-      return `<li class="cc-card cc-card-local">
-  <div class="cc-card-top"><span class="cc-pill cc-pill-open">Open</span> <span class="cc-mine-tag">Yours: this browser only</span></div>
+      return `<li class="card cc-card cc-card-local">
+  <div class="cc-card-top">${statusTag('open')} <span class="local-note">Yours: kept in this browser only</span></div>
   <h3 class="cc-card-title">${esc(p.title)}</h3>
-  <p class="cc-card-owner">${esc(p.org)}${p.town ? ` · ${esc(p.town)}` : ''}</p>
+  <p class="card-meta">${esc(p.org)}${p.town ? ` · ${esc(p.town)}` : ''}</p>
   <p class="cc-card-problem">${esc(p.problem)}</p>
-  <ul class="cc-tags">${p.skills.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
+  <ul class="cc-tags">${p.skills.map(s => `<li class="tag">${esc(s)}</li>`).join('')}</ul>
   <dl class="cc-facts"><div><dt>Budget</dt><dd>${money(p.budget_eur_min)} to ${money(p.budget_eur_max)}</dd></div><div><dt>Deadline</dt><dd>${esc(fmtDate(p.deadline))}</dd></div></dl>
   <p class="cc-mine-h">Your top 3 suppliers</p><ol class="cc-mini">${top.map((e, i) => `<li><span class="cc-mini-n">${i + 1}</span> ${esc(e.sup.name)} <span class="cc-mini-s">${e.score}</span></li>`).join('')}</ol>
-  <p class="cc-card-go"><button type="button" class="cc-linkbtn" data-load="${esc(p.id)}">See the full ranking</button> · <button type="button" class="cc-linkbtn" data-remove="${esc(p.id)}">Remove</button></p>
+  <p class="card-foot cc-card-go"><button type="button" class="cc-linkbtn" data-load="${esc(p.id)}">See the full ranking</button> · <button type="button" class="cc-linkbtn" data-remove="${esc(p.id)}">Remove</button></p>
 </li>`;
     }).join('');
   }
@@ -413,12 +418,12 @@ ${state.posted.length ? `<p class="cc-mine-h">Posted in this browser</p><ul clas
       const list = ranked(c.id), d = decisionOf(c.id);
       const sugg = state.suggest[c.id] || list.slice(0, 3).map(e => e.id);
       return `<article class="cc-tri" data-tri="${esc(c.id)}">
-  <header class="cc-tri-head"><div><p class="cc-detail-kick"><span class="cc-pill cc-pill-${esc(c.status)}">${esc(STATUS[c.status])}</span>${sim(c)} <span class="cc-tri-dec">${d.decision === 'company' ? 'The company decides' : d.decision === 'ae_triage' ? 'Algarve Evolution triage' : 'Nobody has decided yet'}${d.odoo === undefined && d.decision ? ' (this browser)' : ''}</span></p>
+  <header class="cc-tri-head"><div><p class="cc-detail-kick">${statusTag(c.status)}${sim(c)} <span class="cc-tri-dec">${d.decision === 'company' ? 'The company decides' : d.decision === 'ae_triage' ? 'Algarve Evolution triage' : 'Nobody has decided yet'}${d.odoo === undefined && d.decision ? ' (this browser)' : ''}</span></p>
     <h3 class="cc-h3"><a href="#challenge-${esc(c.id)}" data-open="${esc(c.id)}">${esc(c.title)}</a></h3>
     <p class="cc-tri-sub">${esc(ownerName(c))} · ${money(c.budget_eur_min)} to ${money(c.budget_eur_max)} · deadline ${esc(fmtDate(c.deadline))} · ${list.length} application(s)</p></div></header>
   <ol class="cc-tri-list">${list.map((e, i) => `<li class="cc-tri-row${sugg.includes(e.id) ? ' is-sugg' : ''}${d.chosen === e.id ? ' is-chosen' : ''}">
     <label class="cc-tri-tick"><input type="checkbox" data-sugg value="${esc(e.id)}" aria-label="Suggest rank ${i + 1}: ${esc(e.sup ? e.sup.name : 'supplier missing')}"${sugg.includes(e.id) ? ' checked' : ''}><span class="cc-rank-n">${i + 1}</span></label>
-    <div class="cc-tri-who"><p class="cc-rank-name">${supName(e.sup, 'Supplier missing')}${e.local ? ' <span class="cc-mine-tag">This browser</span>' : ''}</p>
+    <div class="cc-tri-who"><p class="cc-rank-name">${supName(e.sup, 'Supplier missing')}${e.local ? ' <span class="local-note">This browser</span>' : ''}</p>
       <p class="cc-rank-meta">${e.sup ? esc(e.sup.town || '') : ''} · ${e.price != null ? money(e.price) : ''} · ${num(e.days)} days</p>
       <p class="cc-rank-contact">${e.sup?.contact ? `Contact (private feed): ${esc(e.sup.contact)}` : 'No contact in Odoo'}</p></div>
     <div class="cc-rank-score"><span class="cc-score">${e.score}</span>${bar(e.parts, e.score)}</div>
@@ -427,7 +432,7 @@ ${state.posted.length ? `<p class="cc-mine-h">Posted in this browser</p><ul clas
     <p class="cc-tri-help" data-sugg-msg aria-live="polite">Ticked: the top 3 you suggest to the company (up to 3).</p>
     <label>Who decides <select data-tri-dec>${[['ae_triage', 'Algarve Evolution triage'], ['company', 'The company chooses'], ['', 'Not decided yet']].map(([v, l]) => `<option value="${v}"${(d.decision || 'ae_triage') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
     <label>Chosen supplier <select data-tri-chosen><option value="">None yet</option>${list.map((e, i) => `<option value="${esc(e.id)}"${d.chosen === e.id ? ' selected' : ''}>${i + 1}. ${esc(e.sup ? e.sup.name : 'Supplier missing')} (${e.score})</option>`).join('')}</select></label>
-    <button type="button" class="cc-btn cc-btn-primary" data-tri-save="${esc(c.id)}">Record (kept in this browser only)</button>
+    <button type="button" class="btn btn-accent" data-tri-save="${esc(c.id)}">Record (kept in this browser only)</button>
   </div><div data-tri-call></div>` : ''}
 </article>`;
     }).join('');
@@ -463,7 +468,7 @@ ${state.posted.length ? `<p class="cc-mine-h">Posted in this browser</p><ul clas
     if (priv) {
       const hidden = priv.suppliers.length - (pub?.suppliers.length || 0);
       p.innerHTML = `The private feed is open in this tab: ${num(priv.applications.length)} applications with contact details, and ${num(hidden)} supplier(s) who have not agreed to be listed publicly. Go to <a href="#triage">Triage</a> to suggest a top 3 and record the decision.`;
-      if (btn) btn.hidden = true;
+      if (btn) btn.closest('p').hidden = true;
     }
   }
 
