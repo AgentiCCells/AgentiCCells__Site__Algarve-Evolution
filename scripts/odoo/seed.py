@@ -1,4 +1,4 @@
-# Seed the Algarve Innovation Hub Odoo database. Re-runnable: every record is
+# Seed the AE Innovation Hub (Algarve Evolution Innovation Hub) Odoo database. Re-runnable: every record is
 # found by its feed id and updated, never duplicated.
 #
 # Run inside an Odoo shell (scripts/odoo/setup-local.sh does this):
@@ -70,6 +70,16 @@ counts = {}
 def count(k, n=1):
     counts[k] = counts.get(k, 0) + n
 
+
+# ---------------------------------------------------------------- the hub's name
+# "AE INNOVATION HUB", as António Guerreiro wrote it on his whiteboard (16 November 2026).
+# The addon's data file creates the record; the seed keeps its name right if someone changed it.
+hub = env.ref('algarve_innovation_hub.hub_main', raise_if_not_found=False) or env['aih.hub'].search([], limit=1)
+HUB = {'name': 'AE Innovation Hub', 'full_name': 'Algarve Evolution Innovation Hub'}
+if hub:
+    hub.write(HUB)
+else:
+    env['aih.hub'].create(HUB)
 
 # ---------------------------------------------------------------- real: communities
 real = load('scripts/odoo/seed/real-public.json')

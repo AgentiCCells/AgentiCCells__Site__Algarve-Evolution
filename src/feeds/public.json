@@ -1,7 +1,7 @@
 {
  "meta": {
   "feed": "public",
-  "exported": "2026-11-16T12:48:50.436Z",
+  "exported": "2026-11-16T13:11:43.843Z",
   "odoo": {
    "url": "http://127.0.0.1:8069",
    "version": "19.0-20261116",
@@ -26,27 +26,27 @@
   }
  },
  "hub": {
-  "name": "Algarve Innovation Hub",
+  "name": "AE Innovation Hub",
   "activities": [
    {
     "id": "inc-acc",
     "name": "INC/ACC: incubation and acceleration",
-    "summary": "Six-month incubation and acceleration programmes: one mentor per company, guest mentors for clinics and workshops, KPIs from month 0 to month 6 made public, and a reflection on the indicators."
+    "summary": "Incubation and acceleration programmes of six months, with mentors (one mentor per company, guest mentors for clinics and workshops) and KPIs from month 0 to month 6, made public, with a reflection on the indicators."
    },
    {
     "id": "challenge-connect",
     "name": "Challenge Connect",
-    "summary": "A company presents a challenge; companies and individual professionals apply as suppliers; a matching result ranks them, and the company chooses or Algarve Evolution suggests the best or a top 3."
+    "summary": "Challenges, suppliers and matching: a company presents a challenge, companies and individual professionals apply as suppliers, and a matching result ranks them; the company chooses, or Algarve Evolution suggests the best or a top 3."
    },
    {
     "id": "vibathon",
     "name": "Vibathon",
-    "summary": "Hackathons and workshops: who registered, mentors and jury, the projects presented at the end, and a next step after the event."
+    "summary": "Hackathons, workshops and juries: who registered, the mentors and the jury, the projects presented at the end, and a next step after the event."
    },
    {
     "id": "talent",
     "name": "Talent Ecosystem",
-    "summary": "The Algarve Digital Innovators network (communities, informal groups and the people in them) grouped as professionals, consultants, mentors and investors, plus project partners and the stakeholders of the regional business innovation hub."
+    "summary": "Talent, competences and partners: the ADI network (Algarve Digital Innovators: communities, informal groups and the people in them) grouped as professionals, consultants, mentors and investors, plus project partners and the stakeholders of the regional business innovation hub."
    }
   ]
  },

@@ -31,6 +31,15 @@ class AihSkill(models.Model):
     _name_unique = models.Constraint('UNIQUE(name)', 'The skill already exists.')
 
 
+class AihHub(models.Model):
+    """The hub itself (one record), so the feed's hub name also comes from Odoo."""
+    _name = 'aih.hub'
+    _description = 'Innovation Hub'
+
+    name = fields.Char(required=True, help='Short name shown on the site, e.g. "AE Innovation Hub".')
+    full_name = fields.Char(help='The name written out, e.g. "Algarve Evolution Innovation Hub".')
+
+
 class AihActivity(models.Model):
     """The four activities of the hub, so the feed's hub section also comes from Odoo."""
     _name = 'aih.activity'

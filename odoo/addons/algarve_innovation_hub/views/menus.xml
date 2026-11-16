@@ -26,6 +26,7 @@
     <menuitem id="menu_aih_events" name="Events" parent="menu_aih_talent" action="aih_event_action" sequence="30"/>
 
     <menuitem id="menu_aih_config" name="Configuration" parent="menu_aih_root" sequence="90" groups="group_aih_manager"/>
+    <menuitem id="menu_aih_hub" name="Hub" parent="menu_aih_config" action="aih_hub_action" sequence="5"/>
     <menuitem id="menu_aih_activities" name="Activities" parent="menu_aih_config" action="aih_activity_action" sequence="10"/>
     <menuitem id="menu_aih_skills" name="Skills" parent="menu_aih_config" action="aih_skill_action" sequence="20"/>
 </odoo>

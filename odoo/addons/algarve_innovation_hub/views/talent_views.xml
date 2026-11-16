@@ -234,6 +234,21 @@
     </record>
 
     <!-- Configuration -->
+    <record id="aih_hub_list" model="ir.ui.view">
+        <field name="name">aih.hub.list</field>
+        <field name="model">aih.hub</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="false" delete="false">
+                <field name="name"/>
+                <field name="full_name"/>
+            </list>
+        </field>
+    </record>
+    <record id="aih_hub_action" model="ir.actions.act_window">
+        <field name="name">Hub</field>
+        <field name="res_model">aih.hub</field>
+        <field name="view_mode">list</field>
+    </record>
     <record id="aih_activity_list" model="ir.ui.view">
         <field name="name">aih.activity.list</field>
         <field name="model">aih.activity</field>

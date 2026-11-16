@@ -1,0 +1,7 @@
+Supplier,Type,Town,Capabilities,Day rate,Email,Phone,Consent
+Supplier Co 21 (simulated),Company,Faro,"Web development, Mobile apps",420 EUR a day,hello@supplier21.example.invalid,+351 900 000 121,yes
+Person 61 (simulated),Freelancer,Lagos,"Data engineering, AI and machine learning",45 EUR an hour,person61@example.invalid,,yes
+Person 62 (simulated),Freelancer,Sevilla,Cybersecurity,500 EUR a day,person62@example.invalid,,yes
+Supplier Co 02 (simulated),Company,Loulé,"Cloud and DevOps, Cybersecurity",380 EUR a day,,,yes
+Person 46 (simulated),Freelancer,Tavira,Sustainability,40 EUR an hour,person46@example.invalid,,no
+Person 63 (simulated),Professional,São Brás de Alportel,"Drone surveys, Geospatial",350 EUR a day,person63@example.invalid,,

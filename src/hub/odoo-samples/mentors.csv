@@ -1,0 +1,10 @@
+Nome;Email;Telefone;Concelho;Tipo de mentoria;Áreas de especialidade;Consentimento
+Mentor 21 (simulated);mentor21@example.invalid;+351 900 000 021;Faro;Um-para-um;Sales, Pricing;sim
+Mentor 22 (simulated);mentor22@example.invalid;;Loule;Convidado;UX design;sim
+Mentor 01 (simulated);mentor01@example.invalid;;Faro;Um-para-um;Product management, UX design;sim
+Mentor 12 (simulated);mentor12@example.invalid;;Lagos;Convidado;Legal and IP;não
+Mentor 23 (simulated);mentor23(at)example.invalid;;Tavira;Convidado;Legal and IP;sim
+Mentor 24 (simulated);mentor24@example.invalid;;Lisboa;Um-para-um;Finance and fundraising;sim
+;mentor25@example.invalid;;Lagos;Convidado;Marketing;sim
+Mentor 26 (simulated);mentor26@example.invalid;;Quarteira;Mentoria de grupo;Blue economy;
+Mentor 21 (simulated);mentor21@example.invalid;;Faro;Um-para-um;Sales;sim

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Export the Algarve Innovation Hub feeds from Odoo, as docs/v2/CONTRACT.md says:
+// Export the AE Innovation Hub (Algarve Evolution Innovation Hub) feeds from Odoo, as docs/v2/CONTRACT.md says:
 //   src/feeds/public.json       published records, public fields, people only with consent
 //   src/feeds/private.enc.json  every record and field, encrypted (AES-256-GCM, key from
 //                               PBKDF2-SHA256 over an access key, 200,000 iterations)
@@ -97,7 +97,8 @@ async function buildPrivate() {
   const F = ['feed_key', 'is_published', 'simulated', 'source_url'];
   const PF = ['aih_feed_key', 'aih_published', 'aih_simulated', 'aih_source_url', 'aih_consent', 'name', 'city', 'is_company', 'email', 'phone'];
 
-  const [activities, skills, cats] = await Promise.all([
+  const [hubs, activities, skills, cats] = await Promise.all([
+    read('aih.hub', [], ['name'], 'id'),
     read('aih.activity', [], ['code', 'name', 'summary', 'is_published'], 'sequence, id'),
     read('aih.skill', [], ['name']),
     read('res.partner.category', [], ['name']),
@@ -142,7 +143,7 @@ async function buildPrivate() {
 
   const feed = {
     hub: {
-      name: 'Algarve Innovation Hub',
+      name: hubs[0]?.name || 'AE Innovation Hub',
       activities: activities.filter((a) => a.is_published).map((a) => ({ id: a.code, name: a.name, summary: s(a.summary) })),
     },
     programmes: progs.map((r) => ({

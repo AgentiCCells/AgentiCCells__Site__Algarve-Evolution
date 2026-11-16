@@ -79,7 +79,7 @@ function checkFeed(feed, which) {
   if (!feed.meta || feed.meta.feed !== which) fail(`${which}: meta.feed must be "${which}"`);
   if (!feed.meta?.exported || Number.isNaN(Date.parse(feed.meta.exported))) fail(`${which}: meta.exported is not an ISO time`);
   for (const k of ['url', 'version', 'db']) if (!T.str(feed.meta?.odoo?.[k])) fail(`${which}: meta.odoo.${k} missing`);
-  if (feed.hub?.name !== 'Algarve Innovation Hub') fail(`${which}: hub.name`);
+  if (feed.hub?.name !== 'AE Innovation Hub') fail(`${which}: hub.name must be "AE Innovation Hub" (António Guerreiro's whiteboard, 16 November 2026)`);
   const acts = feed.hub?.activities || [];
   if (acts.map((a) => a.id).sort().join() !== [...ACTIVITIES].sort().join()) fail(`${which}: hub.activities must be the four activities`);
   for (const a of acts) if (!T.str(a.name) || !T.str(a.summary)) fail(`${which}: hub activity ${a.id} needs name and summary`);

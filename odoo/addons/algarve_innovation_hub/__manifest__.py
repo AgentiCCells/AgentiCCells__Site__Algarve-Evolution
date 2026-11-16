@@ -1,14 +1,14 @@
-# Algarve Innovation Hub: an Odoo 19 Community addon.
+# AE Innovation Hub (Algarve Evolution Innovation Hub): an Odoo 19 Community addon.
 # Licence: LGPL-3 (see LICENSE in this folder). Written by odoo@AgentiCCells.dinis.
 {
-    'name': 'Algarve Innovation Hub',
-    'version': '19.0.1.0.0',
+    'name': 'AE Innovation Hub',
+    'version': '19.0.1.1.0',
     'summary': 'Programmes, Challenge Connect, Vibathons and the Talent Ecosystem, with public and private feeds',
     'description': """
-Algarve Innovation Hub (prototype)
-==================================
+AE Innovation Hub (prototype)
+=============================
 
-Odoo is the source of truth for the Algarve Innovation Hub MVP. This addon holds
+Odoo is the source of truth for the AE Innovation Hub MVP. This addon holds
 its four activities:
 
 * INC/ACC: incubation and acceleration programmes, their companies, mentors,
@@ -22,8 +22,8 @@ its four activities:
   with consent and published flags.
 
 Every record carries a feed id, a published flag, a simulated flag and, for
-real public data, a source URL. scripts/odoo/export-feeds.mjs reads these over
-JSON-RPC and writes the public and private feeds.
+real public data, a source URL. scripts/odoo/export-feeds.mjs reads these over the
+Odoo 19 JSON-2 API and writes the public and private feeds.
 """,
     'author': 'AgentiCCells (odoo@AgentiCCells.dinis)',
     'license': 'LGPL-3',

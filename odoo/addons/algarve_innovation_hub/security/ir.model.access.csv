@@ -1,6 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_aih_skill_reader,aih.skill reader,model_aih_skill,group_aih_reader,1,0,0,0
 access_aih_skill_manager,aih.skill manager,model_aih_skill,group_aih_manager,1,1,1,1
+access_aih_hub_reader,aih.hub reader,model_aih_hub,group_aih_reader,1,0,0,0
+access_aih_hub_manager,aih.hub manager,model_aih_hub,group_aih_manager,1,1,1,1
 access_aih_activity_reader,aih.activity reader,model_aih_activity,group_aih_reader,1,0,0,0
 access_aih_activity_manager,aih.activity manager,model_aih_activity,group_aih_manager,1,1,1,1
 access_aih_programme_reader,aih.programme reader,model_aih_programme,group_aih_reader,1,0,0,0
