@@ -1,6 +1,14 @@
 /* V3 chrome: the prototype note (real data only) and the picker for António's four designs. */
 .v3-proto{position:relative;z-index:1000;display:flex;flex-wrap:wrap;gap:.35rem .75rem;align-items:center;justify-content:center;padding:.45rem 16px;background:#14213d;color:#f4f1ea;font:500 13px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
 .v3-proto a{color:#ffd58a}
+.v3-proto{flex-direction:column;gap:.35rem}
+.v3-row{display:flex;flex-wrap:wrap;gap:.35rem .75rem;align-items:center;justify-content:center}
+.v3-designs{display:inline-flex;flex-wrap:wrap;gap:2px;background:rgba(255,255,255,.08);border-radius:999px;padding:2px}
+.v3-proto a.v3-d{color:#f4f1ea;text-decoration:none;font-weight:600;font-size:12.5px;padding:.15rem .7rem;border-radius:999px}
+.v3-proto a.v3-d:hover{background:rgba(255,255,255,.12)}
+.v3-proto a.v3-d[aria-current="page"]{background:#f4f1ea;color:#14213d}
+.v3-sep{width:1px;height:16px;background:rgba(255,255,255,.25)}
+@media (max-width:600px){.v3-sep{display:none}.v3-designs{border-radius:12px;justify-content:center}}
 .v3-proto a.v3-ver{border:1px solid rgba(255,213,138,.45);border-radius:999px;padding:.05rem .65rem;text-decoration:none;font-weight:700;font-size:12px}
 .v3-tag{font-weight:700;color:#14213d;background:#9be7c4;border-radius:4px;padding:.05rem .45rem;font-size:12px;letter-spacing:.04em}
 .v3-pick-btn{font:inherit;font-weight:700;color:#14213d;background:#ffd58a;border:0;border-radius:999px;padding:.2rem .8rem;cursor:pointer}
