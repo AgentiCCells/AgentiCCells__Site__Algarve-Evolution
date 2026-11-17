@@ -40,6 +40,14 @@ for (const m of v3mods) {
     const file = join(out, v3Path(m.meta.slug), 'index.html'); mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, m.render(ctx));
   } catch (e) { failures.push(`v3/${m.meta.slug}: ${e.message}`); console.error(`FAILED v3/${m.meta.slug}: ${e.stack.split('\n').slice(0, 3).join(' ')}`); }
 }
+// Old addresses keep working: V2 moved from / to /v2/ and V3 from /v3/ to / (Dinis Cruz, 16 November 2026:
+// "the home page should be V3"). Each old path gets a small page that sends the visitor on.
+const moved = { ...Object.fromEntries(['inc-acc', 'challenge-connect', 'vibathon', 'talent', 'workflows', 'plan', 'odoo'].map(p => [`/${p}/`, `/v2/${p}/`])),
+  ...Object.fromEntries(v3mods.map(m => [`/v3/${m.meta.slug === 'brief' ? '' : m.meta.slug + '/'}`, v3Path(m.meta.slug)])) };
+for (const [from, to] of Object.entries(moved)) {
+  const file = join(out, from, 'index.html'); if (existsSync(file)) continue; mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Moved to ${to}</title><meta name="robots" content="noindex, nofollow"><meta http-equiv="refresh" content="0; url=${to}"><link rel="canonical" href="${to}"></head>\n<body><p>A prototype website made by the PrompTugal team for Algarve Evolution; not yet approved by Algarve Evolution.</p><p>This page has moved to <a href="${to}">${to}</a>.</p><script>location.replace(${JSON.stringify(to)} + location.hash)</script></body></html>\n`);
+}
 if (v3mods.length) writeFileSync(join(out, 'v3', 'designs.json'), JSON.stringify({ default: 'brief', designs: v3designs.map(d => ({ ...d, path: v3Path(d.slug) })) }, null, 1) + '\n');
 for (const f of walk(out)) {
   if (f.startsWith(join(out, 'v1'))) continue;                       // the parked V1 keeps its own stamp

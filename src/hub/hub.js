@@ -59,7 +59,7 @@
   const PLAN_KEY = 'hub-plan', planFns = [];
   const readPlan = () => { try { const v = JSON.parse(store.get(localStorage, PLAN_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch { return []; } };
   let planItems = readPlan(), snapshot = null;
-  const pageId = () => location.pathname.replace(/^\/+|\/+$/g, '') || 'home';
+  const pageId = () => location.pathname.replace(/^\/v2(?=\/)/, '').replace(/^\/+|\/+$/g, '') || 'home';
   const normCall = c => ({ method: String(c?.method || 'POST').toUpperCase(), path: String(c?.path || ''), body: c?.body === undefined ? null : c.body, ...(c?.raw ? { raw: String(c.raw).slice(0, 4000) } : {}), ...(c?.why ? { why: String(c.why) } : {}) });
   const callsKey = calls => JSON.stringify(calls.map(c => [c.method, c.path, c.body ?? c.raw ?? null]));
   const copy = v => JSON.parse(JSON.stringify(v));
@@ -98,7 +98,7 @@
   let badge;
   function planBadge() {
     if (!badge && state) {
-      badge = document.createElement('a'); badge.className = 'plan-badge'; badge.href = '/plan/';
+      badge = document.createElement('a'); badge.className = 'plan-badge'; badge.href = '/v2/plan/';
       badge.innerHTML = 'Plan <b data-plan-n>0</b>';
       state.after(badge);
     }
@@ -106,8 +106,8 @@
     const n = planItems.length;
     badge.querySelector('[data-plan-n]').textContent = String(n);
     badge.setAttribute('aria-label', `Plan: ${n} proposed ${n === 1 ? 'change' : 'changes'} to Odoo, kept in this browser`);
-    badge.hidden = n === 0 && location.pathname !== '/plan/';
-    if (location.pathname === '/plan/') badge.setAttribute('aria-current', 'page');
+    badge.hidden = n === 0 && location.pathname !== '/v2/plan/';
+    if (location.pathname === '/v2/plan/') badge.setAttribute('aria-current', 'page');
   }
 
   // "Add to plan" on every Odoo call panel. A panel that sits with others in one container is one action of
@@ -144,7 +144,7 @@
     if (btn.textContent !== label) btn.textContent = label;
     if (btn.getAttribute('aria-pressed') !== String(!!id)) btn.setAttribute('aria-pressed', String(!!id));
     const n = planItems.length;
-    const html = id ? `In your plan${n > 1 ? ` with ${n - 1} other change${n - 1 === 1 ? '' : 's'}` : ''}, waiting for review. <a href="/plan/#queue">Review the plan</a>` : 'Nothing is sent: the Algarve Evolution team reviews and signs the plan first.';
+    const html = id ? `In your plan${n > 1 ? ` with ${n - 1} other change${n - 1 === 1 ? '' : 's'}` : ''}, waiting for review. <a href="/v2/plan/#queue">Review the plan</a>` : 'Nothing is sent: the Algarve Evolution team reviews and signs the plan first.';
     if (msg.innerHTML !== html) msg.innerHTML = html;
   }
   function enhance(d) {

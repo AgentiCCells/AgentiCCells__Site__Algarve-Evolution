@@ -1,7 +1,7 @@
 {
   "schema": "hub.json (draft)",
   "name": "AE Innovation Hub (prototype for Algarve Evolution)",
-  "what_it_does": "A prototype of the AE Innovation Hub on Odoo: INC/ACC, Challenge Connect, Vibathon, Talent Ecosystem; V1 parked at /v1/.",
+  "what_it_does": "A prototype of the AE Innovation Hub on Odoo: V3 (real data only, four designs) at /, V2 (the hub on Odoo with simulated records: INC/ACC, Challenge Connect, Vibathon, Talent Ecosystem) at /v2/, V1 parked at /v1/, decks at /decks/.",
   "owner": "AgentiCCells",
   "team": "sites@AgentiCCells.dinis, instructed by Dinis Cruz",
   "licence": {

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// The plan broker: applies a signed plan from the hub's Plan page (/plan/) to the experimentation Odoo.
+// The plan broker: applies a signed plan from the hub's Plan page (/v2/plan/) to the experimentation Odoo.
 // docs/v2/PLAN.md. The pattern: snapshot, plan, policy check, signed approval, broker, record.
 //
 //   node scripts/odoo/apply-plan.mjs plan.json            dry run (the default): checks, reads, prints what it would do

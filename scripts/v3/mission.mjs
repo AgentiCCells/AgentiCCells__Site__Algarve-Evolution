@@ -18,19 +18,19 @@ const BASE = '/v3/mission';
 
 // ---------- the hub (António's whiteboard, 16 November 2026: docs/v2/BRIEF.md) ----------
 const ACT = {
-  'inc-acc': { code: 'A-01', short: 'INC/ACC', v2: '/inc-acc/', words: ['incubation', 'acceleration', 'mentors', 'KPIs'], pt: 'incubação, aceleração, mentores, KPIs', tone: 'cyan' },
-  'challenge-connect': { code: 'A-02', short: 'Challenge Connect', v2: '/challenge-connect/', words: ['challenges', 'suppliers', 'matching'], pt: 'desafios, fornecedores, matching', tone: 'mag' },
-  vibathon: { code: 'A-03', short: 'Vibathon', v2: '/vibathon/', words: ['hackathons', 'workshops', 'juries'], pt: 'hackathons, workshops, júris', tone: 'amber' },
-  talent: { code: 'A-04', short: 'Talent', v2: '/talent/', words: ['talent', 'competences', 'partners', 'ADI network'], pt: 'talento, competências, parceiros, rede ADI', tone: 'green' },
+  'inc-acc': { code: 'A-01', short: 'INC/ACC', v2: '/v2/inc-acc/', words: ['incubation', 'acceleration', 'mentors', 'KPIs'], pt: 'incubação, aceleração, mentores, KPIs', tone: 'cyan' },
+  'challenge-connect': { code: 'A-02', short: 'Challenge Connect', v2: '/v2/challenge-connect/', words: ['challenges', 'suppliers', 'matching'], pt: 'desafios, fornecedores, matching', tone: 'mag' },
+  vibathon: { code: 'A-03', short: 'Vibathon', v2: '/v2/vibathon/', words: ['hackathons', 'workshops', 'juries'], pt: 'hackathons, workshops, júris', tone: 'amber' },
+  talent: { code: 'A-04', short: 'Talent', v2: '/v2/talent/', words: ['talent', 'competences', 'partners', 'ADI network'], pt: 'talento, competências, parceiros, rede ADI', tone: 'green' },
 };
 const ACT_IDS = Object.keys(ACT);
 // What real data does not exist publicly yet, and the hub addon's records that would hold it
 // (odoo/addons/algarve_innovation_hub). Used only where the real feed carries no gaps.
 const GAPS = [
-  { activity: 'inc-acc', what: 'The startups in each programme, their mentors and sessions, and their KPIs from month 0 to month 6', odoo: ['aih.programme.company', 'aih.session', 'aih.kpi', 'aih.reflection'], v2: '/inc-acc/' },
-  { activity: 'challenge-connect', what: 'Challenges from companies, the suppliers who apply and the matching result', odoo: ['aih.challenge', 'aih.application'], v2: '/challenge-connect/' },
-  { activity: 'vibathon', what: 'Who registered, the mentors and jury, the projects presented, their scores and the next step', odoo: ['aih.vibathon.participant', 'aih.vibathon.jury', 'aih.project', 'aih.project.score'], v2: '/vibathon/' },
-  { activity: 'talent', what: 'The people in the ADI network, grouped as professionals, consultants, mentors and investors, with their skills', odoo: ['res.partner', 'aih.skill'], v2: '/talent/' },
+  { activity: 'inc-acc', what: 'The startups in each programme, their mentors and sessions, and their KPIs from month 0 to month 6', odoo: ['aih.programme.company', 'aih.session', 'aih.kpi', 'aih.reflection'], v2: '/v2/inc-acc/' },
+  { activity: 'challenge-connect', what: 'Challenges from companies, the suppliers who apply and the matching result', odoo: ['aih.challenge', 'aih.application'], v2: '/v2/challenge-connect/' },
+  { activity: 'vibathon', what: 'Who registered, the mentors and jury, the projects presented, their scores and the next step', odoo: ['aih.vibathon.participant', 'aih.vibathon.jury', 'aih.project', 'aih.project.score'], v2: '/v2/vibathon/' },
+  { activity: 'talent', what: 'The people in the ADI network, grouped as professionals, consultants, mentors and investors, with their skills', odoo: ['res.partner', 'aih.skill'], v2: '/v2/talent/' },
 ];
 // Which hub activity each real programme belongs to (our grouping, from the whiteboard's four boxes).
 const PROG_ACT = { founder2founder: 'inc-acc', f2f: 'inc-acc', incubator: 'inc-acc', 'inova-algarve-3': 'inc-acc', inova: 'inc-acc', 'startup-showcase': 'inc-acc',
@@ -412,7 +412,7 @@ export function render(ctx) {
     <figure class="pipe" aria-label="How data flows: ideas, needs and spreadsheets go into Odoo; Odoo feeds their site and this page">
       <ol><li class="pp-in"><span>Ideas, needs</span><span>Spreadsheets</span></li><li class="pp-core"><strong>ODOO</strong><span>${esc(X.sys.version || '')}</span></li><li class="pp-out"><span>${esc(odooHost)}</span><span>This page (V3)</span></li></ol>
       <figcaption>As on António Guerreiro's whiteboard: ideas and needs, and the spreadsheets, flow into Odoo; Odoo feeds the official site. This page reads only what their Odoo publishes.</figcaption></figure></div>
-    <p class="sys-go"><a href="/odoo/">What the hub's own Odoo could hold, in V2 <span aria-hidden="true">→</span></a></p>`;
+    <p class="sys-go"><a href="/v2/odoo/">What the hub's own Odoo could hold, in V2 <span aria-hidden="true">→</span></a></p>`;
 
   // ---------- programme status board ----------
   const STATUS = { 'ualg-entrepreneurship': ['ok', 'Running · Penha, Gambelas, Portimão'], 'the-company': ['ok', 'Running · secondary schools'], buildathons: ['ok', 'Latest: Vibathon Algarve 2026'],
@@ -517,7 +517,7 @@ ${chrome.banner}
   </div>
 </main>
 <footer class="foot">
-  <p>V3 shows what Algarve Evolution has published; <a href="/">V2</a> shows what the hub could be, with simulated records. Code Apache-2.0, text CC BY 4.0.</p>
+  <p>V3 shows what Algarve Evolution has published; <a href="/v2/">V2</a> shows what the hub could be, with simulated records. Code Apache-2.0, text CC BY 4.0.</p>
   <p class="fine">Typefaces: Chakra Petch and JetBrains Mono (SIL OFL 1.1). Version ${esc(chrome.version)}.</p>
 </footer>
 <script src="${BASE}/mission.js" defer></script>

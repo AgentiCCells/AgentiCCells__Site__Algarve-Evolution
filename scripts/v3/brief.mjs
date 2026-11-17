@@ -11,25 +11,25 @@ import { readFileSync, existsSync } from 'node:fs';
 export const meta = { slug: 'brief', order: 1, name: 'The Brief', tagline: 'Read it in two minutes' };
 
 const ODOO = 'https://www.algarveevolution.pt';
-const V2_NAME = { '/': 'The Hub', '/inc-acc/': 'INC/ACC', '/challenge-connect/': 'Challenge Connect', '/vibathon/': 'Vibathon', '/talent/': 'Talent Ecosystem', '/odoo/': 'Odoo', '/workflows/': 'Workflows', '/plan/': 'Plan' };
+const V2_NAME = { '/v2/': 'The Hub', '/v2/inc-acc/': 'INC/ACC', '/v2/challenge-connect/': 'Challenge Connect', '/v2/vibathon/': 'Vibathon', '/v2/talent/': 'Talent Ecosystem', '/v2/odoo/': 'Odoo', '/v2/workflows/': 'Workflows', '/v2/plan/': 'Plan' };
 
 // The four activities on António's whiteboard (docs/v2/BRIEF.md), with his keywords and our English gloss.
 const ACTIVITIES = [
-  { id: 'inc-acc', name: 'INC/ACC', long: 'Incubation and acceleration', keywords: 'incubação, aceleração, mentores, KPIs', gloss: 'incubation, acceleration, mentors, KPIs', v2: '/inc-acc/' },
-  { id: 'challenge-connect', name: 'Challenge Connect', long: 'Challenges matched with suppliers', keywords: 'desafios, fornecedores, matching', gloss: 'challenges, suppliers, matching', v2: '/challenge-connect/' },
-  { id: 'vibathon', name: 'Vibathon', long: 'Hackathons and workshops', keywords: 'hackathons, workshops, júris', gloss: 'hackathons, workshops, juries', v2: '/vibathon/' },
-  { id: 'talent', name: 'Talent Ecosystem', long: 'The people and partners of the region', keywords: 'talento, competências, parceiros, rede ADI', gloss: 'talent, skills, partners, the ADI network', v2: '/talent/' },
+  { id: 'inc-acc', name: 'INC/ACC', long: 'Incubation and acceleration', keywords: 'incubação, aceleração, mentores, KPIs', gloss: 'incubation, acceleration, mentors, KPIs', v2: '/v2/inc-acc/' },
+  { id: 'challenge-connect', name: 'Challenge Connect', long: 'Challenges matched with suppliers', keywords: 'desafios, fornecedores, matching', gloss: 'challenges, suppliers, matching', v2: '/v2/challenge-connect/' },
+  { id: 'vibathon', name: 'Vibathon', long: 'Hackathons and workshops', keywords: 'hackathons, workshops, júris', gloss: 'hackathons, workshops, juries', v2: '/v2/vibathon/' },
+  { id: 'talent', name: 'Talent Ecosystem', long: 'The people and partners of the region', keywords: 'talento, competências, parceiros, rede ADI', gloss: 'talent, skills, partners, the ADI network', v2: '/v2/talent/' },
 ];
 
 // What real data does not exist publicly yet, and the hub addon's records that would hold it
 // (odoo/addons/algarve_innovation_hub). Used until real.json carries its own "gaps".
 const GAPS = [
-  { activity: 'inc-acc', what: 'The startups in each programme, their mentor and their mentoring sessions', odoo: ['aih.programme.company', 'aih.session', 'res.partner (mentor)'], v2: '/inc-acc/' },
-  { activity: 'inc-acc', what: 'Each company\'s KPIs from month 0 to month 6, made public, and the reflection on the indicators', odoo: ['aih.kpi', 'aih.reflection'], v2: '/inc-acc/' },
-  { activity: 'challenge-connect', what: 'Challenges from companies, the suppliers who apply, and the matching result (the best, or a top 3)', odoo: ['aih.challenge', 'aih.application'], v2: '/challenge-connect/' },
-  { activity: 'vibathon', what: 'Who registered, the mentors and the jury, the projects presented, the scores and the next step after each event', odoo: ['aih.vibathon', 'aih.vibathon.participant', 'aih.vibathon.jury', 'aih.project', 'aih.project.score'], v2: '/vibathon/' },
-  { activity: 'talent', what: 'The people in the network (professionals, consultants, mentors, investors), each listed only with their consent, and their skills', odoo: ['res.partner (talent kind, consent)', 'aih.skill'], v2: '/talent/' },
-  { activity: 'talent', what: 'The members of each community, and the communities not yet recorded', odoo: ['aih.community'], v2: '/talent/' },
+  { activity: 'inc-acc', what: 'The startups in each programme, their mentor and their mentoring sessions', odoo: ['aih.programme.company', 'aih.session', 'res.partner (mentor)'], v2: '/v2/inc-acc/' },
+  { activity: 'inc-acc', what: 'Each company\'s KPIs from month 0 to month 6, made public, and the reflection on the indicators', odoo: ['aih.kpi', 'aih.reflection'], v2: '/v2/inc-acc/' },
+  { activity: 'challenge-connect', what: 'Challenges from companies, the suppliers who apply, and the matching result (the best, or a top 3)', odoo: ['aih.challenge', 'aih.application'], v2: '/v2/challenge-connect/' },
+  { activity: 'vibathon', what: 'Who registered, the mentors and the jury, the projects presented, the scores and the next step after each event', odoo: ['aih.vibathon', 'aih.vibathon.participant', 'aih.vibathon.jury', 'aih.project', 'aih.project.score'], v2: '/v2/vibathon/' },
+  { activity: 'talent', what: 'The people in the network (professionals, consultants, mentors, investors), each listed only with their consent, and their skills', odoo: ['res.partner (talent kind, consent)', 'aih.skill'], v2: '/v2/talent/' },
+  { activity: 'talent', what: 'The members of each community, and the communities not yet recorded', odoo: ['aih.community'], v2: '/v2/talent/' },
 ];
 
 // Partners (ecosystem.json nodes of kind "partner"), with V1's short roles. Used until real.json has partners.
@@ -367,7 +367,7 @@ ${notesHtml}
   <p class="foot-mark">AE Innovation Hub <span>${esc(meta.name)} · V3, real data only</span></p>
   <div class="foot-text">
     <p><strong>${esc(h.t(ctx.data.voice.banner))}</strong> <a href="${ODOO}/" rel="noopener">${esc(h.t(ctx.data.voice.banner_link))}</a>.</p>
-    <p>V3 shows only what Algarve Evolution and the press have published. V2 shows what the hub could be, with simulated records marked as such: <a href="/">open V2</a>.</p>
+    <p>V3 shows only what Algarve Evolution and the press have published. V2 shows what the hub could be, with simulated records marked as such: <a href="/v2/">open V2</a>.</p>
     <p class="small">Version ${esc(chrome.version)} · Code Apache-2.0; text CC BY 4.0. Set in Inter (SIL Open Font License 1.1). · <a href="#top">Back to the top</a></p>
   </div>
 </div></footer>

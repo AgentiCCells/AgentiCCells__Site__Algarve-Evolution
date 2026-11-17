@@ -4,7 +4,7 @@
 // Everything here comes from the public feed (aih.programme, aih.programme.company, res.partner mentors,
 // aih.session, aih.kpi, aih.reflection). Persona workspaces and the staff view are drawn by src/hub/inc-acc.js.
 // Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0, text CC BY 4.0.
-export const path = '/inc-acc/';
+export const path = '/v2/inc-acc/';
 export const title = 'INC/ACC: incubation and acceleration';
 export const nav = 'INC/ACC';
 
@@ -347,7 +347,7 @@ export function render({ layout, feed, h }) {
     </div>
     <div class="persona-panel" data-only="challenger supplier participant">
       <p class="persona-panel-head">For this persona</p>
-      <p>This persona matters most on <a href="/challenge-connect/">Challenge Connect</a> and <a href="/vibathon/">Vibathon</a>. INC/ACC is for founders, mentors and the Algarve Evolution team; the results below are public for everyone.</p>
+      <p>This persona matters most on <a href="/v2/challenge-connect/">Challenge Connect</a> and <a href="/v2/vibathon/">Vibathon</a>. INC/ACC is for founders, mentors and the Algarve Evolution team; the results below are public for everyone.</p>
       <p class="ia-go"><button type="button" class="btn btn-primary" data-persona-go="founder">Try it as a founder</button><button type="button" class="btn" data-persona-go="mentor">as a mentor</button></p>
     </div>
     <div class="persona-panel ia-ws" data-only="founder" id="ws-founder" aria-live="polite"><noscript><p>The founder workspace needs JavaScript.</p></noscript></div>

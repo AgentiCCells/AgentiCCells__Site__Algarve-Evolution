@@ -7,7 +7,7 @@
 // Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0, text CC BY 4.0.
 import * as T from '../../src/hub/talent.js';
 
-export const path = '/talent/';
+export const path = '/v2/talent/';
 export const title = 'Talent Ecosystem';
 export const nav = 'Talent Ecosystem';
 

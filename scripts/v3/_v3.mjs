@@ -11,7 +11,7 @@
 import { helpers, localise } from '../site-data.mjs';
 
 export const V3_DEFAULT = 'brief';
-export const v3Path = slug => (slug === V3_DEFAULT ? '/v3/' : `/v3/${slug}/`);
+export const v3Path = slug => (slug === V3_DEFAULT ? '/' : `/${slug}/`);
 
 export function v3Context({ data, real, version, slug, designs }) {
   const en = localise(data, 'en');
@@ -21,7 +21,7 @@ export function v3Context({ data, real, version, slug, designs }) {
   const list = designs.map(d => ({ slug: d.slug, name: d.name, tagline: d.tagline, path: v3Path(d.slug) }));
   const chrome = {
     head: `<link rel="stylesheet" href="/v3/v3.css"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="/hub/favicon.svg" type="image/svg+xml">`,
-    banner: `<div class="v3-proto" role="note"><span>${esc(v.banner.en)}</span> <span class="v3-tag">V3 · real data only</span> <a href="/">V2: what it could be</a> <a href="/decks/">Decks</a> <button type="button" class="v3-pick-btn" data-v3-picker aria-haspopup="dialog">Choose a design</button></div>`,
+    banner: `<div class="v3-proto" role="note"><span>${esc(v.banner.en)}</span> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(v.banner_link.en)}</a> <span class="v3-tag">V3 · real data only</span> <a class="v3-ver" href="/v2/">V2: what it could be</a> <a class="v3-ver" href="/v1/">V1 experiments</a> <a class="v3-ver" href="/decks/">Decks</a> <button type="button" class="v3-pick-btn" data-v3-picker aria-haspopup="dialog">Choose a design</button></div>`,
     foot: `<script type="application/json" id="v3-designs">${JSON.stringify({ current: slug, designs: list }).replace(/</g, '\\u003c')}</script><script src="/v3/picker.js" defer></script>`,
     version,
   };

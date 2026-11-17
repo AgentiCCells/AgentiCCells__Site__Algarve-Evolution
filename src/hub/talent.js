@@ -22,9 +22,9 @@ export const OPEN = new Set(['open', 'matching']);
 export const PEOPLE = new Set(['professional', 'consultant', 'mentor', 'investor']);
 const KIND = Object.fromEntries([...KINDS, { id: 'supplier', label: 'Supplier companies', one: 'Supplier company (Challenge Connect)', group: 'org' }].map(k => [k.id, k]));
 export const ACTS = [
-  { id: 'inc', label: 'INC/ACC', href: '/inc-acc/' },
-  { id: 'cc', label: 'Challenge Connect', href: '/challenge-connect/' },
-  { id: 'vib', label: 'Vibathon', href: '/vibathon/' },
+  { id: 'inc', label: 'INC/ACC', href: '/v2/inc-acc/' },
+  { id: 'cc', label: 'Challenge Connect', href: '/v2/challenge-connect/' },
+  { id: 'vib', label: 'Vibathon', href: '/v2/vibathon/' },
 ];
 
 // ------------------------------------------------------------------ small helpers (same markup as the hub's h.*)
@@ -157,9 +157,9 @@ export function card(e, model) {
   const com = e.communityId ? model.coms.find(c => c.id === e.communityId) : null;
   const links = [];
   if (com) links.push(`Member of <button type="button" class="te-link" data-community="${esc(com.id)}">${esc(com.name)}</button>`);
-  if (e.inc.size) links.push(`<a href="/inc-acc/">INC/ACC mentor</a>`);
-  if (e.cc.size) links.push(`<a href="/challenge-connect/">Challenge Connect supplier</a>`);
-  if (e.vib.size) links.push(`<a href="/vibathon/">Vibathon ${esc([...e.roles].filter(r => /jury|team|vibathon/.test(r)).map(r => r.replace('vibathon ', '')).join(', ') || 'participant')}</a>`);
+  if (e.inc.size) links.push(`<a href="/v2/inc-acc/">INC/ACC mentor</a>`);
+  if (e.cc.size) links.push(`<a href="/v2/challenge-connect/">Challenge Connect supplier</a>`);
+  if (e.vib.size) links.push(`<a href="/v2/vibathon/">Vibathon ${esc([...e.roles].filter(r => /jury|team|vibathon/.test(r)).map(r => r.replace('vibathon ', '')).join(', ') || 'participant')}</a>`);
   if (e.comRecord) { const n = model.entries.filter(x => x.communityId === e.comRecord).length; if (n) links.push(`<button type="button" class="te-link" data-community="${esc(e.comRecord)}">${n} ${n === 1 ? 'person' : 'people'} listed</button>`); }
   const np = model.priv && e.notPublic ? `<span class="tag tag-accent" title="In Odoo, but not in the public feed">${!e.published ? 'Not published' : 'Not public: no consent'}</span>` : '';
   const ml = muniLabel(model.munis, e.muni), where = e.town && e.town !== ml ? `${ml} (${e.town})` : ml;
@@ -244,7 +244,7 @@ export function matrix(model, mode = 'kind') {
   }).sort((a, b) => b.total - a.total || a.c.localeCompare(b.c));
   const max = Math.max(1, ...rows.flatMap(r => r.cells));
   const head = `<tr><th scope="col" class="te-mx-c">Competence</th>${cols.map(c => `<th scope="col"${mode === 'muni' ? ' class="te-mx-v"' : ''}><span>${esc(c.label)}</span></th>`).join('')}<th scope="col" class="te-mx-t"><span>Total</span></th><th scope="col" class="te-mx-d"><span>Open challenges asking</span></th></tr>`;
-  const body = rows.map(r => `<tr${r.total === 0 ? ' class="is-gap"' : ''}><th scope="row" class="te-mx-c">${esc(r.c)}</th>${r.cells.map((n, i) => `<td><button type="button" class="te-mx-b l${level(n, max)}" data-comp="${esc(r.c)}" data-${mode === 'kind' ? 'who' : 'where'}="${esc(cols[i].id)}" aria-label="${esc(r.c)}, ${esc(cols[i].label)}: ${n}">${n || '·'}</button></td>`).join('')}<td class="te-mx-t"><button type="button" class="te-mx-b te-mx-tb" data-comp="${esc(r.c)}" aria-label="${esc(r.c)}, everyone: ${r.total}">${r.total}</button></td><td class="te-mx-d">${r.demand ? `<a href="/challenge-connect/" class="te-dem${r.demand > r.total / 3 ? ' is-short' : ''}" title="Open challenges in Challenge Connect that ask for ${esc(r.c)}">${r.demand}</a>` : '<span class="te-dim">·</span>'}</td></tr>`).join('');
+  const body = rows.map(r => `<tr${r.total === 0 ? ' class="is-gap"' : ''}><th scope="row" class="te-mx-c">${esc(r.c)}</th>${r.cells.map((n, i) => `<td><button type="button" class="te-mx-b l${level(n, max)}" data-comp="${esc(r.c)}" data-${mode === 'kind' ? 'who' : 'where'}="${esc(cols[i].id)}" aria-label="${esc(r.c)}, ${esc(cols[i].label)}: ${n}">${n || '·'}</button></td>`).join('')}<td class="te-mx-t"><button type="button" class="te-mx-b te-mx-tb" data-comp="${esc(r.c)}" aria-label="${esc(r.c)}, everyone: ${r.total}">${r.total}</button></td><td class="te-mx-d">${r.demand ? `<a href="/v2/challenge-connect/" class="te-dem${r.demand > r.total / 3 ? ' is-short' : ''}" title="Open challenges in Challenge Connect that ask for ${esc(r.c)}">${r.demand}</a>` : '<span class="te-dim">·</span>'}</td></tr>`).join('');
   return `<table class="te-mx te-mx-${mode}"><caption class="vh">Competences by ${mode === 'kind' ? 'kind' : 'municipality'}: how many people and companies in the ${model.priv ? 'private' : 'public'} feed have each competence</caption><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
 
@@ -275,7 +275,7 @@ export function findHtml(model, q, limit = 10) {
     return `<li class="te-hit${e.notPublic ? ' is-np' : ''}"><div><p class="te-hit-k">${esc(k.one)} · ${esc(muniLabel(model.munis, e.muni))}</p><h4>${esc(e.name)} ${simB(e)} ${srcL(e)}</h4><p class="te-hit-w">${why.join(' · ') || esc(e.summary)}</p>${e.notPublic ? '<p class="te-hit-np">Not public: ask for their consent before you introduce them.</p>' : ''}</div><span class="te-hit-s" aria-label="${hit.length} of ${q.comps.length} competences">${q.comps.length ? `${hit.length}/${q.comps.length}` : ''}</span></li>`;
   }).join('');
   return `<p class="te-find-n"><b>${res.length}</b> ${res.length === 1 ? 'match' : 'matches'}${res.length > limit ? `, the best ${limit} shown` : ''}.</p>${rows ? `<ol class="te-hits">${rows}</ol>` : '<p class="te-empty">Nobody in the feed has that yet: a gap the hub could fill.</p>'}` +
-    (asks.length ? `<div class="te-asks"><p><b>Challenge Connect:</b> ${asks.length} open ${asks.length === 1 ? 'challenge asks' : 'challenges ask'} for ${q.comps.length > 1 ? 'these competences' : 'this competence'}.</p><ul>${asks.map(ch => `<li><a href="/challenge-connect/">${esc(ch.title)}</a> <span class="te-st">${esc(ch.status)}</span></li>`).join('')}</ul></div>` : '');
+    (asks.length ? `<div class="te-asks"><p><b>Challenge Connect:</b> ${asks.length} open ${asks.length === 1 ? 'challenge asks' : 'challenges ask'} for ${q.comps.length > 1 ? 'these competences' : 'this competence'}.</p><ul>${asks.map(ch => `<li><a href="/v2/challenge-connect/">${esc(ch.title)}</a> <span class="te-st">${esc(ch.status)}</span></li>`).join('')}</ul></div>` : '');
 }
 
 // ------------------------------------------------------------------ the network: communities, people, activities

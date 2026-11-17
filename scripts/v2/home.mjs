@@ -1,31 +1,31 @@
 // The hub's home: António Guerreiro's whiteboard made clickable, the four activities with live counts from Odoo,
 // the personas to try it as, what is coming up (real events from Algarve Evolution's Odoo) and how Odoo feeds it all.
 // Owner: sites-design@AgentiCCells.dinis. Code Apache-2.0, text CC BY 4.0. Every number comes from the feed.
-export const path = '/';
+export const path = '/v2/';
 export const title = 'AE Innovation Hub';
 export const nav = 'The Hub';
 
 // António's keywords from the whiteboard (docs/v2/BRIEF.md, 16 November 2026), in English, with his Portuguese.
 const BOARD = {
-  'inc-acc': { href: '/inc-acc/', short: 'INC/ACC', keys: 'incubation, acceleration, mentors, KPIs', pt: 'incubação, aceleração, mentores, KPIs', for: 'founder mentor',
+  'inc-acc': { href: '/v2/inc-acc/', short: 'INC/ACC', keys: 'incubation, acceleration, mentors, KPIs', pt: 'incubação, aceleração, mentores, KPIs', for: 'founder mentor',
     counts: [['programmes', 'programmes'], ['companies', 'companies'], ['mentors', 'mentors'], ['sessions', 'sessions']], models: ['aih.programme', 'aih.session', 'aih.kpi'] },
-  'challenge-connect': { href: '/challenge-connect/', short: 'Challenge Connect', keys: 'challenges, suppliers, matching', pt: 'desafios, fornecedores, matching', for: 'challenger supplier',
+  'challenge-connect': { href: '/v2/challenge-connect/', short: 'Challenge Connect', keys: 'challenges, suppliers, matching', pt: 'desafios, fornecedores, matching', for: 'challenger supplier',
     counts: [['challenges', 'challenges'], ['suppliers', 'suppliers'], ['applications', 'applications']], models: ['aih.challenge', 'aih.application'] },
-  vibathon: { href: '/vibathon/', short: 'Vibathon', keys: 'hackathons, workshops, juries', pt: 'hackathons, workshops, júris', for: 'participant mentor',
+  vibathon: { href: '/v2/vibathon/', short: 'Vibathon', keys: 'hackathons, workshops, juries', pt: 'hackathons, workshops, júris', for: 'participant mentor',
     counts: [['vibathons', 'Vibathons'], ['projects', 'projects'], ['registrations', 'registrations']], models: ['aih.vibathon', 'aih.project'] },
-  talent: { href: '/talent/', short: 'Talent Ecosystem', keys: 'talent, competences, partners, the ADI network', pt: 'talento, competências, parceiros, rede ADI', for: 'supplier',
+  talent: { href: '/v2/talent/', short: 'Talent Ecosystem', keys: 'talent, competences, partners, the ADI network', pt: 'talento, competências, parceiros, rede ADI', for: 'supplier',
     counts: [['talent', 'people and organisations'], ['communities', 'communities']], models: ['res.partner', 'aih.community'] },
 };
 
 // What each persona finds, and where to start. Shown in the "you are trying it as" strip and on the persona cards.
 const PERSONA_COPY = {
-  visitor: { start: '/inc-acc/', page: 'INC/ACC', text: 'Everything Algarve Evolution has published in Odoo: the programmes and their public KPIs, open challenges, Vibathon projects, the talent network and real events.' },
-  founder: { start: '/inc-acc/', page: 'INC/ACC', text: 'Your programme, your mentor and your sessions, your KPIs from month 0 to month 6, and the reflection on the indicators.' },
-  mentor: { start: '/inc-acc/', page: 'INC/ACC', text: 'The companies you mentor one to one, guest clinics and workshops, logging a session, and the Vibathons you mentor at.' },
-  challenger: { start: '/challenge-connect/', page: 'Challenge Connect', text: 'Post a challenge, see who applied and the ranked matching result, then choose a supplier or ask Algarve Evolution for a top 3.' },
-  supplier: { start: '/challenge-connect/', page: 'Challenge Connect', text: 'Open challenges that fit what you do, applying with a proposal, price and days, and your place in the talent network.' },
-  participant: { start: '/vibathon/', page: 'Vibathon', text: 'Registering for a Vibathon, the projects and the jury, what was presented at the end and the next step after the event.' },
-  staff: { start: '/odoo/', page: 'Odoo', text: 'The private feed, once you enter the access key: session notes, contact details, participants and jury scores, on every page.' },
+  visitor: { start: '/v2/inc-acc/', page: 'INC/ACC', text: 'Everything Algarve Evolution has published in Odoo: the programmes and their public KPIs, open challenges, Vibathon projects, the talent network and real events.' },
+  founder: { start: '/v2/inc-acc/', page: 'INC/ACC', text: 'Your programme, your mentor and your sessions, your KPIs from month 0 to month 6, and the reflection on the indicators.' },
+  mentor: { start: '/v2/inc-acc/', page: 'INC/ACC', text: 'The companies you mentor one to one, guest clinics and workshops, logging a session, and the Vibathons you mentor at.' },
+  challenger: { start: '/v2/challenge-connect/', page: 'Challenge Connect', text: 'Post a challenge, see who applied and the ranked matching result, then choose a supplier or ask Algarve Evolution for a top 3.' },
+  supplier: { start: '/v2/challenge-connect/', page: 'Challenge Connect', text: 'Open challenges that fit what you do, applying with a proposal, price and days, and your place in the talent network.' },
+  participant: { start: '/v2/vibathon/', page: 'Vibathon', text: 'Registering for a Vibathon, the projects and the jury, what was presented at the end and the next step after the event.' },
+  staff: { start: '/v2/odoo/', page: 'Odoo', text: 'The private feed, once you enter the access key: session notes, contact details, participants and jury scores, on every page.' },
 };
 
 export function render({ layout, feed, data, h, PERSONAS }) {
@@ -112,11 +112,11 @@ export function render({ layout, feed, data, h, PERSONAS }) {
         <div class="wb-base">
           <p class="wb-base-name"><span class="odoo-dot" aria-hidden="true"></span>Odoo 19: the source of truth</p>
           <p class="wb-base-text">Every box above reads the same Odoo. Records are entered once, published when they are ready, and exported as two feeds.</p>
-          <a class="wb-base-go" href="/odoo/">How Odoo is used <span aria-hidden="true">&rarr;</span></a>
+          <a class="wb-base-go" href="/v2/odoo/">How Odoo is used <span aria-hidden="true">&rarr;</span></a>
         </div>
       </div>
       <div class="wb-bottom">
-        <a class="wb-ideas" href="/odoo/#ideas-and-needs">
+        <a class="wb-ideas" href="/v2/odoo/#ideas-and-needs">
           <svg class="wb-ideas-arrow" viewBox="0 0 40 56" aria-hidden="true" focusable="false"><path d="M20 54V6M6 20 20 6l14 14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"/></svg>
           <span><strong>Ideas and needs</strong><span class="wb-pt" lang="pt">ideias, necessidades</span>
           <span class="wb-ideas-text">The stream that feeds the hub: a need from a company, an idea for a programme or an event. Send one and see the Odoo record it would create.</span></span>
@@ -180,9 +180,9 @@ export function render({ layout, feed, data, h, PERSONAS }) {
   const openCh = feed.challenges.filter(c => ['open', 'matching'].includes(c.status)).sort((a, b) => a.deadline.localeCompare(b.deadline));
   const running = feed.programmes.filter(p => p.status === 'running');
   const hubNext = [
-    nextVib && `<a class="card card-link card-accent" href="/vibathon/"><span class="card-kicker">Next Vibathon</span><h3>${esc(nextVib.name)}</h3><span class="card-meta">${esc(h.date(nextVib.date))} · ${esc(nextVib.town)} ${sim(nextVib)}</span><span class="card-foot">${odoo('aih.vibathon')}<span class="home-go">Register <span aria-hidden="true">&rarr;</span></span></span></a>`,
-    openCh.length && `<a class="card card-link" href="/challenge-connect/"><span class="card-kicker">${num(openCh.length)} challenges taking applications</span><h3>${esc(openCh[0].title)}</h3><span class="card-meta">Closes ${esc(h.date(openCh[0].deadline))} · ${esc(h.money(openCh[0].budget_eur_min))} to ${esc(h.money(openCh[0].budget_eur_max))} ${sim(openCh[0])}</span><span class="card-foot">${odoo('aih.challenge')}<span class="home-go">Apply <span aria-hidden="true">&rarr;</span></span></span></a>`,
-    running[0] && `<a class="card card-link" href="/inc-acc/"><span class="card-kicker">Programme running now</span><h3>${esc(running[0].name)}</h3><span class="card-meta">Until ${esc(h.date(running[0].end))} · ${num(running[0].company_ids.length)} companies ${sim(running[0])}</span><span class="card-foot">${odoo('aih.programme')}<span class="home-go">See the KPIs <span aria-hidden="true">&rarr;</span></span></span></a>`,
+    nextVib && `<a class="card card-link card-accent" href="/v2/vibathon/"><span class="card-kicker">Next Vibathon</span><h3>${esc(nextVib.name)}</h3><span class="card-meta">${esc(h.date(nextVib.date))} · ${esc(nextVib.town)} ${sim(nextVib)}</span><span class="card-foot">${odoo('aih.vibathon')}<span class="home-go">Register <span aria-hidden="true">&rarr;</span></span></span></a>`,
+    openCh.length && `<a class="card card-link" href="/v2/challenge-connect/"><span class="card-kicker">${num(openCh.length)} challenges taking applications</span><h3>${esc(openCh[0].title)}</h3><span class="card-meta">Closes ${esc(h.date(openCh[0].deadline))} · ${esc(h.money(openCh[0].budget_eur_min))} to ${esc(h.money(openCh[0].budget_eur_max))} ${sim(openCh[0])}</span><span class="card-foot">${odoo('aih.challenge')}<span class="home-go">Apply <span aria-hidden="true">&rarr;</span></span></span></a>`,
+    running[0] && `<a class="card card-link" href="/v2/inc-acc/"><span class="card-kicker">Programme running now</span><h3>${esc(running[0].name)}</h3><span class="card-meta">Until ${esc(h.date(running[0].end))} · ${num(running[0].company_ids.length)} companies ${sim(running[0])}</span><span class="card-foot">${odoo('aih.programme')}<span class="home-go">See the KPIs <span aria-hidden="true">&rarr;</span></span></span></a>`,
   ].filter(Boolean).join('\n        ');
   const coming = `
 <section class="hub-sec home-coming" id="coming-up" aria-labelledby="coming-h">

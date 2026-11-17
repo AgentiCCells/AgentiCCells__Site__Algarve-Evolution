@@ -10,7 +10,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import vm from 'node:vm';
 
-export const path = '/plan/';
+export const path = '/v2/plan/';
 export const title = 'Plan, then apply';
 export const nav = 'Plan';
 

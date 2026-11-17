@@ -2,16 +2,16 @@
 // The journey of every event: register, build, present, next step. Everything is read from the Odoo feed
 // (aih.vibathon, aih.project, res.partner, event.event); the private parts (participants, jury scores) open in the
 // browser for the Algarve Evolution team (src/hub/vibathon.js). Owner: sites-dev@AgentiCCells.dinis. Apache-2.0.
-export const path = '/vibathon/';
+export const path = '/v2/vibathon/';
 export const title = 'Vibathon: hackathons and workshops';
 export const nav = 'Vibathon';
 
 // The routing rule from a project's next step to a follow-up lane: a proposal of ours, not a field in Odoo.
 // Rules are tried in order; partners are found in the Talent Ecosystem ("parceiros" on António's whiteboard).
 export const LANES = [
-  { id: 'inc-acc', name: 'INC/ACC', verb: 'Apply to incubation or acceleration', href: '/inc-acc/' },
-  { id: 'challenge', name: 'Challenge Connect', verb: 'Test it with a first customer or a pilot', href: '/challenge-connect/' },
-  { id: 'talent', name: 'Talent Ecosystem', verb: 'Find partners, skills and people in the network', href: '/talent/' },
+  { id: 'inc-acc', name: 'INC/ACC', verb: 'Apply to incubation or acceleration', href: '/v2/inc-acc/' },
+  { id: 'challenge', name: 'Challenge Connect', verb: 'Test it with a first customer or a pilot', href: '/v2/challenge-connect/' },
+  { id: 'talent', name: 'Talent Ecosystem', verb: 'Find partners, skills and people in the network', href: '/v2/talent/' },
 ];
 export const RULES = [
   { id: 'none', re: '^stopped|split up|abandon' },
@@ -242,9 +242,9 @@ export function render({ layout, feed, data, h, ix }) {
       <label class="vb-inline">You are <select data-mentor-pick>${client.mentors.map(m => `<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></label>
       <div data-mentor-view></div>
     </div>
-    <div class="persona-panel vb-panel" data-only="founder" hidden><p class="persona-panel-head">For founders</p><p>Teams whose next step is a programme are in the <a href="#after">INC/ACC lane</a>: they would join a cohort like yours. <a href="/inc-acc/">See INC/ACC</a>.</p></div>
-    <div class="persona-panel vb-panel" data-only="challenger" hidden><p class="persona-panel-head">For challenge owners</p><p>Teams looking for a first customer or a pilot are in the <a href="#after">Challenge Connect lane</a>. If one of them could solve your problem, <a href="/challenge-connect/">post a challenge</a> and invite them to apply.</p></div>
-    <div class="persona-panel vb-panel" data-only="supplier" hidden><p class="persona-panel-head">For suppliers</p><p>Vibathon teams become suppliers too: the <a href="#after">Challenge Connect lane</a> shows the ones ready for a pilot. <a href="/challenge-connect/">See the open challenges</a>.</p></div>
+    <div class="persona-panel vb-panel" data-only="founder" hidden><p class="persona-panel-head">For founders</p><p>Teams whose next step is a programme are in the <a href="#after">INC/ACC lane</a>: they would join a cohort like yours. <a href="/v2/inc-acc/">See INC/ACC</a>.</p></div>
+    <div class="persona-panel vb-panel" data-only="challenger" hidden><p class="persona-panel-head">For challenge owners</p><p>Teams looking for a first customer or a pilot are in the <a href="#after">Challenge Connect lane</a>. If one of them could solve your problem, <a href="/v2/challenge-connect/">post a challenge</a> and invite them to apply.</p></div>
+    <div class="persona-panel vb-panel" data-only="supplier" hidden><p class="persona-panel-head">For suppliers</p><p>Vibathon teams become suppliers too: the <a href="#after">Challenge Connect lane</a> shows the ones ready for a pilot. <a href="/v2/challenge-connect/">See the open challenges</a>.</p></div>
     <div class="persona-panel persona-panel-private vb-panel" data-only="staff" hidden>
       <p class="persona-panel-head">Algarve Evolution team: the private feed</p>
       <div data-staff-view><p class="vb-locked">The private feed is not open in this tab. Choose "Algarve Evolution team" again and enter the access key to see participants, registrations data and jury scores.</p></div>
@@ -312,7 +312,7 @@ ${real ? `<section class="hub-sec vb-real" id="real" aria-labelledby="real-h">
     ${funnel}
     <div class="vb-lanes">${laneCols}</div>
     <div data-no-lane></div>
-    <p class="vb-talent-note">And every team member (${h.num(teamPeople.length)} named with consent) is invited into the <a href="/talent/">Talent Ecosystem</a>, whatever lane their project is in.</p>
+    <p class="vb-talent-note">And every team member (${h.num(teamPeople.length)} named with consent) is invited into the <a href="/v2/talent/">Talent Ecosystem</a>, whatever lane their project is in.</p>
     <div class="vb-odoo-call" data-call="route" data-only="staff" hidden></div>
   </div>
 </section>

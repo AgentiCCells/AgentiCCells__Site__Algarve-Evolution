@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-11-16T23:21:22.237Z",
+  "built": "2026-11-16T23:59:20.222Z",
   "contract": "docs/v3/REAL-FEED.md",
   "rule": "Real, published data only. Every record carries its source URL; nothing is simulated. No person is named except António Guerreiro, executive director. No e-mail address or telephone number is kept.",
   "sources": {
@@ -352,7 +352,7 @@
    "known": "Nothing is published.",
    "odoo": [],
    "odoo_note": "Proposal: the hub addon has no model for this yet; a CRM lead (crm.lead) or a Helpdesk ticket could hold it.",
-   "v2": "/"
+   "v2": "/v2/"
   }
  },
  "organisation": {
@@ -9144,7 +9144,7 @@
     "aih.kpi",
     "aih.reflection"
    ],
-   "v2": "/inc-acc/"
+   "v2": "/v2/inc-acc/"
   },
   {
    "id": "mentors",
@@ -9155,7 +9155,7 @@
     "res.partner (aih_is_mentor, aih_mentor_kind, aih_expertise_ids)",
     "aih.session"
    ],
-   "v2": "/inc-acc/"
+   "v2": "/v2/inc-acc/"
   },
   {
    "id": "challenges",
@@ -9166,7 +9166,7 @@
     "aih.challenge",
     "aih.skill"
    ],
-   "v2": "/challenge-connect/"
+   "v2": "/v2/challenge-connect/"
   },
   {
    "id": "suppliers",
@@ -9177,7 +9177,7 @@
     "res.partner (aih_is_supplier, aih_capability_ids, aih_rate)",
     "aih.skill"
    ],
-   "v2": "/challenge-connect/"
+   "v2": "/v2/challenge-connect/"
   },
   {
    "id": "applications",
@@ -9187,7 +9187,7 @@
    "odoo": [
     "aih.application"
    ],
-   "v2": "/challenge-connect/"
+   "v2": "/v2/challenge-connect/"
   },
   {
    "id": "vibathon-projects",
@@ -9198,7 +9198,7 @@
     "aih.vibathon",
     "aih.project"
    ],
-   "v2": "/vibathon/"
+   "v2": "/v2/vibathon/"
   },
   {
    "id": "vibathon-jury",
@@ -9209,7 +9209,7 @@
     "aih.vibathon.jury",
     "aih.project.score"
    ],
-   "v2": "/vibathon/"
+   "v2": "/v2/vibathon/"
   },
   {
    "id": "vibathon-participants",
@@ -9221,7 +9221,7 @@
     "aih.vibathon (registrations)",
     "event.registration"
    ],
-   "v2": "/vibathon/"
+   "v2": "/v2/vibathon/"
   },
   {
    "id": "talent-people",
@@ -9231,7 +9231,7 @@
    "odoo": [
     "res.partner (aih_talent_kind, aih_consent, aih_published, aih_community_id)"
    ],
-   "v2": "/talent/"
+   "v2": "/v2/talent/"
   },
   {
    "id": "competences",
@@ -9242,7 +9242,7 @@
     "aih.skill",
     "res.partner (aih_expertise_ids, aih_capability_ids)"
    ],
-   "v2": "/talent/"
+   "v2": "/v2/talent/"
   },
   {
    "id": "community-members",
@@ -9253,7 +9253,7 @@
     "aih.community (members)",
     "res.partner (aih_community_id)"
    ],
-   "v2": "/talent/"
+   "v2": "/v2/talent/"
   },
   {
    "id": "partners-stakeholders",
@@ -9263,7 +9263,7 @@
    "odoo": [
     "res.partner (aih_talent_kind: partner, stakeholder)"
    ],
-   "v2": "/talent/"
+   "v2": "/v2/talent/"
   }
  ]
 }

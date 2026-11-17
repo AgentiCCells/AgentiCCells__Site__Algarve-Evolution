@@ -1,6 +1,6 @@
 // The plan broker's policy: which Odoo calls a signed plan may contain. One file, used twice:
 //   - scripts/odoo/apply-plan.mjs loads it (node:vm) and checks every call again before it applies anything;
-//   - the Plan page (/plan/) loads it to show the same checks in the browser before anyone signs.
+//   - the Plan page (/v2/plan/) loads it to show the same checks in the browser before anyone signs.
 // The broker never trusts the checks written in a plan; it runs these itself. Change this file in a reviewed commit.
 // Plain script, no dependencies: sets globalThis.PlanPolicy. Owner: odoo@AgentiCCells.dinis. Apache-2.0.
 (function (root) {

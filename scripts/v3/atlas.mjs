@@ -84,18 +84,18 @@ function placer(munis) {
 // ---------- the activities ----------
 const ACTS = ['inc-acc', 'challenge-connect', 'vibathon', 'talent'];
 const ACT = {
-  'inc-acc': { short: 'INC/ACC', cls: 'inc', v2: '/inc-acc/', words: 'incubação, aceleração, mentores, KPIs' },
-  'challenge-connect': { short: 'Challenge Connect', cls: 'chal', v2: '/challenge-connect/', words: 'desafios, fornecedores, matching' },
-  vibathon: { short: 'Vibathon', cls: 'vib', v2: '/vibathon/', words: 'hackathons, workshops, júris' },
-  talent: { short: 'Talent', cls: 'tal', v2: '/talent/', words: 'talento, competências, parceiros, rede ADI' },
+  'inc-acc': { short: 'INC/ACC', cls: 'inc', v2: '/v2/inc-acc/', words: 'incubação, aceleração, mentores, KPIs' },
+  'challenge-connect': { short: 'Challenge Connect', cls: 'chal', v2: '/v2/challenge-connect/', words: 'desafios, fornecedores, matching' },
+  vibathon: { short: 'Vibathon', cls: 'vib', v2: '/v2/vibathon/', words: 'hackathons, workshops, júris' },
+  talent: { short: 'Talent', cls: 'tal', v2: '/v2/talent/', words: 'talento, competências, parceiros, rede ADI' },
 };
 // What no public source holds yet, by activity, with the hub addon's records that would hold it
 // (odoo/addons/algarve_innovation_hub). Used only until src/feeds/real.json brings its own gaps.
 const GAPS = [
-  { activity: 'inc-acc', what: 'The startups in each programme, their mentors and mentoring sessions, and their KPIs from month 0 to month 6, with a reflection on the indicators.', odoo: ['aih.programme', 'aih.programme.company', 'aih.session', 'aih.kpi', 'aih.reflection'], v2: '/inc-acc/' },
-  { activity: 'challenge-connect', what: 'The challenges companies bring, the companies and professionals who apply as suppliers, their applications and the matching result: the best or a top 3.', odoo: ['aih.challenge', 'aih.application', 'res.partner (supplier)'], v2: '/challenge-connect/' },
-  { activity: 'vibathon', what: 'Who registered, the mentors and the jury, the projects presented at the end, their scores and the next step after each event.', odoo: ['aih.vibathon', 'aih.vibathon.participant', 'aih.vibathon.jury', 'aih.project', 'aih.project.score'], v2: '/vibathon/' },
-  { activity: 'talent', what: 'The people in each community, with their consent, grouped as professionals, consultants, mentors and investors, with their skills; project partners and stakeholders.', odoo: ['aih.community', 'res.partner (talent)', 'aih.skill'], v2: '/talent/' },
+  { activity: 'inc-acc', what: 'The startups in each programme, their mentors and mentoring sessions, and their KPIs from month 0 to month 6, with a reflection on the indicators.', odoo: ['aih.programme', 'aih.programme.company', 'aih.session', 'aih.kpi', 'aih.reflection'], v2: '/v2/inc-acc/' },
+  { activity: 'challenge-connect', what: 'The challenges companies bring, the companies and professionals who apply as suppliers, their applications and the matching result: the best or a top 3.', odoo: ['aih.challenge', 'aih.application', 'res.partner (supplier)'], v2: '/v2/challenge-connect/' },
+  { activity: 'vibathon', what: 'Who registered, the mentors and the jury, the projects presented at the end, their scores and the next step after each event.', odoo: ['aih.vibathon', 'aih.vibathon.participant', 'aih.vibathon.jury', 'aih.project', 'aih.project.score'], v2: '/v2/vibathon/' },
+  { activity: 'talent', what: 'The people in each community, with their consent, grouped as professionals, consultants, mentors and investors, with their skills; project partners and stakeholders.', odoo: ['aih.community', 'res.partner (talent)', 'aih.skill'], v2: '/v2/talent/' },
 ];
 // Programmes from src/data, by activity (only until real.json gives each programme its activity).
 const PROG_ACT = { 'ualg-entrepreneurship': 'inc-acc', 'the-company': 'inc-acc', founder2founder: 'inc-acc', incubator: 'inc-acc', 'inova-algarve-3': 'inc-acc',
@@ -413,7 +413,7 @@ ${id !== 'beyond' ? gapLine(missing.join(', ')) : ''}</article>`;
   };
   const actCard = a => { const b = actBody(a); return `<article class="card act-card act-${a.cls}" id="act-${a.id}"><p class="card-k"><span class="sw sw-${a.cls}" aria-hidden="true"></span>Layer · ${esc(a.short)}</p><h3>${esc(a.name)}</h3><p class="kw"><span lang="pt">${esc(a.keywords)}</span>${a.keywordsEn ? ` <span class="kw-en">(${esc(a.keywordsEn)})</span>` : ''}</p><p>${esc(a.summary)}</p>${b.exists}${b.where}${b.gapBox}</article>`; };
   const gapGroups = [...ACTS, null].map(act => [act, M.gaps.filter(g => (g.activity || null) === act)]).filter(([, l]) => l.length);
-  const gapsCard = `<article class="card gaps-card" id="gaps"><p class="card-k">The gaps</p><h3>What your Odoo would fill</h3><p>These records do not exist in any public source yet. The hub's Odoo addon has a place for each; V2 shows what they could look like, with simulated data. This is the first piece of work: getting more data into Odoo.</p><ol class="gaps">${gapGroups.map(([act, l]) => `<li><p class="gap-k"><span class="sw sw-${act ? ACT[act].cls : 'gap'}" aria-hidden="true"></span>${esc(act ? actName(act) : 'The hub as a whole')}</p>${gapItems(l)}<a class="gap-go" href="${esc(l[0].v2 || '/')}">V2: what it could look like →</a></li>`).join('')}</ol></article>`;
+  const gapsCard = `<article class="card gaps-card" id="gaps"><p class="card-k">The gaps</p><h3>What your Odoo would fill</h3><p>These records do not exist in any public source yet. The hub's Odoo addon has a place for each; V2 shows what they could look like, with simulated data. This is the first piece of work: getting more data into Odoo.</p><ol class="gaps">${gapGroups.map(([act, l]) => `<li><p class="gap-k"><span class="sw sw-${act ? ACT[act].cls : 'gap'}" aria-hidden="true"></span>${esc(act ? actName(act) : 'The hub as a whole')}</p>${gapItems(l)}<a class="gap-go" href="${esc(l[0].v2 || '/v2/')}">V2: what it could look like →</a></li>`).join('')}</ol></article>`;
 
   // ---- timeline and month cards ----
   const tlCard = e => `<article class="card tl-card${e.future ? ' is-future' : ''}" id="tl-${e.key.replace('.', '-')}" data-t="${e.t}"><p class="card-k"><time>${esc(e.when)}</time>${e.future ? ' · <span class="tag">Planned</span>' : ''}${(TL_PLACES[e.key] || []).length ? ` · ${esc(TL_PLACES[e.key].map(id => id === 'beyond' ? 'Lisbon' : nameOf(id)).join(', '))}` : ''}</p><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p>${e.stat ? `<p class="stat">${esc(e.stat)} (their own figure)</p>` : ''}${cite(e.src)}</article>`;
@@ -579,7 +579,7 @@ ${chrome.banner}
 ${story}
 <footer class="foot"><div class="st-in">
   <p>${esc(data.voice.banner.en)}</p>
-  <p>V3 shows only real, published records, each with its source. <a href="/">V2</a> shows what the hub could be, with simulated records.</p>
+  <p>V3 shows only real, published records, each with its source. <a href="/v2/">V2</a> shows what the hub could be, with simulated records.</p>
   <p class="muted">Map drawn from Natural Earth (public domain) via the outline in the site's data; town positions are approximate; relief is drawn for effect, not survey data. Typeface: Cormorant Garamond (SIL OFL 1.1). Built from V1's Atlas. Version ${esc(chrome.version)}.</p>
 </div></footer>
 <script src="/v3/atlas/atlas.js" defer></script>

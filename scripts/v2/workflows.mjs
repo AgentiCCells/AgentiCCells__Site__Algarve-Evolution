@@ -8,7 +8,7 @@
 import { readFileSync } from 'node:fs';
 import { CELLS, LADDER, CONNECTORS, NOT_CONNECTED } from '../../src/hub/workflows.js';
 
-export const path = '/workflows/';
+export const path = '/v2/workflows/';
 export const title = 'Workflows: ten agentic cells';
 export const nav = 'Workflows';
 
@@ -129,7 +129,7 @@ export function render({ layout, feed, data, h, PERSONAS }) {
       <p class="hub-lede">A connector moves data from one place to another. A cell does the same work a person does with it: it reads, looks things up, decides what to propose, and then stops at the points where a person must decide. Three things make the difference.</p></div>
     <div class="hub-cols-3 wf-three">
       <div class="card"><p class="card-kicker">1 · The policy</p><h3>Grant, mandate, gap, barriers</h3><p>Every cell has an agent behaviour policy: what it can reach in Odoo and in the mailboxes (the grant), what it was asked to do (the mandate), the difference between the two (the gap), and what stops it (the barriers). Odoo's access rights are a real boundary; a sentence in a prompt is only an expectation.</p></div>
-      <div class="card"><p class="card-kicker">2 · The approval</p><h3>A person decides what leaves</h3><p>Any outbound email, any invoice, any contact with someone who has not agreed: the cell drafts, a person approves. Proposed Odoo writes go to the <a href="/plan/">plan queue</a>, where the team reviews them and signs the approval with a key made in their browser.</p></div>
+      <div class="card"><p class="card-kicker">2 · The approval</p><h3>A person decides what leaves</h3><p>Any outbound email, any invoice, any contact with someone who has not agreed: the cell drafts, a person approves. Proposed Odoo writes go to the <a href="/v2/plan/">plan queue</a>, where the team reviews them and signs the approval with a key made in their browser.</p></div>
       <div class="card"><p class="card-kicker">3 · The record</p><h3>What changed, and who approved it</h3><p>The signed plan, the policy checks and the result of each call are kept, longer than any chat. In Odoo, each cell leaves a to-do with its draft on the contact it touched, so the work waits where the team already looks.</p></div>
     </div>
     <ol class="wf-pipe" aria-label="How a cell runs, end to end">

@@ -32,11 +32,11 @@ const readJson = f => { try { return existsSync(f) ? JSON.parse(readFileSync(f, 
 const PROG_ACT = { founder2founder: 'inc-acc', incubator: 'inc-acc', 'startup-showcase': 'inc-acc', 'inova-algarve-3': 'inc-acc', buildathons: 'vibathon', 'algarve-digital-innovators': 'talent', 'algarve-tech-hub-summit': 'talent', 'ccdr-digital-platform': 'talent' };
 const fallbackProgrammes = d => d.programmes.pillars.flatMap(p => p.programmes.map(g => ({ id: g.id, name: g.name.en, activity: PROG_ACT[g.id] || 'education', summary: g.summary.en, facts: g.sources.slice(0, 1).map(u => ({ text: 'Reported by', source: u })) })));
 const FALLBACK_GAPS = [
-  { activity: 'inc-acc', what: 'Startups in each programme and their KPIs from month 0 to 6', odoo: ['aih.programme.company', 'aih.kpi'], v2: '/inc-acc/' },
-  { activity: 'inc-acc', what: 'Mentors and their sessions with each company', odoo: ['res.partner', 'aih.session'], v2: '/inc-acc/' },
-  { activity: 'challenge-connect', what: 'Challenges, supplier applications and the matching result', odoo: ['aih.challenge', 'aih.application'], v2: '/challenge-connect/' },
-  { activity: 'vibathon', what: 'Vibathon projects, the jury and their scores', odoo: ['aih.project', 'aih.vibathon.jury', 'aih.project.score'], v2: '/vibathon/' },
-  { activity: 'talent', what: 'The people in each community, by skill, with their consent', odoo: ['res.partner', 'aih.skill', 'aih.community'], v2: '/talent/' },
+  { activity: 'inc-acc', what: 'Startups in each programme and their KPIs from month 0 to 6', odoo: ['aih.programme.company', 'aih.kpi'], v2: '/v2/inc-acc/' },
+  { activity: 'inc-acc', what: 'Mentors and their sessions with each company', odoo: ['res.partner', 'aih.session'], v2: '/v2/inc-acc/' },
+  { activity: 'challenge-connect', what: 'Challenges, supplier applications and the matching result', odoo: ['aih.challenge', 'aih.application'], v2: '/v2/challenge-connect/' },
+  { activity: 'vibathon', what: 'Vibathon projects, the jury and their scores', odoo: ['aih.project', 'aih.vibathon.jury', 'aih.project.score'], v2: '/v2/vibathon/' },
+  { activity: 'talent', what: 'The people in each community, by skill, with their consent', odoo: ['res.partner', 'aih.skill', 'aih.community'], v2: '/v2/talent/' },
 ];
 
 function feedFrom(ctx) {
@@ -480,7 +480,7 @@ ${vib ? `<section id="hackathons" class="plate" aria-labelledby="h-build">
   <p class="intro">Hackathons with a public record, and the hackathon and buildathon events in their Odoo. The projects, jury and scores are not public yet.</p>
   ${vibOthers.length ? `<ol class="hks">${vibOthers.map(vibCard).join('')}</ol>` : ''}
   ${hackOdoo.length ? `<h3 class="sub">In their Odoo</h3><ol class="evs evs-hk">${hackOdoo.map(evCard).join('')}</ol>` : ''}
-  <p class="gap-inline">Projects, jury and scores: <a href="#gaps">your Odoo would fill this</a>; <a href="/vibathon/">see what it could be</a> (V2, simulated).</p>
+  <p class="gap-inline">Projects, jury and scores: <a href="#gaps">your Odoo would fill this</a>; <a href="/v2/vibathon/">see what it could be</a> (V2, simulated).</p>
 </section>
 
 <section id="calendar" class="ch calch" aria-labelledby="h-calendar">
@@ -518,7 +518,7 @@ ${vib ? `<section id="hackathons" class="plate" aria-labelledby="h-build">
   ${head('11', 'gaps', 'The gaps, by activity', 'Your Odoo would fill this')}
   <p class="intro">Each card names what is missing, the Odoo records that would hold it (from the hub's Odoo addon), and the V2 page that shows it with simulated data.</p>
   <ol class="gapl">${gapCards}</ol>
-  <p class="v2-all"><a class="fx-app" href="/">Open V2: what it could be <span aria-hidden="true">→</span></a></p>
+  <p class="v2-all"><a class="fx-app" href="/v2/">Open V2: what it could be <span aria-hidden="true">→</span></a></p>
 </section>
 
 <section id="sources" class="ch sources" aria-labelledby="h-sources">
@@ -532,7 +532,7 @@ ${vib ? `<section id="hackathons" class="plate" aria-labelledby="h-build">
 <footer class="foot">
   <p class="big">${words('Real data first. Then the rest.')}</p>
   <p>${esc(data.voice.banner.en)} <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(data.voice.banner_link.en)}</a></p>
-  <p>V3 shows what Algarve Evolution has published. <a href="/">V2 shows what it could be</a>, with simulated data.</p>
+  <p>V3 shows what Algarve Evolution has published. <a href="/v2/">V2 shows what it could be</a>, with simulated data.</p>
   <p class="fine">Version ${esc(chrome.version)} · Code Apache-2.0; text and images CC BY 4.0</p>
 </footer>
 <script src="/v3/future/app.js" defer></script>

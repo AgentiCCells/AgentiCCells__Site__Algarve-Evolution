@@ -70,14 +70,14 @@ for (const f of files.filter(f => f.endsWith('.html'))) {
 for (const f of files.filter(f => /\.(html|json)$/.test(f))) {
   for (const m of readFileSync(f, 'utf8').matchAll(/https?:\/\/((?:stg|staging|test|preview)\.[a-z0-9.-]+)/gi)) fail(`${f}: link to a staging or test host ${m[1]}`);
 }
-// V2: every hub page exists and is English; the parked V1 at /v1/ keeps its own four languages.
-const V2_PAGES = ['/', '/inc-acc/', '/challenge-connect/', '/vibathon/', '/talent/', '/workflows/', '/plan/', '/odoo/'];
+// V2 (at /v2/): every hub page exists and is English; the parked V1 at /v1/ keeps its own four languages.
+const V2_PAGES = ['/v2/', '/v2/inc-acc/', '/v2/challenge-connect/', '/v2/vibathon/', '/v2/talent/', '/v2/workflows/', '/v2/plan/', '/v2/odoo/'];
 const need = process.env.V2_PAGES_REQUIRED === '0' ? [] : V2_PAGES;
 for (const p of need) if (!existsSync(join(out, p, 'index.html'))) fail(`V2 page ${p} is missing`);
 if (!existsSync(join(out, 'v1', 'index.html'))) fail('the parked V1 (/v1/) is missing');
 // V3: António's four designs, real data only. Each page exists, is not indexed, has a picker thumbnail, and never
 // shows the raw title of an event that names a person (real.json gives name_safe for those).
-const V3_PAGES = { brief: '/v3/', mission: '/v3/mission/', atlas: '/v3/atlas/', future: '/v3/future/' };
+const V3_PAGES = { brief: '/', mission: '/mission/', atlas: '/atlas/', future: '/future/' };
 const realFeed = existsSync('src/feeds/real.json') ? JSON.parse(readFileSync('src/feeds/real.json', 'utf8')) : null;
 const namedEvents = (realFeed?.events || []).filter(e => e.names_person && e.name_safe).map(e => e.name);
 for (const [slug, p] of Object.entries(process.env.V3_PAGES_REQUIRED === '0' ? {} : V3_PAGES)) {

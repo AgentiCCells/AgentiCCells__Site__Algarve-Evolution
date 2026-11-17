@@ -1,4 +1,4 @@
-// The Plan page (/plan/): review, approve, sign, export and verify the changes proposed to Odoo.
+// The Plan page (/v2/plan/): review, approve, sign, export and verify the changes proposed to Odoo.
 // Reads the queue from window.HUB.plan (src/hub/hub.js) and the broker's policy from window.PlanPolicy
 // (src/hub/plan-policy.js, the same file scripts/odoo/apply-plan.mjs loads). Reviews, the reviewer's name and the last
 // signed plan are kept in localStorage; the reviewer's private key in IndexedDB, made non-extractable.
@@ -57,7 +57,7 @@
   const queue = $('[data-queue]');
   // Sources are page ids ("inc-acc") or workflow cells ("workflow:<cell id>", from the Workflows page).
   const sourceLabel = s => C.sources?.[s] || (String(s).startsWith('workflow:') ? `${C.sources?.workflows || 'Workflows'}: ${String(s).slice(9)}` : s);
-  const sourceHref = s => (s === 'home' ? '/' : C.sources?.[s] ? `/${s}/` : String(s).startsWith('workflow:') ? `/workflows/#${encodeURIComponent(String(s).slice(9))}` : null);
+  const sourceHref = s => (s === 'home' ? '/v2/' : C.sources?.[s] ? `/v2/${s}/` : String(s).startsWith('workflow:') ? `/v2/workflows/#${encodeURIComponent(String(s).slice(9))}` : null);
   const pretty = c => (c.body ? JSON.stringify(c.body, null, 2) : c.raw || '(no body)');
   const decision = id => review[id]?.decision || null;
   const checksHtml = list => `<ul class="pl-checks">${list.map(c => `<li class="${c.ok ? 'is-ok' : 'is-bad'}"><span class="pl-ck" aria-hidden="true">${c.ok ? '✓' : '✕'}</span><span><span class="visually-hidden">${c.ok ? 'Passes: ' : 'Fails: '}</span>${c.call ? `<b>Call ${c.call}</b> · ` : ''}${esc(c.rule)}${c.note ? `: ${esc(c.note)}` : ''}</span></li>`).join('')}</ul>`;
@@ -125,7 +125,7 @@
     const open = new Set([...queue.querySelectorAll('details[data-k]')].filter(d => d.open).map(d => d.dataset.k));
     const closed = new Set([...queue.querySelectorAll('details[data-k]')].filter(d => !d.open).map(d => d.dataset.k));
     if (!items.length) {
-      queue.innerHTML = `<div class="pl-empty"><h3>Nothing in the plan yet</h3><p>Open <a href="/inc-acc/">INC/ACC</a>, <a href="/challenge-connect/">Challenge Connect</a>, <a href="/vibathon/">Vibathon</a> or <a href="/talent/">the Talent Ecosystem</a>, use a form, and press <b>Add to plan</b> on its Odoo call panel. Or add the two examples above.</p></div>`;
+      queue.innerHTML = `<div class="pl-empty"><h3>Nothing in the plan yet</h3><p>Open <a href="/v2/inc-acc/">INC/ACC</a>, <a href="/v2/challenge-connect/">Challenge Connect</a>, <a href="/v2/vibathon/">Vibathon</a> or <a href="/v2/talent/">the Talent Ecosystem</a>, use a form, and press <b>Add to plan</b> on its Odoo call panel. Or add the two examples above.</p></div>`;
     } else {
       const groups = new Map(); items.forEach(i => { if (!groups.has(i.source)) groups.set(i.source, []); groups.get(i.source).push(i); });
       queue.innerHTML = [...groups].map(([s, list]) => `<section class="pl-group" aria-label="From ${esc(sourceLabel(s))}"><h3 class="pl-group-h"><span>From ${esc(sourceLabel(s))}</span> <span class="pl-group-n">${plural(list.length, 'item')}</span></h3>${list.map(itemHtml).join('')}</section>`).join('');
@@ -229,7 +229,7 @@
   async function signPlan() {
     if (!key) await makeKey();
     const plan = {
-      v: 1, created: new Date().toISOString(), mode: mode(), hub: `${location.origin}/plan/`,
+      v: 1, created: new Date().toISOString(), mode: mode(), hub: `${location.origin}/v2/plan/`,
       reviewer: { name: nameBox.value.trim(), publicKeyJwk: key.publicKeyJwk, fingerprint: key.fingerprint },
       items: approvedItems().map(i => ({ ...i, review: { decision: 'approved', at: review[i.id].at } })),
       rejected: items.filter(i => decision(i.id) === 'rejected').map(i => i.id),

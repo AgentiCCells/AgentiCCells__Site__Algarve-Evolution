@@ -1,9 +1,10 @@
-// The V3 design picker: António's four designs over the same real data. The choice is remembered in this browser.
+// The V3 design picker: António's four designs over the same real data. The last choice is remembered in this browser
+// to mark it in the picker; it never redirects.
 (() => {
   const cfg = JSON.parse(document.getElementById('v3-designs')?.textContent || '{}');
   const KEY = 'v3-design'; const store = { get() { try { return localStorage.getItem(KEY); } catch { return null; } }, set(v) { try { localStorage.setItem(KEY, v); } catch {} } };
   const here = cfg.current;
-  if (here === 'brief' && location.pathname === '/v3/' && !location.search.includes('design=')) { const s = store.get(); const d = (cfg.designs || []).find(x => x.slug === s); if (d && s !== 'brief') location.replace(d.path); }
+  // The home page always shows The Brief (it is the site's front door); the picker moves between designs.
   if (!location.search.includes('design=') || here) store.set(here);
   let box;
   function open() {

@@ -4,7 +4,7 @@
 // The browser part (src/hub/challenge-connect.js) runs the same match score as the addon
 // (odoo/addons/algarve_innovation_hub/models/challenge.py: skills 50, town 20, budget 30) and shows the Odoo calls.
 // Owner: sites-dev@AgentiCCells.dinis. Code Apache-2.0, text CC BY 4.0.
-export const path = '/challenge-connect/';
+export const path = '/v2/challenge-connect/';
 export const title = 'Challenge Connect';
 export const nav = 'Challenge Connect';
 
@@ -302,7 +302,7 @@ Data kept in the EU</textarea></label>
   <div class="hub-wrap cc-how">
     <div><p class="kicker">Odoo is the source of truth</p><h2 class="hub-h2">How this page reads Odoo</h2>
       <p class="hub-lede">Every challenge, application, supplier and score above is read from the feed exported from Odoo. Actions on this page do not write to Odoo: they are kept in this browser only, and each one shows the Odoo call that would make it real.</p>
-      <p class="hub-lede"><a href="/odoo/">How the hub uses Odoo</a> · <a href="/feeds/public.json">the public feed</a></p></div>
+      <p class="hub-lede"><a href="/v2/odoo/">How the hub uses Odoo</a> · <a href="/feeds/public.json">the public feed</a></p></div>
     <dl class="cc-models">
       <div><dt>${h.odoo('aih.challenge', chs.length)}</dt><dd>The challenge: problem, requirements, skills, budget, deadline, status, who decides and the chosen application.</dd></div>
       <div><dt>${h.odoo('aih.application', apps.length)}</dt><dd>An application: supplier, proposal, price, days, and the score, rank and reasons Odoo computes.</dd></div>

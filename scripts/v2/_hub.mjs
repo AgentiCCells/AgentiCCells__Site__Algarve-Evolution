@@ -6,14 +6,14 @@
 import { formatDate } from '../render.mjs';
 
 export const NAV = [
-  { path: '/', label: 'The Hub' },
-  { path: '/inc-acc/', label: 'INC/ACC' },
-  { path: '/challenge-connect/', label: 'Challenge Connect' },
-  { path: '/vibathon/', label: 'Vibathon' },
-  { path: '/talent/', label: 'Talent Ecosystem' },
-  { path: '/workflows/', label: 'Workflows' },
-  { path: '/plan/', label: 'Plan' },
-  { path: '/odoo/', label: 'Odoo' },
+  { path: '/v2/', label: 'The Hub' },
+  { path: '/v2/inc-acc/', label: 'INC/ACC' },
+  { path: '/v2/challenge-connect/', label: 'Challenge Connect' },
+  { path: '/v2/vibathon/', label: 'Vibathon' },
+  { path: '/v2/talent/', label: 'Talent Ecosystem' },
+  { path: '/v2/workflows/', label: 'Workflows' },
+  { path: '/v2/plan/', label: 'Plan' },
+  { path: '/v2/odoo/', label: 'Odoo' },
 ];
 // The personas a visitor can try the hub as (Dinis: "get the different personas to try it out").
 export const PERSONAS = [
@@ -44,7 +44,7 @@ export function hubContext({ data, feed, version, path, title }) {
   const layout = ({ body, description = '', head = '', scripts = '', pageClass = '' }) => `<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(title)}${path === '/' ? '' : ' · AE Innovation Hub'}</title>
+<title>${esc(title)}${path === '/v2/' ? '' : ' · AE Innovation Hub'}</title>
 <meta name="description" content="${esc(description || 'The AE Innovation Hub by Algarve Evolution: incubation and acceleration, Challenge Connect, Vibathon and the Talent Ecosystem, with Odoo as the source of truth.')}">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0a1d3d">
@@ -55,10 +55,10 @@ ${head}
 </head>
 <body class="${esc(pageClass)}" data-persona="visitor">
 <a class="skip" href="#main">Skip to content</a>
-<div class="proto" role="note"><span>${esc(v.banner.en)}</span> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(v.banner_link.en)}</a> <a class="proto-v1 proto-v3" href="/v3/">V3: real data only</a> <a class="proto-v1" href="/decks/">Decks</a> <a class="proto-v1" href="/v1/">V1 experiments</a></div>
+<div class="proto" role="note"><span>${esc(v.banner.en)}</span> <a href="https://www.algarveevolution.pt/" rel="noopener">${esc(v.banner_link.en)}</a> <a class="proto-v1 proto-v3" href="/">V3: real data only (home)</a> <a class="proto-v1" href="/decks/">Decks</a> <a class="proto-v1" href="/v1/">V1 experiments</a></div>
 <header class="hub-top">
   <div class="hub-wrap hub-top-row">
-    <a class="hub-brand" href="/"><span class="hub-mark" aria-hidden="true"></span><span><strong>AE Innovation Hub</strong><small>Algarve Evolution</small></span></a>
+    <a class="hub-brand" href="/v2/"><span class="hub-mark" aria-hidden="true"></span><span><strong>AE Innovation Hub</strong><small>Algarve Evolution</small></span></a>
     <nav class="hub-nav" aria-label="Hub"><ul>${NAV.map(n => `<li><a href="${n.path}"${n.path === path ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('')}</ul></nav>
   </div>
   <div class="hub-wrap persona-row">
@@ -76,7 +76,7 @@ ${body}
     <p><strong>${esc(v.banner.en)}</strong></p>
     <p>Everything on these pages is read from Odoo, Algarve Evolution's source of truth: the public feed exported on ${esc(exported)} (${esc(feed.meta?.odoo?.version || 'Odoo')}). Records marked <span class="sim-badge">Simulated</span> are invented for the prototype; real organisations and events link to their sources. António Guerreiro, executive director, is the only person named.</p>
     <p>${esc(v.footer_disclosure.en)}</p>
-    <p>Version __VERSION__ · <a href="/feeds/public.json">public feed</a> · <a href="/odoo/">how Odoo is used</a> · <a href="/decks/">decks</a> · <a href="/v3/">V3, real data only</a> · <a href="/v1/">V1 experiments</a> · code Apache-2.0, Odoo addon LGPL-3, text CC BY 4.0</p>
+    <p>Version __VERSION__ · <a href="/feeds/public.json">public feed</a> · <a href="/v2/odoo/">how Odoo is used</a> · <a href="/decks/">decks</a> · <a href="/">V3, real data only</a> · <a href="/v1/">V1 experiments</a> · code Apache-2.0, Odoo addon LGPL-3, text CC BY 4.0</p>
   </div>
 </footer>
 <script type="application/json" id="hub-personas">${JSON.stringify(PERSONAS)}</script>
